@@ -1,0 +1,18 @@
+{
+    "required": true,
+    "package": "fi.dy.masa.tweakeroo.mixin",
+    "refmap": "mixins.tweakeroo.refmap.json",
+    "minVersion": "0.6",
+    "client": [
+        "MixinEntityRenderer",
+        "MixinItem",
+        "MixinItemRenderer",
+        "MixinItemShulkerBox",
+        "MixinItemStack",
+        "MixinMinecraft",
+        "MixinRenderManager"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
