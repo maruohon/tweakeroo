@@ -10,7 +10,7 @@ import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 public class KeybindMulti implements IKeybind
 {
     private List<Integer> keyCodes = new ArrayList<>(4);
-    private boolean active;
+    private boolean pressed;
 
     @Override
     public boolean isValid()
@@ -19,10 +19,38 @@ public class KeybindMulti implements IKeybind
     }
 
     /**
-     * Checks if this keybind is now active but previously was not active, and then updates the cached state.
+     * Checks if this keybind is now active but previously was not active,
+     * and then updates the cached state.
+     * @return true if this keybind just became pressed
      */
     @Override
     public boolean isPressed()
+    {
+        if (this.isValid())
+        {
+            boolean wasActive = this.pressed;
+            this.updateIsPressed();
+
+            return this.pressed && wasActive == false;
+        }
+        else
+        {
+            this.pressed = false;
+            return false;
+        }
+    }
+
+    /**
+     * Returns whether the keybind is being held down.
+     * @return
+     */
+    @Override
+    public boolean isKeybindHeld()
+    {
+        return this.pressed;
+    }
+
+    private void updateIsPressed()
     {
         int activeCount = 0;
 
@@ -34,22 +62,14 @@ public class KeybindMulti implements IKeybind
             }
         }
 
-        boolean wasActive = this.active;
-        this.active = activeCount == this.keyCodes.size();
-
-        return wasActive == false && this.active;
-    }
-
-    @Override
-    public boolean wasActive()
-    {
-        return this.active;
+        this.pressed = activeCount == this.keyCodes.size();
     }
 
     @Override
     public void clearKeys()
     {
         this.keyCodes.clear();
+        this.pressed = false;
     }
 
     @Override

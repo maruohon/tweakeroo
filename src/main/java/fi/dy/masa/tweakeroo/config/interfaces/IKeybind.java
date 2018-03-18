@@ -8,7 +8,7 @@ public interface IKeybind
 
     boolean isPressed();
 
-    boolean wasActive();
+    boolean isKeybindHeld();
 
     void clearKeys();
 
