@@ -43,7 +43,9 @@ public class Tweaks
 
                 if (hand != null && isNewPosValidForFastPlacement(pos, trace.sideHit, player))
                 {
-                    while (true)
+                    int failSafe = 10;
+
+                    while (failSafe-- > 0)
                     {
                         EnumActionResult result = tryPlaceBlock(mc.playerController,
                                 player, mc.world, pos, sideFirst, sideRotatedFirst, hitVecFirst, hand, hitPartFirst);
