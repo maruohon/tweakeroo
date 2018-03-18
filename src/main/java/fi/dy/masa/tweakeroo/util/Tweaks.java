@@ -2,9 +2,9 @@ package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.item.ItemStack;
@@ -39,30 +39,27 @@ public class Tweaks
             if (player != null && trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
             {
                 BlockPos pos = trace.getBlockPos();
+                EnumHand hand = getHandWithItem(stackFirst, player);
 
-                if (isNewPosValidForFastPlacement(pos, trace.sideHit, player))
+                if (hand != null && isNewPosValidForFastPlacement(pos, trace.sideHit, player))
                 {
-                    EnumHand hand = getHandWithItem(stackFirst, player);
-
-                    if (hand != null)
+                    while (true)
                     {
-                        while (true)
-                        {
-                            EnumActionResult result = tryPlaceBlock(mc.playerController, player, mc.world, pos, sideFirst, hitVecFirst, hand);
+                        EnumActionResult result = tryPlaceBlock(mc.playerController,
+                                player, mc.world, pos, sideFirst, sideRotatedFirst, hitVecFirst, hand, hitPartFirst);
 
-                            if (result == EnumActionResult.SUCCESS)
-                            {
-                                posLast = pos;
-                            }
-                            else
-                            {
-                                break;
-                            }
+                        if (result == EnumActionResult.SUCCESS)
+                        {
+                            posLast = pos;
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
-
-                    playerPosLast = player.getPositionVector();
                 }
+
+                playerPosLast = player.getPositionVector();
             }
 
             // Reset the timer to prevent the regular process method from re-firing
@@ -79,33 +76,9 @@ public class Tweaks
             Vec3d hitVec,
             EnumHand hand)
     {
-        BlockPos posNew = posIn;
         HitPart hitPart = getHitPart(sideIn, posIn, hitVec);
-        EnumFacing side = sideIn;
         EnumFacing sideRotated = getRotatedFacing(sideIn, hitPart);
-        EnumActionResult result;
-
-        // Alt: Place the block facing/against the adjacent block (= just rotated from normal)
-        if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() && GuiScreen.isAltKeyDown())
-        {
-            posNew = posIn.offset(sideIn);
-
-            // Alt + Ctrl: Place the block into the adjacent space
-            if (GuiScreen.isCtrlKeyDown())
-            {
-                posNew = posNew.offset(sideRotated.getOpposite());
-            }
-            else
-            {
-                side = sideRotated;
-            }
-
-            result = handleFlexibleBlockPlacement(controller, player, world, posNew, side, hitVec, hand, hitPart);
-        }
-        else
-        {
-            result = controller.processRightClickBlock(player, world, posIn, sideIn, hitVec, hand);
-        }
+        EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, hitVec, hand, hitPart);
 
         // Store the initial click data for the fast placement mode
         if (posFirst == null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
@@ -129,33 +102,50 @@ public class Tweaks
             WorldClient world,
             BlockPos posIn,
             EnumFacing sideIn,
+            EnumFacing sideRotatedIn,
             Vec3d hitVec,
-            EnumHand hand)
+            EnumHand hand,
+            HitPart hitPart)
     {
-        BlockPos posNew = posIn;
-        EnumFacing side = sideIn;
-
-        // Alt: Place the block facing/against the adjacent block (= just rotated from normal)
-        if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() && GuiScreen.isAltKeyDown())
+        if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
         {
-            posNew = posIn.offset(sideIn);
+            BlockPos posNew = posIn.offset(sideIn);
+            EnumFacing side = sideIn;
+            boolean handle = false;
 
-            // Alt + Ctrl: Place the block into the adjacent space
-            if (GuiScreen.isCtrlKeyDown())
+            // Place the block facing/against the adjacent block (= just rotated from normal)
+            if (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false))
             {
-                posNew = posNew.offset(sideRotatedFirst.getOpposite());
+                side = sideRotatedIn;
+                handle = true;
             }
             else
             {
-                side = sideRotatedFirst;
+                // Don't rotate the player facing in handleFlexibleBlockPlacement()
+                hitPart = null;
             }
 
-            return handleFlexibleBlockPlacement(controller, player, world, posNew, side, hitVec, hand, hitPartFirst);
+            // Place the block into the diagonal position
+            if (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false))
+            {
+                posNew = posNew.offset(sideRotatedIn.getOpposite());
+                handle = true;
+            }
+
+            if (handle)
+            {
+                if (world.getBlockState(posNew).getBlock().isReplaceable(world, posNew))
+                {
+                    return handleFlexibleBlockPlacement(controller, player, world, posNew, side, hitVec, hand, hitPart);
+                }
+                else
+                {
+                    return EnumActionResult.FAIL;
+                }
+            }
         }
-        else
-        {
-            return controller.processRightClickBlock(player, world, posIn, sideIn, hitVec, hand);
-        }
+
+        return controller.processRightClickBlock(player, world, posIn, sideIn, hitVec, hand);
     }
 
     private static EnumActionResult handleFlexibleBlockPlacement(
@@ -166,23 +156,27 @@ public class Tweaks
             EnumFacing side,
             Vec3d hitVec,
             EnumHand hand,
-            HitPart hitPart)
+            @Nullable HitPart hitPart)
     {
         boolean rotated = false;
+        EnumFacing facing = player.getHorizontalFacing();
 
         if (hitPart == HitPart.CENTER)
         {
-            player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw - 180f, player.rotationPitch, player.onGround));
+            facing = facing.getOpposite();
+            player.connection.sendPacket(new CPacketPlayer.Rotation(facing.getHorizontalAngle(), player.rotationPitch, player.onGround));
             rotated = true;
         }
         else if (hitPart == HitPart.LEFT)
         {
-            player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw - 90f, player.rotationPitch, player.onGround));
+            facing = facing.rotateYCCW();
+            player.connection.sendPacket(new CPacketPlayer.Rotation(facing.getHorizontalAngle(), player.rotationPitch, player.onGround));
             rotated = true;
         }
         else if (hitPart == HitPart.RIGHT)
         {
-            player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw + 90f, player.rotationPitch, player.onGround));
+            facing = facing.rotateY();
+            player.connection.sendPacket(new CPacketPlayer.Rotation(facing.getHorizontalAngle(), player.rotationPitch, player.onGround));
             rotated = true;
         }
 
@@ -349,22 +343,17 @@ public class Tweaks
     @Nullable
     public static EnumHand getHandWithItem(ItemStack stack, EntityPlayerSP player)
     {
-        if (areStacksEqual(player.getHeldItemMainhand(), stackFirst))
+        if (InventoryUtils.areStacksEqual(player.getHeldItemMainhand(), stackFirst))
         {
             return EnumHand.MAIN_HAND;
         }
 
-        if (areStacksEqual(player.getHeldItemOffhand(), stackFirst))
+        if (InventoryUtils.areStacksEqual(player.getHeldItemOffhand(), stackFirst))
         {
             return EnumHand.OFF_HAND;
         }
 
         return null;
-    }
-
-    public static boolean areStacksEqual(ItemStack stack1, ItemStack stack2)
-    {
-        return ItemStack.areItemsEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 
     public enum HitPart

@@ -4,9 +4,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 
 public class InventoryUtils
 {
+    public static boolean areStacksEqual(ItemStack stack1, ItemStack stack2)
+    {
+        return ItemStack.areItemsEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
+
     public static void swapHotbarWithInventoryRow(EntityPlayer player, int row)
     {
         Container container = player.inventoryContainer;

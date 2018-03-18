@@ -4,7 +4,6 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.RayTraceResult;
@@ -24,9 +23,10 @@ public class RenderEventHandler
     private static void renderOverlays(Minecraft mc, float partialTicks)
     {
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
-            GuiScreen.isAltKeyDown() &&
             mc.objectMouseOver != null &&
-            mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
+            mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK &&
+            (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false) ||
+             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false)))
         {
             Entity entity = mc.player;
             GlStateManager.depthMask(false);
