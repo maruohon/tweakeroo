@@ -11,6 +11,7 @@
         "MixinItemShulkerBox",
         "MixinItemStack",
         "MixinMinecraft",
+        "MixinRenderGlobal",
         "MixinRenderManager"
     ],
     "injectors": {
