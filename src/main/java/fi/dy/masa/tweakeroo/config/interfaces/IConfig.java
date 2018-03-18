@@ -1,15 +1,8 @@
 package fi.dy.masa.tweakeroo.config.interfaces;
 
-import javax.annotation.Nullable;
-
-public interface IConfig
+public interface IConfig extends INamed
 {
     ConfigType getType();
-
-    String getName();
-
-    @Nullable
-    String getComment();
 
     String getStringValue();
 }

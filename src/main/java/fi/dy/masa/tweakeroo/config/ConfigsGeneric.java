@@ -8,10 +8,15 @@ import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 import fi.dy.masa.tweakeroo.config.interfaces.ConfigType;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigBoolean;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigGeneric;
+import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionList;
+import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionListEntry;
 
-public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean
+public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean, IConfigOptionList
 {
-    FLEXIBLE_PLACEMENT_OVERLAY_COLOR    ("flexibleBlockPlacementOverlayColor", "#FF3030FF", true, "The color of the currently pointed-at\nregion in block placement the overlay");
+    FLEXIBLE_PLACEMENT_OVERLAY_COLOR    ("flexibleBlockPlacementOverlayColor", "#FF3030FF", true, "The color of the currently pointed-at\nregion in block placement the overlay"),
+    HOTBAR_SWAP_OVERLAY_ALIGNMENT       ("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, "The positioning of the hotbar swap overlay"),
+    HOTBAR_SWAP_OVERLAY_OFFSET_X        ("hotbarSwapOverlayOffsetX", 4, "The horizontal offset of the hotbar swap overlay"),
+    HOTBAR_SWAP_OVERLAY_OFFSET_Y        ("hotbarSwapOverlayOffsetY", 4, "The vertical offset of the hotbar swap overlay");
 
     private final String name;
     private final ConfigType type;
@@ -19,6 +24,7 @@ public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean
     private boolean valueBoolean;
     private int valueInteger;
     private String valueString;
+    private IConfigOptionListEntry valueOptionList;
 
     private ConfigsGeneric(String name, boolean defaultValue, String comment)
     {
@@ -42,6 +48,14 @@ public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean
         this.name = name;
         this.valueString = defaultValue;
         this.valueInteger = getColor(defaultValue, 0);
+        this.comment = comment;
+    }
+
+    private ConfigsGeneric(String name, IConfigOptionListEntry defaultValue, String comment)
+    {
+        this.type = ConfigType.OPTION_LIST;
+        this.name = name;
+        this.valueOptionList = defaultValue;
         this.comment = comment;
     }
 
@@ -91,6 +105,18 @@ public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean
         this.valueInteger = value;
     }
 
+    @Override
+    public IConfigOptionListEntry getOptionListValue()
+    {
+        return this.valueOptionList;
+    }
+
+    @Override
+    public void setOptionListValue(IConfigOptionListEntry value)
+    {
+        this.valueOptionList = value;
+    }
+
     public String getStringValue()
     {
         switch (this.type)
@@ -98,6 +124,7 @@ public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean
             case BOOLEAN:       return String.valueOf(this.valueBoolean);
             case INTEGER:       return String.valueOf(this.valueInteger);
             case HEX_STRING:    return String.format("0x%08X", this.valueInteger);
+            case OPTION_LIST:   return this.valueOptionList.getStringValue();
             case STRING:
             default:            return this.valueString;
         }
@@ -132,6 +159,9 @@ public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean
                 case HEX_STRING:
                     this.valueInteger = getColor(value, 0);
                     break;
+                case OPTION_LIST:
+                    this.valueOptionList = this.valueOptionList.fromString(value);
+                    break;
                 default:
             }
         }
@@ -159,6 +189,9 @@ public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean
                 case HEX_STRING:
                     this.valueInteger = getColor(value.getAsString(), 0);
                     break;
+                case OPTION_LIST:
+                    this.valueOptionList = this.valueOptionList.fromString(value.getAsString());
+                    break;
                 default:
             }
         }
@@ -176,6 +209,7 @@ public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean
             case INTEGER:       return new JsonPrimitive(this.getIntegerValue());
             case STRING:        return new JsonPrimitive(this.getStringValue());
             case HEX_STRING:    return new JsonPrimitive(String.format("0x%08X", this.getIntegerValue()));
+            case OPTION_LIST:   return new JsonPrimitive(this.getStringValue());
             default:
         }
 

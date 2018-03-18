@@ -5,6 +5,7 @@
     "minVersion": "0.6",
     "client": [
         "MixinEntityRenderer",
+        "MixinGuiIngame",
         "MixinItem",
         "MixinItemRenderer",
         "MixinItemShulkerBox",

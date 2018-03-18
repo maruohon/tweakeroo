@@ -1,6 +1,6 @@
 package fi.dy.masa.tweakeroo.config.interfaces;
 
-public interface IConfigHotkey extends IConfig
+public interface IHotkey extends INamed
 {
     IKeybind getKeybind();
 

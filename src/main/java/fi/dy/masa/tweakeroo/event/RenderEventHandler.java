@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.event;
 
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -49,6 +50,17 @@ public class RenderEventHandler
             GlStateManager.disableBlend();
             GlStateManager.enableCull();
             GlStateManager.depthMask(true);
+        }
+    }
+
+    public static void onRenderGameOverlayPost(float partialTicks)
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
+            Hotkeys.HOTBAR_SWAP_BASE.getKeybind().isKeybindHeld(false))
+        {
+            RenderUtils.renderInventoryOverlay(mc);
         }
     }
 }

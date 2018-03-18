@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 import org.lwjgl.input.Keyboard;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
+import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -12,7 +14,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 public class InputEventHandler
 {
     private static final InputEventHandler INSTANCE = new InputEventHandler();
-    private static final Set<Integer> USED_KEYS = new HashSet<>();
+    private static final Set<Integer> TWEAK_TOGGLES_USED_KEYS = new HashSet<>();
+    private static final Set<Integer> GENERIC_HOTKEYS_USED_KEYS = new HashSet<>();
 
     public static InputEventHandler getInstance()
     {
@@ -21,11 +24,17 @@ public class InputEventHandler
 
     public static void updateUsedKeys()
     {
-        USED_KEYS.clear();
+        TWEAK_TOGGLES_USED_KEYS.clear();
+        GENERIC_HOTKEYS_USED_KEYS.clear();
 
         for (FeatureToggle toggle : FeatureToggle.values())
         {
-            USED_KEYS.addAll(toggle.getKeybind().getKeys());
+            TWEAK_TOGGLES_USED_KEYS.addAll(toggle.getKeybind().getKeys());
+        }
+
+        for (Hotkeys hotkey : Hotkeys.values())
+        {
+            GENERIC_HOTKEYS_USED_KEYS.addAll(hotkey.getKeybind().getKeys());
         }
     }
 
@@ -38,7 +47,7 @@ public class InputEventHandler
         {
             int eventKey = Keyboard.getEventKey();
 
-            if (USED_KEYS.contains(eventKey))
+            if (TWEAK_TOGGLES_USED_KEYS.contains(eventKey))
             {
                 for (FeatureToggle toggle : FeatureToggle.values())
                 {
@@ -53,6 +62,45 @@ public class InputEventHandler
                     }
                 }
             }
+
+            if (GENERIC_HOTKEYS_USED_KEYS.contains(eventKey))
+            {
+                for (Hotkeys hotkey : Hotkeys.values())
+                {
+                    IKeybind keybind = hotkey.getKeybind();
+
+                    // Note: isPressed() has to get called for key releases too, to reset the state
+                    if (keybind.isPressed() && Keyboard.getEventKeyState())
+                    {
+                        switch (hotkey)
+                        {
+                            case HOTBAR_SWAP_1:
+                                InventoryUtils.swapHotbarWithInventoryRow(mc.player, 0);
+                                break;
+                            case HOTBAR_SWAP_2:
+                                InventoryUtils.swapHotbarWithInventoryRow(mc.player, 1);
+                                break;
+                            case HOTBAR_SWAP_3:
+                                InventoryUtils.swapHotbarWithInventoryRow(mc.player, 2);
+                                break;
+                            default:
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void onTick()
+    {
+        for (FeatureToggle toggle : FeatureToggle.values())
+        {
+            toggle.getKeybind().tick();
+        }
+
+        for (Hotkeys hotkey : Hotkeys.values())
+        {
+            hotkey.getKeybind().tick();
         }
     }
 

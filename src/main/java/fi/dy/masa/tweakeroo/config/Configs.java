@@ -27,9 +27,10 @@ public class Configs
             if (element != null && element.isJsonObject())
             {
                 JsonObject root = element.getAsJsonObject();
-                JsonObject objToggles   = JsonUtils.getNestedObject(root, "TweakToggles", false);
-                JsonObject objHotkeys   = JsonUtils.getNestedObject(root, "TweakHotkeys", false);
-                JsonObject objGeneric   = JsonUtils.getNestedObject(root, "Generic", false);
+                JsonObject objTweakToggles      = JsonUtils.getNestedObject(root, "TweakToggles", false);
+                JsonObject objTweakHotkeys      = JsonUtils.getNestedObject(root, "TweakHotkeys", false);
+                JsonObject objGenericHotkeys    = JsonUtils.getNestedObject(root, "GenericHotkeys", false);
+                JsonObject objGeneric           = JsonUtils.getNestedObject(root, "Generic", false);
 
                 if (objGeneric != null)
                 {
@@ -44,14 +45,22 @@ public class Configs
 
                 for (FeatureToggle toggle : FeatureToggle.values())
                 {
-                    if (objToggles != null && JsonUtils.hasBoolean(objToggles, toggle.getName()))
+                    if (objTweakToggles != null && JsonUtils.hasBoolean(objTweakToggles, toggle.getName()))
                     {
-                        toggle.setBooleanValue(JsonUtils.getBoolean(objToggles, toggle.getName()));
+                        toggle.setBooleanValue(JsonUtils.getBoolean(objTweakToggles, toggle.getName()));
                     }
 
-                    if (objHotkeys != null && JsonUtils.hasString(objHotkeys, toggle.getName()))
+                    if (objTweakHotkeys != null && JsonUtils.hasString(objTweakHotkeys, toggle.getName()))
                     {
-                        toggle.getKeybind().setKeysFromStorageString(JsonUtils.getString(objHotkeys, toggle.getName()));
+                        toggle.getKeybind().setKeysFromStorageString(JsonUtils.getString(objTweakHotkeys, toggle.getName()));
+                    }
+                }
+
+                for (Hotkeys hotkey : Hotkeys.values())
+                {
+                    if (objGenericHotkeys != null && JsonUtils.hasString(objGenericHotkeys, hotkey.getName()))
+                    {
+                        hotkey.getKeybind().setKeysFromStorageString(JsonUtils.getString(objGenericHotkeys, hotkey.getName()));
                     }
                 }
             }
@@ -69,9 +78,10 @@ public class Configs
             File configFile = new File(dir, CONFIG_FILE_NAME);
             FileWriter writer = null;
             JsonObject root = new JsonObject();
-            JsonObject objToggles   = JsonUtils.getNestedObject(root, "TweakToggles", true);
-            JsonObject objHotkeys   = JsonUtils.getNestedObject(root, "TweakHotkeys", true);
-            JsonObject objGeneric   = JsonUtils.getNestedObject(root, "Generic", true);
+            JsonObject objTweakToggles      = JsonUtils.getNestedObject(root, "TweakToggles", true);
+            JsonObject objTweakHotkeys      = JsonUtils.getNestedObject(root, "TweakHotkeys", true);
+            JsonObject objGenericHotkeys    = JsonUtils.getNestedObject(root, "GenericHotkeys", true);
+            JsonObject objGeneric           = JsonUtils.getNestedObject(root, "Generic", true);
 
             for (ConfigsGeneric gen : ConfigsGeneric.values())
             {
@@ -80,8 +90,13 @@ public class Configs
 
             for (FeatureToggle toggle : FeatureToggle.values())
             {
-                objToggles.add(toggle.getName(), new JsonPrimitive(toggle.getBooleanValue()));
-                objHotkeys.add(toggle.getName(), new JsonPrimitive(toggle.getKeybind().getStorageString()));
+                objTweakToggles.add(toggle.getName(), new JsonPrimitive(toggle.getBooleanValue()));
+                objTweakHotkeys.add(toggle.getName(), new JsonPrimitive(toggle.getKeybind().getStorageString()));
+            }
+
+            for (Hotkeys hotkey : Hotkeys.values())
+            {
+                objGenericHotkeys.add(hotkey.getName(), new JsonPrimitive(hotkey.getKeybind().getStorageString()));
             }
 
             try

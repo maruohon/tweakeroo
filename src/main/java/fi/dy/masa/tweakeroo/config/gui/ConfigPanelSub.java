@@ -16,6 +16,7 @@ import fi.dy.masa.tweakeroo.config.interfaces.IConfig;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigBoolean;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigGeneric;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionList;
+import fi.dy.masa.tweakeroo.config.interfaces.INamed;
 import net.minecraft.client.resources.I18n;
 
 public abstract class ConfigPanelSub extends AbstractConfigPanel
@@ -204,13 +205,13 @@ public abstract class ConfigPanelSub extends AbstractConfigPanel
         this.configComments.add(info);
     }
 
-    protected int getMaxLabelWidth(IConfig[] configs)
+    protected int getMaxLabelWidth(INamed[] entries)
     {
         int maxWidth = 0;
 
-        for (IConfig config : configs)
+        for (INamed entry : entries)
         {
-            maxWidth = Math.max(maxWidth, this.mc.fontRenderer.getStringWidth(config.getName()));
+            maxWidth = Math.max(maxWidth, this.mc.fontRenderer.getStringWidth(entry.getName()));
         }
 
         return maxWidth;

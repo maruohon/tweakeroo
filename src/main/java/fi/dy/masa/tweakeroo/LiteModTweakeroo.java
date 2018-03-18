@@ -9,6 +9,7 @@ import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.gui.TweakerooConfigPanel;
+import fi.dy.masa.tweakeroo.event.InputEventHandler;
 import fi.dy.masa.tweakeroo.util.Tweaks;
 import net.minecraft.client.Minecraft;
 
@@ -60,5 +61,7 @@ public class LiteModTweakeroo implements LiteMod, Configurable, Tickable
         {
             Tweaks.clearClickedBlockInfo();
         }
+
+        InputEventHandler.onTick();
     }
 }

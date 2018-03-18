@@ -3,18 +3,18 @@ package fi.dy.masa.tweakeroo.config.gui.button;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 import fi.dy.masa.tweakeroo.config.gui.ConfigPanelHotkeysBase;
-import fi.dy.masa.tweakeroo.config.interfaces.IConfigHotkey;
+import fi.dy.masa.tweakeroo.config.interfaces.IHotkey;
 import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 import net.minecraft.util.text.TextFormatting;
 
 public class ConfigButtonHotkey extends ConfigButtonBase
 {
     private final ConfigPanelHotkeysBase host;
-    private final IConfigHotkey hotkey;
+    private final IHotkey hotkey;
     private boolean selected;
     private boolean firstKey;
 
-    public ConfigButtonHotkey(int id, int x, int y, int width, int height, IConfigHotkey hotkey, ConfigPanelHotkeysBase host)
+    public ConfigButtonHotkey(int id, int x, int y, int width, int height, IHotkey hotkey, ConfigPanelHotkeysBase host)
     {
         super(id, x, y, width, height);
 

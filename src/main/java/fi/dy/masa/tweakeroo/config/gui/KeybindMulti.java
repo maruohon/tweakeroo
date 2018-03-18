@@ -11,6 +11,7 @@ public class KeybindMulti implements IKeybind
 {
     private List<Integer> keyCodes = new ArrayList<>(4);
     private boolean pressed;
+    private int heldTime;
 
     @Override
     public boolean isValid()
@@ -28,10 +29,8 @@ public class KeybindMulti implements IKeybind
     {
         if (this.isValid())
         {
-            boolean wasActive = this.pressed;
             this.updateIsPressed();
-
-            return this.pressed && wasActive == false;
+            return this.pressed && this.heldTime == 0;
         }
         else
         {
@@ -45,8 +44,13 @@ public class KeybindMulti implements IKeybind
      * @return
      */
     @Override
-    public boolean isKeybindHeld()
+    public boolean isKeybindHeld(boolean checkNow)
     {
+        if (checkNow)
+        {
+            this.updateIsPressed();
+        }
+
         return this.pressed;
     }
 
@@ -63,6 +67,11 @@ public class KeybindMulti implements IKeybind
         }
 
         this.pressed = activeCount == this.keyCodes.size();
+
+        if (this.pressed == false)
+        {
+            this.heldTime = 0;
+        }
     }
 
     @Override
@@ -70,6 +79,7 @@ public class KeybindMulti implements IKeybind
     {
         this.keyCodes.clear();
         this.pressed = false;
+        this.heldTime = 0;
     }
 
     @Override
@@ -78,6 +88,15 @@ public class KeybindMulti implements IKeybind
         if (this.keyCodes.contains(keyCode) == false)
         {
             this.keyCodes.add(keyCode);
+        }
+    }
+
+    @Override
+    public void tick()
+    {
+        if (this.pressed)
+        {
+            this.heldTime++;
         }
     }
 

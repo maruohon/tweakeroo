@@ -8,13 +8,15 @@ public interface IKeybind
 
     boolean isPressed();
 
-    boolean isKeybindHeld();
+    boolean isKeybindHeld(boolean checkNow);
 
     void clearKeys();
 
     void addKey(int keyCode);
 
     void removeKey(int keyCode);
+
+    void tick();
 
     String getKeysDisplayString();
 
