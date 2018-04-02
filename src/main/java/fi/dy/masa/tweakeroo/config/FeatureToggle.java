@@ -9,6 +9,7 @@ import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
     TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "X,F", "Enables fast/convenient block placement when moving the cursor over new blocks"),
+    TWEAK_FIX_ENTITY_ITEM_MOVEMENT  ("tweakFixEntityItemClientMovement",    false, "",    "Fixes the warping EntityItem movement on the client when inside blocks"),
     TWEAK_FLEXIBLE_BLOCK_PLACEMENT  ("tweakFlexibleBlockPlacement",         false, "X,L", "Enables placing blocks in different orientations while holding down the keybind"),
     TWEAK_HOTBAR_SWAP               ("tweakHotbarSwap",                     false, "X,H", "Enables the hotbar swapping feature"),
     TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "X,R", "If enabled, then falling block entities won't be rendered at all"),
