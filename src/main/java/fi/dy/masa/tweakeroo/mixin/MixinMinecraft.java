@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.event.InputEventHandler;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
-import fi.dy.masa.tweakeroo.util.Tweaks;
+import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
@@ -57,6 +57,6 @@ public class MixinMinecraft implements IMinecraftAccessor
             Vec3d hitVec,
             EnumHand hand)
     {
-        return Tweaks.onProcessRightClickBlock(controller, player, world, pos, side, hitVec, hand);
+        return PlacementTweaks.onProcessRightClickBlock(controller, player, world, pos, side, hitVec, hand);
     }
 }

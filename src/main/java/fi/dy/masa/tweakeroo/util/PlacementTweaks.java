@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
-public class Tweaks
+public class PlacementTweaks
 {
     private static BlockPos posFirst = null;
     private static BlockPos posLast = null;

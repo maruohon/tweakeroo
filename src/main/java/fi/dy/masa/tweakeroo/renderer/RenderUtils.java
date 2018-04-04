@@ -3,8 +3,8 @@ package fi.dy.masa.tweakeroo.renderer;
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.HudAlignment;
-import fi.dy.masa.tweakeroo.util.Tweaks;
-import fi.dy.masa.tweakeroo.util.Tweaks.HitPart;
+import fi.dy.masa.tweakeroo.util.PlacementTweaks;
+import fi.dy.masa.tweakeroo.util.PlacementTweaks.HitPart;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -26,7 +26,7 @@ public class RenderUtils
 
     public static void renderBlockPlacementOverlay(BlockPos pos, EnumFacing side, Vec3d hitVec, double dx, double dy, double dz)
     {
-        HitPart part = Tweaks.getHitPart(side, pos, hitVec);
+        HitPart part = PlacementTweaks.getHitPart(side, pos, hitVec);
 
         double x = pos.getX() + 0.5d - dx;
         double y = pos.getY() + 0.5d - dy;

@@ -10,7 +10,7 @@ import com.mumfrey.liteloader.modconfig.ConfigPanel;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.gui.TweakerooConfigPanel;
 import fi.dy.masa.tweakeroo.event.InputEventHandler;
-import fi.dy.masa.tweakeroo.util.Tweaks;
+import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import net.minecraft.client.Minecraft;
 
 public class LiteModTweakeroo implements LiteMod, Configurable, Tickable
@@ -55,11 +55,11 @@ public class LiteModTweakeroo implements LiteMod, Configurable, Tickable
     {
         if (minecraft.currentScreen == null && minecraft.gameSettings.keyBindUseItem.isKeyDown())
         {
-            Tweaks.onUsingTick();
+            PlacementTweaks.onUsingTick();
         }
         else
         {
-            Tweaks.clearClickedBlockInfo();
+            PlacementTweaks.clearClickedBlockInfo();
         }
 
         InputEventHandler.onTick();
