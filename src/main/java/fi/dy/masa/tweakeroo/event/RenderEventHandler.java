@@ -40,6 +40,7 @@ public class RenderEventHandler
             double dz = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 
             RenderUtils.renderBlockPlacementOverlay(
+                    entity,
                     mc.objectMouseOver.getBlockPos(),
                     mc.objectMouseOver.sideHit,
                     mc.objectMouseOver.hitVec,

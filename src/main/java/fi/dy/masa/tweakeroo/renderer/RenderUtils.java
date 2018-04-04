@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -24,9 +25,10 @@ public class RenderUtils
     private static final Vec3d LIGHT0_POS = (new Vec3d( 0.2D, 1.0D, -0.7D)).normalize();
     private static final Vec3d LIGHT1_POS = (new Vec3d(-0.2D, 1.0D,  0.7D)).normalize();
 
-    public static void renderBlockPlacementOverlay(BlockPos pos, EnumFacing side, Vec3d hitVec, double dx, double dy, double dz)
+    public static void renderBlockPlacementOverlay(Entity entity, BlockPos pos, EnumFacing side, Vec3d hitVec, double dx, double dy, double dz)
     {
-        HitPart part = PlacementTweaks.getHitPart(side, pos, hitVec);
+        EnumFacing playerFacing = entity.getHorizontalFacing();
+        HitPart part = PlacementTweaks.getHitPart(side, playerFacing, pos, hitVec);
 
         double x = pos.getX() + 0.5d - dx;
         double y = pos.getY() + 0.5d - dy;
@@ -38,9 +40,11 @@ public class RenderUtils
         switch (side)
         {
             case DOWN:
+                GlStateManager.rotate(180f - playerFacing.getHorizontalAngle(), 0, 1f, 0);
                 GlStateManager.rotate( 90f, 1f, 0, 0);
                 break;
             case UP:
+                GlStateManager.rotate(180f - playerFacing.getHorizontalAngle(), 0, 1f, 0);
                 GlStateManager.rotate(-90f, 1f, 0, 0);
                 break;
             case NORTH:

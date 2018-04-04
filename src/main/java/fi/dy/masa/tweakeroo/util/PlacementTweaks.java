@@ -78,8 +78,9 @@ public class PlacementTweaks
             Vec3d hitVec,
             EnumHand hand)
     {
-        HitPart hitPart = getHitPart(sideIn, posIn, hitVec);
-        EnumFacing sideRotated = getRotatedFacing(sideIn, hitPart);
+        EnumFacing playerFacingH = player.getHorizontalFacing();
+        HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
+        EnumFacing sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
         EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, hitVec, hand, hitPart);
 
         // Store the initial click data for the fast placement mode
@@ -162,30 +163,35 @@ public class PlacementTweaks
     {
         boolean rotated = false;
         EnumFacing facing = player.getHorizontalFacing();
+        float yawOrig = player.rotationYaw;
 
         if (hitPart == HitPart.CENTER)
         {
             facing = facing.getOpposite();
-            player.connection.sendPacket(new CPacketPlayer.Rotation(facing.getHorizontalAngle(), player.rotationPitch, player.onGround));
             rotated = true;
         }
         else if (hitPart == HitPart.LEFT)
         {
             facing = facing.rotateYCCW();
-            player.connection.sendPacket(new CPacketPlayer.Rotation(facing.getHorizontalAngle(), player.rotationPitch, player.onGround));
             rotated = true;
         }
         else if (hitPart == HitPart.RIGHT)
         {
             facing = facing.rotateY();
-            player.connection.sendPacket(new CPacketPlayer.Rotation(facing.getHorizontalAngle(), player.rotationPitch, player.onGround));
             rotated = true;
+        }
+
+        if (rotated)
+        {
+            player.rotationYaw = facing.getHorizontalAngle();
+            player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
         }
 
         EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
 
         if (rotated)
         {
+            player.rotationYaw = yawOrig;
             player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
         }
 
@@ -202,16 +208,16 @@ public class PlacementTweaks
         stackFirst = ItemStack.EMPTY;
     }
 
-    public static EnumFacing getRotatedFacing(EnumFacing originalSide, HitPart hitPart)
+    public static EnumFacing getRotatedFacing(EnumFacing originalSide, EnumFacing playerFacingH, HitPart hitPart)
     {
         if (originalSide.getAxis().isVertical())
         {
             switch (hitPart)
             {
-                case LEFT:      return EnumFacing.EAST;
-                case RIGHT:     return EnumFacing.WEST;
-                case BOTTOM:    return EnumFacing.NORTH;
-                case TOP:       return EnumFacing.SOUTH;
+                case LEFT:      return playerFacingH.rotateY();
+                case RIGHT:     return playerFacingH.rotateYCCW();
+                case BOTTOM:    return originalSide == EnumFacing.UP   ? playerFacingH : playerFacingH.getOpposite();
+                case TOP:       return originalSide == EnumFacing.DOWN ? playerFacingH : playerFacingH.getOpposite();
                 case CENTER:    return originalSide.getOpposite();
                 default:        return originalSide;
             }
@@ -230,7 +236,7 @@ public class PlacementTweaks
         }
     }
 
-    public static HitPart getHitPart(EnumFacing originalSide, BlockPos pos, Vec3d hitVec)
+    public static HitPart getHitPart(EnumFacing originalSide, EnumFacing playerFacingH, BlockPos pos, Vec3d hitVec)
     {
         double x = hitVec.x - pos.getX();
         double y = hitVec.y - pos.getY();
@@ -241,12 +247,33 @@ public class PlacementTweaks
         switch (originalSide)
         {
             case DOWN:
-                posH = x;
-                posV = z;
-                break;
             case UP:
-                posH = x;
-                posV = 1.0d - z;
+                switch (playerFacingH)
+                {
+                    case NORTH:
+                        posH = x;
+                        posV = 1.0d - z;
+                        break;
+                    case SOUTH:
+                        posH = 1.0d - x;
+                        posV = z;
+                        break;
+                    case WEST:
+                        posH = 1.0d - z;
+                        posV = 1.0d - x;
+                        break;
+                    case EAST:
+                        posH = z;
+                        posV = x;
+                        break;
+                    default:
+                }
+
+                if (originalSide == EnumFacing.DOWN)
+                {
+                    posV = 1.0d - posV;
+                }
+
                 break;
             case NORTH:
             case SOUTH:
