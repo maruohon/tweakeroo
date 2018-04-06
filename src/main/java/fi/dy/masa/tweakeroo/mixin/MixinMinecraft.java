@@ -26,12 +26,21 @@ public class MixinMinecraft implements IMinecraftAccessor
     private int rightClickDelayTimer;
 
     @Shadow
+    private void clickMouse() {}
+
+    @Shadow
     private void rightClickMouse() {}
 
     @Override
     public void setRightClickDelayTimer(int value)
     {
         this.rightClickDelayTimer = value;
+    }
+
+    @Override
+    public void leftClickMouseAccessor()
+    {
+        this.clickMouse();
     }
 
     @Override

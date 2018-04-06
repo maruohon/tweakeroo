@@ -43,6 +43,18 @@ public class PlacementTweaks
         }
         else
         {
+            if (mc.currentScreen == null &&
+                mc.gameSettings.keyBindAttack.isKeyDown() &&
+                FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue())
+            {
+                final int count = ConfigsGeneric.FAST_LEFT_CLICK_COUNT.getIntegerValue();
+
+                for (int i = 0; i < count; ++i)
+                {
+                    ((IMinecraftAccessor) mc).leftClickMouseAccessor();
+                }
+            }
+
             clearClickedBlockInfo();
         }
     }
