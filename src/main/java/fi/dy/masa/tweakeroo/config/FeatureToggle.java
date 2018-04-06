@@ -13,8 +13,8 @@ import net.minecraft.util.text.TextFormatting;
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
     TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "R",   "Enables fast/convenient block placement when moving the cursor over new blocks"),
-    TWEAK_FAST_LEFT_CLICK           ("tweakFastLeftClick",                  false, "X,U", "Enables automatic fast left clicking while holding down the attack button (left click).\nThe number of clicks per game tick is set in the Generic configs."),
-    TWEAK_FAST_RIGHT_CLICK          ("tweakFastRightClick",                 false, "X,Y", "Enables automatic fast right clicking while holding down the use button (right click).\nThe number of clicks per game tick is set in the Generic configs."),
+    TWEAK_FAST_LEFT_CLICK           ("tweakFastLeftClick",                  false, "X,Y", "Enables automatic fast left clicking while holding down the attack button (left click).\nThe number of clicks per game tick is set in the Generic configs."),
+    TWEAK_FAST_RIGHT_CLICK          ("tweakFastRightClick",                 false, "X,U", "Enables automatic fast right clicking while holding down the use button (right click).\nThe number of clicks per game tick is set in the Generic configs."),
     TWEAK_FLEXIBLE_BLOCK_PLACEMENT  ("tweakFlexibleBlockPlacement",         false, "X,L", "Enables placing blocks in different orientations while holding down the keybind"),
     TWEAK_GAMMA_OVERRIDE            ("tweakGammaOverride",                  false, "X,G", "Overrides the video settings gamma value with the one set in the Generic configs"),
     TWEAK_HOTBAR_SWAP               ("tweakHotbarSwap",                     false, "X,H", "Enables the hotbar swapping feature"),
@@ -106,11 +106,11 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
         );
      }
 
-    private static class KeyCallbackToggleFeatureWithMessage implements IHotkeyCallback
+    public static class KeyCallbackToggleFeatureWithMessage implements IHotkeyCallback
     {
-        private final FeatureToggle feature;
+        protected final FeatureToggle feature;
 
-        private KeyCallbackToggleFeatureWithMessage(FeatureToggle feature)
+        public KeyCallbackToggleFeatureWithMessage(FeatureToggle feature)
         {
             this.feature = feature;
         }

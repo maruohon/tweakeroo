@@ -5,6 +5,7 @@ import java.util.Set;
 import org.lwjgl.input.Keyboard;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.FeatureToggle.KeyCallbackToggleFeatureWithMessage;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.config.IHotkeyCallback;
 import fi.dy.masa.tweakeroo.config.KeybindMulti.KeyAction;
@@ -27,7 +28,7 @@ public class InputEventHandler
     private InputEventHandler()
     {
         Minecraft mc = Minecraft.getMinecraft();
-        FeatureToggle.TWEAK_GAMMA_OVERRIDE.getKeybind().setCallback(new KeyCallbackGamma(mc));
+        FeatureToggle.TWEAK_GAMMA_OVERRIDE.getKeybind().setCallback(new KeyCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
 
         IHotkeyCallback callback = new KeyCallbackHotkeys(mc);
         Hotkeys.FAST_MODE_PLANE.getKeybind().setCallback(callback);
@@ -108,18 +109,20 @@ public class InputEventHandler
         mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation(key, args));
     }
 
-    private static class KeyCallbackGamma implements IHotkeyCallback
+    private static class KeyCallbackGamma extends KeyCallbackToggleFeatureWithMessage
     {
         private final Minecraft mc;
         private float originalGamma;
 
-        public KeyCallbackGamma(Minecraft mc)
+        public KeyCallbackGamma(FeatureToggle feature, Minecraft mc)
         {
+            super(feature);
+
             this.mc = mc;
             this.originalGamma = this.mc.gameSettings.gammaSetting;
 
             // If the feature is enabled on game launch, apply it here
-            if (FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanValue())
+            if (feature.getBooleanValue())
             {
                 this.mc.gameSettings.gammaSetting = ConfigsGeneric.GAMMA_OVERRIDE_VALUE.getIntegerValue();
             }
@@ -128,10 +131,11 @@ public class InputEventHandler
         @Override
         public void onKeyAction(KeyAction action, IKeybind key)
         {
+            super.onKeyAction(action, key);
+
             if (action == KeyAction.PRESS)
             {
-                // The values will be toggled after the callback (see above), thus inversed check here
-                if (FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanValue() == false)
+                if (this.feature.getBooleanValue())
                 {
                     this.originalGamma = this.mc.gameSettings.gammaSetting;
                     this.mc.gameSettings.gammaSetting = ConfigsGeneric.GAMMA_OVERRIDE_VALUE.getIntegerValue();
