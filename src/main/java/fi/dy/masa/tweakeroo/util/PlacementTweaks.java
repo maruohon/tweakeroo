@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
+import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import net.minecraft.client.Minecraft;
@@ -30,9 +31,10 @@ public class PlacementTweaks
 
     public static void onUsingTick()
     {
+        Minecraft mc = Minecraft.getMinecraft();
+
         if (posFirst != null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
         {
-            Minecraft mc = Minecraft.getMinecraft();
             EntityPlayerSP player = mc.player;
             RayTraceResult trace = mc.objectMouseOver;
 
@@ -66,6 +68,15 @@ public class PlacementTweaks
 
             // Reset the timer to prevent the regular process method from re-firing
             ((IMinecraftAccessor) mc).setRightClickDelayTimer(4);
+        }
+        else if (FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue() && mc.gameSettings.keyBindUseItem.isKeyDown())
+        {
+            final int count = ConfigsGeneric.FAST_RIGHT_CLICK_COUNT.getIntegerValue();
+
+            for (int i = 0; i < count; ++i)
+            {
+                ((IMinecraftAccessor) mc).rightClickMouseAccessor();
+            }
         }
     }
 

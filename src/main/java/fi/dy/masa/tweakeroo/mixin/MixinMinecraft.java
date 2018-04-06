@@ -25,17 +25,26 @@ public class MixinMinecraft implements IMinecraftAccessor
     @Shadow
     private int rightClickDelayTimer;
 
-    //@Inject(method = "runTickKeyboard", at = @At(value = "JUMP", opcode = Opcodes.GOTO, ordinal = ??))
-    @Inject(method = "dispatchKeypresses", at = @At(value = "HEAD"))
-    public void onKeyboardInput(CallbackInfo ci)
-    {
-        InputEventHandler.getInstance().onKeyInput();
-    }
+    @Shadow
+    private void rightClickMouse() {}
 
     @Override
     public void setRightClickDelayTimer(int value)
     {
         this.rightClickDelayTimer = value;
+    }
+
+    @Override
+    public void rightClickMouseAccessor()
+    {
+        this.rightClickMouse();
+    }
+
+    //@Inject(method = "runTickKeyboard", at = @At(value = "JUMP", opcode = Opcodes.GOTO, ordinal = ??))
+    @Inject(method = "dispatchKeypresses", at = @At(value = "HEAD"))
+    private void onKeyboardInput(CallbackInfo ci)
+    {
+        InputEventHandler.getInstance().onKeyInput();
     }
 
     @Redirect(method = "rightClickMouse()V", at = @At(

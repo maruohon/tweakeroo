@@ -8,6 +8,7 @@ import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
     TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "X,F", "Enables fast/convenient block placement when moving the cursor over new blocks"),
+    TWEAK_FAST_RIGHT_CLICK          ("tweakFastRightClick",                 false, "X,Y", "Enables automatic fast right clicking while holding down the use button (right click).\nThe number of clicks per game tick is set in the Generic configs."),
     TWEAK_FIX_ENTITY_ITEM_MOVEMENT  ("tweakFixEntityItemClientMovement",    false, "",    "Fixes the warping EntityItem movement on the client when inside blocks"),
     TWEAK_FLEXIBLE_BLOCK_PLACEMENT  ("tweakFlexibleBlockPlacement",         false, "X,L", "Enables placing blocks in different orientations while holding down the keybind"),
     TWEAK_GAMMA_OVERRIDE            ("tweakGammaOverride",                  false, "X,G", "Overrides the video settings gamma value with the one set in the Generic configs"),

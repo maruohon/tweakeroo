@@ -13,6 +13,7 @@ import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionListEntry;
 
 public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean, IConfigOptionList
 {
+    FAST_RIGHT_CLICK_COUNT              ("fastRightClickCount", 10, "The number of right clicks to do per game tick when\ntweakFastRightClick is enabled and the use button is held down"),
     FLEXIBLE_PLACEMENT_OVERLAY_COLOR    ("flexibleBlockPlacementOverlayColor", "#C03030F0", true, "The color of the currently pointed-at\nregion in block placement the overlay"),
     GAMMA_OVERRIDE_VALUE                ("gammaOverrideValue", 1000, "The gamma value to use when the override option is enabled"),
     HOTBAR_SWAP_OVERLAY_ALIGNMENT       ("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, "The positioning of the hotbar swap overlay"),
