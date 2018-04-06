@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.renderer;
 
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.HudAlignment;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.HitPart;
@@ -13,8 +14,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -267,5 +271,30 @@ public class RenderUtils
 
         float ambientLightStrength = 0.4F;
         GlStateManager.glLightModel(2899, RenderHelper.setColorBuffer(ambientLightStrength, ambientLightStrength, ambientLightStrength, 1.0F));
+    }
+
+    public static void overrideLavaFog(Entity entity)
+    {
+        if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() && entity instanceof EntityLivingBase)
+        {
+            EntityLivingBase living = (EntityLivingBase) entity;
+            int resp = EnchantmentHelper.getRespirationModifier(living);
+            float density = 0.6F;
+
+            if (living.isPotionActive(MobEffects.WATER_BREATHING))
+            {
+                density -= 0.13F;
+            }
+
+            if (resp > 0)
+            {
+                density -= (float) resp * 0.13F;
+            }
+
+            if (density < 0.6F)
+            {
+                GlStateManager.setFogDensity(density);
+            }
+        }
     }
 }
