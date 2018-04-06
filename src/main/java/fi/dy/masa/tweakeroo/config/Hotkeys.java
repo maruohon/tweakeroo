@@ -5,6 +5,9 @@ import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 
 public enum Hotkeys implements IHotkey
 {
+    FAST_MODE_PLANE             ("fastPlacementModePlane",  "Z,1",  "Switch the Fast Placement mode to the Plane mode"),
+    FAST_MODE_FACE              ("fastPlacementModeFace",   "Z,2",  "Switch the Fast Placement mode to the Face mode"),
+    FAST_MODE_COLUMN            ("fastPlacementModeColumn", "Z,3",  "Switch the Fast Placement mode to the Column mode"),
     FLEXIBLE_BLOCK_PLACEMENT_OFFSET     ("flexibleBlockPlacementOffset", "LCONTROL", "The key to activate the flexible block placement\nmode/overlay for placing the block in a offset or diagonal position"),
     FLEXIBLE_BLOCK_PLACEMENT_ROTATION   ("flexibleBlockPlacementRotation", "LMENU",  "The key to activate the flexible block placement\nmode/overlay for placing the block with a rotation/facing"),
     HOTBAR_SWAP_BASE            ("hotbarSwapBase",  "C",    "The base key to show the hotbar/inventory overlay"),

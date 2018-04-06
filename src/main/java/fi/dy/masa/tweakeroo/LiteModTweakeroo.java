@@ -54,16 +54,8 @@ public class LiteModTweakeroo implements LiteMod, Configurable, ShutdownListener
     @Override
     public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock)
     {
-        if (minecraft.currentScreen == null && minecraft.gameSettings.keyBindUseItem.isKeyDown())
-        {
-            PlacementTweaks.onUsingTick();
-        }
-        else
-        {
-            PlacementTweaks.clearClickedBlockInfo();
-        }
-
         InputEventHandler.onTick();
+        PlacementTweaks.onTick(minecraft);
     }
 
     @Override

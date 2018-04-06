@@ -2,6 +2,8 @@ language.name=English
 language.region=US
 language.code=en_US
 
+tweakeroo.message.set_fast_placement_mode_to=Set Fast Placement mode to %s
 tweakeroo.message.toggled=Toggled %s %s
+tweakeroo.message.toggled_fast_placement_mode_on=Toggled Fast Placement mode %s, mode: %s
 tweakeroo.message.value.off=OFF
 tweakeroo.message.value.on=ON

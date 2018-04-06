@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.event.InputEventHandler;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
@@ -15,8 +17,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 
 public class PlacementTweaks
 {
@@ -24,46 +29,96 @@ public class PlacementTweaks
     private static BlockPos posLast = null;
     private static HitPart hitPartFirst = null;
     private static Vec3d hitVecFirst = null;
-    private static Vec3d playerPosLast = null;
     private static EnumFacing sideFirst = null;
     private static EnumFacing sideRotatedFirst = null;
+    private static float playerYawFirst;
     private static ItemStack stackFirst = ItemStack.EMPTY;
+    private static FastMode fastMode = FastMode.PLANE;
 
-    public static void onUsingTick()
+    public static void onTick(Minecraft mc)
+    {
+        if (mc.currentScreen == null && mc.gameSettings.keyBindUseItem.isKeyDown())
+        {
+            onUsingTick();
+        }
+        else
+        {
+            clearClickedBlockInfo();
+        }
+    }
+
+    public static void setFastPlacementMode(FastMode mode)
+    {
+        fastMode = mode;
+
+        Minecraft mc = Minecraft.getMinecraft();
+        String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
+        InputEventHandler.printMessage(mc, "tweakeroo.message.set_fast_placement_mode_to", str);
+    }
+
+    public static FastMode getFastPlacementMode()
+    {
+        return fastMode;
+    }
+
+    private static void onUsingTick()
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (posFirst != null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
+        if (posFirst != null && mc.player != null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
         {
             EntityPlayerSP player = mc.player;
-            RayTraceResult trace = mc.objectMouseOver;
+            World world = player.getEntityWorld();
+            double reach = mc.playerController.getBlockReachDistance();
+            int failSafe = 10;
 
-            if (player != null && trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+            while (failSafe-- > 0)
             {
-                BlockPos pos = trace.getBlockPos();
-                EnumHand hand = getHandWithItem(stackFirst, player);
+                RayTraceResult trace = mc.objectMouseOver;
 
-                if (hand != null && isNewPosValidForFastPlacement(pos, trace.sideHit, player))
+                if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
                 {
-                    int failSafe = 10;
+                    EnumFacing side = trace.sideHit;
+                    BlockPos pos = trace.getBlockPos();
+                    BlockPos posNew = pos.offset(side);
+                    EnumHand hand = getHandWithItem(stackFirst, player);
 
-                    while (failSafe-- > 0)
+                    if (hand != null && world.getBlockState(posNew).getBlock().isReplaceable(world, posNew) &&
+                        (
+                            (fastMode == FastMode.PLANE  && isNewPositionValidForPlaneMode(posNew)) ||
+                            (fastMode == FastMode.FACE   && isNewPositionValidForFaceMode(posNew, side)) ||
+                            (fastMode == FastMode.COLUMN && isNewPositionValidForColumnMode(posNew))
+                        )
+                    )
                     {
+                        IBlockState state = world.getBlockState(pos);
+                        float x = (float) (trace.hitVec.x - pos.getX());
+                        float y = (float) (trace.hitVec.y - pos.getY());
+                        float z = (float) (trace.hitVec.z - pos.getZ());
+
+                        if (state.getBlock().onBlockActivated(world, pos, state, player, hand, side, x, y, z))
+                        {
+                            return;
+                        }
+
                         EnumActionResult result = tryPlaceBlock(mc.playerController,
-                                player, mc.world, pos, sideFirst, sideRotatedFirst, hitVecFirst, hand, hitPartFirst);
+                                player, mc.world, posNew, sideFirst, sideRotatedFirst, hitVecFirst, hand, hitPartFirst);
 
                         if (result == EnumActionResult.SUCCESS)
                         {
-                            posLast = pos;
+                            posLast = posNew;
+                            mc.objectMouseOver = player.rayTrace(reach, mc.getRenderPartialTicks());
                         }
                         else
                         {
                             break;
                         }
                     }
+                    else
+                    {
+                        break;
+                    }
                 }
-
-                playerPosLast = player.getPositionVector();
             }
 
             // Reset the timer to prevent the regular process method from re-firing
@@ -97,13 +152,13 @@ public class PlacementTweaks
         // Store the initial click data for the fast placement mode
         if (posFirst == null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
         {
-            posFirst = posIn;
+            posFirst = posIn.offset(sideIn);
             posLast = posIn;
             hitPartFirst = hitPart;
             hitVecFirst = hitVec;
             sideFirst = sideIn;
             sideRotatedFirst = sideRotated;
-            playerPosLast = player.getPositionVector();
+            playerYawFirst = player.rotationYaw;
             stackFirst = player.getHeldItem(hand).copy();
         }
 
@@ -123,7 +178,7 @@ public class PlacementTweaks
     {
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
         {
-            BlockPos posNew = posIn.offset(sideIn);
+            BlockPos posNew = posIn;
             EnumFacing side = sideIn;
             boolean handle = false;
 
@@ -172,44 +227,34 @@ public class PlacementTweaks
             EnumHand hand,
             @Nullable HitPart hitPart)
     {
-        boolean rotated = false;
-        EnumFacing facing = player.getHorizontalFacing();
+        EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor((playerYawFirst * 4.0F / 360.0F) + 0.5D) & 3);
         float yawOrig = player.rotationYaw;
 
         if (hitPart == HitPart.CENTER)
         {
             facing = facing.getOpposite();
-            rotated = true;
         }
         else if (hitPart == HitPart.LEFT)
         {
             facing = facing.rotateYCCW();
-            rotated = true;
         }
         else if (hitPart == HitPart.RIGHT)
         {
             facing = facing.rotateY();
-            rotated = true;
         }
 
-        if (rotated)
-        {
-            player.rotationYaw = facing.getHorizontalAngle();
-            player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
-        }
+        player.rotationYaw = facing.getHorizontalAngle();
+        player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
 
         EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
 
-        if (rotated)
-        {
-            player.rotationYaw = yawOrig;
-            player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
-        }
+        player.rotationYaw = yawOrig;
+        player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
 
         return result;
     }
 
-    public static void clearClickedBlockInfo()
+    private static void clearClickedBlockInfo()
     {
         posFirst = null;
         hitPartFirst = null;
@@ -219,7 +264,7 @@ public class PlacementTweaks
         stackFirst = ItemStack.EMPTY;
     }
 
-    public static EnumFacing getRotatedFacing(EnumFacing originalSide, EnumFacing playerFacingH, HitPart hitPart)
+    private static EnumFacing getRotatedFacing(EnumFacing originalSide, EnumFacing playerFacingH, HitPart hitPart)
     {
         if (originalSide.getAxis().isVertical())
         {
@@ -318,21 +363,16 @@ public class PlacementTweaks
         }
     }
 
-    private static boolean isNewPosValidForFastPlacement(BlockPos posNew, EnumFacing side, EntityPlayerSP player)
+    private static boolean isNewPositionValidForPlaneMode(BlockPos posNew)
     {
-        if (side == sideFirst && posNew.equals(posLast) == false)
+        if (posNew.equals(posLast) == false)
         {
-            EnumFacing.Axis axis = side.getAxis();
+            EnumFacing.Axis axis = sideFirst.getAxis();
 
             // Cursor moved to adjacent position
-            if ((axis == EnumFacing.Axis.X && posNew.getX() == posLast.getX()) ||
-                (axis == EnumFacing.Axis.Z && posNew.getZ() == posLast.getZ()) ||
-                (axis == EnumFacing.Axis.Y && posNew.getY() == posLast.getY()))
-            {
-                return true;
-            }
-
-            if (getPlayerMovementDirection(player) == side && posLast.offset(side).equals(posNew))
+            if ((axis == EnumFacing.Axis.X && posNew.getX() == posFirst.getX()) ||
+                (axis == EnumFacing.Axis.Z && posNew.getZ() == posFirst.getZ()) ||
+                (axis == EnumFacing.Axis.Y && posNew.getY() == posFirst.getY()))
             {
                 return true;
             }
@@ -341,6 +381,29 @@ public class PlacementTweaks
         return false;
     }
 
+    private static boolean isNewPositionValidForFaceMode(BlockPos posNew, EnumFacing side)
+    {
+        return side == sideFirst && posNew.equals(posLast) == false;
+    }
+
+    private static boolean isNewPositionValidForColumnMode(BlockPos posNew)
+    {
+        if (posNew.equals(posLast) == false)
+        {
+            EnumFacing.Axis axis = sideFirst.getAxis();
+
+            if ((axis == EnumFacing.Axis.X && posNew.getY() == posFirst.getY() && posNew.getZ() == posFirst.getZ()) ||
+                (axis == EnumFacing.Axis.Y && posNew.getX() == posFirst.getX() && posNew.getZ() == posFirst.getZ()) ||
+                (axis == EnumFacing.Axis.Z && posNew.getX() == posFirst.getX() && posNew.getY() == posFirst.getY()))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /*
     @Nullable
     private static EnumFacing getPlayerMovementDirection(EntityPlayerSP player)
     {
@@ -379,9 +442,10 @@ public class PlacementTweaks
             }
         }
     }
+    */
 
     @Nullable
-    public static EnumHand getHandWithItem(ItemStack stack, EntityPlayerSP player)
+    private static EnumHand getHandWithItem(ItemStack stack, EntityPlayerSP player)
     {
         if (InventoryUtils.areStacksEqual(player.getHeldItemMainhand(), stackFirst))
         {
@@ -403,5 +467,12 @@ public class PlacementTweaks
         RIGHT,
         BOTTOM,
         TOP;
+    }
+
+    public enum FastMode
+    {
+        PLANE,
+        FACE,
+        COLUMN;
     }
 }

@@ -1,13 +1,18 @@
 package fi.dy.masa.tweakeroo.config;
 
+import fi.dy.masa.tweakeroo.config.KeybindMulti.KeyAction;
 import fi.dy.masa.tweakeroo.config.interfaces.ConfigType;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigBoolean;
 import fi.dy.masa.tweakeroo.config.interfaces.IHotkey;
 import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
+import fi.dy.masa.tweakeroo.event.InputEventHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextFormatting;
 
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
-    TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "X,F", "Enables fast/convenient block placement when moving the cursor over new blocks"),
+    TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "R",   "Enables fast/convenient block placement when moving the cursor over new blocks"),
     TWEAK_FAST_RIGHT_CLICK          ("tweakFastRightClick",                 false, "X,Y", "Enables automatic fast right clicking while holding down the use button (right click).\nThe number of clicks per game tick is set in the Generic configs."),
     TWEAK_FIX_ENTITY_ITEM_MOVEMENT  ("tweakFixEntityItemClientMovement",    false, "",    "Fixes the warping EntityItem movement on the client when inside blocks"),
     TWEAK_FLEXIBLE_BLOCK_PLACEMENT  ("tweakFlexibleBlockPlacement",         false, "X,L", "Enables placing blocks in different orientations while holding down the keybind"),
@@ -32,6 +37,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
         this.comment = comment;
         this.toggleMessage = splitCamelCase(this.name.substring(5));
         this.keybind = KeybindMulti.fromStorageString(defaultHotkey);
+        this.keybind.setCallback(new KeyCallbackToggleFeatureWithMessage(this));
     }
 
     @Override
@@ -99,4 +105,29 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
            " "
         );
      }
+
+    private static class KeyCallbackToggleFeatureWithMessage implements IHotkeyCallback
+    {
+        private final FeatureToggle feature;
+
+        private KeyCallbackToggleFeatureWithMessage(FeatureToggle feature)
+        {
+            this.feature = feature;
+        }
+
+        @Override
+        public void onKeyAction(KeyAction action, IKeybind key)
+        {
+            if (action == KeyAction.PRESS)
+            {
+                this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
+
+                final boolean enabled = this.feature.getBooleanValue();
+                String pre = enabled ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
+                String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
+                String message = I18n.format("tweakeroo.message.toggled", this.feature.getToggleMessage(), pre + status + TextFormatting.RESET);
+                InputEventHandler.printMessage(Minecraft.getMinecraft(), message);
+            }
+        }
+    }
 }

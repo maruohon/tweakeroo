@@ -10,6 +10,8 @@ import fi.dy.masa.tweakeroo.config.IHotkeyCallback;
 import fi.dy.masa.tweakeroo.config.KeybindMulti.KeyAction;
 import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.PlacementTweaks;
+import fi.dy.masa.tweakeroo.util.PlacementTweaks.FastMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ChatType;
@@ -24,7 +26,18 @@ public class InputEventHandler
 
     private InputEventHandler()
     {
-        FeatureToggle.TWEAK_GAMMA_OVERRIDE.getKeybind().setCallback(new KeyCallbackGamma(Minecraft.getMinecraft()));
+        Minecraft mc = Minecraft.getMinecraft();
+        FeatureToggle.TWEAK_GAMMA_OVERRIDE.getKeybind().setCallback(new KeyCallbackGamma(mc));
+
+        IHotkeyCallback callback = new KeyCallbackHotkeys(mc);
+        Hotkeys.FAST_MODE_PLANE.getKeybind().setCallback(callback);
+        Hotkeys.FAST_MODE_FACE.getKeybind().setCallback(callback);
+        Hotkeys.FAST_MODE_COLUMN.getKeybind().setCallback(callback);
+        Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callback);
+        Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callback);
+        Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callback);
+
+        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT, mc));
     }
 
     public static InputEventHandler getInstance()
@@ -61,17 +74,8 @@ public class InputEventHandler
             {
                 for (FeatureToggle toggle : FeatureToggle.values())
                 {
-                    IKeybind keybind = toggle.getKeybind();
-
                     // Note: isPressed() has to get called for key releases too, to reset the state
-                    if (keybind.isPressed() && Keyboard.getEventKeyState())
-                    {
-                        toggle.setBooleanValue(! toggle.getBooleanValue());
-                        String pre = toggle.getBooleanValue() ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
-                        String str = I18n.format("tweakeroo.message.value." + (toggle.getBooleanValue() ? "on" : "off"));
-                        String message = I18n.format("tweakeroo.message.toggled", toggle.getToggleMessage(), pre + str + TextFormatting.RESET);
-                        this.printMessage(mc, message);
-                    }
+                    toggle.getKeybind().isPressed();
                 }
             }
 
@@ -79,25 +83,8 @@ public class InputEventHandler
             {
                 for (Hotkeys hotkey : Hotkeys.values())
                 {
-                    IKeybind keybind = hotkey.getKeybind();
-
                     // Note: isPressed() has to get called for key releases too, to reset the state
-                    if (keybind.isPressed() && Keyboard.getEventKeyState())
-                    {
-                        switch (hotkey)
-                        {
-                            case HOTBAR_SWAP_1:
-                                InventoryUtils.swapHotbarWithInventoryRow(mc.player, 0);
-                                break;
-                            case HOTBAR_SWAP_2:
-                                InventoryUtils.swapHotbarWithInventoryRow(mc.player, 1);
-                                break;
-                            case HOTBAR_SWAP_3:
-                                InventoryUtils.swapHotbarWithInventoryRow(mc.player, 2);
-                                break;
-                            default:
-                        }
-                    }
+                    hotkey.getKeybind().isPressed();
                 }
             }
         }
@@ -116,7 +103,7 @@ public class InputEventHandler
         }
     }
 
-    private void printMessage(Minecraft mc, String key, Object... args)
+    public static void printMessage(Minecraft mc, String key, Object... args)
     {
         mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation(key, args));
     }
@@ -152,6 +139,87 @@ public class InputEventHandler
                 else
                 {
                     this.mc.gameSettings.gammaSetting = this.originalGamma;
+                }
+            }
+        }
+    }
+
+    private static class KeyCallbackHotkeys implements IHotkeyCallback
+    {
+        private final Minecraft mc;
+
+        public KeyCallbackHotkeys(Minecraft mc)
+        {
+            this.mc = mc;
+        }
+
+        @Override
+        public void onKeyAction(KeyAction action, IKeybind key)
+        {
+            if (action == KeyAction.PRESS)
+            {
+                if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())
+                {
+                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, 0);
+                }
+                else if (key == Hotkeys.HOTBAR_SWAP_2.getKeybind())
+                {
+                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, 1);
+                }
+                else if (key == Hotkeys.HOTBAR_SWAP_3.getKeybind())
+                {
+                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, 2);
+                }
+                // The values will be toggled after the callback (see above), thus inversed check here
+                else if (key == Hotkeys.FAST_MODE_PLANE.getKeybind())
+                {
+                    PlacementTweaks.setFastPlacementMode(FastMode.PLANE);
+                }
+                else if (key == Hotkeys.FAST_MODE_FACE.getKeybind())
+                {
+                    PlacementTweaks.setFastPlacementMode(FastMode.FACE);
+                }
+                else if (key == Hotkeys.FAST_MODE_COLUMN.getKeybind())
+                {
+                    PlacementTweaks.setFastPlacementMode(FastMode.COLUMN);
+                }
+            }
+        }
+    }
+
+    private static class KeyCallbackToggleFastMode implements IHotkeyCallback
+    {
+        private final FeatureToggle feature;
+        private final Minecraft mc;
+
+        private KeyCallbackToggleFastMode(FeatureToggle feature, Minecraft mc)
+        {
+            this.feature = feature;
+            this.mc = mc;
+        }
+
+        @Override
+        public void onKeyAction(KeyAction action, IKeybind key)
+        {
+            if (action == KeyAction.PRESS)
+            {
+                this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
+
+                boolean enabled = this.feature.getBooleanValue();
+                String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
+                String preGreen = TextFormatting.GREEN.toString();
+                String preRed = TextFormatting.RED.toString();
+                String rst = TextFormatting.RESET.toString();
+                strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
+
+                if (enabled)
+                {
+                    String strMode = PlacementTweaks.getFastPlacementMode().name();
+                    printMessage(this.mc, "tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
+                }
+                else
+                {
+                    printMessage(this.mc, "tweakeroo.message.toggled", this.feature.getToggleMessage(), strStatus);
                 }
             }
         }
