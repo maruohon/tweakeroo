@@ -1,6 +1,5 @@
 package fi.dy.masa.tweakeroo.config;
 
-import fi.dy.masa.tweakeroo.config.gui.KeybindMulti;
 import fi.dy.masa.tweakeroo.config.interfaces.ConfigType;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigBoolean;
 import fi.dy.masa.tweakeroo.config.interfaces.IHotkey;
@@ -11,6 +10,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "X,F", "Enables fast/convenient block placement when moving the cursor over new blocks"),
     TWEAK_FIX_ENTITY_ITEM_MOVEMENT  ("tweakFixEntityItemClientMovement",    false, "",    "Fixes the warping EntityItem movement on the client when inside blocks"),
     TWEAK_FLEXIBLE_BLOCK_PLACEMENT  ("tweakFlexibleBlockPlacement",         false, "X,L", "Enables placing blocks in different orientations while holding down the keybind"),
+    TWEAK_GAMMA_OVERRIDE            ("tweakGammaOverride",                  false, "X,G", "Overrides the video settings gamma value with the one set in the Generic configs"),
     TWEAK_HOTBAR_SWAP               ("tweakHotbarSwap",                     false, "X,H", "Enables the hotbar swapping feature"),
     TWEAK_LAVA_VISIBILITY           ("tweakLavaVisibility",                 false, "X,A", "If enabled and the player has a Respiration helmet and/or Wather Breathing active, the lava fog is greatly reduced"),
     TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "X,R", "If enabled, then falling block entities won't be rendered at all"),
@@ -29,7 +29,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
         this.name = name;
         this.valueBoolean = defaultValue;
         this.comment = comment;
-        this.toggleMessage = "Toggled " + splitCamelCase(this.name.substring(5)) + " %s";
+        this.toggleMessage = splitCamelCase(this.name.substring(5));
         this.keybind = KeybindMulti.fromStorageString(defaultHotkey);
     }
 

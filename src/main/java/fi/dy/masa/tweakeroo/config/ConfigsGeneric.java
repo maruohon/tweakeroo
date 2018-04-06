@@ -13,7 +13,8 @@ import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionListEntry;
 
 public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean, IConfigOptionList
 {
-    FLEXIBLE_PLACEMENT_OVERLAY_COLOR    ("flexibleBlockPlacementOverlayColor", "#FF3030FF", true, "The color of the currently pointed-at\nregion in block placement the overlay"),
+    FLEXIBLE_PLACEMENT_OVERLAY_COLOR    ("flexibleBlockPlacementOverlayColor", "#C03030F0", true, "The color of the currently pointed-at\nregion in block placement the overlay"),
+    GAMMA_OVERRIDE_VALUE                ("gammaOverrideValue", 1000, "The gamma value to use when the override option is enabled"),
     HOTBAR_SWAP_OVERLAY_ALIGNMENT       ("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, "The positioning of the hotbar swap overlay"),
     HOTBAR_SWAP_OVERLAY_OFFSET_X        ("hotbarSwapOverlayOffsetX", 4, "The horizontal offset of the hotbar swap overlay"),
     HOTBAR_SWAP_OVERLAY_OFFSET_Y        ("hotbarSwapOverlayOffsetY", 4, "The vertical offset of the hotbar swap overlay");

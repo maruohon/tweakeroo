@@ -1,8 +1,9 @@
-package fi.dy.masa.tweakeroo.config.gui;
+package fi.dy.masa.tweakeroo.config;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 import com.google.common.collect.ImmutableList;
 import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
@@ -12,6 +13,14 @@ public class KeybindMulti implements IKeybind
     private List<Integer> keyCodes = new ArrayList<>(4);
     private boolean pressed;
     private int heldTime;
+    @Nullable
+    private IHotkeyCallback callback;
+
+    @Override
+    public void setCallback(@Nullable IHotkeyCallback callback)
+    {
+        this.callback = callback;
+    }
 
     @Override
     public boolean isValid()
@@ -46,7 +55,7 @@ public class KeybindMulti implements IKeybind
     @Override
     public boolean isKeybindHeld(boolean checkNow)
     {
-        if (checkNow)
+        if (checkNow && this.isValid())
         {
             this.updateIsPressed();
         }
@@ -66,11 +75,21 @@ public class KeybindMulti implements IKeybind
             }
         }
 
+        boolean pressedLast = this.pressed;
         this.pressed = activeCount == this.keyCodes.size();
 
         if (this.pressed == false)
         {
             this.heldTime = 0;
+
+            if (pressedLast && this.callback != null)
+            {
+                this.callback.onKeyAction(KeyAction.RELEASE, this);
+            }
+        }
+        else if (this.heldTime == 0 && this.callback != null)
+        {
+            this.callback.onKeyAction(KeyAction.PRESS, this);
         }
     }
 
@@ -165,5 +184,11 @@ public class KeybindMulti implements IKeybind
         KeybindMulti keybind = new KeybindMulti();
         keybind.setKeysFromStorageString(str);
         return keybind;
+    }
+
+    public enum KeyAction
+    {
+        PRESS,
+        RELEASE;
     }
 }

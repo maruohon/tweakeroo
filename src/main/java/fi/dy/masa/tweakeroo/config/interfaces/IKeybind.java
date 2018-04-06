@@ -1,9 +1,13 @@
 package fi.dy.masa.tweakeroo.config.interfaces;
 
 import java.util.Collection;
+import javax.annotation.Nullable;
+import fi.dy.masa.tweakeroo.config.IHotkeyCallback;
 
 public interface IKeybind
 {
+    void setCallback(@Nullable IHotkeyCallback callback);
+
     boolean isValid();
 
     boolean isPressed();

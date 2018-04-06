@@ -1,3 +1,7 @@
 language.name=English
 language.region=US
 language.code=en_US
+
+tweakeroo.message.toggled=Toggled %s %s
+tweakeroo.message.value.off=OFF
+tweakeroo.message.value.on=ON
