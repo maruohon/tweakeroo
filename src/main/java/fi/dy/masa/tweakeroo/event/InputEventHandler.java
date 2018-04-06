@@ -124,12 +124,18 @@ public class InputEventHandler
     private static class KeyCallbackGamma implements IHotkeyCallback
     {
         private final Minecraft mc;
-        private final float originalGamma;
+        private float originalGamma;
 
         public KeyCallbackGamma(Minecraft mc)
         {
             this.mc = mc;
-            this.originalGamma = mc.gameSettings.gammaSetting;
+            this.originalGamma = this.mc.gameSettings.gammaSetting;
+
+            // If the feature is enabled on game launch, apply it here
+            if (FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanValue())
+            {
+                this.mc.gameSettings.gammaSetting = ConfigsGeneric.GAMMA_OVERRIDE_VALUE.getIntegerValue();
+            }
         }
 
         @Override
@@ -140,6 +146,7 @@ public class InputEventHandler
                 // The values will be toggled after the callback (see above), thus inversed check here
                 if (FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanValue() == false)
                 {
+                    this.originalGamma = this.mc.gameSettings.gammaSetting;
                     this.mc.gameSettings.gammaSetting = ConfigsGeneric.GAMMA_OVERRIDE_VALUE.getIntegerValue();
                 }
                 else

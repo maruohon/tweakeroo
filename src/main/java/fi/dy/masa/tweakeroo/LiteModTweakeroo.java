@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.mumfrey.liteloader.Configurable;
 import com.mumfrey.liteloader.LiteMod;
+import com.mumfrey.liteloader.ShutdownListener;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -13,7 +14,7 @@ import fi.dy.masa.tweakeroo.event.InputEventHandler;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import net.minecraft.client.Minecraft;
 
-public class LiteModTweakeroo implements LiteMod, Configurable, Tickable
+public class LiteModTweakeroo implements LiteMod, Configurable, ShutdownListener, Tickable
 {
     public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
 
@@ -63,5 +64,11 @@ public class LiteModTweakeroo implements LiteMod, Configurable, Tickable
         }
 
         InputEventHandler.onTick();
+    }
+
+    @Override
+    public void onShutDown()
+    {
+        Configs.save();
     }
 }
