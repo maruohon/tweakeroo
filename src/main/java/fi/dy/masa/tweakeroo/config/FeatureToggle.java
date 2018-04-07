@@ -1,14 +1,10 @@
 package fi.dy.masa.tweakeroo.config;
 
-import fi.dy.masa.tweakeroo.config.KeybindMulti.KeyAction;
+import fi.dy.masa.tweakeroo.config.Callbacks.KeyCallbackToggleFeatureWithMessage;
 import fi.dy.masa.tweakeroo.config.interfaces.ConfigType;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigBoolean;
 import fi.dy.masa.tweakeroo.config.interfaces.IHotkey;
 import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
-import fi.dy.masa.tweakeroo.event.InputEventHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextFormatting;
 
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
@@ -29,6 +25,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     private final String toggleMessage;
     private boolean valueBoolean;
     private IKeybind keybind;
+    private IFeatureCallback callback;
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
@@ -38,6 +35,11 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
         this.toggleMessage = splitCamelCase(this.name.substring(5));
         this.keybind = KeybindMulti.fromStorageString(defaultHotkey);
         this.keybind.setCallback(new KeyCallbackToggleFeatureWithMessage(this));
+    }
+
+    public void setCallback(IFeatureCallback callback)
+    {
+        this.callback = callback;
     }
 
     @Override
@@ -91,6 +93,11 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     public void setBooleanValue(boolean value)
     {
         this.valueBoolean = value;
+
+        if (this.callback != null)
+        {
+            this.callback.onValueChange(this);
+        }
     }
 
     // https://stackoverflow.com/questions/2559759/how-do-i-convert-camelcase-into-human-readable-names-in-java
@@ -105,29 +112,4 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
            " "
         );
      }
-
-    public static class KeyCallbackToggleFeatureWithMessage implements IHotkeyCallback
-    {
-        protected final FeatureToggle feature;
-
-        public KeyCallbackToggleFeatureWithMessage(FeatureToggle feature)
-        {
-            this.feature = feature;
-        }
-
-        @Override
-        public void onKeyAction(KeyAction action, IKeybind key)
-        {
-            if (action == KeyAction.PRESS)
-            {
-                this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
-
-                final boolean enabled = this.feature.getBooleanValue();
-                String pre = enabled ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
-                String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String message = I18n.format("tweakeroo.message.toggled", this.feature.getToggleMessage(), pre + status + TextFormatting.RESET);
-                InputEventHandler.printMessage(Minecraft.getMinecraft(), message);
-            }
-        }
-    }
 }

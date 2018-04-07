@@ -8,6 +8,7 @@ import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.ShutdownListener;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
+import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.gui.TweakerooConfigPanel;
 import fi.dy.masa.tweakeroo.event.InputEventHandler;
@@ -43,6 +44,7 @@ public class LiteModTweakeroo implements LiteMod, Configurable, ShutdownListener
     @Override
     public void init(File configPath)
     {
+        Callbacks.init();
         Configs.load();
     }
 

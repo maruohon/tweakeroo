@@ -1,10 +1,10 @@
 package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
+import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.event.InputEventHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -65,7 +65,7 @@ public class PlacementTweaks
 
         Minecraft mc = Minecraft.getMinecraft();
         String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
-        InputEventHandler.printMessage(mc, "tweakeroo.message.set_fast_placement_mode_to", str);
+        Callbacks.printMessage(mc, "tweakeroo.message.set_fast_placement_mode_to", str);
     }
 
     public static FastMode getFastPlacementMode()
