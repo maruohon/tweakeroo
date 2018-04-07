@@ -92,9 +92,10 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     @Override
     public void setBooleanValue(boolean value)
     {
+        boolean oldValue = this.valueBoolean;
         this.valueBoolean = value;
 
-        if (this.callback != null)
+        if (this.callback != null && oldValue != this.valueBoolean)
         {
             this.callback.onValueChange(this);
         }
