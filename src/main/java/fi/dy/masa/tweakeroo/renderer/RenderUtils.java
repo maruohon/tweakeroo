@@ -2,7 +2,6 @@ package fi.dy.masa.tweakeroo.renderer;
 
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.HudAlignment;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.HitPart;
@@ -273,28 +272,42 @@ public class RenderUtils
         GlStateManager.glLightModel(2899, RenderHelper.setColorBuffer(ambientLightStrength, ambientLightStrength, ambientLightStrength, 1.0F));
     }
 
-    public static void overrideLavaFog(Entity entity)
+    public static float getLavaFog(Entity entity, float originalFog)
     {
-        if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() && entity instanceof EntityLivingBase)
+        if (entity instanceof EntityLivingBase)
         {
             EntityLivingBase living = (EntityLivingBase) entity;
-            int resp = EnchantmentHelper.getRespirationModifier(living);
-            float density = 0.6F;
+            final int resp = EnchantmentHelper.getRespirationModifier(living);
+            // The original fog value of 2.0F is way too much to reduce gradually from.
+            // You would only be able to see meaningfully with the full reduction.
+            final float baseFog = 0.6F;
+            final float respDecrement = (baseFog * 0.75F) / 3F - 0.02F;
+            float fog = baseFog;
 
             if (living.isPotionActive(MobEffects.WATER_BREATHING))
             {
-                density -= 0.13F;
+                fog -= baseFog * 0.4F;
             }
 
             if (resp > 0)
             {
-                density -= (float) resp * 0.13F;
+                fog -= (float) resp * respDecrement;
+                fog = Math.max(0.12F,  fog);
             }
 
-            if (density < 0.6F)
-            {
-                GlStateManager.setFogDensity(density);
-            }
+            return fog < baseFog ? fog : originalFog;
+        }
+
+        return originalFog;
+    }
+
+    public static void overrideLavaFog(Entity entity)
+    {
+        float fog = getLavaFog(entity, 2.0F);
+
+        if (fog < 2.0F)
+        {
+            GlStateManager.setFogDensity(fog);
         }
     }
 }

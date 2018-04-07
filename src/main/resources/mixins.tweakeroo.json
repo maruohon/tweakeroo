@@ -5,6 +5,7 @@
     "minVersion": "0.6",
     "client": [
         "MixinEntityRenderer",
+        "MixinGlStateManager",
         "MixinGuiIngame",
         "MixinItem",
         "MixinItemRenderer",

@@ -5,6 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.event.RenderEventHandler;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -30,6 +32,9 @@ public class MixinEntityRenderer
             ordinal = 4))
     private void onSetupLavaFog(int startCoords, float partialTicks, CallbackInfo ci)
     {
-        RenderUtils.overrideLavaFog(Minecraft.getMinecraft().getRenderViewEntity());
+        if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() && ConfigsGeneric.LAVA_VISIBILITY_OPTIFINE.getBooleanValue() == false)
+        {
+            RenderUtils.overrideLavaFog(Minecraft.getMinecraft().getRenderViewEntity());
+        }
     }
 }

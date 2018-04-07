@@ -19,7 +19,8 @@ public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean, IConfigOpt
     GAMMA_OVERRIDE_VALUE                ("gammaOverrideValue", 1000, "The gamma value to use when the override option is enabled"),
     HOTBAR_SWAP_OVERLAY_ALIGNMENT       ("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, "The positioning of the hotbar swap overlay"),
     HOTBAR_SWAP_OVERLAY_OFFSET_X        ("hotbarSwapOverlayOffsetX", 4, "The horizontal offset of the hotbar swap overlay"),
-    HOTBAR_SWAP_OVERLAY_OFFSET_Y        ("hotbarSwapOverlayOffsetY", 4, "The vertical offset of the hotbar swap overlay");
+    HOTBAR_SWAP_OVERLAY_OFFSET_Y        ("hotbarSwapOverlayOffsetY", 4, "The vertical offset of the hotbar swap overlay"),
+    LAVA_VISIBILITY_OPTIFINE            ("lavaVisibilityOptifineCompat", true, "Use an alternative version of the Lava Visibility,\nwhich is Optifine compatible (but more hacky).\nImplementation credit to Nessie.");
 
     private final String name;
     private final ConfigType type;
