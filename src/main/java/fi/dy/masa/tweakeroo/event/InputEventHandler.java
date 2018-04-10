@@ -38,7 +38,7 @@ public class InputEventHandler
         }
     }
 
-    public void onKeyInput()
+    public boolean onKeyInput()
     {
         Minecraft mc = Minecraft.getMinecraft();
 
@@ -46,13 +46,14 @@ public class InputEventHandler
         if (mc.currentScreen == null)
         {
             int eventKey = Keyboard.getEventKey();
+            boolean cancel = false;
 
             if (TWEAK_TOGGLES_USED_KEYS.contains(eventKey))
             {
                 for (FeatureToggle toggle : FeatureToggle.values())
                 {
                     // Note: isPressed() has to get called for key releases too, to reset the state
-                    toggle.getKeybind().isPressed();
+                    cancel |= toggle.getKeybind().isPressed();
                 }
             }
 
@@ -61,10 +62,14 @@ public class InputEventHandler
                 for (Hotkeys hotkey : Hotkeys.values())
                 {
                     // Note: isPressed() has to get called for key releases too, to reset the state
-                    hotkey.getKeybind().isPressed();
+                    cancel |= hotkey.getKeybind().isPressed();
                 }
             }
+
+            return cancel;
         }
+
+        return false;
     }
 
     public static void onTick()
