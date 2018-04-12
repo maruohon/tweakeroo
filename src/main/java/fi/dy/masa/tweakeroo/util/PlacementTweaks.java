@@ -156,13 +156,14 @@ public class PlacementTweaks
             Vec3d hitVec,
             EnumHand hand)
     {
+        ItemStack stackPre = player.getHeldItem(hand).copy();
         EnumFacing playerFacingH = player.getHorizontalFacing();
         HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
         EnumFacing sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
         EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, hitVec, hand, hitPart);
 
         // Store the initial click data for the fast placement mode
-        if (posFirst == null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
+        if (posFirst == null && result == EnumActionResult.SUCCESS && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
         {
             posFirst = posIn.offset(sideIn);
             posLast = posIn;
@@ -171,7 +172,7 @@ public class PlacementTweaks
             sideFirst = sideIn;
             sideRotatedFirst = sideRotated;
             playerYawFirst = player.rotationYaw;
-            stackFirst = player.getHeldItem(hand).copy();
+            stackFirst = stackPre;
         }
 
         return result;
@@ -226,7 +227,31 @@ public class PlacementTweaks
             }
         }
 
-        return controller.processRightClickBlock(player, world, posIn, sideIn, hitVec, hand);
+        return processRightClickBlockWrapper(controller, player, world, posIn, sideIn, hitVec, hand);
+    }
+
+    private static EnumActionResult processRightClickBlockWrapper(
+            PlayerControllerMP controller,
+            EntityPlayerSP player,
+            WorldClient world,
+            BlockPos pos,
+            EnumFacing side,
+            Vec3d hitVec,
+            EnumHand hand)
+    {
+        // Need to grab the stack here if the cached stack is still empty, because this code runs before
+        // the cached stack gets updated on the first click/use.
+        ItemStack stackBefore = stackFirst.isEmpty() ? player.getHeldItem(hand).copy() : stackFirst;
+        EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
+
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            player.getHeldItem(hand).isEmpty() &&
+            stackBefore.isEmpty() == false)
+        {
+            InventoryUtils.swapNewStackToHand(player, hand, stackBefore);
+        }
+
+        return result;
     }
 
     private static EnumActionResult handleFlexibleBlockPlacement(
@@ -258,7 +283,7 @@ public class PlacementTweaks
         player.rotationYaw = facing.getHorizontalAngle();
         player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
 
-        EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
+        EnumActionResult result = processRightClickBlockWrapper(controller, player, world, pos, side, hitVec, hand);
 
         player.rotationYaw = yawOrig;
         player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
