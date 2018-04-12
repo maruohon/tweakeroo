@@ -12,9 +12,16 @@ public class InputEventHandler
     private static final InputEventHandler INSTANCE = new InputEventHandler();
     private static final Set<Integer> TWEAK_TOGGLES_USED_KEYS = new HashSet<>();
     private static final Set<Integer> GENERIC_HOTKEYS_USED_KEYS = new HashSet<>();
+    private static final Set<Integer> MODIFIER_KEYS = new HashSet<>();
 
     private InputEventHandler()
     {
+        MODIFIER_KEYS.add(Keyboard.KEY_LSHIFT);
+        MODIFIER_KEYS.add(Keyboard.KEY_RSHIFT);
+        MODIFIER_KEYS.add(Keyboard.KEY_LCONTROL);
+        MODIFIER_KEYS.add(Keyboard.KEY_RCONTROL);
+        MODIFIER_KEYS.add(Keyboard.KEY_LMENU);
+        MODIFIER_KEYS.add(Keyboard.KEY_RMENU);
     }
 
     public static InputEventHandler getInstance()
@@ -66,7 +73,10 @@ public class InputEventHandler
                 }
             }
 
-            return cancel;
+            // Somewhat hacky fix to prevent eating the modifier keys... >_>
+            // A proper fix would likely require adding a context for the keys,
+            // and only cancel if the context is currently active/valid.
+            return cancel && MODIFIER_KEYS.contains(eventKey) == false;
         }
 
         return false;
