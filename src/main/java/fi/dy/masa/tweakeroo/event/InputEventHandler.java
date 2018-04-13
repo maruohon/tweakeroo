@@ -9,10 +9,10 @@ import net.minecraft.client.Minecraft;
 
 public class InputEventHandler
 {
-    private static final InputEventHandler INSTANCE = new InputEventHandler();
     private static final Set<Integer> TWEAK_TOGGLES_USED_KEYS = new HashSet<>();
     private static final Set<Integer> GENERIC_HOTKEYS_USED_KEYS = new HashSet<>();
     private static final Set<Integer> MODIFIER_KEYS = new HashSet<>();
+    private static final InputEventHandler INSTANCE = new InputEventHandler();
 
     private InputEventHandler()
     {
