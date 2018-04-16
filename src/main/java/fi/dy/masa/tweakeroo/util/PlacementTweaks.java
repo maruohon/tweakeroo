@@ -92,10 +92,12 @@ public class PlacementTweaks
                 {
                     EnumFacing side = trace.sideHit;
                     BlockPos pos = trace.getBlockPos();
-                    BlockPos posNew = pos.offset(side);
+                    BlockPos posNew = getPlacementPositionForTargetedPosition(pos, side, world);
                     EnumHand hand = getHandWithItem(stackFirst, player);
 
-                    if (hand != null && world.getBlockState(posNew).getBlock().isReplaceable(world, posNew) &&
+                    if (hand != null &&
+                        posNew.equals(posLast) == false &&
+                        canPlaceBlockIntoPosition(posNew, world) &&
                         (
                             (fastMode == FastMode.PLANE  && isNewPositionValidForPlaneMode(posNew)) ||
                             (fastMode == FastMode.FACE   && isNewPositionValidForFaceMode(posNew, side)) ||
@@ -108,13 +110,14 @@ public class PlacementTweaks
                         float y = (float) (trace.hitVec.y - pos.getY());
                         float z = (float) (trace.hitVec.z - pos.getZ());
 
-                        if (state.getBlock().onBlockActivated(world, pos, state, player, hand, side, x, y, z))
+                        if (state.getBlock().onBlockActivated(world, posNew, state, player, hand, side, x, y, z))
                         {
                             return;
                         }
 
-                        EnumActionResult result = tryPlaceBlock(mc.playerController,
-                                player, mc.world, posNew, sideFirst, sideRotatedFirst, hitVecFirst, hand, hitPartFirst);
+                        Vec3d hitVec = hitVecFirst.addVector(posNew.getX(), posNew.getY(), posNew.getZ());
+                        EnumActionResult result = tryPlaceBlock(mc.playerController, player, mc.world,
+                                posNew, sideFirst, sideRotatedFirst, playerYawFirst, hitVec, hand, hitPartFirst, false);
 
                         if (result == EnumActionResult.SUCCESS)
                         {
@@ -156,19 +159,21 @@ public class PlacementTweaks
             Vec3d hitVec,
             EnumHand hand)
     {
+        boolean fastPlacement = FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue();
         ItemStack stackPre = player.getHeldItem(hand).copy();
         EnumFacing playerFacingH = player.getHorizontalFacing();
         HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
         EnumFacing sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
-        EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, hitVec, hand, hitPart);
+
+        EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, player.rotationYaw, hitVec, hand, hitPart, true);
 
         // Store the initial click data for the fast placement mode
-        if (posFirst == null && result == EnumActionResult.SUCCESS && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
+        if (posFirst == null && result == EnumActionResult.SUCCESS && fastPlacement)
         {
-            posFirst = posIn.offset(sideIn);
-            posLast = posIn;
+            posFirst = getPlacementPositionForTargetedPosition(posIn, sideIn, world);
+            posLast = posFirst;
             hitPartFirst = hitPart;
-            hitVecFirst = hitVec;
+            hitVecFirst = hitVec.subtract(posFirst.getX(), posFirst.getY(), posFirst.getZ());
             sideFirst = sideIn;
             sideRotatedFirst = sideRotated;
             playerYawFirst = player.rotationYaw;
@@ -185,18 +190,22 @@ public class PlacementTweaks
             BlockPos posIn,
             EnumFacing sideIn,
             EnumFacing sideRotatedIn,
+            float playerYaw,
             Vec3d hitVec,
             EnumHand hand,
-            HitPart hitPart)
+            HitPart hitPart,
+            boolean isFirstClick)
     {
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
         {
-            BlockPos posNew = posIn;
             EnumFacing side = sideIn;
             boolean handle = false;
+            boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false);
+            boolean offset = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false);
+            BlockPos posNew = isFirstClick && (rotation || offset) ? getPlacementPositionForTargetedPosition(posIn, sideIn, world) : posIn;
 
             // Place the block facing/against the adjacent block (= just rotated from normal)
-            if (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false))
+            if (rotation)
             {
                 side = sideRotatedIn;
                 handle = true;
@@ -208,7 +217,7 @@ public class PlacementTweaks
             }
 
             // Place the block into the diagonal position
-            if (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false))
+            if (offset)
             {
                 posNew = posNew.offset(sideRotatedIn.getOpposite());
                 handle = true;
@@ -216,9 +225,10 @@ public class PlacementTweaks
 
             if (handle)
             {
-                if (world.getBlockState(posNew).getBlock().isReplaceable(world, posNew))
+                if (canPlaceBlockIntoPosition(posNew, world))
                 {
-                    return handleFlexibleBlockPlacement(controller, player, world, posNew, side, hitVec, hand, hitPart);
+                    //System.out.printf("tryPlaceBlock() pos: %s, side: %s, part: %s, hitVec: %s\n", posNew, side, hitPart, hitVec);
+                    return handleFlexibleBlockPlacement(controller, player, world, posNew, side, playerYaw, hitVec, hand, hitPart);
                 }
                 else
                 {
@@ -239,8 +249,8 @@ public class PlacementTweaks
             Vec3d hitVec,
             EnumHand hand)
     {
-        // Need to grab the stack here if the cached stack is still empty, because this code runs before
-        // the cached stack gets updated on the first click/use.
+        // We need to grab the stack here if the cached stack is still empty,
+        // because this code runs before the cached stack gets set on the first click/use.
         ItemStack stackBefore = stackFirst.isEmpty() ? player.getHeldItem(hand).copy() : stackFirst;
         EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
 
@@ -260,11 +270,12 @@ public class PlacementTweaks
             WorldClient world,
             BlockPos pos,
             EnumFacing side,
+            float playerYaw,
             Vec3d hitVec,
             EnumHand hand,
             @Nullable HitPart hitPart)
     {
-        EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor((playerYawFirst * 4.0F / 360.0F) + 0.5D) & 3);
+        EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3);
         float yawOrig = player.rotationYaw;
 
         if (hitPart == HitPart.CENTER)
@@ -283,6 +294,7 @@ public class PlacementTweaks
         player.rotationYaw = facing.getHorizontalAngle();
         player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
 
+        //System.out.printf("handleFlexibleBlockPlacement() pos: %s, side: %s, facing orig: %s facing new: %s\n", pos, side, facingOrig, facing);
         EnumActionResult result = processRightClickBlockWrapper(controller, player, world, pos, side, hitVec, hand);
 
         player.rotationYaw = yawOrig;
@@ -400,19 +412,31 @@ public class PlacementTweaks
         }
     }
 
+    private static BlockPos getPlacementPositionForTargetedPosition(BlockPos pos, EnumFacing side, World world)
+    {
+        if (canPlaceBlockIntoPosition(pos, world))
+        {
+            return pos;
+        }
+
+        return pos.offset(side);
+    }
+
+    private static boolean canPlaceBlockIntoPosition(BlockPos pos, World world)
+    {
+        return world.getBlockState(pos).getBlock().isReplaceable(world, pos);
+    }
+
     private static boolean isNewPositionValidForPlaneMode(BlockPos posNew)
     {
-        if (posNew.equals(posLast) == false)
-        {
-            EnumFacing.Axis axis = sideFirst.getAxis();
+        EnumFacing.Axis axis = sideFirst.getAxis();
 
-            // Cursor moved to adjacent position
-            if ((axis == EnumFacing.Axis.X && posNew.getX() == posFirst.getX()) ||
-                (axis == EnumFacing.Axis.Z && posNew.getZ() == posFirst.getZ()) ||
-                (axis == EnumFacing.Axis.Y && posNew.getY() == posFirst.getY()))
-            {
-                return true;
-            }
+        // Cursor moved to adjacent position
+        if ((axis == EnumFacing.Axis.X && posNew.getX() == posFirst.getX()) ||
+            (axis == EnumFacing.Axis.Z && posNew.getZ() == posFirst.getZ()) ||
+            (axis == EnumFacing.Axis.Y && posNew.getY() == posFirst.getY()))
+        {
+            return true;
         }
 
         return false;
@@ -420,21 +444,18 @@ public class PlacementTweaks
 
     private static boolean isNewPositionValidForFaceMode(BlockPos posNew, EnumFacing side)
     {
-        return side == sideFirst && posNew.equals(posLast) == false;
+        return side == sideFirst;
     }
 
     private static boolean isNewPositionValidForColumnMode(BlockPos posNew)
     {
-        if (posNew.equals(posLast) == false)
-        {
-            EnumFacing.Axis axis = sideFirst.getAxis();
+        EnumFacing.Axis axis = sideFirst.getAxis();
 
-            if ((axis == EnumFacing.Axis.X && posNew.getY() == posFirst.getY() && posNew.getZ() == posFirst.getZ()) ||
-                (axis == EnumFacing.Axis.Y && posNew.getX() == posFirst.getX() && posNew.getZ() == posFirst.getZ()) ||
-                (axis == EnumFacing.Axis.Z && posNew.getX() == posFirst.getX() && posNew.getY() == posFirst.getY()))
-            {
-                return true;
-            }
+        if ((axis == EnumFacing.Axis.X && posNew.getY() == posFirst.getY() && posNew.getZ() == posFirst.getZ()) ||
+            (axis == EnumFacing.Axis.Y && posNew.getX() == posFirst.getX() && posNew.getZ() == posFirst.getZ()) ||
+            (axis == EnumFacing.Axis.Z && posNew.getX() == posFirst.getX() && posNew.getY() == posFirst.getY()))
+        {
+            return true;
         }
 
         return false;
