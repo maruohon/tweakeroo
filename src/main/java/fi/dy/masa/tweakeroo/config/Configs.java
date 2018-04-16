@@ -66,7 +66,7 @@ public class Configs
             }
         }
 
-        InputEventHandler.updateUsedKeys();
+        InputEventHandler.getInstance().updateUsedKeys();
     }
 
     public static void save()
