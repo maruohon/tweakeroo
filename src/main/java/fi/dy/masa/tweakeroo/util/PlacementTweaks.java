@@ -105,6 +105,7 @@ public class PlacementTweaks
                         )
                     )
                     {
+                        /*
                         IBlockState state = world.getBlockState(pos);
                         float x = (float) (trace.hitVec.x - pos.getX());
                         float y = (float) (trace.hitVec.y - pos.getY());
@@ -114,6 +115,7 @@ public class PlacementTweaks
                         {
                             return;
                         }
+                        */
 
                         Vec3d hitVec = hitVecFirst.addVector(posNew.getX(), posNew.getY(), posNew.getZ());
                         EnumActionResult result = tryPlaceBlock(mc.playerController, player, mc.world,
@@ -165,6 +167,7 @@ public class PlacementTweaks
         HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
         EnumFacing sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
 
+        //System.out.printf("onProcessRightClickBlock() pos: %s, side: %s, part: %s, hitVec: %s\n", posIn, sideIn, hitPart, hitVec);
         EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, player.rotationYaw, hitVec, hand, hitPart, true);
 
         // Store the initial click data for the fast placement mode
@@ -252,6 +255,10 @@ public class PlacementTweaks
         // We need to grab the stack here if the cached stack is still empty,
         // because this code runs before the cached stack gets set on the first click/use.
         ItemStack stackBefore = stackFirst.isEmpty() ? player.getHeldItem(hand).copy() : stackFirst;
+        BlockPos posPlacement = getPlacementPositionForTargetedPosition(pos, side, world);
+        IBlockState stateBefore = world.getBlockState(posPlacement);
+
+        //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
         EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
 
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
@@ -259,6 +266,23 @@ public class PlacementTweaks
             stackBefore.isEmpty() == false)
         {
             InventoryUtils.swapNewStackToHand(player, hand, stackBefore);
+        }
+
+        if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue() && world.getBlockState(posPlacement) != stateBefore)
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+            final int count = MathHelper.clamp(ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
+            double reach = mc.playerController.getBlockReachDistance();
+            RayTraceResult trace = player.rayTrace(reach, mc.getRenderPartialTicks());
+
+            if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    //System.out.printf("processRightClickBlockWrapper() after-clicker - i: %d, pos: %s, side: %s, hitVec: %s\n", i, pos, side, hitVec);
+                    controller.processRightClickBlock(player, world, trace.getBlockPos(), trace.sideHit, trace.hitVec, hand);
+                }
+            }
         }
 
         return result;

@@ -8,6 +8,7 @@ import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
+    TWEAK_AFTER_CLICKER             ("tweakAfterClicker",                   false, "X,C", "Enables a \"after clicker\" tweak, which does automatic right clicks on the just-placed block.\nUseful for example for Repeaters (setting the delay)."),
     TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "R",   "Enables fast/convenient block placement when moving the cursor over new blocks"),
     TWEAK_FAST_LEFT_CLICK           ("tweakFastLeftClick",                  false, "X,Y", "Enables automatic fast left clicking while holding down the attack button (left click).\nThe number of clicks per game tick is set in the Generic configs."),
     TWEAK_FAST_RIGHT_CLICK          ("tweakFastRightClick",                 false, "X,U", "Enables automatic fast right clicking while holding down the use button (right click).\nThe number of clicks per game tick is set in the Generic configs."),

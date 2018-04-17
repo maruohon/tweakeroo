@@ -29,6 +29,7 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callback);
 
+        FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleAfterClicker(FeatureToggle.TWEAK_AFTER_CLICKER, mc));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT, mc));
     }
 
@@ -107,15 +108,15 @@ public class Callbacks
             {
                 if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())
                 {
-                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, 0);
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 0);
                 }
                 else if (key == Hotkeys.HOTBAR_SWAP_2.getKeybind())
                 {
-                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, 1);
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 1);
                 }
                 else if (key == Hotkeys.HOTBAR_SWAP_3.getKeybind())
                 {
-                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, 2);
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 2);
                 }
                 // The values will be toggled after the callback (see above), thus inversed check here
                 else if (key == Hotkeys.FAST_MODE_PLANE.getKeybind())
@@ -163,6 +164,44 @@ public class Callbacks
                 {
                     String strMode = PlacementTweaks.getFastPlacementMode().name();
                     printMessage(this.mc, "tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
+                }
+                else
+                {
+                    printMessage(this.mc, "tweakeroo.message.toggled", this.feature.getToggleMessage(), strStatus);
+                }
+            }
+        }
+    }
+
+    private static class KeyCallbackToggleAfterClicker implements IHotkeyCallback
+    {
+        private final FeatureToggle feature;
+        private final Minecraft mc;
+
+        private KeyCallbackToggleAfterClicker(FeatureToggle feature, Minecraft mc)
+        {
+            this.feature = feature;
+            this.mc = mc;
+        }
+
+        @Override
+        public void onKeyAction(KeyAction action, IKeybind key)
+        {
+            if (action == KeyAction.PRESS)
+            {
+                this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
+
+                boolean enabled = this.feature.getBooleanValue();
+                String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
+                String preGreen = TextFormatting.GREEN.toString();
+                String preRed = TextFormatting.RED.toString();
+                String rst = TextFormatting.RESET.toString();
+                strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
+
+                if (enabled)
+                {
+                    String strValue = ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getStringValue();
+                    printMessage(this.mc, "tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
                 }
                 else
                 {
