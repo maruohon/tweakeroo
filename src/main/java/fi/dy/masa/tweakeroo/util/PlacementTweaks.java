@@ -268,6 +268,20 @@ public class PlacementTweaks
             pos = pos.offset(side.getOpposite());
         }
 
+        // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
+        if (FeatureToggle.CARPET_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
+        {
+            int x = side.getIndex() + 2 + pos.getX();
+
+            if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue())
+            {
+                x += ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() * 10;
+            }
+
+            hitVec = new Vec3d(x, hitVec.y, hitVec.z);
+            System.out.printf("carpet hitVec: %s\n", hitVec);
+        }
+
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
         EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
 
@@ -278,7 +292,9 @@ public class PlacementTweaks
             InventoryUtils.swapNewStackToHand(player, hand, stackBefore);
         }
 
-        if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue() && world.getBlockState(posPlacement) != stateBefore)
+        if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue() &&
+            FeatureToggle.CARPET_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() == false &&
+            world.getBlockState(posPlacement) != stateBefore)
         {
             Minecraft mc = Minecraft.getMinecraft();
             final int count = MathHelper.clamp(ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
