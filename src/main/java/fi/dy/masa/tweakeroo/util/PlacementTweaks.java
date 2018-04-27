@@ -257,6 +257,16 @@ public class PlacementTweaks
         ItemStack stackBefore = stackFirst.isEmpty() ? player.getHeldItem(hand).copy() : stackFirst;
         BlockPos posPlacement = getPlacementPositionForTargetedPosition(pos, side, world);
         IBlockState stateBefore = world.getBlockState(posPlacement);
+        IBlockState state = world.getBlockState(pos);
+
+        if (state.getBlock().isReplaceable(world, pos) == false && state.getMaterial().isReplaceable())
+        {
+            // If the block itself says it's not replaceable, but the material is (fluids),
+            // then we need to offset the position back, otherwise the check in ItemBlock
+            // will offset the position by one forward from the desired position.
+            // FIXME This will break if the block behind the desired position is replaceable though... >_>
+            pos = pos.offset(side.getOpposite());
+        }
 
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
         EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
@@ -448,7 +458,8 @@ public class PlacementTweaks
 
     private static boolean canPlaceBlockIntoPosition(BlockPos pos, World world)
     {
-        return world.getBlockState(pos).getBlock().isReplaceable(world, pos);
+        IBlockState state = world.getBlockState(pos);
+        return state.getBlock().isReplaceable(world, pos) || state.getMaterial().isReplaceable();
     }
 
     private static boolean isNewPositionValidForPlaneMode(BlockPos posNew)
