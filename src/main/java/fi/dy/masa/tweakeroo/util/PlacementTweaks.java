@@ -279,7 +279,6 @@ public class PlacementTweaks
             }
 
             hitVec = new Vec3d(x, hitVec.y, hitVec.z);
-            System.out.printf("carpet hitVec: %s\n", hitVec);
         }
 
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
