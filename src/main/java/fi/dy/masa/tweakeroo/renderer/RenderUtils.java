@@ -7,6 +7,8 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.config.HudAlignment;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.HitPart;
+import net.minecraft.block.BlockChest;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -21,13 +23,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.ILockableContainer;
+import net.minecraft.world.World;
 
 public class RenderUtils
 {
@@ -227,16 +233,30 @@ public class RenderUtils
     public static void renderInventoryOverlay(Minecraft mc)
     {
         RayTraceResult trace = mc.objectMouseOver;
+        World world = getBestWorld(mc);
 
         if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
             Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld(false) &&
             trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
         {
-            TileEntity te = mc.world.getTileEntity(trace.getBlockPos());
+            BlockPos pos = trace.getBlockPos();
+            TileEntity te = world.getTileEntity(pos);
 
             if (te instanceof IInventory)
             {
                 IInventory inv = (IInventory) te;
+                IBlockState state = world.getBlockState(pos);
+
+                if (state.getBlock() instanceof BlockChest)
+                {
+                    ILockableContainer cont = ((BlockChest) state.getBlock()).getLockableContainer(world, pos);
+
+                    if (cont instanceof InventoryLargeChest)
+                    {
+                        inv = (InventoryLargeChest) cont;
+                    }
+                }
+
                 final int totalSlots = inv.getSizeInventory();
                 int slotsPerRow = 9;
                 int slotOffsetX =  8;
@@ -244,6 +264,10 @@ public class RenderUtils
 
                 switch (totalSlots)
                 {
+                    case 3:
+                        slotOffsetX += 2 * 18;
+                        slotOffsetY += 2;
+                        break;
                     case 5:
                         slotsPerRow = 5;
                         slotOffsetX += 2 * 18;
@@ -272,6 +296,25 @@ public class RenderUtils
         }
     }
 
+    /**
+     * Best name. Returns the integrated server world for the current dimension
+     * in single player, otherwise just the client world.
+     * @param mc
+     * @return
+     */
+    public static World getBestWorld(Minecraft mc)
+    {
+        if (mc.isSingleplayer())
+        {
+            IntegratedServer server = mc.getIntegratedServer();
+            return server.getWorld(mc.world.provider.getDimensionType().getId());
+        }
+        else
+        {
+            return mc.world;
+        }
+    }
+
     private static void renderInventoryBackground(int x, int y, int slotsPerRow, int totalSlots, Minecraft mc)
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -281,8 +324,8 @@ public class RenderUtils
             case 3:
             case 5:
                 mc.getTextureManager().bindTexture(TEXTURE_HOPPER);
-                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  40);
-                mc.ingameGUI.drawTexturedModalRect(x, y +  40, 0, 127, 176,   6);
+                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  50);
+                mc.ingameGUI.drawTexturedModalRect(x, y +  50, 0, 127, 176,   6);
                 break;
             case 9:
                 mc.getTextureManager().bindTexture(TEXTURE_DISPENSER);
@@ -341,14 +384,14 @@ public class RenderUtils
 
         //Gui.drawRect(0, 0, 16, 16, 0x20FFFFFF); // light background for the item
 
-        enableGUIStandardItemLighting(scale);
+        RenderHelper.enableGUIStandardItemLighting();
 
         mc.getRenderItem().zLevel += 100;
         mc.getRenderItem().renderItemAndEffectIntoGUI(mc.player, stack, 0, 0);
         mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRenderer, stack, 0, 0, null);
         mc.getRenderItem().zLevel -= 100;
 
-        GlStateManager.disableBlend();
+        //GlStateManager.disableBlend();
         RenderHelper.disableStandardItemLighting();
         GlStateManager.popMatrix();
     }
