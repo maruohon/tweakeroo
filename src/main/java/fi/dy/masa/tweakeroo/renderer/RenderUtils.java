@@ -2,6 +2,8 @@ package fi.dy.masa.tweakeroo.renderer;
 
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.config.HudAlignment;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.HitPart;
@@ -18,13 +20,21 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
 public class RenderUtils
 {
+    public static final ResourceLocation TEXTURE_DISPENSER = new ResourceLocation("textures/gui/container/dispenser.png");
+    public static final ResourceLocation TEXTURE_DOUBLE_CHEST = new ResourceLocation("textures/gui/container/generic_54.png");
+    public static final ResourceLocation TEXTURE_HOPPER = new ResourceLocation("textures/gui/container/hopper.png");
+    public static final ResourceLocation TEXTURE_SINGLE_CHEST = new ResourceLocation("textures/gui/container/shulker_box.png");
     private static final Vec3d LIGHT0_POS = (new Vec3d( 0.2D, 1.0D, -0.7D)).normalize();
     private static final Vec3d LIGHT1_POS = (new Vec3d(-0.2D, 1.0D,  0.7D)).normalize();
 
@@ -152,7 +162,7 @@ public class RenderUtils
         GlStateManager.popMatrix();
     }
 
-    public static void renderInventoryOverlay(Minecraft mc)
+    public static void renderHotbarSwapOverlay(Minecraft mc)
     {
         EntityPlayer player = mc.player;
 
@@ -214,6 +224,114 @@ public class RenderUtils
         }
     }
 
+    public static void renderInventoryOverlay(Minecraft mc)
+    {
+        RayTraceResult trace = mc.objectMouseOver;
+
+        if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
+            Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld(false) &&
+            trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        {
+            TileEntity te = mc.world.getTileEntity(trace.getBlockPos());
+
+            if (te instanceof IInventory)
+            {
+                IInventory inv = (IInventory) te;
+                final int totalSlots = inv.getSizeInventory();
+                int slotsPerRow = 9;
+                int slotOffsetX =  8;
+                int slotOffsetY = 18;
+
+                switch (totalSlots)
+                {
+                    case 5:
+                        slotsPerRow = 5;
+                        slotOffsetX += 2 * 18;
+                        slotOffsetY += 2;
+                        break;
+                    case 9:
+                        slotsPerRow = 3;
+                        slotOffsetX += 3 * 18;
+                        slotOffsetY += -1;
+                        break;
+                }
+
+                ScaledResolution res = new ScaledResolution(mc);
+                final int rows = (int) Math.ceil(totalSlots / slotsPerRow);
+                int x = res.getScaledWidth() / 2 - 176 / 2;
+                int y = res.getScaledHeight() / 2 + 10;
+
+                if (rows > 6)
+                {
+                    y -= (rows - 6) * 18;
+                }
+
+                renderInventoryBackground(x, y, slotsPerRow, totalSlots, mc);
+                renderInventoryStacks(inv, x + slotOffsetX, y + slotOffsetY, slotsPerRow, mc);
+            }
+        }
+    }
+
+    private static void renderInventoryBackground(int x, int y, int slotsPerRow, int totalSlots, Minecraft mc)
+    {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        switch (totalSlots)
+        {
+            case 3:
+            case 5:
+                mc.getTextureManager().bindTexture(TEXTURE_HOPPER);
+                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  40);
+                mc.ingameGUI.drawTexturedModalRect(x, y +  40, 0, 127, 176,   6);
+                break;
+            case 9:
+                mc.getTextureManager().bindTexture(TEXTURE_DISPENSER);
+                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  83);
+                mc.ingameGUI.drawTexturedModalRect(x, y +  83, 0, 163, 176,   3);
+                break;
+            case 27:
+                mc.getTextureManager().bindTexture(TEXTURE_SINGLE_CHEST);
+                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  83);
+                mc.ingameGUI.drawTexturedModalRect(x, y +  83, 0, 161, 176,   5);
+                break;
+            case 54:
+                mc.getTextureManager().bindTexture(TEXTURE_DOUBLE_CHEST);
+                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176, 139);
+                mc.ingameGUI.drawTexturedModalRect(x, y + 139, 0, 219, 176,   3);
+                break;
+            default:
+                // FIXME/TODO:
+                mc.getTextureManager().bindTexture(TEXTURE_DOUBLE_CHEST);
+                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176, 139);
+                mc.ingameGUI.drawTexturedModalRect(x, y + 139, 0, 219, 176,   3);
+        }
+    }
+
+    private static void renderInventoryStacks(IInventory inv, int startX, int startY, int slotsPerRow, Minecraft mc)
+    {
+        final int slots = inv.getSizeInventory();
+        int x = startX;
+        int y = startY;
+
+        for (int slot = 0; slot < slots;)
+        {
+            for (int column = 0; column < slotsPerRow && slot < slots; ++column, ++slot)
+            {
+                ItemStack stack = inv.getStackInSlot(slot);
+
+                if (stack.isEmpty() == false)
+                {
+                    renderStackAt(stack, x, y, 1, mc);
+                }
+
+                x += 18;
+            }
+
+            x = startX;
+            y += 18;
+        }
+    }
+
     private static void renderStackAt(ItemStack stack, float x, float y, float scale, Minecraft mc)
     {
         GlStateManager.pushMatrix();
@@ -223,15 +341,12 @@ public class RenderUtils
 
         //Gui.drawRect(0, 0, 16, 16, 0x20FFFFFF); // light background for the item
 
-        if (stack.isEmpty() == false)
-        {
-            enableGUIStandardItemLighting(scale);
+        enableGUIStandardItemLighting(scale);
 
-            mc.getRenderItem().zLevel += 100;
-            mc.getRenderItem().renderItemAndEffectIntoGUI(mc.player, stack, 0, 0);
-            mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRenderer, stack, 0, 0, null);
-            mc.getRenderItem().zLevel -= 100;
-        }
+        mc.getRenderItem().zLevel += 100;
+        mc.getRenderItem().renderItemAndEffectIntoGUI(mc.player, stack, 0, 0);
+        mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRenderer, stack, 0, 0, null);
+        mc.getRenderItem().zLevel -= 100;
 
         GlStateManager.disableBlend();
         RenderHelper.disableStandardItemLighting();

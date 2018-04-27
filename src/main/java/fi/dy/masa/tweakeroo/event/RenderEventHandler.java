@@ -61,6 +61,12 @@ public class RenderEventHandler
         if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
             Hotkeys.HOTBAR_SWAP_BASE.getKeybind().isKeybindHeld(false))
         {
+            RenderUtils.renderHotbarSwapOverlay(mc);
+        }
+
+        if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
+            Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld(false))
+        {
             RenderUtils.renderInventoryOverlay(mc);
         }
     }
