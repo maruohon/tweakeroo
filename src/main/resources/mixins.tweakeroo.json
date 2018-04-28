@@ -12,6 +12,7 @@
         "MixinItemShulkerBox",
         "MixinItemStack",
         "MixinMinecraft",
+        "MixinMovementInputFromOptions",
         "MixinRenderGlobal",
         "MixinRenderManager"
     ],
