@@ -21,6 +21,7 @@ public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean, IConfigOpt
     HOTBAR_SWAP_OVERLAY_ALIGNMENT       ("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, "The positioning of the hotbar swap overlay"),
     HOTBAR_SWAP_OVERLAY_OFFSET_X        ("hotbarSwapOverlayOffsetX", 4, "The horizontal offset of the hotbar swap overlay"),
     HOTBAR_SWAP_OVERLAY_OFFSET_Y        ("hotbarSwapOverlayOffsetY", 4, "The vertical offset of the hotbar swap overlay"),
+    ITEM_SWAP_DURABILITY_THRESHOLD      ("itemSwapDurabilityThreshold", 20, "This is the durability threshold (in uses left) for the low-durability item swap feature.\nNote that items with low total durability will go lower and be swapped at 5%% left."),
     LAVA_VISIBILITY_OPTIFINE            ("lavaVisibilityOptifineCompat", true, "Use an alternative version of the Lava Visibility,\nwhich is Optifine compatible (but more hacky).\nImplementation credit to Nessie.");
 
     private final String name;

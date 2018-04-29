@@ -37,25 +37,35 @@ public class PlacementTweaks
 
     public static void onTick(Minecraft mc)
     {
-        if (mc.currentScreen == null && mc.gameSettings.keyBindUseItem.isKeyDown())
+        if (mc.currentScreen == null)
         {
-            onUsingTick();
-        }
-        else
-        {
-            if (mc.currentScreen == null &&
-                mc.gameSettings.keyBindAttack.isKeyDown() &&
-                FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue())
+            if (mc.gameSettings.keyBindUseItem.isKeyDown())
             {
-                final int count = ConfigsGeneric.FAST_LEFT_CLICK_COUNT.getIntegerValue();
+                InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+                onUsingTick();
+            }
+            else
+            {
+                clearClickedBlockInfo();
 
-                for (int i = 0; i < count; ++i)
+                if (mc.gameSettings.keyBindAttack.isKeyDown())
                 {
-                    ((IMinecraftAccessor) mc).leftClickMouseAccessor();
+                    if (FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue())
+                    {
+                        final int count = ConfigsGeneric.FAST_LEFT_CLICK_COUNT.getIntegerValue();
+
+                        for (int i = 0; i < count; ++i)
+                        {
+                            ((IMinecraftAccessor) mc).leftClickMouseAccessor();
+                            InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+                        }
+                    }
+                    else
+                    {
+                        InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+                    }
                 }
             }
-
-            clearClickedBlockInfo();
         }
     }
 
@@ -148,6 +158,7 @@ public class PlacementTweaks
             for (int i = 0; i < count; ++i)
             {
                 ((IMinecraftAccessor) mc).rightClickMouseAccessor();
+                InventoryUtils.trySwapCurrentToolIfNearlyBroken();
             }
         }
     }
@@ -567,6 +578,8 @@ public class PlacementTweaks
 
         return null;
     }
+
+
 
     public enum HitPart
     {
