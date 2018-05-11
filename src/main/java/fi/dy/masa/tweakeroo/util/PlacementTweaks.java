@@ -295,9 +295,11 @@ public class PlacementTweaks
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
         EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
 
+        ItemStack stackAfter = player.getHeldItem(hand);
+
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
-            player.getHeldItem(hand).isEmpty() &&
-            stackBefore.isEmpty() == false)
+            stackBefore.isEmpty() == false &&
+            (stackAfter.isEmpty() || InventoryUtils.areStacksEqual(stackBefore, stackAfter) == false))
         {
             InventoryUtils.swapNewStackToHand(player, hand, stackBefore);
         }
