@@ -10,12 +10,14 @@ import fi.dy.masa.tweakeroo.config.interfaces.IConfigBoolean;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigGeneric;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionList;
 import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionListEntry;
+import fi.dy.masa.tweakeroo.util.PlacementTweaks.FastMode;
 
 public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean, IConfigOptionList
 {
     AFTER_CLICKER_CLICK_COUNT           ("afterClickerClickCount",  1, "The number of right clicks to do per placed block when\ntweakAfterClicker is enabled"),
     FAST_LEFT_CLICK_COUNT               ("fastLeftClickCount",  10, "The number of left clicks to do per game tick when\ntweakFastLeftClick is enabled and the attack button is held down"),
     FAST_RIGHT_CLICK_COUNT              ("fastRightClickCount", 10, "The number of right clicks to do per game tick when\ntweakFastRightClick is enabled and the use button is held down"),
+    FAST_PLACEMENT_MODE                 ("fastPlacementMode", FastMode.FACE, "The Fast Block Placement mode to use (hotkey-selectable)"),
     FLEXIBLE_PLACEMENT_OVERLAY_COLOR    ("flexibleBlockPlacementOverlayColor", "#C03030F0", true, "The color of the currently pointed-at\nregion in block placement the overlay"),
     GAMMA_OVERRIDE_VALUE                ("gammaOverrideValue", 1000, "The gamma value to use when the override option is enabled"),
     HOTBAR_SWAP_OVERLAY_ALIGNMENT       ("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, "The positioning of the hotbar swap overlay"),

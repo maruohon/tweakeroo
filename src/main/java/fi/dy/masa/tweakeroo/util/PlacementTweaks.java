@@ -5,6 +5,7 @@ import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionListEntry;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -72,10 +73,16 @@ public class PlacementTweaks
     public static void setFastPlacementMode(FastMode mode)
     {
         fastMode = mode;
+        ConfigsGeneric.FAST_PLACEMENT_MODE.setOptionListValue(mode);
 
         Minecraft mc = Minecraft.getMinecraft();
         String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
         Callbacks.printMessage(mc, "tweakeroo.message.set_fast_placement_mode_to", str);
+    }
+
+    public static void setFastPlacementModeFromConfigs()
+    {
+        fastMode = (FastMode) ConfigsGeneric.FAST_PLACEMENT_MODE.getOptionListValue();
     }
 
     public static FastMode getFastPlacementMode()
@@ -591,10 +598,77 @@ public class PlacementTweaks
         TOP;
     }
 
-    public enum FastMode
+    public enum FastMode implements IConfigOptionListEntry
     {
-        PLANE,
-        FACE,
-        COLUMN;
+        PLANE   ("Plane"),
+        FACE    ("Face"),
+        COLUMN  ("Column");
+
+        private final String displayName;
+
+        private FastMode(String displayName)
+        {
+            this.displayName = displayName;
+        }
+
+        @Override
+        public String getStringValue()
+        {
+            return this.name().toLowerCase();
+        }
+
+        @Override
+        public String getDisplayName()
+        {
+            return this.displayName;
+        }
+
+        @Override
+        public int getOrdinalValue()
+        {
+            return this.ordinal();
+        }
+
+        @Override
+        public IConfigOptionListEntry cycle(boolean forward)
+        {
+            int id = this.ordinal();
+
+            if (forward)
+            {
+                if (++id >= values().length)
+                {
+                    id = 0;
+                }
+            }
+            else
+            {
+                if (--id < 0)
+                {
+                    id = values().length - 1;
+                }
+            }
+
+            return values()[id % values().length];
+        }
+
+        @Override
+        public FastMode fromString(String name)
+        {
+            return fromStringStatic(name);
+        }
+
+        public static FastMode fromStringStatic(String name)
+        {
+            for (FastMode al : FastMode.values())
+            {
+                if (al.name().equalsIgnoreCase(name))
+                {
+                    return al;
+                }
+            }
+
+            return FastMode.FACE;
+        }
     }
 }

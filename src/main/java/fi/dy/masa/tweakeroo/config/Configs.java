@@ -11,6 +11,7 @@ import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.event.InputEventHandler;
 import fi.dy.masa.tweakeroo.util.JsonUtils;
+import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 
 public class Configs
 {
@@ -67,6 +68,7 @@ public class Configs
         }
 
         InputEventHandler.getInstance().updateUsedKeys();
+        PlacementTweaks.setFastPlacementModeFromConfigs();
     }
 
     public static void save()
