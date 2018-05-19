@@ -13,7 +13,9 @@ import net.minecraft.util.text.TextFormatting;
 
 public class Callbacks
 {
-    public static final IFeatureCallback FEATURE_CALLBACK_GAMMA = new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, Minecraft.getMinecraft());
+    private static final IFeatureCallback FEATURE_CALLBACK_GAMMA = new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, Minecraft.getMinecraft());
+
+    public static boolean skipWorldRendering;
 
     public static void init()
     {
@@ -31,7 +33,8 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callback);
 
-        Hotkeys.SKIP_RENDERING.getKeybind().setCallback(callbackMessage);
+        Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
+        Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
 
         FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleAfterClicker(FeatureToggle.TWEAK_AFTER_CLICKER, mc));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT, mc));
@@ -85,13 +88,23 @@ public class Callbacks
         {
             if (action == KeyAction.PRESS)
             {
-                if (key == Hotkeys.SKIP_RENDERING.getKeybind())
+                if (key == Hotkeys.SKIP_ALL_RENDERING.getKeybind())
                 {
                     this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
 
                     String pre = mc.skipRenderWorld ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
                     String status = I18n.format("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
-                    String message = I18n.format("tweakeroo.message.toggled", "Skip rendering", pre + status + TextFormatting.RESET);
+                    String message = I18n.format("tweakeroo.message.toggled", "Skip All Rendering", pre + status + TextFormatting.RESET);
+                    printMessage(this.mc, message);
+                }
+                else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
+                {
+                    skipWorldRendering = ! skipWorldRendering;
+
+                    boolean enabled = skipWorldRendering;
+                    String pre = enabled ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
+                    String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
+                    String message = I18n.format("tweakeroo.message.toggled", "Skip World Rendering", pre + status + TextFormatting.RESET);
                     printMessage(this.mc, message);
                 }
             }

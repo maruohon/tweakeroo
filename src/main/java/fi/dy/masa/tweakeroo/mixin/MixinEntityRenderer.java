@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.event.RenderEventHandler;
@@ -15,6 +16,15 @@ import net.minecraft.client.renderer.EntityRenderer;
 @Mixin(EntityRenderer.class)
 public class MixinEntityRenderer
 {
+    @Inject(method = "renderWorld(FJ)V", at = @At("HEAD"), cancellable = true)
+    private void onRenderWorld(CallbackInfo ci)
+    {
+        if (Callbacks.skipWorldRendering)
+        {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "renderWorldPass(IFJ)V", at = @At(
             value = "INVOKE_STRING",
             target = "Lnet/minecraft/profiler/Profiler;endStartSection(Ljava/lang/String;)V",
