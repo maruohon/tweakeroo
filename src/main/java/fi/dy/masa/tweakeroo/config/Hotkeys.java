@@ -20,7 +20,7 @@ public enum Hotkeys implements IHotkey
 
     private final String name;
     private final String comment;
-    private IKeybind keybind;
+    private final IKeybind keybind;
 
     private Hotkeys(String name, String defaultHotkey, String comment)
     {
@@ -45,11 +45,5 @@ public enum Hotkeys implements IHotkey
     public IKeybind getKeybind()
     {
         return this.keybind;
-    }
-
-    @Override
-    public void setKeybind(IKeybind keybind)
-    {
-        this.keybind = keybind;
     }
 }

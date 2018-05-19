@@ -2,7 +2,10 @@ package fi.dy.masa.tweakeroo.config;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 import com.google.common.collect.ImmutableList;
@@ -10,6 +13,8 @@ import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 
 public class KeybindMulti implements IKeybind
 {
+    private static Set<Integer> pressedKeys = new HashSet<>();
+
     private List<Integer> keyCodes = new ArrayList<>(4);
     private boolean pressed;
     private int heldTime;
@@ -76,7 +81,7 @@ public class KeybindMulti implements IKeybind
         }
 
         boolean pressedLast = this.pressed;
-        this.pressed = activeCount == this.keyCodes.size();
+        this.pressed = pressedKeys.size() == activeCount && this.keyCodes.size() == activeCount;
 
         if (this.pressed == false)
         {
@@ -104,7 +109,7 @@ public class KeybindMulti implements IKeybind
     @Override
     public void addKey(int keyCode)
     {
-        if (this.keyCodes.contains(keyCode) == false)
+        if (keyCode > 0 && this.keyCodes.contains(keyCode) == false)
         {
             this.keyCodes.add(keyCode);
         }
@@ -184,6 +189,33 @@ public class KeybindMulti implements IKeybind
         KeybindMulti keybind = new KeybindMulti();
         keybind.setKeysFromStorageString(str);
         return keybind;
+    }
+
+    public static void onKeyInput(int keyCode, boolean state)
+    {
+        if (state)
+        {
+            pressedKeys.add(keyCode);
+        }
+        else
+        {
+            pressedKeys.remove(keyCode);
+        }
+    }
+
+    public static void reCheckPressedKeys()
+    {
+        Iterator<Integer> iter = pressedKeys.iterator();
+
+        while (iter.hasNext())
+        {
+            int keyCode = iter.next().intValue();
+
+            if (keyCode > 0 && Keyboard.isKeyDown(keyCode) == false)
+            {
+                iter.remove();
+            }
+        }
     }
 
     public enum KeyAction

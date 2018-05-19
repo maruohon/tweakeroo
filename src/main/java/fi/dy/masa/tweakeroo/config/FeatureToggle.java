@@ -29,8 +29,8 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     private final String name;
     private final String comment;
     private final String toggleMessage;
+    private final IKeybind keybind;
     private boolean valueBoolean;
-    private IKeybind keybind;
     private IFeatureCallback callback;
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
@@ -81,12 +81,6 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     public IKeybind getKeybind()
     {
         return this.keybind;
-    }
-
-    @Override
-    public void setKeybind(IKeybind keybind)
-    {
-        this.keybind = keybind;
     }
 
     @Override
