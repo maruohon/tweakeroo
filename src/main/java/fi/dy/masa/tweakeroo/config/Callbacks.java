@@ -22,12 +22,16 @@ public class Callbacks
         Minecraft mc = Minecraft.getMinecraft();
 
         IHotkeyCallback callback = new KeyCallbackHotkeys(mc);
+        IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
+
         Hotkeys.FAST_MODE_PLANE.getKeybind().setCallback(callback);
         Hotkeys.FAST_MODE_FACE.getKeybind().setCallback(callback);
         Hotkeys.FAST_MODE_COLUMN.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callback);
+
+        Hotkeys.SKIP_RENDERING.getKeybind().setCallback(callbackMessage);
 
         FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleAfterClicker(FeatureToggle.TWEAK_AFTER_CLICKER, mc));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT, mc));
@@ -63,6 +67,33 @@ public class Callbacks
             else
             {
                 mc.gameSettings.gammaSetting = this.originalGamma;
+            }
+        }
+    }
+
+    public static class KeyCallbackHotkeyWithMessage implements IHotkeyCallback
+    {
+        private final Minecraft mc;
+
+        public KeyCallbackHotkeyWithMessage(Minecraft mc)
+        {
+            this.mc = mc;
+        }
+
+        @Override
+        public void onKeyAction(KeyAction action, IKeybind key)
+        {
+            if (action == KeyAction.PRESS)
+            {
+                if (key == Hotkeys.SKIP_RENDERING.getKeybind())
+                {
+                    this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
+
+                    String pre = mc.skipRenderWorld ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
+                    String status = I18n.format("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
+                    String message = I18n.format("tweakeroo.message.toggled", "Skip rendering", pre + status + TextFormatting.RESET);
+                    printMessage(this.mc, message);
+                }
             }
         }
     }

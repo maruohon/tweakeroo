@@ -14,7 +14,8 @@ public enum Hotkeys implements IHotkey
     HOTBAR_SWAP_1               ("hotbarSwap1",     "C,1",  "Swap the hotbar with the top-most inventory row"),
     HOTBAR_SWAP_2               ("hotbarSwap2",     "C,2",  "Swap the hotbar with the middle inventory row"),
     HOTBAR_SWAP_3               ("hotbarSwap3",     "C,3",  "Swap the hotbar with the bottom-most inventory row"),
-    INVENTORY_PREVIEW           ("inventoryPreview", "LMENU",  "The key to activate the inventory preview feature");
+    INVENTORY_PREVIEW           ("inventoryPreview", "LMENU",  "The key to activate the inventory preview feature"),
+    SKIP_RENDERING              ("skipRendering",   "X,DELETE",  "Toggles skipping all rendering");
 
     private final String name;
     private final String comment;
