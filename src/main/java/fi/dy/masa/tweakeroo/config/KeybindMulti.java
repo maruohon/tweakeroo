@@ -193,6 +193,8 @@ public class KeybindMulti implements IKeybind
 
     public static void onKeyInput(int keyCode, boolean state)
     {
+        reCheckPressedKeys();
+
         if (state)
         {
             pressedKeys.add(keyCode);
@@ -203,7 +205,7 @@ public class KeybindMulti implements IKeybind
         }
     }
 
-    public static void reCheckPressedKeys()
+    private static void reCheckPressedKeys()
     {
         Iterator<Integer> iter = pressedKeys.iterator();
 
