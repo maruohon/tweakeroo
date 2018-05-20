@@ -20,6 +20,11 @@ public class InventoryUtils
         return ItemStack.areItemsEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
     }
 
+    public static boolean areStacksEqualIgnoreDurability(ItemStack stack1, ItemStack stack2)
+    {
+        return ItemStack.areItemsEqualIgnoreDurability(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+    }
+
     public static void swapHotbarWithInventoryRow(EntityPlayer player, int row)
     {
         Container container = player.inventoryContainer;
@@ -32,13 +37,13 @@ public class InventoryUtils
         }
     }
 
-    public static void swapSlots(Container container, int slot, int hotbarSlot)
+    private static void swapSlots(Container container, int slot, int hotbarSlot)
     {
         Minecraft mc = Minecraft.getMinecraft();
         mc.playerController.windowClick(container.windowId, slot, hotbarSlot, ClickType.SWAP, mc.player);
     }
 
-    public static void swapNewStackToHand(EntityPlayer player, EnumHand hand, ItemStack stackReference)
+    public static void restockNewStackToHand(EntityPlayer player, EnumHand hand, ItemStack stackReference)
     {
         int slotWithItem = findSlotWithItem(player.inventoryContainer, stackReference);
 
@@ -48,11 +53,11 @@ public class InventoryUtils
         }
     }
 
-    public static int findSlotWithItem(Container container, ItemStack stackReference)
+    private static int findSlotWithItem(Container container, ItemStack stackReference)
     {
         for (Slot slot : container.inventorySlots)
         {
-            if (areStacksEqual(slot.getStack(), stackReference))
+            if (areStacksEqualIgnoreDurability(slot.getStack(), stackReference))
             {
                 return slot.slotNumber;
             }

@@ -69,6 +69,29 @@ public class MixinMinecraft implements IMinecraftAccessor
         }
     }
 
+    @Inject(method = "clickMouse", at = {
+            @At(value = "INVOKE",
+                target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;attackEntity(" +
+                         "Lnet/minecraft/entity/player/EntityPlayer;" +
+                         "Lnet/minecraft/entity/Entity;)V"),
+            @At(value = "INVOKE",
+                target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;clickBlock(" +
+                         "Lnet/minecraft/util/math/BlockPos;" +
+                         "Lnet/minecraft/util/EnumFacing;)Z")
+            })
+    private void onLeftClickMousePre(CallbackInfo ci)
+    {
+        PlacementTweaks.onLeftClickMousePre();
+    }
+
+    @Inject(method = "clickMouse", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/entity/EntityPlayerSP;swingArm(Lnet/minecraft/util/EnumHand;)V"))
+    private void onLeftClickMousePost(CallbackInfo ci)
+    {
+        PlacementTweaks.onLeftClickMousePost();
+    }
+
     @Redirect(method = "rightClickMouse()V", at = @At(
                 value = "INVOKE",
                 target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;processRightClickBlock(" +
@@ -77,8 +100,8 @@ public class MixinMinecraft implements IMinecraftAccessor
                 "Lnet/minecraft/util/math/BlockPos;" +
                 "Lnet/minecraft/util/EnumFacing;" +
                 "Lnet/minecraft/util/math/Vec3d;" +
-                "Lnet/minecraft/util/EnumHand;)" +
-                "Lnet/minecraft/util/EnumActionResult;"))
+                "Lnet/minecraft/util/EnumHand;" +
+                ")Lnet/minecraft/util/EnumActionResult;"))
     private EnumActionResult onProcessRightClickBlock(
             PlayerControllerMP controller,
             EntityPlayerSP player,

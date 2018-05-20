@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumActionResult;
@@ -34,6 +35,7 @@ public class PlacementTweaks
     private static EnumFacing sideRotatedFirst = null;
     private static float playerYawFirst;
     private static ItemStack stackFirst = ItemStack.EMPTY;
+    private static ItemStack[] stackBeforeUse = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY };
     private static FastMode fastMode = FastMode.PLANE;
 
     public static void onTick(Minecraft mc)
@@ -42,32 +44,52 @@ public class PlacementTweaks
         {
             if (mc.gameSettings.keyBindUseItem.isKeyDown())
             {
-                InventoryUtils.trySwapCurrentToolIfNearlyBroken();
                 onUsingTick();
             }
-            else
+
+            if (mc.gameSettings.keyBindAttack.isKeyDown())
             {
-                clearClickedBlockInfo();
-
-                if (mc.gameSettings.keyBindAttack.isKeyDown())
-                {
-                    if (FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue())
-                    {
-                        final int count = ConfigsGeneric.FAST_LEFT_CLICK_COUNT.getIntegerValue();
-
-                        for (int i = 0; i < count; ++i)
-                        {
-                            ((IMinecraftAccessor) mc).leftClickMouseAccessor();
-                            InventoryUtils.trySwapCurrentToolIfNearlyBroken();
-                        }
-                    }
-                    else
-                    {
-                        InventoryUtils.trySwapCurrentToolIfNearlyBroken();
-                    }
-                }
+                onAttackTick(mc);
             }
         }
+
+        if (mc.gameSettings.keyBindUseItem.isKeyDown() == false)
+        {
+            clearClickedBlockInfo();
+        }
+    }
+
+    public static void onProcessRightClickPre(EntityPlayer player, EnumHand hand)
+    {
+        InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+
+        ItemStack stackOriginal = player.getHeldItem(hand);
+
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            stackOriginal.isEmpty() == false &&
+            stackOriginal.getCount() <= 2)
+        {
+            stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
+        }
+    }
+
+    public static void onProcessRightClickPost(EntityPlayer player, EnumHand hand)
+    {
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
+        {
+            tryRestockHand(player, hand, stackBeforeUse[hand.ordinal()]);
+            stackBeforeUse[hand.ordinal()] = ItemStack.EMPTY;
+        }
+    }
+
+    public static void onLeftClickMousePre()
+    {
+        onProcessRightClickPre(Minecraft.getMinecraft().player, EnumHand.MAIN_HAND);
+    }
+
+    public static void onLeftClickMousePost()
+    {
+        onProcessRightClickPost(Minecraft.getMinecraft().player, EnumHand.MAIN_HAND);
     }
 
     public static void setFastPlacementMode(FastMode mode)
@@ -88,6 +110,24 @@ public class PlacementTweaks
     public static FastMode getFastPlacementMode()
     {
         return fastMode;
+    }
+
+    private static void onAttackTick(Minecraft mc)
+    {
+        if (FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue())
+        {
+            final int count = ConfigsGeneric.FAST_LEFT_CLICK_COUNT.getIntegerValue();
+
+            for (int i = 0; i < count; ++i)
+            {
+                InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+                ((IMinecraftAccessor) mc).leftClickMouseAccessor();
+            }
+        }
+        else
+        {
+            InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+        }
     }
 
     private static void onUsingTick()
@@ -165,7 +205,6 @@ public class PlacementTweaks
             for (int i = 0; i < count; ++i)
             {
                 ((IMinecraftAccessor) mc).rightClickMouseAccessor();
-                InventoryUtils.trySwapCurrentToolIfNearlyBroken();
             }
         }
     }
@@ -261,6 +300,18 @@ public class PlacementTweaks
         return processRightClickBlockWrapper(controller, player, world, posIn, sideIn, hitVec, hand);
     }
 
+    private static void tryRestockHand(EntityPlayer player, EnumHand hand, ItemStack stackOriginal)
+    {
+        ItemStack stackCurrent = player.getHeldItem(hand);
+
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            stackOriginal.isEmpty() == false &&
+            (stackCurrent.isEmpty() || InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
+        {
+            InventoryUtils.restockNewStackToHand(player, hand, stackOriginal);
+        }
+    }
+
     private static EnumActionResult processRightClickBlockWrapper(
             PlayerControllerMP controller,
             EntityPlayerSP player,
@@ -272,7 +323,7 @@ public class PlacementTweaks
     {
         // We need to grab the stack here if the cached stack is still empty,
         // because this code runs before the cached stack gets set on the first click/use.
-        ItemStack stackBefore = stackFirst.isEmpty() ? player.getHeldItem(hand).copy() : stackFirst;
+        ItemStack stackOriginal = stackFirst.isEmpty() == false ? stackFirst : player.getHeldItem(hand).copy();
         BlockPos posPlacement = getPlacementPositionForTargetedPosition(pos, side, world);
         IBlockState stateBefore = world.getBlockState(posPlacement);
         IBlockState state = world.getBlockState(pos);
@@ -299,17 +350,12 @@ public class PlacementTweaks
             hitVec = new Vec3d(x, hitVec.y, hitVec.z);
         }
 
+        InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
         EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
 
-        ItemStack stackAfter = player.getHeldItem(hand);
-
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
-            stackBefore.isEmpty() == false &&
-            (stackAfter.isEmpty() || InventoryUtils.areStacksEqual(stackBefore, stackAfter) == false))
-        {
-            InventoryUtils.swapNewStackToHand(player, hand, stackBefore);
-        }
+        tryRestockHand(player, hand, stackOriginal);
 
         if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue() &&
             world.getBlockState(posPlacement) != stateBefore)
@@ -574,12 +620,12 @@ public class PlacementTweaks
     @Nullable
     private static EnumHand getHandWithItem(ItemStack stack, EntityPlayerSP player)
     {
-        if (InventoryUtils.areStacksEqual(player.getHeldItemMainhand(), stackFirst))
+        if (InventoryUtils.areStacksEqualIgnoreDurability(player.getHeldItemMainhand(), stackFirst))
         {
             return EnumHand.MAIN_HAND;
         }
 
-        if (InventoryUtils.areStacksEqual(player.getHeldItemOffhand(), stackFirst))
+        if (InventoryUtils.areStacksEqualIgnoreDurability(player.getHeldItemOffhand(), stackFirst))
         {
             return EnumHand.OFF_HAND;
         }
