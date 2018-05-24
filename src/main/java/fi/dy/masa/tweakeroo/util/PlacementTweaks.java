@@ -61,7 +61,7 @@ public class PlacementTweaks
         }
     }
 
-    public static void onProcessRightClickPre(EntityPlayer player, EnumHand hand)
+    public static boolean onProcessRightClickPre(EntityPlayer player, EnumHand hand)
     {
         InventoryUtils.trySwapCurrentToolIfNearlyBroken();
 
@@ -74,6 +74,8 @@ public class PlacementTweaks
             //System.out.printf("onProcessRightClickPre storing stack: %s\n", stackOriginal);
             stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
         }
+
+        return InventoryUtils.canUnstackingItemNotFitInInventory(stackOriginal, player);
     }
 
     public static void onProcessRightClickPost(EntityPlayer player, EnumHand hand)
@@ -359,7 +361,16 @@ public class PlacementTweaks
         InventoryUtils.trySwapCurrentToolIfNearlyBroken();
 
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
-        EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
+        EnumActionResult result;
+
+        if (InventoryUtils.canUnstackingItemNotFitInInventory(stackOriginal, player))
+        {
+            result = EnumActionResult.PASS;
+        }
+        else
+        {
+            result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
+        }
 
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
         {

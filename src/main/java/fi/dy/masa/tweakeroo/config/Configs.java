@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.config;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -10,6 +11,7 @@ import com.mumfrey.liteloader.core.LiteLoader;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.event.InputEventHandler;
+import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.JsonUtils;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 
@@ -69,6 +71,7 @@ public class Configs
 
         InputEventHandler.getInstance().updateUsedKeys();
         PlacementTweaks.setFastPlacementModeFromConfigs();
+        InventoryUtils.setUnstackingItems(ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle")); // TODO add a string list config
     }
 
     public static void save()

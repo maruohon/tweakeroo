@@ -1,20 +1,43 @@
 package fi.dy.masa.tweakeroo.util;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentTranslation;
 
 public class InventoryUtils
 {
+    private static final HashSet<Item> UNSTACKING_ITEMS = new HashSet<>();
+
+    public static void setUnstackingItems(List<String> names)
+    {
+        UNSTACKING_ITEMS.clear();
+
+        for (String name : names)
+        {
+            Item item = Item.REGISTRY.getObject(new ResourceLocation(name));
+
+            if (item != null && item != Items.AIR)
+            {
+                UNSTACKING_ITEMS.add(item);
+            }
+        }
+    }
+
     public static boolean areStacksEqual(ItemStack stack1, ItemStack stack2)
     {
         return ItemStack.areItemsEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
@@ -121,7 +144,7 @@ public class InventoryUtils
             return;
         }
 
-        slotWithItem = findEmptySlot(player.inventoryContainer);
+        slotWithItem = findEmptySlot(player.inventoryContainer, false);
 
         if (slotWithItem != -1)
         {
@@ -195,19 +218,97 @@ public class InventoryUtils
         return -1;
     }
 
-    private static int findEmptySlot(Container container)
+    private static int findEmptySlot(Container container, boolean allowOffhand)
     {
         for (Slot slot : container.inventorySlots)
         {
             ItemStack stackSlot = slot.getStack();
 
             // Inventory crafting, armor and offhand slots are not valid
-            if (stackSlot.isEmpty() && slot.slotNumber > 8 && slot.slotNumber < 45)
+            if (stackSlot.isEmpty() && slot.slotNumber > 8 && (allowOffhand || slot.slotNumber < 45))
             {
                 return slot.slotNumber;
             }
         }
 
         return -1;
+    }
+
+    private static void tryCombineStacksInInventory(EntityPlayer player, ItemStack stackReference)
+    {
+        List<Slot> slots = new ArrayList<>();
+        Container container = player.inventoryContainer;
+        Minecraft mc = Minecraft.getMinecraft();
+
+        for (Slot slot : container.inventorySlots)
+        {
+            // Inventory crafting and armor slots are not valid
+            if (slot.slotNumber < 8)
+            {
+                continue;
+            }
+
+            ItemStack stack = slot.getStack();
+
+            if (stack.getCount() < stack.getMaxStackSize() && areStacksEqual(stackReference, stack))
+            {
+                slots.add(slot);
+            }
+        }
+
+        for (int i = 0; i < slots.size(); ++i)
+        {
+            Slot slot1 = slots.get(i);
+
+            for (int j = i + 1; j < slots.size(); ++j)
+            {
+                Slot slot2 = slots.get(j);
+                ItemStack stack = slot1.getStack();
+
+                if (stack.getCount() < stack.getMaxStackSize())
+                {
+                    // Pick up the item from slot1 and try to put it in slot2
+                    mc.playerController.windowClick(container.windowId, slot1.slotNumber, 0, ClickType.PICKUP, player);
+                    mc.playerController.windowClick(container.windowId, slot2.slotNumber, 0, ClickType.PICKUP, player);
+
+                    // If the items didn't all fit, return the rest
+                    if (player.inventory.getCurrentItem().isEmpty() == false)
+                    {
+                        mc.playerController.windowClick(container.windowId, slot1.slotNumber, 0, ClickType.PICKUP, player);
+                    }
+
+                    if (slot2.getStack().getCount() >= slot2.getStack().getMaxStackSize())
+                    {
+                        slots.remove(j);
+                        --j;
+                    }
+                }
+
+                if (slot1.getHasStack() == false)
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    public static boolean canUnstackingItemNotFitInInventory(ItemStack stack, EntityPlayer player)
+    {
+        if (FeatureToggle.TWEAK_ITEM_UNSTACKING_PROTECTION.getBooleanValue() &&
+            stack.getCount() > 1 &&
+            UNSTACKING_ITEMS.contains(stack.getItem()))
+        {
+            if (findEmptySlot(player.inventoryContainer, false) == -1)
+            {
+                tryCombineStacksInInventory(player, stack);
+
+                if (findEmptySlot(player.inventoryContainer, false) == -1)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

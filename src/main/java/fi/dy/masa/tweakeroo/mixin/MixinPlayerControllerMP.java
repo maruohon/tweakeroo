@@ -18,14 +18,34 @@ import net.minecraft.world.World;
 public class MixinPlayerControllerMP
 {
     @Inject(method = "processRightClick", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;syncCurrentPlayItem()V"),
+            cancellable = true)
+    private void onProcessRightClickFirst(EntityPlayer player, World worldIn, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
+    {
+        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        {
+            cir.setReturnValue(EnumActionResult.PASS);
+            cir.cancel();
+        }
+    }
+
+    /*
+    @Inject(method = "processRightClick", at = @At(
                 value = "INVOKE",
                 target = "Lnet/minecraft/item/ItemStack;useItemRightClick(" +
                          "Lnet/minecraft/world/World;Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/util/EnumHand;" +
-                         ")Lnet/minecraft/util/ActionResult;"))
+                         ")Lnet/minecraft/util/ActionResult;"),
+            cancellable = true)
     private void onProcessRightClickPre(EntityPlayer player, World worldIn, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
-        PlacementTweaks.onProcessRightClickPre(player, hand);
+        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        {
+            cir.setReturnValue(EnumActionResult.PASS);
+            cir.cancel();
+        }
     }
+    */
 
     @Inject(method = "processRightClick",
             slice = @Slice(from = @At(value = "INVOKE", 
@@ -43,10 +63,15 @@ public class MixinPlayerControllerMP
                      "Lnet/minecraft/entity/Entity;" +
                      "Lnet/minecraft/util/EnumHand;" +
                      ")Lnet/minecraft/util/EnumActionResult;",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     private void onRightClickMouseOnEntityPre1(EntityPlayer player, Entity target, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
-        PlacementTweaks.onProcessRightClickPre(player, hand);
+        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        {
+            cir.setReturnValue(EnumActionResult.PASS);
+            cir.cancel();
+        }
     }
 
     @Inject(method = "interactWithEntity(" +
@@ -55,9 +80,14 @@ public class MixinPlayerControllerMP
                      "Lnet/minecraft/util/math/RayTraceResult;" +
                      "Lnet/minecraft/util/EnumHand;" +
                      ")Lnet/minecraft/util/EnumActionResult;",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     private void onRightClickMouseOnEntityPre2(EntityPlayer player, Entity target, RayTraceResult ray, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
-        PlacementTweaks.onProcessRightClickPre(player, hand);
+        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        {
+            cir.setReturnValue(EnumActionResult.PASS);
+            cir.cancel();
+        }
     }
 }
