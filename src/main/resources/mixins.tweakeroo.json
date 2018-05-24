@@ -13,6 +13,7 @@
         "MixinItemStack",
         "MixinMinecraft",
         "MixinMovementInputFromOptions",
+        "MixinNetHandlerPlayClient",
         "MixinPlayerControllerMP",
         "MixinRenderGlobal",
         "MixinRenderManager"

@@ -12,6 +12,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumActionResult;
@@ -37,6 +38,7 @@ public class PlacementTweaks
     private static ItemStack stackFirst = ItemStack.EMPTY;
     private static ItemStack[] stackBeforeUse = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY };
     private static FastMode fastMode = FastMode.PLANE;
+    private static boolean isEmulatedClick;
 
     public static void onTick(Minecraft mc)
     {
@@ -65,10 +67,11 @@ public class PlacementTweaks
 
         ItemStack stackOriginal = player.getHeldItem(hand);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
-            stackOriginal.isEmpty() == false &&
-            stackOriginal.getCount() <= 2)
+        if (isEmulatedClick == false &&
+            FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            stackOriginal.isEmpty() == false)
         {
+            //System.out.printf("onProcessRightClickPre storing stack: %s\n", stackOriginal);
             stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
         }
     }
@@ -77,8 +80,8 @@ public class PlacementTweaks
     {
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
         {
+            //System.out.printf("onProcessRightClickPost -> tryRestockHand with: %s, current: %s\n", stackBeforeUse[hand.ordinal()], player.getHeldItem(hand));
             tryRestockHand(player, hand, stackBeforeUse[hand.ordinal()]);
-            stackBeforeUse[hand.ordinal()] = ItemStack.EMPTY;
         }
     }
 
@@ -121,7 +124,9 @@ public class PlacementTweaks
             for (int i = 0; i < count; ++i)
             {
                 InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+                isEmulatedClick = true;
                 ((IMinecraftAccessor) mc).leftClickMouseAccessor();
+                isEmulatedClick = false;
             }
         }
         else
@@ -204,7 +209,9 @@ public class PlacementTweaks
 
             for (int i = 0; i < count; ++i)
             {
+                isEmulatedClick = true;
                 ((IMinecraftAccessor) mc).rightClickMouseAccessor();
+                isEmulatedClick = false;
             }
         }
     }
@@ -304,8 +311,7 @@ public class PlacementTweaks
     {
         ItemStack stackCurrent = player.getHeldItem(hand);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
-            stackOriginal.isEmpty() == false &&
+        if (stackOriginal.isEmpty() == false &&
             (stackCurrent.isEmpty() || InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
         {
             InventoryUtils.restockNewStackToHand(player, hand, stackOriginal);
@@ -355,7 +361,10 @@ public class PlacementTweaks
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
         EnumActionResult result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
 
-        tryRestockHand(player, hand, stackOriginal);
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
+        {
+            tryRestockHand(player, hand, stackOriginal);
+        }
 
         if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue() &&
             world.getBlockState(posPlacement) != stateBefore)
@@ -633,7 +642,28 @@ public class PlacementTweaks
         return null;
     }
 
+    public static boolean shouldSkipSlotSync(int slotNumber, ItemStack newStack)
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.player;
+        Container container = player != null ? player.openContainer : null;
 
+        if (ConfigsGeneric.SLOT_SYNC_WORKAROUND.getBooleanValue() &&
+            container != null && container == player.inventoryContainer &&
+            (slotNumber == 45 || (slotNumber - 36) == player.inventory.currentItem))
+        {
+            boolean featRight = FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue();
+            boolean featLeft = FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue();
+
+            if ((featRight && mc.gameSettings.keyBindUseItem.isKeyDown()) ||
+                (featLeft && mc.gameSettings.keyBindAttack.isKeyDown()))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public enum HitPart
     {
