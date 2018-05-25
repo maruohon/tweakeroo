@@ -18,12 +18,13 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     TWEAK_HAND_RESTOCK              ("tweakHandRestock",                    false, "X,E", "Enables swapping a new stack to the main or the offhand when the previous stack runs out"),
     TWEAK_HOTBAR_SWAP               ("tweakHotbarSwap",                     false, "X,H", "Enables the hotbar swapping feature"),
     TWEAK_INVENTORY_PREVIEW         ("tweakInventoryPreview",               false, "X,I", "Enables an inventory preview while having the cursor over a block with an inventory and holding the configured modifier key for it"),
+    TWEAK_ITEM_UNSTACKING_PROTECTION("tweakItemUnstackingProtection",       false, "X,P", "If enabled, then items configured in Generic -> unstackingItems won't be allowed to spill out when using.\nThis is meant for example to prevent throwing buckets into lava when filling them."),
     TWEAK_LAVA_VISIBILITY           ("tweakLavaVisibility",                 false, "X,A", "If enabled and the player has a Respiration helmet and/or Wather Breathing active, the lava fog is greatly reduced"),
     TWEAK_MOVEMENT_KEYS             ("tweakMovementKeysLast",               false, "X,M", "If enabled, then opposite movement keys won't cancel each other, but the last pressed one is the active input"),
     TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "X,R", "If enabled, then falling block entities won't be rendered at all"),
     TWEAK_NO_ITEM_SWITCH_COOLDOWN   ("tweakNoItemSwitchRenderCooldown",     false, "X,I", "If true, then there won't be any cooldown/equip\nanimation when switching the held item or using the item."),
     TWEAK_NO_LIGHT_UPDATES          ("tweakNoLightUpdates",                 false, "X,N", "If enabled, disables client-side light updates"),
-    TWEAK_ITEM_UNSTACKING_PROTECTION("tweakItemUnstackingProtection",       false, "X,P", "If enabled, then items configured in Generic -> unstackingItems won't be allowed to spill out when using.\nThis is meant for example to prevent throwing buckets into lava when filling them."),
+    TWEAK_PERMANENT_SNEAK           ("tweakPermanentSneak",                 false, "LSHIFT,X,S", "If enabled, the player will be sneaking the entire time"),
     TWEAK_SHULKERBOX_STACKING       ("tweakEmptyShulkerBoxesStack",         false, "X,S", "Enables empty Shulker Boxes stacking up to 64"),
     TWEAK_SWAP_ALMOST_BROKEN_TOOLS  ("tweakSwapAlmostBrokenTools",          false, "X,W", "If enabled, then any damageable items held in the hand that are about to break will be swapped to fresh ones");
 
