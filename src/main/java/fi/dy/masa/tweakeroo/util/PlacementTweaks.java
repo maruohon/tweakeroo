@@ -394,18 +394,12 @@ public class PlacementTweaks
             FeatureToggle.CARPET_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() == false &&
             world.getBlockState(posPlacement) != stateBefore)
         {
-            Minecraft mc = Minecraft.getMinecraft();
             final int count = MathHelper.clamp(ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
-            double reach = mc.playerController.getBlockReachDistance();
-            RayTraceResult trace = player.rayTrace(reach, mc.getRenderPartialTicks());
 
-            if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < count; i++)
-                {
-                    //System.out.printf("processRightClickBlockWrapper() after-clicker - i: %d, pos: %s, side: %s, hitVec: %s\n", i, pos, side, hitVec);
-                    controller.processRightClickBlock(player, world, trace.getBlockPos(), trace.sideHit, trace.hitVec, hand);
-                }
+                //System.out.printf("processRightClickBlockWrapper() after-clicker - i: %d, pos: %s, side: %s, hitVec: %s\n", i, pos, side, hitVec);
+                controller.processRightClickBlock(player, world, posPlacement, side, hitVec, hand);
             }
         }
 
