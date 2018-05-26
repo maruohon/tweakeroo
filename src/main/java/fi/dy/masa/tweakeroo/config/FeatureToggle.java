@@ -25,6 +25,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     TWEAK_NO_ITEM_SWITCH_COOLDOWN   ("tweakNoItemSwitchRenderCooldown",     false, "X,I", "If true, then there won't be any cooldown/equip\nanimation when switching the held item or using the item."),
     TWEAK_NO_LIGHT_UPDATES          ("tweakNoLightUpdates",                 false, "X,N", "If enabled, disables client-side light updates"),
     TWEAK_PERMANENT_SNEAK           ("tweakPermanentSneak",                 false, "LSHIFT,X,S", "If enabled, the player will be sneaking the entire time"),
+    TWEAK_PICK_BEFORE_PLACE         ("tweakPickBeforePlace",                false, "X,K", "If enabled, then before each block placement, the same block\nis switched to hand that you are placing against"),
     TWEAK_SHULKERBOX_STACKING       ("tweakEmptyShulkerBoxesStack",         false, "X,S", "Enables empty Shulker Boxes stacking up to 64"),
     TWEAK_SWAP_ALMOST_BROKEN_TOOLS  ("tweakSwapAlmostBrokenTools",          false, "X,W", "If enabled, then any damageable items held in the hand that are about to break will be swapped to fresh ones");
 

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,8 +17,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 
 public class InventoryUtils
 {
@@ -310,5 +314,64 @@ public class InventoryUtils
         }
 
         return false;
+    }
+
+    public static void switchToPickedBlock()
+    {
+        Minecraft mc  = Minecraft.getMinecraft();
+        EntityPlayer player = mc.player;
+        World world = mc.world;
+        double reach = mc.playerController.getBlockReachDistance();
+        boolean isCreative = player.capabilities.isCreativeMode;
+        RayTraceResult trace = player.rayTrace(reach, mc.getRenderPartialTicks());
+
+        if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        {
+            BlockPos pos = trace.getBlockPos();
+            IBlockState stateTargeted = world.getBlockState(pos);
+            ItemStack stack = stateTargeted.getBlock().getItem(world, pos, stateTargeted);
+
+            if (stack.isEmpty() == false)
+            {
+                /*
+                if (isCreative)
+                {
+                    TileEntity te = world.getTileEntity(pos);
+
+                    if (te != null)
+                    {
+                        mc.storeTEInStack(stack, te);
+                    }
+                }
+                */
+
+                if (isCreative)
+                {
+                    player.inventory.setPickedItemStack(stack);
+                    mc.playerController.sendSlotPacket(player.getHeldItem(EnumHand.MAIN_HAND), 36 + player.inventory.currentItem);
+                }
+                else
+                {
+                    int slot = findSlotWithItem(player.inventoryContainer, stack); //player.inventory.getSlotFor(stack);
+
+                    if (slot != -1)
+                    {
+                        int currentHotbarSlot = player.inventory.currentItem;
+                        mc.playerController.windowClick(player.inventoryContainer.windowId, slot, currentHotbarSlot, ClickType.SWAP, mc.player);
+
+                        /*
+                        if (InventoryPlayer.isHotbar(slot))
+                        {
+                            player.inventory.currentItem = slot;
+                        }
+                        else
+                        {
+                            mc.playerController.pickItem(slot);
+                        }
+                        */
+                    }
+                }
+            }
+        }
     }
 }

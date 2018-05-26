@@ -371,6 +371,11 @@ public class PlacementTweaks
             hitVec = new Vec3d(x, hitVec.y, hitVec.z);
         }
 
+        if (FeatureToggle.TWEAK_PICK_BEFORE_PLACE.getBooleanValue())
+        {
+            InventoryUtils.switchToPickedBlock();
+        }
+
         InventoryUtils.trySwapCurrentToolIfNearlyBroken();
 
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
@@ -387,6 +392,8 @@ public class PlacementTweaks
 
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
         {
+            // This restock needs to happen even with the pick-before-place tweak active,
+            // otherwise the fast placement mode's checks (getHandWithItem()) will fail...
             tryRestockHand(player, hand, stackOriginal);
         }
 
@@ -668,6 +675,7 @@ public class PlacementTweaks
         Container container = player != null ? player.openContainer : null;
 
         if (ConfigsGeneric.SLOT_SYNC_WORKAROUND.getBooleanValue() &&
+            FeatureToggle.TWEAK_PICK_BEFORE_PLACE.getBooleanValue() == false &&
             container != null && container == player.inventoryContainer &&
             (slotNumber == 45 || (slotNumber - 36) == player.inventory.currentItem))
         {
