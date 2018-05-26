@@ -54,10 +54,23 @@ public class PlacementTweaks
                 onAttackTick(mc);
             }
         }
+        else
+        {
+            stackBeforeUse[0] = ItemStack.EMPTY;
+            stackBeforeUse[1] = ItemStack.EMPTY;
+        }
 
         if (mc.gameSettings.keyBindUseItem.isKeyDown() == false)
         {
             clearClickedBlockInfo();
+
+            // Clear the cached stack when releasing both keys, so that the restock doesn't happen when
+            // using another another item or an empty hand.
+            if (mc.gameSettings.keyBindAttack.isKeyDown() == false)
+            {
+                stackBeforeUse[0] = ItemStack.EMPTY;
+                stackBeforeUse[1] = ItemStack.EMPTY;
+            }
         }
     }
 
