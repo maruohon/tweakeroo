@@ -391,6 +391,7 @@ public class PlacementTweaks
         }
 
         if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue() &&
+            FeatureToggle.CARPET_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() == false &&
             world.getBlockState(posPlacement) != stateBefore)
         {
             Minecraft mc = Minecraft.getMinecraft();
