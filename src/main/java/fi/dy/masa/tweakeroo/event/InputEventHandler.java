@@ -123,11 +123,11 @@ public class InputEventHandler
         // Not in a GUI
         if (mc.currentScreen == null)
         {
-            int dWheel = Mouse.getEventDWheel() / 120;
+            int dWheel = Mouse.getEventDWheel();
 
             if (dWheel != 0 && FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld(false))
             {
-                int change = dWheel;
+                int change = dWheel > 0 ? 1 : -1;
                 int clicks = MathHelper.clamp(ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + change, 1, 32);
 
                 ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(clicks);
