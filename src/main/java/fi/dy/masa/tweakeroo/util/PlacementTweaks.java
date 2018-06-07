@@ -39,6 +39,8 @@ public class PlacementTweaks
     private static ItemStack[] stackBeforeUse = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY };
     private static FastMode fastMode = FastMode.PLANE;
     private static boolean isEmulatedClick;
+    private static boolean firstWasRotation;
+    private static boolean firstWasOffset;
 
     public static void onTick(Minecraft mc)
     {
@@ -252,6 +254,11 @@ public class PlacementTweaks
         // Store the initial click data for the fast placement mode
         if (posFirst == null && result == EnumActionResult.SUCCESS && fastPlacement)
         {
+            boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
+            boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false);
+            boolean offset = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false);
+            firstWasRotation = flexible && rotation;
+            firstWasOffset = flexible && offset;
             posFirst = getPlacementPositionForTargetedPosition(posIn, sideIn, world);
             posLast = posFirst;
             hitPartFirst = hitPart;
@@ -282,8 +289,11 @@ public class PlacementTweaks
         {
             EnumFacing side = sideIn;
             boolean handle = false;
-            boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false);
-            boolean offset = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false);
+            boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
+            boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false);
+            boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false);
+            boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
+            boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
             BlockPos posNew = isFirstClick && (rotation || offset) ? getPlacementPositionForTargetedPosition(posIn, sideIn, world) : posIn;
 
             // Place the block facing/against the adjacent block (= just rotated from normal)
@@ -464,6 +474,8 @@ public class PlacementTweaks
         sideFirst = null;
         sideRotatedFirst = null;
         stackFirst = ItemStack.EMPTY;
+        firstWasRotation = false;
+        firstWasOffset = false;
     }
 
     private static EnumFacing getRotatedFacing(EnumFacing originalSide, EnumFacing playerFacingH, HitPart hitPart)
