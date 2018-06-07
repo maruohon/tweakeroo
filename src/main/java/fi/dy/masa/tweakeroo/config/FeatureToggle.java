@@ -8,9 +8,9 @@ import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
-    CARPET_FLEXIBLE_BLOCK_PLACEMENT ("tweakCarpetFlexibleBlockPlacement",   false, "LMENU,C", "If enabled, then the flexible block placement uses the protocol implemented in the recent carpet mod versions"),
+    CARPET_FLEXIBLE_BLOCK_PLACEMENT ("carpetFlexibleBlockPlacement",        false, "LMENU,C", "If enabled, then the flexible block placement uses the protocol implemented in the recent carpet mod versions"),
     TWEAK_AFTER_CLICKER             ("tweakAfterClicker",                   false, "X,C", "Enables a \"after clicker\" tweak, which does automatic right clicks on the just-placed block.\nUseful for example for Repeaters (setting the delay)."),
-    TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "R",   "Enables fast/convenient block placement when moving the cursor over new blocks"),
+    TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "X,F", "Enables fast/convenient block placement when moving the cursor over new blocks"),
     TWEAK_FAST_LEFT_CLICK           ("tweakFastLeftClick",                  false, "X,Y", "Enables automatic fast left clicking while holding down the attack button (left click).\nThe number of clicks per game tick is set in the Generic configs."),
     TWEAK_FAST_RIGHT_CLICK          ("tweakFastRightClick",                 false, "X,U", "Enables automatic fast right clicking while holding down the use button (right click).\nThe number of clicks per game tick is set in the Generic configs."),
     TWEAK_FLEXIBLE_BLOCK_PLACEMENT  ("tweakFlexibleBlockPlacement",         false, "X,L", "Enables placing blocks in different orientations while holding down the keybind"),
@@ -21,12 +21,12 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     TWEAK_ITEM_UNSTACKING_PROTECTION("tweakItemUnstackingProtection",       false, "X,P", "If enabled, then items configured in Generic -> unstackingItems won't be allowed to spill out when using.\nThis is meant for example to prevent throwing buckets into lava when filling them."),
     TWEAK_LAVA_VISIBILITY           ("tweakLavaVisibility",                 false, "X,A", "If enabled and the player has a Respiration helmet and/or Wather Breathing active, the lava fog is greatly reduced"),
     TWEAK_MOVEMENT_KEYS             ("tweakMovementKeysLast",               false, "X,M", "If enabled, then opposite movement keys won't cancel each other, but the last pressed one is the active input"),
-    TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "X,R", "If enabled, then falling block entities won't be rendered at all"),
-    TWEAK_NO_ITEM_SWITCH_COOLDOWN   ("tweakNoItemSwitchRenderCooldown",     false, "X,I", "If true, then there won't be any cooldown/equip\nanimation when switching the held item or using the item."),
+    TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "",    "If enabled, then falling block entities won't be rendered at all"),
+    TWEAK_NO_ITEM_SWITCH_COOLDOWN   ("tweakNoItemSwitchRenderCooldown",     false, "",    "If true, then there won't be any cooldown/equip\nanimation when switching the held item or using the item."),
     TWEAK_NO_LIGHT_UPDATES          ("tweakNoLightUpdates",                 false, "X,N", "If enabled, disables client-side light updates"),
     TWEAK_PERMANENT_SNEAK           ("tweakPermanentSneak",                 false, "LSHIFT,X,S", "If enabled, the player will be sneaking the entire time"),
     TWEAK_PICK_BEFORE_PLACE         ("tweakPickBeforePlace",                false, "X,K", "If enabled, then before each block placement, the same block\nis switched to hand that you are placing against"),
-    TWEAK_SHULKERBOX_STACKING       ("tweakEmptyShulkerBoxesStack",         false, "X,S", "Enables empty Shulker Boxes stacking up to 64"),
+    TWEAK_SHULKERBOX_STACKING       ("tweakEmptyShulkerBoxesStack",         false, "",    "Enables empty Shulker Boxes stacking up to 64"),
     TWEAK_SWAP_ALMOST_BROKEN_TOOLS  ("tweakSwapAlmostBrokenTools",          false, "X,W", "If enabled, then any damageable items held in the hand that are about to break will be swapped to fresh ones");
 
     private final String name;
@@ -38,10 +38,15 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
+        this(name, defaultValue, defaultHotkey, comment, splitCamelCase(name.substring(5)));
+    }
+
+    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String toggleMessage)
+    {
         this.name = name;
         this.valueBoolean = defaultValue;
         this.comment = comment;
-        this.toggleMessage = splitCamelCase(this.name.substring(5));
+        this.toggleMessage = toggleMessage;
         this.keybind = KeybindMulti.fromStorageString(defaultHotkey);
         this.keybind.setCallback(new KeyCallbackToggleFeatureWithMessage(this));
     }
