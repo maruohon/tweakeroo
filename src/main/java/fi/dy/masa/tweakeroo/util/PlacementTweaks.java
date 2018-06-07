@@ -318,6 +318,10 @@ public class PlacementTweaks
                 }
             }
         }
+        else if (isFirstClick == false && FeatureToggle.FAST_PLACEMENT_REMEMBER_ALWAYS.getBooleanValue())
+        {
+            return handleFlexibleBlockPlacement(controller, player, world, posIn, sideIn, playerYaw, hitVec, hand, null);
+        }
 
         return processRightClickBlockWrapper(controller, player, world, posIn, sideIn, hitVec, hand);
     }
