@@ -1,11 +1,11 @@
 package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
+import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionListEntry;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -740,12 +740,6 @@ public class PlacementTweaks
         public String getDisplayName()
         {
             return this.displayName;
-        }
-
-        @Override
-        public int getOrdinalValue()
-        {
-            return this.ordinal();
         }
 
         @Override

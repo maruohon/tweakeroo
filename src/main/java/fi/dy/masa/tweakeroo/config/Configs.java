@@ -8,11 +8,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mumfrey.liteloader.core.LiteLoader;
+import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.event.InputEventHandler;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.JsonUtils;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 
 public class Configs

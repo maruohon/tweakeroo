@@ -1,10 +1,12 @@
 package fi.dy.masa.tweakeroo.config;
 
+import fi.dy.masa.malilib.config.ConfigType;
+import fi.dy.masa.malilib.config.IConfigBoolean;
+import fi.dy.masa.malilib.hotkeys.IHotkey;
+import fi.dy.masa.malilib.hotkeys.IKeybind;
+import fi.dy.masa.malilib.hotkeys.KeybindMulti;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.Callbacks.KeyCallbackToggleFeatureWithMessage;
-import fi.dy.masa.tweakeroo.config.interfaces.ConfigType;
-import fi.dy.masa.tweakeroo.config.interfaces.IConfigBoolean;
-import fi.dy.masa.tweakeroo.config.interfaces.IHotkey;
-import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
@@ -40,7 +42,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
-        this(name, defaultValue, defaultHotkey, comment, splitCamelCase(name.substring(5)));
+        this(name, defaultValue, defaultHotkey, comment, StringUtils.splitCamelCase(name.substring(5)));
     }
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String toggleMessage)
@@ -77,6 +79,11 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     }
 
     @Override
+    public void setValueFromString(String value)
+    {
+    }
+
+    @Override
     public String getComment()
     {
         return comment != null ? comment : "";
@@ -110,17 +117,4 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
             this.callback.onValueChange(this);
         }
     }
-
-    // https://stackoverflow.com/questions/2559759/how-do-i-convert-camelcase-into-human-readable-names-in-java
-    public static String splitCamelCase(String str)
-    {
-        return str.replaceAll(
-           String.format("%s|%s|%s",
-              "(?<=[A-Z])(?=[A-Z][a-z])",
-              "(?<=[^A-Z])(?=[A-Z])",
-              "(?<=[A-Za-z])(?=[^A-Za-z])"
-           ),
-           " "
-        );
-     }
 }

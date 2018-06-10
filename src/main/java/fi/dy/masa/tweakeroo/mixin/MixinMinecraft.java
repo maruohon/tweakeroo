@@ -6,7 +6,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.event.InputEventHandler;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import net.minecraft.client.Minecraft;
@@ -47,26 +46,6 @@ public class MixinMinecraft implements IMinecraftAccessor
     public void rightClickMouseAccessor()
     {
         this.rightClickMouse();
-    }
-
-    @Inject(method = "runTickKeyboard", cancellable = true,
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;dispatchKeypresses()V"))
-    private void onKeyboardInput(CallbackInfo ci)
-    {
-        if (InputEventHandler.getInstance().onKeyInput())
-        {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "runTickMouse", cancellable = true,
-            at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Mouse;getEventButton()I", remap = false))
-    private void onMouseInput(CallbackInfo ci)
-    {
-        if (InputEventHandler.getInstance().onMouseInput())
-        {
-            ci.cancel();
-        }
     }
 
     @Inject(method = "clickMouse", at = {

@@ -1,8 +1,10 @@
 package fi.dy.masa.tweakeroo.config.gui;
 
 import com.mumfrey.liteloader.modconfig.ConfigPanelHost;
+import fi.dy.masa.malilib.config.gui.ConfigPanelHotkeysBase;
+import fi.dy.masa.malilib.config.gui.button.ConfigButtonHotkey;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.config.gui.button.ConfigButtonHotkey;
+import fi.dy.masa.tweakeroo.event.InputEventHandler;
 
 public class ConfigPanelTweakHotkeys extends ConfigPanelHotkeysBase
 {
@@ -15,6 +17,12 @@ public class ConfigPanelTweakHotkeys extends ConfigPanelHotkeysBase
     protected FeatureToggle[] getConfigs()
     {
         return FeatureToggle.values();
+    }
+
+    @Override
+    protected void onSettingsChanged()
+    {
+        InputEventHandler.getInstance().updateUsedKeys();
     }
 
     @Override

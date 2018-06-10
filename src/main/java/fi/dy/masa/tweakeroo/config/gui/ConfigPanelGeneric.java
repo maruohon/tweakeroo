@@ -1,9 +1,9 @@
 package fi.dy.masa.tweakeroo.config.gui;
 
+import fi.dy.masa.malilib.config.IConfigValue;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
-import fi.dy.masa.tweakeroo.config.interfaces.IConfig;
 
-public class ConfigPanelGeneric extends ConfigPanelSub
+public class ConfigPanelGeneric extends ConfigPanelSubTweakeroo
 {
     public ConfigPanelGeneric(TweakerooConfigPanel parent)
     {
@@ -11,7 +11,7 @@ public class ConfigPanelGeneric extends ConfigPanelSub
     }
 
     @Override
-    protected IConfig[] getConfigs()
+    protected IConfigValue[] getConfigs()
     {
         return ConfigsGeneric.values();
     }

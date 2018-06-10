@@ -1,9 +1,11 @@
 package fi.dy.masa.tweakeroo.config.gui;
 
 import com.mumfrey.liteloader.modconfig.ConfigPanelHost;
+import fi.dy.masa.malilib.config.IConfigValue;
+import fi.dy.masa.malilib.config.gui.ConfigPanelHotkeysBase;
+import fi.dy.masa.malilib.config.gui.button.ConfigButtonHotkey;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.config.gui.button.ConfigButtonHotkey;
-import fi.dy.masa.tweakeroo.config.interfaces.IConfig;
+import fi.dy.masa.tweakeroo.event.InputEventHandler;
 
 public class ConfigPanelGenericHotkeys extends ConfigPanelHotkeysBase
 {
@@ -13,9 +15,15 @@ public class ConfigPanelGenericHotkeys extends ConfigPanelHotkeysBase
     }
 
     @Override
-    protected IConfig[] getConfigs()
+    protected IConfigValue[] getConfigs()
     {
-        return new IConfig[0];
+        return new IConfigValue[0];
+    }
+
+    @Override
+    protected void onSettingsChanged()
+    {
+        InputEventHandler.getInstance().updateUsedKeys();
     }
 
     @Override

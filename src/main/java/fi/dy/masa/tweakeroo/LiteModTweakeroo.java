@@ -8,6 +8,7 @@ import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.ShutdownListener;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
+import fi.dy.masa.malilib.hotkeys.KeybindEventHandler;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.gui.TweakerooConfigPanel;
@@ -46,6 +47,11 @@ public class LiteModTweakeroo implements LiteMod, Configurable, ShutdownListener
     {
         Callbacks.init();
         Configs.load();
+
+        InputEventHandler handler = InputEventHandler.getInstance();
+        KeybindEventHandler bindHandler = KeybindEventHandler.getInstance();
+        bindHandler.registerKeyEventHandler(handler);
+        bindHandler.registerMouseEventHandler(handler);
     }
 
     @Override

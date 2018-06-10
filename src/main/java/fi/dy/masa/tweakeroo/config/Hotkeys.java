@@ -1,7 +1,8 @@
 package fi.dy.masa.tweakeroo.config;
 
-import fi.dy.masa.tweakeroo.config.interfaces.IHotkey;
-import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
+import fi.dy.masa.malilib.hotkeys.IHotkey;
+import fi.dy.masa.malilib.hotkeys.IKeybind;
+import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 
 public enum Hotkeys implements IHotkey
 {

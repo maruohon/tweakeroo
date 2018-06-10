@@ -4,15 +4,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import com.google.gson.JsonPrimitive;
+import fi.dy.masa.malilib.config.ConfigType;
+import fi.dy.masa.malilib.config.HudAlignment;
+import fi.dy.masa.malilib.config.IConfigBoolean;
+import fi.dy.masa.malilib.config.IConfigOptionList;
+import fi.dy.masa.malilib.config.IConfigOptionListEntry;
+import fi.dy.masa.malilib.config.IConfigValue;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
-import fi.dy.masa.tweakeroo.config.interfaces.ConfigType;
-import fi.dy.masa.tweakeroo.config.interfaces.IConfigBoolean;
-import fi.dy.masa.tweakeroo.config.interfaces.IConfigGeneric;
-import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionList;
-import fi.dy.masa.tweakeroo.config.interfaces.IConfigOptionListEntry;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.FastMode;
 
-public enum ConfigsGeneric implements IConfigGeneric, IConfigBoolean, IConfigOptionList
+public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptionList
 {
     AFTER_CLICKER_CLICK_COUNT           ("afterClickerClickCount",  1, "The number of right clicks to do per placed block when\ntweakAfterClicker is enabled"),
     FAST_LEFT_CLICK_COUNT               ("fastLeftClickCount",  10, "The number of left clicks to do per game tick when\ntweakFastLeftClick is enabled and the attack button is held down"),

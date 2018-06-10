@@ -4,14 +4,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import fi.dy.masa.malilib.hotkeys.IKeyEventHandler;
+import fi.dy.masa.malilib.hotkeys.IKeybind;
+import fi.dy.masa.malilib.hotkeys.IMouseEventHandler;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.config.KeybindMulti;
-import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInput;
@@ -20,7 +20,7 @@ import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-public class InputEventHandler
+public class InputEventHandler implements IKeyEventHandler, IMouseEventHandler
 {
     private static final InputEventHandler INSTANCE = new InputEventHandler();
     private final Multimap<Integer, IKeybind> hotkeyMap = ArrayListMultimap.create();
@@ -95,13 +95,10 @@ public class InputEventHandler
         return cancel;
     }
 
-    public boolean onKeyInput()
+    @Override
+    public boolean onKeyInput(int eventKey, boolean eventKeyState)
     {
         Minecraft mc = Minecraft.getMinecraft();
-        final int eventKey = Keyboard.getEventKey();
-        final boolean eventKeyState = Keyboard.getEventKeyState();
-
-        KeybindMulti.onKeyInput(eventKey, eventKeyState);
 
         // Not in a GUI
         if (mc.currentScreen == null)
@@ -122,38 +119,35 @@ public class InputEventHandler
         return false;
     }
 
-    public boolean onMouseInput()
+    @Override
+    public boolean onMouseInput(int eventButton, int dWheel, boolean eventButtonState)
     {
         Minecraft mc = Minecraft.getMinecraft();
-        final int eventKey = Mouse.getEventButton();
-
-        if (eventKey != -1)
-        {
-            KeybindMulti.onKeyInput(eventKey - 100, Mouse.getEventButtonState());
-        }
 
         // Not in a GUI
         if (mc.currentScreen == null)
         {
-            final int dWheel = Mouse.getEventDWheel();
-            boolean cancel = eventKey != -1 && this.checkKeyBinds(eventKey - 100);
-
-            if (dWheel != 0 && FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld())
+            if (dWheel != 0)
             {
-                int change = dWheel > 0 ? 1 : -1;
-                int clicks = MathHelper.clamp(ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + change, 1, 32);
+                if (FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld())
+                {
+                    int change = dWheel > 0 ? 1 : -1;
+                    int clicks = MathHelper.clamp(ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + change, 1, 32);
 
-                ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(clicks);
+                    ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(clicks);
 
-                String preGreen = TextFormatting.GREEN.toString();
-                String rst = TextFormatting.RESET.toString();
-                String strValue = preGreen + Integer.valueOf(clicks) + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_after_clicker_count_to", strValue));
+                    String preGreen = TextFormatting.GREEN.toString();
+                    String rst = TextFormatting.RESET.toString();
+                    String strValue = preGreen + Integer.valueOf(clicks) + rst;
+                    mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_after_clicker_count_to", strValue));
 
-                return true;
+                    return true;
+                }
             }
-
-            return cancel;
+            else
+            {
+                return eventButton != -1 && this.checkKeyBinds(eventButton - 100);
+            }
         }
 
         return false;

@@ -1,10 +1,10 @@
 package fi.dy.masa.tweakeroo.renderer;
 
 import org.lwjgl.opengl.GL11;
+import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.config.HudAlignment;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.HitPart;
 import net.minecraft.block.BlockChest;

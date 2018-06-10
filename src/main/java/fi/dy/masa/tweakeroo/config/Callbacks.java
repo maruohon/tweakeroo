@@ -1,7 +1,8 @@
 package fi.dy.masa.tweakeroo.config;
 
-import fi.dy.masa.tweakeroo.config.KeybindMulti.KeyAction;
-import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
+import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
+import fi.dy.masa.malilib.hotkeys.IKeybind;
+import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.FastMode;
