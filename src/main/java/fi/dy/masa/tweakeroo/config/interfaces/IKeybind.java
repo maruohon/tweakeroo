@@ -12,7 +12,7 @@ public interface IKeybind
 
     boolean isPressed();
 
-    boolean isKeybindHeld(boolean checkNow);
+    boolean isKeybindHeld();
 
     void clearKeys();
 

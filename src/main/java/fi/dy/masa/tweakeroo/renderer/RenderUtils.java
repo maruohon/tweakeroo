@@ -236,7 +236,7 @@ public class RenderUtils
         World world = getBestWorld(mc);
 
         if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
-            Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld(false) &&
+            Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld() &&
             trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
         {
             BlockPos pos = trace.getBlockPos();

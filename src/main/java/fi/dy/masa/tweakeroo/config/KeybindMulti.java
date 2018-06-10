@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import com.google.common.collect.ImmutableList;
 import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 
@@ -58,13 +59,8 @@ public class KeybindMulti implements IKeybind
      * @return
      */
     @Override
-    public boolean isKeybindHeld(boolean checkNow)
+    public boolean isKeybindHeld()
     {
-        if (checkNow && this.isValid())
-        {
-            this.updateIsPressed();
-        }
-
         return this.pressed;
     }
 
@@ -72,11 +68,25 @@ public class KeybindMulti implements IKeybind
     {
         int activeCount = 0;
 
-        for (Integer keyCode : this.keyCodes)
+        for (int i = 0; i < this.keyCodes.size(); ++i)
         {
-            if (Keyboard.isKeyDown(keyCode))
+            int keyCode = this.keyCodes.get(i).intValue();
+
+            if (keyCode > 0)
             {
-                activeCount++;
+                if (Keyboard.isKeyDown(keyCode))
+                {
+                    activeCount++;
+                }
+            }
+            else
+            {
+                keyCode += 100;
+
+                if (keyCode >= 0 && keyCode < Mouse.getButtonCount() && Mouse.isButtonDown(keyCode))
+                {
+                    activeCount++;
+                }
             }
         }
 
@@ -109,7 +119,7 @@ public class KeybindMulti implements IKeybind
     @Override
     public void addKey(int keyCode)
     {
-        if (keyCode > 0 && this.keyCodes.contains(keyCode) == false)
+        if (this.keyCodes.contains(keyCode) == false)
         {
             this.keyCodes.add(keyCode);
         }
@@ -145,18 +155,30 @@ public class KeybindMulti implements IKeybind
     @Override
     public String getStorageString()
     {
-        StringBuilder sb = new StringBuilder(16);
-        int i = 0;
+        StringBuilder sb = new StringBuilder(32);
 
-        for (Integer keyCode : this.keyCodes)
+        for (int i = 0; i < this.keyCodes.size(); ++i)
         {
             if (i > 0)
             {
                 sb.append(",");
             }
 
-            sb.append(Keyboard.getKeyName(keyCode));
-            i++;
+            int keyCode = this.keyCodes.get(i).intValue();
+
+            if (keyCode > 0)
+            {
+                sb.append(Keyboard.getKeyName(keyCode));
+            }
+            else
+            {
+                keyCode += 100;
+
+                if (keyCode >= 0 && keyCode < Mouse.getButtonCount())
+                {
+                    sb.append(Mouse.getButtonName(keyCode));
+                }
+            }
         }
 
         return sb.toString();
@@ -178,7 +200,15 @@ public class KeybindMulti implements IKeybind
 
                 if (keyCode != Keyboard.KEY_NONE)
                 {
-                    this.keyCodes.add(keyCode);
+                    this.addKey(keyCode);
+                    continue;
+                }
+
+                keyCode = Mouse.getButtonIndex(key);
+
+                if (keyCode >= 0 && keyCode < Mouse.getButtonCount())
+                {
+                    this.addKey(keyCode - 100);
                 }
             }
         }
@@ -189,6 +219,18 @@ public class KeybindMulti implements IKeybind
         KeybindMulti keybind = new KeybindMulti();
         keybind.setKeysFromStorageString(str);
         return keybind;
+    }
+
+    public static boolean isKeyDown(int keyCode)
+    {
+        if (keyCode > 0)
+        {
+            return Keyboard.isKeyDown(keyCode);
+        }
+
+        keyCode += 100;
+
+        return keyCode >= 0 && keyCode < Mouse.getButtonCount() && Mouse.isButtonDown(keyCode);
     }
 
     public static void onKeyInput(int keyCode, boolean state)
@@ -213,7 +255,7 @@ public class KeybindMulti implements IKeybind
         {
             int keyCode = iter.next().intValue();
 
-            if (keyCode > 0 && Keyboard.isKeyDown(keyCode) == false)
+            if (isKeyDown(keyCode) == false)
             {
                 iter.remove();
             }

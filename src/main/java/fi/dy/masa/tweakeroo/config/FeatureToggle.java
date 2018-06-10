@@ -8,7 +8,7 @@ import fi.dy.masa.tweakeroo.config.interfaces.IKeybind;
 
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
-    CARPET_FLEXIBLE_BLOCK_PLACEMENT ("carpetFlexibleBlockPlacement",        false, "LMENU,C", "If enabled, then the flexible block placement uses the protocol implemented in the recent carpet mod versions"),
+    CARPET_FLEXIBLE_BLOCK_PLACEMENT ("carpetFlexibleBlockPlacement",        false, "LMENU,C", "If enabled, then the flexible block placement uses the protocol implemented in the recent carpet mod versions", "Carpet protocol Flexible Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "LSHIFT,X,F", "If enabled, then the fast placement mode will always remember the orientation of the first block you place.\nWithout this, the orientation will only be remembered with the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
     REMEMBER_FLEXIBLE               ("rememberFlexibleFromClick",           true, "LSHIFT,X,L", "If enabled, then the flexible block placement status will be remembered\nfrom the first placed block, as long as the use key is held down.", "Remember Flexible Orientation From First Click"),
     TWEAK_AFTER_CLICKER             ("tweakAfterClicker",                   false, "X,C", "Enables a \"after clicker\" tweak, which does automatic right clicks on the just-placed block.\nUseful for example for Repeaters (setting the delay)."),

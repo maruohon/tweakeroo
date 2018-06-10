@@ -63,18 +63,29 @@ public abstract class ConfigPanelSub extends AbstractConfigPanel
     @Override
     public void mousePressed(ConfigPanelHost host, int mouseX, int mouseY, int mouseButton)
     {
+        // Don't call super if the button got handled
+        if (this.mousePressed(mouseX, mouseY, mouseButton) == false)
+        {
+            super.mousePressed(host, mouseX, mouseY, mouseButton);
+        }
+    }
+
+    /**
+     * Handle a mouse button click. Returns true if the click was handled
+     */
+    protected boolean mousePressed(int mouseX, int mouseY, int mouseButton)
+    {
         for (ConfigButtonBase button : this.buttons)
         {
             if (button.mousePressed(this.mc, mouseX, mouseY))
             {
                 button.onMouseButtonClicked(mouseButton);
                 this.listener.actionPerformed(button);
-                // Don't call super if the button got handled
-                return;
+                return true;
             }
         }
 
-        super.mousePressed(host, mouseX, mouseY, mouseButton);
+        return false;
     }
 
     protected <T extends ConfigButtonBase> void addButton(T button, ConfigOptionListener<T> listener)

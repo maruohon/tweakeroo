@@ -255,8 +255,8 @@ public class PlacementTweaks
         if (posFirst == null && result == EnumActionResult.SUCCESS && fastPlacement)
         {
             boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
-            boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false);
-            boolean offset = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false);
+            boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
+            boolean offset = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld();
             firstWasRotation = flexible && rotation;
             firstWasOffset = flexible && offset;
             posFirst = getPlacementPositionForTargetedPosition(posIn, sideIn, world);
@@ -290,8 +290,8 @@ public class PlacementTweaks
             EnumFacing side = sideIn;
             boolean handle = false;
             boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
-            boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false);
-            boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false);
+            boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
+            boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld();
             boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
             boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
             BlockPos posNew = isFirstClick && (rotation || offset) ? getPlacementPositionForTargetedPosition(posIn, sideIn, world) : posIn;

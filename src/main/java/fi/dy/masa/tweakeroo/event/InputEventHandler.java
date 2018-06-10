@@ -78,6 +78,23 @@ public class InputEventHandler
         }
     }
 
+    private boolean checkKeyBinds(int eventKey)
+    {
+        boolean cancel = false;
+        Collection<IKeybind> keybinds = this.hotkeyMap.get(eventKey);
+
+        if (keybinds.isEmpty() == false)
+        {
+            for (IKeybind keybind : keybinds)
+            {
+                // Note: isPressed() has to get called for key releases too, to reset the state
+                cancel |= keybind.isPressed();
+            }
+        }
+
+        return cancel;
+    }
+
     public boolean onKeyInput()
     {
         Minecraft mc = Minecraft.getMinecraft();
@@ -89,18 +106,7 @@ public class InputEventHandler
         // Not in a GUI
         if (mc.currentScreen == null)
         {
-            boolean cancel = false;
-
-            Collection<IKeybind> keybinds = this.hotkeyMap.get(eventKey);
-
-            if (keybinds.isEmpty() == false)
-            {
-                for (IKeybind keybind : keybinds)
-                {
-                    // Note: isPressed() has to get called for key releases too, to reset the state
-                    cancel |= keybind.isPressed();
-                }
-            }
+            boolean cancel = this.checkKeyBinds(eventKey);
 
             if (eventKeyState)
             {
@@ -119,13 +125,20 @@ public class InputEventHandler
     public boolean onMouseInput()
     {
         Minecraft mc = Minecraft.getMinecraft();
+        final int eventKey = Mouse.getEventButton();
+
+        if (eventKey != -1)
+        {
+            KeybindMulti.onKeyInput(eventKey - 100, Mouse.getEventButtonState());
+        }
 
         // Not in a GUI
         if (mc.currentScreen == null)
         {
-            int dWheel = Mouse.getEventDWheel();
+            final int dWheel = Mouse.getEventDWheel();
+            boolean cancel = eventKey != -1 && this.checkKeyBinds(eventKey - 100);
 
-            if (dWheel != 0 && FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld(false))
+            if (dWheel != 0 && FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld())
             {
                 int change = dWheel > 0 ? 1 : -1;
                 int clicks = MathHelper.clamp(ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + change, 1, 32);
@@ -139,6 +152,8 @@ public class InputEventHandler
 
                 return true;
             }
+
+            return cancel;
         }
 
         return false;

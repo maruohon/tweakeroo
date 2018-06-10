@@ -27,14 +27,16 @@ public class ConfigButtonHotkey extends ConfigButtonBase
     @Override
     public void onMouseButtonClicked(int mouseButton)
     {
-        this.onMouseClicked();
-    }
-
-    @Override
-    public void onMouseClicked()
-    {
-        this.selected = ! this.selected;
-        this.host.setActiveButton(this.selected ? this : null);
+        if (this.selected)
+        {
+            this.addKey(mouseButton - 100);
+            this.updateDisplayString();
+        }
+        else if (mouseButton == 0)
+        {
+            this.selected = true;
+            this.host.setActiveButton(this);
+        }
     }
 
     public void onKeyPressed(int keyCode)
@@ -50,17 +52,24 @@ public class ConfigButtonHotkey extends ConfigButtonBase
             }
             else
             {
-                if (this.firstKey)
-                {
-                    keybind.clearKeys();
-                    this.firstKey = false;
-                }
-
-                keybind.addKey(keyCode);
+                this.addKey(keyCode);
             }
 
             this.updateDisplayString();
         }
+    }
+
+    private void addKey(int keyCode)
+    {
+        IKeybind keybind = this.hotkey.getKeybind();
+
+        if (this.firstKey)
+        {
+            keybind.clearKeys();
+            this.firstKey = false;
+        }
+
+        keybind.addKey(keyCode);
     }
 
     public void onSelected()

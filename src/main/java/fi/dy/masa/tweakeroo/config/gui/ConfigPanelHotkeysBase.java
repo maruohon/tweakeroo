@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.config.gui;
 
+import javax.annotation.Nullable;
 import com.mumfrey.liteloader.modconfig.ConfigPanelHost;
 import fi.dy.masa.tweakeroo.config.gui.button.ConfigButtonHotkey;
 
@@ -12,7 +13,7 @@ public abstract class ConfigPanelHotkeysBase extends ConfigPanelSub
         super(title, parent);
     }
 
-    public void setActiveButton(ConfigButtonHotkey button)
+    public void setActiveButton(@Nullable ConfigButtonHotkey button)
     {
         if (this.activeButton != null)
         {
@@ -25,6 +26,22 @@ public abstract class ConfigPanelHotkeysBase extends ConfigPanelSub
         {
             this.activeButton.onSelected();
         }
+    }
+
+    @Override
+    protected boolean mousePressed(int mouseX, int mouseY, int mouseButton)
+    {
+        boolean handled = super.mousePressed(mouseX, mouseY, mouseButton);
+
+        // When clicking on not-a-button, clear the selection
+        if (handled == false && this.activeButton != null)
+        {
+            this.activeButton.onClearSelection();
+            this.setActiveButton(null);
+            return true;
+        }
+
+        return handled;
     }
 
     @Override

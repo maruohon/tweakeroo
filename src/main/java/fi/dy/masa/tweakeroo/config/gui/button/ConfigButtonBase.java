@@ -9,7 +9,11 @@ public abstract class ConfigButtonBase extends GuiButton
         super(id, x, y, width, height, "");
     }
 
-    public abstract void onMouseClicked();
+    public void onMouseClicked()
+    {
+    }
 
-    public abstract void onMouseButtonClicked(int mouseButton);
+    public void onMouseButtonClicked(int mouseButton)
+    {
+    }
 }

@@ -17,11 +17,6 @@ public class ConfigButtonBoolean extends ConfigButtonBase
     }
 
     @Override
-    public void onMouseClicked()
-    {
-    }
-
-    @Override
     public void onMouseButtonClicked(int mouseButton)
     {
         this.config.setBooleanValue(! this.config.getBooleanValue());

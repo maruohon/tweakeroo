@@ -16,11 +16,6 @@ public class ConfigButtonOptionList extends ConfigButtonBase
     }
 
     @Override
-    public void onMouseClicked()
-    {
-    }
-
-    @Override
     public void onMouseButtonClicked(int mouseButton)
     {
         this.config.setOptionListValue(this.config.getOptionListValue().cycle(mouseButton == 0));

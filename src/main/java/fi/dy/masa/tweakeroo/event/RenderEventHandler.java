@@ -25,8 +25,8 @@ public class RenderEventHandler
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
             mc.objectMouseOver != null &&
             mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK &&
-            (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld(false) ||
-             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld(false)))
+            (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
+             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld()))
         {
             Entity entity = mc.player;
             GlStateManager.depthMask(false);
@@ -59,13 +59,13 @@ public class RenderEventHandler
         Minecraft mc = Minecraft.getMinecraft();
 
         if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
-            Hotkeys.HOTBAR_SWAP_BASE.getKeybind().isKeybindHeld(false))
+            Hotkeys.HOTBAR_SWAP_BASE.getKeybind().isKeybindHeld())
         {
             RenderUtils.renderHotbarSwapOverlay(mc);
         }
 
         if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
-            Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld(false))
+            Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld())
         {
             RenderUtils.renderInventoryOverlay(mc);
         }
