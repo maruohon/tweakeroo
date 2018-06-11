@@ -4,7 +4,6 @@ import com.mumfrey.liteloader.modconfig.ConfigPanelHost;
 import fi.dy.masa.malilib.config.gui.ConfigPanelHotkeysBase;
 import fi.dy.masa.malilib.config.gui.button.ConfigButtonHotkey;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.event.InputEventHandler;
 
 public class ConfigPanelTweakHotkeys extends ConfigPanelHotkeysBase
 {
@@ -20,12 +19,6 @@ public class ConfigPanelTweakHotkeys extends ConfigPanelHotkeysBase
     }
 
     @Override
-    protected void onSettingsChanged()
-    {
-        InputEventHandler.getInstance().updateUsedKeys();
-    }
-
-    @Override
     public void addOptions(ConfigPanelHost host)
     {
         this.clearOptions();
@@ -38,7 +31,7 @@ public class ConfigPanelTweakHotkeys extends ConfigPanelHotkeysBase
         for (FeatureToggle hotkey : this.getConfigs())
         {
             this.addLabel(i, x, y + 7, labelWidth, 8, 0xFFFFFFFF, hotkey.getName());
-            this.addConfigComment(x, y + 7, labelWidth, 8, "Hotkey to toggle the '" + hotkey.getToggleMessage() + "' tweak");
+            this.addConfigComment(x, y + 7, labelWidth, 8, "Hotkey to toggle the '" + hotkey.getPrettyName() + "' tweak");
 
             this.addButton(new ConfigButtonHotkey(i + 1, x + labelWidth + 10, y, 200, 20, hotkey, this), this.getConfigListener());
 

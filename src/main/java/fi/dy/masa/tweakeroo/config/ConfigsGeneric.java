@@ -83,6 +83,13 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
     }
 
     @Override
+    public String getPrettyName()
+    {
+        // TODO
+        return this.name;
+    }
+
+    @Override
     @Nullable
     public String getComment()
     {

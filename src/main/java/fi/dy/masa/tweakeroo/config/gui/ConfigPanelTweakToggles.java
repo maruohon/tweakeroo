@@ -8,16 +8,13 @@ public class ConfigPanelTweakToggles extends ConfigPanelSub
     public ConfigPanelTweakToggles(TweakerooConfigPanel parent)
     {
         super("Tweak Toggles", parent);
+
+        this.elementWidth = 120;
     }
 
     @Override
     protected FeatureToggle[] getConfigs()
     {
         return FeatureToggle.values();
-    }
-
-    @Override
-    protected void onSettingsChanged()
-    {
     }
 }

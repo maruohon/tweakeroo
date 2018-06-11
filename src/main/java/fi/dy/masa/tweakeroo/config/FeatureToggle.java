@@ -4,9 +4,9 @@ import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.IConfigBoolean;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
+import fi.dy.masa.malilib.hotkeys.KeyCallbackToggleBooleanConfigWithMessage;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.tweakeroo.config.Callbacks.KeyCallbackToggleFeatureWithMessage;
 
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
@@ -35,7 +35,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
 
     private final String name;
     private final String comment;
-    private final String toggleMessage;
+    private final String prettyName;
     private final IKeybind keybind;
     private boolean valueBoolean;
     private IFeatureCallback callback;
@@ -45,14 +45,14 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
         this(name, defaultValue, defaultHotkey, comment, StringUtils.splitCamelCase(name.substring(5)));
     }
 
-    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String toggleMessage)
+    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
     {
         this.name = name;
         this.valueBoolean = defaultValue;
         this.comment = comment;
-        this.toggleMessage = toggleMessage;
+        this.prettyName = prettyName;
         this.keybind = KeybindMulti.fromStorageString(defaultHotkey);
-        this.keybind.setCallback(new KeyCallbackToggleFeatureWithMessage(this));
+        this.keybind.setCallback(new KeyCallbackToggleBooleanConfigWithMessage(this));
     }
 
     public void setCallback(IFeatureCallback callback)
@@ -73,6 +73,12 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     }
 
     @Override
+    public String getPrettyName()
+    {
+        return this.prettyName;
+    }
+
+    @Override
     public String getStringValue()
     {
         return String.valueOf(this.valueBoolean);
@@ -87,11 +93,6 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     public String getComment()
     {
         return comment != null ? comment : "";
-    }
-
-    public String getToggleMessage()
-    {
-        return this.toggleMessage;
     }
 
     @Override

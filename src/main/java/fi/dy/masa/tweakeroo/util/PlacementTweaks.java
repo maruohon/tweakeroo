@@ -2,7 +2,7 @@ package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
-import fi.dy.masa.tweakeroo.config.Callbacks;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -117,9 +117,8 @@ public class PlacementTweaks
         fastMode = mode;
         ConfigsGeneric.FAST_PLACEMENT_MODE.setOptionListValue(mode);
 
-        Minecraft mc = Minecraft.getMinecraft();
         String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
-        Callbacks.printMessage(mc, "tweakeroo.message.set_fast_placement_mode_to", str);
+        StringUtils.printActionbarMessage("tweakeroo.message.set_fast_placement_mode_to", str);
     }
 
     public static void setFastPlacementModeFromConfigs()

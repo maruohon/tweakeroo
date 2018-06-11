@@ -3,13 +3,12 @@ package fi.dy.masa.tweakeroo.config;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.FastMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 public class Callbacks
@@ -37,8 +36,8 @@ public class Callbacks
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
 
-        FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleAfterClicker(FeatureToggle.TWEAK_AFTER_CLICKER, mc));
-        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT, mc));
+        FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleAfterClicker(FeatureToggle.TWEAK_AFTER_CLICKER));
+        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
     }
 
     public static class FeatureCallbackGamma implements IFeatureCallback
@@ -85,7 +84,7 @@ public class Callbacks
         }
 
         @Override
-        public void onKeyAction(KeyAction action, IKeybind key)
+        public boolean onKeyAction(KeyAction action, IKeybind key)
         {
             if (action == KeyAction.PRESS)
             {
@@ -96,7 +95,7 @@ public class Callbacks
                     String pre = mc.skipRenderWorld ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
                     String status = I18n.format("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
                     String message = I18n.format("tweakeroo.message.toggled", "Skip All Rendering", pre + status + TextFormatting.RESET);
-                    printMessage(this.mc, message);
+                    StringUtils.printActionbarMessage(message);
                 }
                 else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
                 {
@@ -106,34 +105,13 @@ public class Callbacks
                     String pre = enabled ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
                     String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
                     String message = I18n.format("tweakeroo.message.toggled", "Skip World Rendering", pre + status + TextFormatting.RESET);
-                    printMessage(this.mc, message);
+                    StringUtils.printActionbarMessage(message);
                 }
+
+                return true;
             }
-        }
-    }
 
-    public static class KeyCallbackToggleFeatureWithMessage implements IHotkeyCallback
-    {
-        protected final FeatureToggle feature;
-
-        public KeyCallbackToggleFeatureWithMessage(FeatureToggle feature)
-        {
-            this.feature = feature;
-        }
-
-        @Override
-        public void onKeyAction(KeyAction action, IKeybind key)
-        {
-            if (action == KeyAction.PRESS)
-            {
-                this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
-
-                final boolean enabled = this.feature.getBooleanValue();
-                String pre = enabled ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
-                String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String message = I18n.format("tweakeroo.message.toggled", this.feature.getToggleMessage(), pre + status + TextFormatting.RESET);
-                printMessage(Minecraft.getMinecraft(), message);
-            }
+            return false;
         }
     }
 
@@ -147,7 +125,7 @@ public class Callbacks
         }
 
         @Override
-        public void onKeyAction(KeyAction action, IKeybind key)
+        public boolean onKeyAction(KeyAction action, IKeybind key)
         {
             if (action == KeyAction.PRESS)
             {
@@ -176,23 +154,25 @@ public class Callbacks
                 {
                     PlacementTweaks.setFastPlacementMode(FastMode.COLUMN);
                 }
+
+                return true;
             }
+
+            return false;
         }
     }
 
     private static class KeyCallbackToggleFastMode implements IHotkeyCallback
     {
         private final FeatureToggle feature;
-        private final Minecraft mc;
 
-        private KeyCallbackToggleFastMode(FeatureToggle feature, Minecraft mc)
+        private KeyCallbackToggleFastMode(FeatureToggle feature)
         {
             this.feature = feature;
-            this.mc = mc;
         }
 
         @Override
-        public void onKeyAction(KeyAction action, IKeybind key)
+        public boolean onKeyAction(KeyAction action, IKeybind key)
         {
             if (action == KeyAction.PRESS)
             {
@@ -208,29 +188,31 @@ public class Callbacks
                 if (enabled)
                 {
                     String strMode = PlacementTweaks.getFastPlacementMode().name();
-                    printMessage(this.mc, "tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
                 }
                 else
                 {
-                    printMessage(this.mc, "tweakeroo.message.toggled", this.feature.getToggleMessage(), strStatus);
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
                 }
+
+                return true;
             }
+
+            return false;
         }
     }
 
     private static class KeyCallbackToggleAfterClicker implements IHotkeyCallback
     {
         private final FeatureToggle feature;
-        private final Minecraft mc;
 
-        private KeyCallbackToggleAfterClicker(FeatureToggle feature, Minecraft mc)
+        private KeyCallbackToggleAfterClicker(FeatureToggle feature)
         {
             this.feature = feature;
-            this.mc = mc;
         }
 
         @Override
-        public void onKeyAction(KeyAction action, IKeybind key)
+        public boolean onKeyAction(KeyAction action, IKeybind key)
         {
             if (action == KeyAction.PRESS)
             {
@@ -246,18 +228,17 @@ public class Callbacks
                 if (enabled)
                 {
                     String strValue = ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getStringValue();
-                    printMessage(this.mc, "tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
                 }
                 else
                 {
-                    printMessage(this.mc, "tweakeroo.message.toggled", this.feature.getToggleMessage(), strStatus);
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
                 }
-            }
-        }
-    }
 
-    public static void printMessage(Minecraft mc, String key, Object... args)
-    {
-        mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation(key, args));
+                return true;
+            }
+
+            return false;
+        }
     }
 }
