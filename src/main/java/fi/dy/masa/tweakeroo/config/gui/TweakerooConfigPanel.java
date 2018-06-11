@@ -1,7 +1,11 @@
 package fi.dy.masa.tweakeroo.config.gui;
 
 import fi.dy.masa.malilib.config.gui.ConfigPanelBase;
+import fi.dy.masa.malilib.config.gui.ConfigPanelHotkeysBase;
 import fi.dy.masa.tweakeroo.Reference;
+import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
 
 public class TweakerooConfigPanel extends ConfigPanelBase
 {
@@ -14,9 +18,9 @@ public class TweakerooConfigPanel extends ConfigPanelBase
     @Override
     protected void createSubPanels()
     {
-        this.addSubPanel(new ConfigPanelGeneric(this));
-        this.addSubPanel(new ConfigPanelGenericHotkeys(this));
-        this.addSubPanel(new ConfigPanelTweakToggles(this));
+        this.addSubPanel(new ConfigPanelSubTweakeroo("Generic", ConfigsGeneric.values(), this));
+        this.addSubPanel(new ConfigPanelHotkeysBase("Generic Hotkeys", Hotkeys.values(), this));
+        this.addSubPanel((new ConfigPanelSubTweakeroo("Tweak Toggles", FeatureToggle.values(), this)).setElementWidth(120));
         this.addSubPanel(new ConfigPanelTweakHotkeys(this));
     }
 }
