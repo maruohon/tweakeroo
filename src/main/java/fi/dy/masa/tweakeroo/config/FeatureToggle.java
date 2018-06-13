@@ -28,6 +28,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     TWEAK_ITEM_UNSTACKING_PROTECTION("tweakItemUnstackingProtection",       false, "X,P", "If enabled, then items configured in Generic -> unstackingItems won't be\nallowed to spill out when using. This is meant for example to\nprevent throwing buckets into lava when filling them."),
     TWEAK_LAVA_VISIBILITY           ("tweakLavaVisibility",                 false, "X,A", "If enabled and the player has a Respiration helmet and/or Wather Breathing\nactive, the lava fog is greatly reduced"),
     TWEAK_MOVEMENT_KEYS             ("tweakMovementKeysLast",               false, "X,M", "If enabled, then opposite movement keys won't cancel each other,\nbut instead the last pressed key is the active input"),
+    TWEAK_PLAYER_INVENTORY_PEEK     ("tweakPlayerInventoryPeek",            false, "X,Q", "Enables a player inventory peek/preview, while holding the\nconfigured modifier key for it"),
     TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "",    "If enabled, then falling block entities won't be rendered at all"),
     TWEAK_NO_ITEM_SWITCH_COOLDOWN   ("tweakNoItemSwitchRenderCooldown",     false, "",    "If true, then there won't be any cooldown/equip animation\nwhen switching the held item or using the item."),
     TWEAK_NO_LIGHT_UPDATES          ("tweakNoLightUpdates",                 false, "X,N", "If enabled, disables client-side light updates"),

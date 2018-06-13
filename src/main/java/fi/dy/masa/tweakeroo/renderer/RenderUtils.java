@@ -3,8 +3,6 @@ package fi.dy.masa.tweakeroo.renderer;
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.HitPart;
 import net.minecraft.block.BlockChest;
@@ -40,6 +38,7 @@ public class RenderUtils
     public static final ResourceLocation TEXTURE_DISPENSER = new ResourceLocation("textures/gui/container/dispenser.png");
     public static final ResourceLocation TEXTURE_DOUBLE_CHEST = new ResourceLocation("textures/gui/container/generic_54.png");
     public static final ResourceLocation TEXTURE_HOPPER = new ResourceLocation("textures/gui/container/hopper.png");
+    public static final ResourceLocation TEXTURE_PLAYER_INV = new ResourceLocation("textures/gui/container/hopper.png");
     public static final ResourceLocation TEXTURE_SINGLE_CHEST = new ResourceLocation("textures/gui/container/shulker_box.png");
     private static final Vec3d LIGHT0_POS = (new Vec3d( 0.2D, 1.0D, -0.7D)).normalize();
     private static final Vec3d LIGHT1_POS = (new Vec3d(-0.2D, 1.0D,  0.7D)).normalize();
@@ -235,9 +234,7 @@ public class RenderUtils
         RayTraceResult trace = mc.objectMouseOver;
         World world = getBestWorld(mc);
 
-        if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
-            Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld() &&
-            trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
         {
             BlockPos pos = trace.getBlockPos();
             TileEntity te = world.getTileEntity(pos);
@@ -291,9 +288,21 @@ public class RenderUtils
                 }
 
                 renderInventoryBackground(x, y, slotsPerRow, totalSlots, mc);
-                renderInventoryStacks(inv, x + slotOffsetX, y + slotOffsetY, slotsPerRow, mc);
+                renderInventoryStacks(inv, x + slotOffsetX, y + slotOffsetY, slotsPerRow, 0, -1, mc);
             }
         }
+    }
+
+    public static void renderPlayerInventoryOverlay(Minecraft mc)
+    {
+        ScaledResolution res = new ScaledResolution(mc);
+        int x = res.getScaledWidth() / 2 - 176 / 2;
+        int y = res.getScaledHeight() / 2 + 10;
+        int slotOffsetX =  8;
+        int slotOffsetY = 18;
+
+        renderInventoryBackground(x, y, 9, 27, mc);
+        renderInventoryStacks(mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
     }
 
     /**
@@ -350,15 +359,20 @@ public class RenderUtils
         }
     }
 
-    private static void renderInventoryStacks(IInventory inv, int startX, int startY, int slotsPerRow, Minecraft mc)
+    private static void renderInventoryStacks(IInventory inv, int startX, int startY, int slotsPerRow, int startSlot, int maxSlots, Minecraft mc)
     {
         final int slots = inv.getSizeInventory();
         int x = startX;
         int y = startY;
 
-        for (int slot = 0; slot < slots;)
+        if (maxSlots < 0)
         {
-            for (int column = 0; column < slotsPerRow && slot < slots; ++column, ++slot)
+            maxSlots = slots;
+        }
+
+        for (int slot = startSlot, i = 0; slot < slots && i < maxSlots;)
+        {
+            for (int column = 0; column < slotsPerRow && slot < slots && i < maxSlots; ++column, ++slot, ++i)
             {
                 ItemStack stack = inv.getStackInSlot(slot);
 

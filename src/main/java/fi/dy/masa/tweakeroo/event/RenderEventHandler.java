@@ -69,5 +69,11 @@ public class RenderEventHandler
         {
             RenderUtils.renderInventoryOverlay(mc);
         }
+
+        if (FeatureToggle.TWEAK_PLAYER_INVENTORY_PEEK.getBooleanValue() &&
+            Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().isKeybindHeld())
+        {
+            RenderUtils.renderPlayerInventoryOverlay(mc);
+        }
     }
 }

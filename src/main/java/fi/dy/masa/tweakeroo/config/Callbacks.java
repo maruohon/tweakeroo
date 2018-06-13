@@ -32,6 +32,7 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callback);
+        Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().setCallback(callback);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
