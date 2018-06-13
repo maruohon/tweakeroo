@@ -17,6 +17,8 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -24,8 +26,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.tileentity.TileEntity;
@@ -46,6 +50,7 @@ public class RenderUtils
     public static final ResourceLocation TEXTURE_SINGLE_CHEST = new ResourceLocation("textures/gui/container/shulker_box.png");
     private static final Vec3d LIGHT0_POS = (new Vec3d( 0.2D, 1.0D, -0.7D)).normalize();
     private static final Vec3d LIGHT1_POS = (new Vec3d(-0.2D, 1.0D,  0.7D)).normalize();
+    private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] { EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET };
 
     public static void renderBlockPlacementOverlay(Entity entity, BlockPos pos, EnumFacing side, Vec3d hitVec, double dx, double dy, double dz)
     {
@@ -247,86 +252,113 @@ public class RenderUtils
 
         RayTraceResult trace = RayTraceUtils.getRayTraceFromEntity(world, player, false);
 
-        if (trace != null)
+        if (trace == null)
         {
-            IInventory inv = null;
+            return;
+        }
 
-            if (trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        IInventory inv = null;
+        EntityLivingBase entity = null;
+
+        if (trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        {
+            BlockPos pos = trace.getBlockPos();
+            TileEntity te = world.getTileEntity(pos);
+
+            if (te instanceof IInventory)
             {
-                BlockPos pos = trace.getBlockPos();
-                TileEntity te = world.getTileEntity(pos);
+                inv = (IInventory) te;
+                IBlockState state = world.getBlockState(pos);
 
-                if (te instanceof IInventory)
+                if (state.getBlock() instanceof BlockChest)
                 {
-                    inv = (IInventory) te;
-                    IBlockState state = world.getBlockState(pos);
+                    ILockableContainer cont = ((BlockChest) state.getBlock()).getLockableContainer(world, pos);
 
-                    if (state.getBlock() instanceof BlockChest)
+                    if (cont instanceof InventoryLargeChest)
                     {
-                        ILockableContainer cont = ((BlockChest) state.getBlock()).getLockableContainer(world, pos);
-
-                        if (cont instanceof InventoryLargeChest)
-                        {
-                            inv = (InventoryLargeChest) cont;
-                        }
+                        inv = (InventoryLargeChest) cont;
                     }
                 }
             }
-            else if (trace.typeOfHit == RayTraceResult.Type.ENTITY &&
-                    trace.entityHit instanceof EntityVillager)
+        }
+        else if (trace.typeOfHit == RayTraceResult.Type.ENTITY && trace.entityHit instanceof EntityLivingBase)
+        {
+            entity = (EntityLivingBase) trace.entityHit;
+
+            if (entity instanceof EntityVillager)
             {
                 inv = ((EntityVillager) trace.entityHit).getVillagerInventory();
             }
+        }
 
-            if (inv != null)
+        ScaledResolution res = new ScaledResolution(mc);
+        final int xCenter = res.getScaledWidth() / 2;
+        final int yCenter = res.getScaledHeight() / 2;
+
+        if (inv != null)
+        {
+            final int totalSlots = inv.getSizeInventory();
+            int slotsPerRow = 9;
+            int slotOffsetX =  8;
+            int slotOffsetY = 18;
+
+            if (totalSlots <= 5)
             {
-                final int totalSlots = inv.getSizeInventory();
-                int slotsPerRow = 9;
-                int slotOffsetX =  8;
-                int slotOffsetY = 18;
-
-                if (totalSlots <= 5)
-                {
-                    slotOffsetX += 2 * 18;
-                    slotOffsetY += 2;
-                }
-                else if (totalSlots <= 9)
-                {
-                    slotsPerRow = 3;
-                    slotOffsetX += 3 * 18;
-                    slotOffsetY += -1;
-                }
-
-                ScaledResolution res = new ScaledResolution(mc);
-                final int rows = (int) Math.ceil(totalSlots / slotsPerRow);
-                int x = res.getScaledWidth() / 2 - 176 / 2;
-                int y = res.getScaledHeight() / 2 + 10;
-
-                if (rows > 6)
-                {
-                    y -= (rows - 6) * 18;
-                }
-
-                if (FeatureToggle.TWEAK_PLAYER_INVENTORY_PEEK.getBooleanValue() &&
-                    Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().isKeybindHeld())
-                {
-                    int height = 0;
-
-                    switch (totalSlots)
-                    {
-                        case 3:
-                        case 5:  height =  56; break;
-                        case 9:  height =  86; break;
-                        case 27: height =  88; break;
-                        case 54: height = 142; break;
-                    }
-
-                    y -= (y - res.getScaledHeight() / 2 + 10 + height);
-                }
-
-                renderInventoryBackground(x, y, slotsPerRow, totalSlots, mc);
-                renderInventoryStacks(inv, x + slotOffsetX, y + slotOffsetY, slotsPerRow, 0, -1, mc);
+                slotOffsetX += 2 * 18;
+                slotOffsetY += 2;
             }
+            else if (totalSlots <= 9)
+            {
+                slotsPerRow = 3;
+                slotOffsetX += 3 * 18;
+                slotOffsetY += -1;
+            }
+
+            int x = xCenter - 176 / 2;
+            int y = yCenter + 10;
+            final int rows = (int) Math.ceil(totalSlots / slotsPerRow);
+
+            if (rows > 6)
+            {
+                y -= (rows - 6) * 18;
+            }
+
+            boolean above = false;
+            int height = 0;
+
+            switch (totalSlots)
+            {
+                case 3:
+                case 5:  height =  56; break;
+                case 9:  height =  86; break;
+                case 27: height =  88; break;
+                case 54: height = 142; break;
+            }
+
+            if (FeatureToggle.TWEAK_PLAYER_INVENTORY_PEEK.getBooleanValue() &&
+                Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().isKeybindHeld())
+            {
+                y -= (y - yCenter + 10 + height);
+                above = true;
+            }
+
+            renderInventoryBackground(x, y, slotsPerRow, totalSlots, mc);
+            renderInventoryStacks(inv, x + slotOffsetX, y + slotOffsetY, slotsPerRow, 0, -1, mc);
+
+            if (entity != null)
+            {
+                x = x - 56;
+                //y = above ? yCenter - height - 80 - 20: yCenter + height + 20;
+                renderEquipmentOverlayBackground(mc, x, y, entity);
+                renderEquipmentStacks(entity, x, y, mc);
+            }
+        }
+        else if (entity != null)
+        {
+            int x = xCenter - 54 / 2;
+            int y = yCenter + 10;
+            renderEquipmentOverlayBackground(mc, x, y, entity);
+            renderEquipmentStacks(entity, x, y, mc);
         }
     }
 
@@ -361,6 +393,45 @@ public class RenderUtils
         }
     }
 
+    private static void renderEquipmentOverlayBackground(Minecraft mc, int x, int y, EntityLivingBase entity)
+    {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        mc.getTextureManager().bindTexture(TEXTURE_DISPENSER);
+        mc.ingameGUI.drawTexturedModalRect(x     , y     ,   0,   0, 50, 83); // top-left (main part)
+        mc.ingameGUI.drawTexturedModalRect(x + 50, y     , 173,   0,  3, 83); // right edge top
+        mc.ingameGUI.drawTexturedModalRect(x     , y + 83,   0, 163, 50,  3); // bottom edge left
+        mc.ingameGUI.drawTexturedModalRect(x + 50, y + 83, 173, 163,  3,  3); // bottom right corner
+
+        for (int i = 0, xOff = 7, yOff = 7; i < 4; ++i, yOff += 18)
+        {
+            mc.ingameGUI.drawTexturedModalRect(x + xOff, y + yOff, 61, 16, 18, 18);
+        }
+
+        // Main hand and offhand
+        mc.ingameGUI.drawTexturedModalRect(x + 28, y + 2 * 18 + 7, 61, 16, 18, 18);
+        mc.ingameGUI.drawTexturedModalRect(x + 28, y + 3 * 18 + 7, 61, 16, 18, 18);
+
+        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
+        if (entity.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).isEmpty())
+        {
+            String texture = "minecraft:items/empty_armor_slot_shield";
+            renderSprite(mc, x + 28 + 1, y + 3 * 18 + 7 + 1, texture, 16, 16);
+        }
+
+        for (int i = 0, xOff = 7, yOff = 7; i < 4; ++i, yOff += 18)
+        {
+            final EntityEquipmentSlot eqSlot = VALID_EQUIPMENT_SLOTS[i];
+
+            if (entity.getItemStackFromSlot(eqSlot).isEmpty())
+            {
+                String texture = ItemArmor.EMPTY_SLOT_NAMES[eqSlot.getIndex()];
+                renderSprite(mc, x + xOff + 1, y + yOff + 1, texture, 16, 16);
+            }
+        }
+    }
+
     private static void renderInventoryBackground(int x, int y, int slotsPerRow, int totalSlots, Minecraft mc)
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -391,6 +462,17 @@ public class RenderUtils
         }
     }
 
+    private static void renderSprite(Minecraft mc, int x, int y, String texture, int width, int height)
+    {
+        if (texture != null)
+        {
+            TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(texture);
+            GlStateManager.disableLighting();
+            mc.ingameGUI.drawTexturedModalRect(x, y, sprite, width, height);
+            GlStateManager.enableLighting();
+        }
+    }
+
     private static void renderInventoryStacks(IInventory inv, int startX, int startY, int slotsPerRow, int startSlot, int maxSlots, Minecraft mc)
     {
         final int slots = inv.getSizeInventory();
@@ -418,6 +500,34 @@ public class RenderUtils
 
             x = startX;
             y += 18;
+        }
+    }
+
+    private static void renderEquipmentStacks(EntityLivingBase entity, int x, int y, Minecraft mc)
+    {
+        for (int i = 0, xOff = 7, yOff = 7; i < 4; ++i, yOff += 18)
+        {
+            final EntityEquipmentSlot eqSlot = VALID_EQUIPMENT_SLOTS[i];
+            ItemStack stack = entity.getItemStackFromSlot(eqSlot);
+
+            if (stack.isEmpty() == false)
+            {
+                renderStackAt(stack, x + xOff + 1, y + yOff + 1, 1, mc);
+            }
+        }
+
+        ItemStack stack = entity.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+
+        if (stack.isEmpty() == false)
+        {
+            renderStackAt(stack, x + 28, y + 2 * 18 + 7 + 1, 1, mc);
+        }
+
+        stack = entity.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
+
+        if (stack.isEmpty() == false)
+        {
+            renderStackAt(stack, x + 28, y + 3 * 18 + 7 + 1, 1, mc);
         }
     }
 
