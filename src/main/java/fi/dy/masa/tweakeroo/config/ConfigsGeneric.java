@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.config;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.HudAlignment;
@@ -30,7 +31,12 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
     SLOT_SYNC_WORKAROUND                ("slotSyncWorkaround", true, "This prevents the server from overriding the durability or stack size on items\nthat are being used quickly for example with the fast right click tweak");
 
     private final String name;
+    private final String prettyName;
     private final ConfigType type;
+    private boolean defaultValueBoolean;
+    private int defaultValueInteger;
+    private String defaultValueString;
+    private IConfigOptionListEntry defaultValueOptionList;
     private String comment;
     private boolean valueBoolean;
     private int valueInteger;
@@ -41,7 +47,9 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
     {
         this.type = ConfigType.BOOLEAN;
         this.name = name;
+        this.prettyName = name;
         this.valueBoolean = defaultValue;
+        this.defaultValueBoolean = defaultValue;
         this.comment = comment;
     }
 
@@ -49,7 +57,9 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
     {
         this.type = ConfigType.INTEGER;
         this.name = name;
+        this.prettyName = name;
         this.valueInteger = defaultValue;
+        this.defaultValueInteger = defaultValue;
         this.comment = comment;
     }
 
@@ -57,8 +67,11 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
     {
         this.type = ConfigType.HEX_STRING;
         this.name = name;
+        this.prettyName = name;
         this.valueString = defaultValue;
+        this.defaultValueString = defaultValue;
         this.valueInteger = getColor(defaultValue, 0);
+        this.defaultValueInteger = this.valueInteger;
         this.comment = comment;
     }
 
@@ -66,7 +79,9 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
     {
         this.type = ConfigType.OPTION_LIST;
         this.name = name;
+        this.prettyName = name;
         this.valueOptionList = defaultValue;
+        this.defaultValueOptionList = defaultValue;
         this.comment = comment;
     }
 
@@ -85,8 +100,7 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
     @Override
     public String getPrettyName()
     {
-        // TODO
-        return this.name;
+        return this.prettyName;
     }
 
     @Override
@@ -133,6 +147,51 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
     public void setOptionListValue(IConfigOptionListEntry value)
     {
         this.valueOptionList = value;
+    }
+
+    @Override
+    public boolean isModified()
+    {
+        switch (this.type)
+        {
+            case BOOLEAN:       return this.valueBoolean != this.defaultValueBoolean;
+            case INTEGER:       return this.valueInteger != this.defaultValueInteger;
+            case HEX_STRING:    return this.valueInteger != this.defaultValueInteger;
+            case OPTION_LIST:   return this.valueOptionList != this.defaultValueOptionList;
+            case STRING:        return this.valueString.equals(this.defaultValueString) == false;
+            default:            return false;
+        }
+    }
+
+    @Override
+    public boolean isModified(String newValue)
+    {
+        switch (this.type)
+        {
+            case BOOLEAN:       return String.valueOf(this.defaultValueBoolean).equals(newValue) == false;
+            case INTEGER:       return String.valueOf(this.defaultValueInteger).equals(newValue) == false;
+            case HEX_STRING:    return String.format("0x%08X", this.defaultValueInteger).equals(newValue) == false;
+            case OPTION_LIST:   return this.defaultValueOptionList.getStringValue().equals(newValue) == false;
+            case STRING:
+            default:            return this.defaultValueString.equals(newValue) == false;
+        }
+    }
+
+    @Override
+    public void resetToDefault()
+    {
+        switch (this.type)
+        {
+            case BOOLEAN:       this.valueBoolean = this.defaultValueBoolean;   break;
+            case INTEGER:       this.valueInteger = this.defaultValueInteger;   break;
+            case HEX_STRING:
+                this.valueString = this.defaultValueString;
+                this.valueInteger = this.defaultValueInteger;
+                break;
+            case OPTION_LIST:   this.valueOptionList = this.defaultValueOptionList; break;
+            case STRING:        this.valueString = this.defaultValueString;     break;
+            default:
+        }
     }
 
     public String getStringValue()
@@ -189,28 +248,36 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
         }
     }
 
-    public void setValueFromJsonPrimitive(JsonPrimitive value)
+    @Override
+    public void setValueFromJsonElement(JsonElement element)
     {
         try
         {
-            switch (this.type)
+            if (element.isJsonPrimitive())
             {
-                case BOOLEAN:
-                    this.valueBoolean = value.getAsBoolean();
-                    break;
-                case INTEGER:
-                    this.valueInteger = value.getAsInt();
-                    break;
-                case STRING:
-                    this.valueString = value.getAsString();
-                    break;
-                case HEX_STRING:
-                    this.valueInteger = getColor(value.getAsString(), 0);
-                    break;
-                case OPTION_LIST:
-                    this.valueOptionList = this.valueOptionList.fromString(value.getAsString());
-                    break;
-                default:
+                switch (this.type)
+                {
+                    case BOOLEAN:
+                        this.valueBoolean = element.getAsBoolean();
+                        break;
+                    case INTEGER:
+                        this.valueInteger = element.getAsInt();
+                        break;
+                    case STRING:
+                        this.valueString = element.getAsString();
+                        break;
+                    case HEX_STRING:
+                        this.valueInteger = getColor(element.getAsString(), 0);
+                        break;
+                    case OPTION_LIST:
+                        this.valueOptionList = this.valueOptionList.fromString(element.getAsString());
+                        break;
+                    default:
+                }
+            }
+            else
+            {
+                LiteModTweakeroo.logger.warn("Failed to read config value for {} from the JSON config", this.getName());
             }
         }
         catch (Exception e)
@@ -219,7 +286,8 @@ public enum ConfigsGeneric implements IConfigValue, IConfigBoolean, IConfigOptio
         }
     }
 
-    public JsonPrimitive getAsJsonPrimitive()
+    @Override
+    public JsonElement getAsJsonElement()
     {
         switch (this.type)
         {

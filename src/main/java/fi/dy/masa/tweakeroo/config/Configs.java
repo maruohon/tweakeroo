@@ -38,9 +38,9 @@ public class Configs
                 {
                     for (ConfigsGeneric gen : ConfigsGeneric.values())
                     {
-                        if (objGeneric.has(gen.getName()) && objGeneric.get(gen.getName()).isJsonPrimitive())
+                        if (objGeneric.has(gen.getName()))
                         {
-                            gen.setValueFromJsonPrimitive(objGeneric.get(gen.getName()).getAsJsonPrimitive());
+                            gen.setValueFromJsonElement(objGeneric.get(gen.getName()));
                         }
                     }
                 }
@@ -88,7 +88,7 @@ public class Configs
 
             for (ConfigsGeneric gen : ConfigsGeneric.values())
             {
-                objGeneric.add(gen.getName(), gen.getAsJsonPrimitive());
+                objGeneric.add(gen.getName(), gen.getAsJsonElement());
             }
 
             for (FeatureToggle toggle : FeatureToggle.values())

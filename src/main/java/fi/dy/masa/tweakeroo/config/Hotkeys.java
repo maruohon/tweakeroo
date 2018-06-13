@@ -1,8 +1,11 @@
 package fi.dy.masa.tweakeroo.config;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
+import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
 public enum Hotkeys implements IHotkey
 {
@@ -46,5 +49,31 @@ public enum Hotkeys implements IHotkey
     public IKeybind getKeybind()
     {
         return this.keybind;
+    }
+
+    @Override
+    public JsonElement getAsJsonElement()
+    {
+        return new JsonPrimitive(this.keybind.getStorageString());
+    }
+
+    @Override
+    public void setValueFromJsonElement(JsonElement element)
+    {
+        try
+        {
+            if (element.isJsonPrimitive())
+            {
+                this.keybind.setKeysFromStorageString(element.getAsString());
+            }
+            else
+            {
+                LiteModTweakeroo.logger.warn("Failed to set the keybinds for '{}' from the JSON element '{}'", this.getName(), element);
+            }
+        }
+        catch (Exception e)
+        {
+            LiteModTweakeroo.logger.warn("Failed to set the keybinds for '{}' from the JSON element '{}'", this.getName(), element, e);
+        }
     }
 }
