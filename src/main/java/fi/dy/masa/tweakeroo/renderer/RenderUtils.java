@@ -7,6 +7,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.HitPart;
+import fi.dy.masa.tweakeroo.util.RayTraceUtils;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.IInventory;
@@ -233,50 +235,66 @@ public class RenderUtils
 
     public static void renderInventoryOverlay(Minecraft mc)
     {
-        RayTraceResult trace = mc.objectMouseOver;
         World world = getBestWorld(mc);
 
-        if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        // We need to get the player from the server world, so that the player itself won't be included in the ray trace
+        EntityPlayer player = world.getPlayerEntityByUUID(mc.player.getUniqueID());
+
+        if (player == null)
         {
-            BlockPos pos = trace.getBlockPos();
-            TileEntity te = world.getTileEntity(pos);
+            player = mc.player;
+        }
 
-            if (te instanceof IInventory)
+        RayTraceResult trace = RayTraceUtils.getRayTraceFromEntity(world, player, false);
+
+        if (trace != null)
+        {
+            IInventory inv = null;
+
+            if (trace.typeOfHit == RayTraceResult.Type.BLOCK)
             {
-                IInventory inv = (IInventory) te;
-                IBlockState state = world.getBlockState(pos);
+                BlockPos pos = trace.getBlockPos();
+                TileEntity te = world.getTileEntity(pos);
 
-                if (state.getBlock() instanceof BlockChest)
+                if (te instanceof IInventory)
                 {
-                    ILockableContainer cont = ((BlockChest) state.getBlock()).getLockableContainer(world, pos);
+                    inv = (IInventory) te;
+                    IBlockState state = world.getBlockState(pos);
 
-                    if (cont instanceof InventoryLargeChest)
+                    if (state.getBlock() instanceof BlockChest)
                     {
-                        inv = (InventoryLargeChest) cont;
+                        ILockableContainer cont = ((BlockChest) state.getBlock()).getLockableContainer(world, pos);
+
+                        if (cont instanceof InventoryLargeChest)
+                        {
+                            inv = (InventoryLargeChest) cont;
+                        }
                     }
                 }
+            }
+            else if (trace.typeOfHit == RayTraceResult.Type.ENTITY &&
+                    trace.entityHit instanceof EntityVillager)
+            {
+                inv = ((EntityVillager) trace.entityHit).getVillagerInventory();
+            }
 
+            if (inv != null)
+            {
                 final int totalSlots = inv.getSizeInventory();
                 int slotsPerRow = 9;
                 int slotOffsetX =  8;
                 int slotOffsetY = 18;
 
-                switch (totalSlots)
+                if (totalSlots <= 5)
                 {
-                    case 3:
-                        slotOffsetX += 2 * 18;
-                        slotOffsetY += 2;
-                        break;
-                    case 5:
-                        slotsPerRow = 5;
-                        slotOffsetX += 2 * 18;
-                        slotOffsetY += 2;
-                        break;
-                    case 9:
-                        slotsPerRow = 3;
-                        slotOffsetX += 3 * 18;
-                        slotOffsetY += -1;
-                        break;
+                    slotOffsetX += 2 * 18;
+                    slotOffsetY += 2;
+                }
+                else if (totalSlots <= 9)
+                {
+                    slotsPerRow = 3;
+                    slotOffsetX += 3 * 18;
+                    slotOffsetY += -1;
                 }
 
                 ScaledResolution res = new ScaledResolution(mc);
@@ -347,34 +365,29 @@ public class RenderUtils
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        switch (totalSlots)
+        if (totalSlots <= 5)
         {
-            case 3:
-            case 5:
-                mc.getTextureManager().bindTexture(TEXTURE_HOPPER);
-                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  50);
-                mc.ingameGUI.drawTexturedModalRect(x, y +  50, 0, 127, 176,   6);
-                break;
-            case 9:
-                mc.getTextureManager().bindTexture(TEXTURE_DISPENSER);
-                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  83);
-                mc.ingameGUI.drawTexturedModalRect(x, y +  83, 0, 163, 176,   3);
-                break;
-            case 27:
-                mc.getTextureManager().bindTexture(TEXTURE_SINGLE_CHEST);
-                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  83);
-                mc.ingameGUI.drawTexturedModalRect(x, y +  83, 0, 161, 176,   5);
-                break;
-            case 54:
-                mc.getTextureManager().bindTexture(TEXTURE_DOUBLE_CHEST);
-                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176, 139);
-                mc.ingameGUI.drawTexturedModalRect(x, y + 139, 0, 219, 176,   3);
-                break;
-            default:
-                // FIXME/TODO:
-                mc.getTextureManager().bindTexture(TEXTURE_DOUBLE_CHEST);
-                mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176, 139);
-                mc.ingameGUI.drawTexturedModalRect(x, y + 139, 0, 219, 176,   3);
+            mc.getTextureManager().bindTexture(TEXTURE_HOPPER);
+            mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  50);
+            mc.ingameGUI.drawTexturedModalRect(x, y +  50, 0, 127, 176,   6);
+        }
+        else if (totalSlots <= 9)
+        {
+            mc.getTextureManager().bindTexture(TEXTURE_DISPENSER);
+            mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  83);
+            mc.ingameGUI.drawTexturedModalRect(x, y +  83, 0, 163, 176,   3);
+        }
+        else if (totalSlots <= 27)
+        {
+            mc.getTextureManager().bindTexture(TEXTURE_SINGLE_CHEST);
+            mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  83);
+            mc.ingameGUI.drawTexturedModalRect(x, y +  83, 0, 161, 176,   5);
+        }
+        else
+        {
+            mc.getTextureManager().bindTexture(TEXTURE_DOUBLE_CHEST);
+            mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176, 139);
+            mc.ingameGUI.drawTexturedModalRect(x, y + 139, 0, 219, 176,   3);
         }
     }
 
