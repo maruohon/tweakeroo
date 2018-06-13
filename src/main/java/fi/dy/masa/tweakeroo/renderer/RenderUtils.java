@@ -3,6 +3,8 @@ package fi.dy.masa.tweakeroo.renderer;
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.HitPart;
 import net.minecraft.block.BlockChest;
@@ -285,6 +287,23 @@ public class RenderUtils
                 if (rows > 6)
                 {
                     y -= (rows - 6) * 18;
+                }
+
+                if (FeatureToggle.TWEAK_PLAYER_INVENTORY_PEEK.getBooleanValue() &&
+                    Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().isKeybindHeld())
+                {
+                    int height = 0;
+
+                    switch (totalSlots)
+                    {
+                        case 3:
+                        case 5:  height =  56; break;
+                        case 9:  height =  86; break;
+                        case 27: height =  88; break;
+                        case 54: height = 142; break;
+                    }
+
+                    y -= (y - res.getScaledHeight() / 2 + 10 + height);
                 }
 
                 renderInventoryBackground(x, y, slotsPerRow, totalSlots, mc);
