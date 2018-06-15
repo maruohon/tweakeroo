@@ -3,7 +3,7 @@ package fi.dy.masa.tweakeroo.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -124,7 +124,7 @@ public class InventoryUtils
 
     private static int getMinDurability(ItemStack stack)
     {
-        int minDurability = ConfigsGeneric.ITEM_SWAP_DURABILITY_THRESHOLD.getIntegerValue();
+        int minDurability = Configs.Generic.ITEM_SWAP_DURABILITY_THRESHOLD.getIntegerValue();
 
         // For items with low maximum durability, use 5% as the threshold,
         // if the configured durability threshold is over that.

@@ -2,7 +2,7 @@ package fi.dy.masa.tweakeroo.event;
 
 import fi.dy.masa.malilib.hotkeys.IKeybindEventHandler;
 import fi.dy.masa.malilib.hotkeys.IKeybindManager;
-import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import net.minecraft.client.Minecraft;
@@ -68,9 +68,9 @@ public class InputEventHandler implements IKeybindEventHandler
             if (FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld())
             {
                 int change = dWheel > 0 ? 1 : -1;
-                int clicks = MathHelper.clamp(ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + change, 1, 32);
+                int clicks = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + change, 1, 32);
 
-                ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(clicks);
+                Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(clicks);
 
                 String preGreen = TextFormatting.GREEN.toString();
                 String rst = TextFormatting.RESET.toString();

@@ -54,7 +54,7 @@ public class Callbacks
             // If the feature is enabled on game launch, apply it here
             if (feature.getBooleanValue())
             {
-                this.mc.gameSettings.gammaSetting = ConfigsGeneric.GAMMA_OVERRIDE_VALUE.getIntegerValue();
+                this.mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
             }
         }
 
@@ -66,7 +66,7 @@ public class Callbacks
             if (feature.getBooleanValue())
             {
                 this.originalGamma = mc.gameSettings.gammaSetting;
-                mc.gameSettings.gammaSetting = ConfigsGeneric.GAMMA_OVERRIDE_VALUE.getIntegerValue();
+                mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
             }
             else
             {
@@ -228,7 +228,7 @@ public class Callbacks
 
                 if (enabled)
                 {
-                    String strValue = ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getStringValue();
+                    String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
                     StringUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
                 }
                 else

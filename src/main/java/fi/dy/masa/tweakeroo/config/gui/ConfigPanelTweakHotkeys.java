@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.config.gui;
 import fi.dy.masa.malilib.config.IConfigBoolean;
 import fi.dy.masa.malilib.config.gui.ConfigPanelHotkeysBase;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class ConfigPanelTweakHotkeys extends ConfigPanelHotkeysBase
@@ -16,5 +17,14 @@ public class ConfigPanelTweakHotkeys extends ConfigPanelHotkeysBase
     protected String getHotkeyComment(IHotkey hotkey)
     {
         return "Hotkey to toggle the '" + ((IConfigBoolean) hotkey).getPrettyName() + "' tweak";
+    }
+
+    @Override
+    protected void onSettingsChanged()
+    {
+        super.onSettingsChanged();
+
+        Configs.save();
+        Configs.load();
     }
 }

@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.config;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
@@ -41,6 +42,12 @@ public enum Hotkeys implements IHotkey
     }
 
     @Override
+    public ConfigType getType()
+    {
+        return ConfigType.HOTKEY;
+    }
+
+    @Override
     public String getName()
     {
         return this.name;
@@ -61,7 +68,7 @@ public enum Hotkeys implements IHotkey
     @Override
     public JsonElement getAsJsonElement()
     {
-        return new JsonPrimitive(this.keybind.getStorageString());
+        return new JsonPrimitive(this.keybind.getStringValue());
     }
 
     @Override
@@ -71,7 +78,7 @@ public enum Hotkeys implements IHotkey
         {
             if (element.isJsonPrimitive())
             {
-                this.keybind.setKeysFromStorageString(element.getAsString());
+                this.keybind.setValueFromString(element.getAsString());
             }
             else
             {

@@ -91,6 +91,12 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     }
 
     @Override
+    public String getDefaultStringValue()
+    {
+        return String.valueOf(this.defaultValueBoolean);
+    }
+
+    @Override
     public void setValueFromString(String value)
     {
     }
@@ -111,6 +117,12 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     public boolean getBooleanValue()
     {
         return this.valueBoolean;
+    }
+
+    @Override
+    public boolean getDefaultBooleanValue()
+    {
+        return this.defaultValueBoolean;
     }
 
     @Override

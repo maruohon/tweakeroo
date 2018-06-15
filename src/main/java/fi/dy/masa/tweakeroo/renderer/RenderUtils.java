@@ -2,7 +2,7 @@ package fi.dy.masa.tweakeroo.renderer;
 
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.malilib.config.HudAlignment;
-import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
@@ -93,7 +93,7 @@ public class RenderUtils
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
         float quadAlpha = 0.18f;
-        int color = ConfigsGeneric.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getIntegerValue();
+        int color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getIntegerValue();
         float ha = ((color >>> 24) & 0xFF) / 255f;
         float hr = ((color >>> 16) & 0xFF) / 255f;
         float hg = ((color >>>  8) & 0xFF) / 255f;
@@ -183,12 +183,12 @@ public class RenderUtils
         if (player != null)
         {
             ScaledResolution res = new ScaledResolution(mc);
-            final int offX = ConfigsGeneric.HOTBAR_SWAP_OVERLAY_OFFSET_X.getIntegerValue();
-            final int offY = ConfigsGeneric.HOTBAR_SWAP_OVERLAY_OFFSET_Y.getIntegerValue();
+            final int offX = Configs.Generic.HOTBAR_SWAP_OVERLAY_OFFSET_X.getIntegerValue();
+            final int offY = Configs.Generic.HOTBAR_SWAP_OVERLAY_OFFSET_Y.getIntegerValue();
             int startX = offX;
             int startY = offY;
 
-            HudAlignment align = (HudAlignment) ConfigsGeneric.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
+            HudAlignment align = (HudAlignment) Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
 
             switch (align)
             {
@@ -323,7 +323,6 @@ public class RenderUtils
                 y -= (rows - 6) * 18;
             }
 
-            boolean above = false;
             int height = 0;
 
             switch (totalSlots)
@@ -339,7 +338,6 @@ public class RenderUtils
                 Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().isKeybindHeld())
             {
                 y -= (y - yCenter + 10 + height);
-                above = true;
             }
 
             renderInventoryBackground(x, y, slotsPerRow, totalSlots, mc);
@@ -348,7 +346,6 @@ public class RenderUtils
             if (entity != null)
             {
                 x = x - 56;
-                //y = above ? yCenter - height - 80 - 20: yCenter + height + 20;
                 renderEquipmentOverlayBackground(mc, x, y, entity);
                 renderEquipmentStacks(entity, x, y, mc);
             }

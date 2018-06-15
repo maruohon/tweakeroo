@@ -3,7 +3,7 @@ package fi.dy.masa.tweakeroo.util;
 import javax.annotation.Nullable;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.tweakeroo.config.ConfigsGeneric;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import net.minecraft.block.state.IBlockState;
@@ -115,7 +115,7 @@ public class PlacementTweaks
     public static void setFastPlacementMode(FastMode mode)
     {
         fastMode = mode;
-        ConfigsGeneric.FAST_PLACEMENT_MODE.setOptionListValue(mode);
+        Configs.Generic.FAST_PLACEMENT_MODE.setOptionListValue(mode);
 
         String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
         StringUtils.printActionbarMessage("tweakeroo.message.set_fast_placement_mode_to", str);
@@ -123,7 +123,7 @@ public class PlacementTweaks
 
     public static void setFastPlacementModeFromConfigs()
     {
-        fastMode = (FastMode) ConfigsGeneric.FAST_PLACEMENT_MODE.getOptionListValue();
+        fastMode = (FastMode) Configs.Generic.FAST_PLACEMENT_MODE.getOptionListValue();
     }
 
     public static FastMode getFastPlacementMode()
@@ -135,7 +135,7 @@ public class PlacementTweaks
     {
         if (FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue())
         {
-            final int count = ConfigsGeneric.FAST_LEFT_CLICK_COUNT.getIntegerValue();
+            final int count = Configs.Generic.FAST_LEFT_CLICK_COUNT.getIntegerValue();
 
             for (int i = 0; i < count; ++i)
             {
@@ -221,7 +221,7 @@ public class PlacementTweaks
         }
         else if (FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue() && mc.gameSettings.keyBindUseItem.isKeyDown())
         {
-            final int count = ConfigsGeneric.FAST_RIGHT_CLICK_COUNT.getIntegerValue();
+            final int count = Configs.Generic.FAST_RIGHT_CLICK_COUNT.getIntegerValue();
 
             for (int i = 0; i < count; ++i)
             {
@@ -361,6 +361,7 @@ public class PlacementTweaks
         BlockPos posPlacement = getPlacementPositionForTargetedPosition(pos, side, world);
         IBlockState stateBefore = world.getBlockState(posPlacement);
         IBlockState state = world.getBlockState(pos);
+        final int afterClickerClickCount = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
 
         if (state.getBlock().isReplaceable(world, pos) == false && state.getMaterial().isReplaceable())
         {
@@ -378,7 +379,7 @@ public class PlacementTweaks
 
             if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue())
             {
-                x += ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() * 10;
+                x += afterClickerClickCount * 10;
             }
 
             hitVec = new Vec3d(x, hitVec.y, hitVec.z);
@@ -414,9 +415,7 @@ public class PlacementTweaks
             FeatureToggle.CARPET_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() == false &&
             world.getBlockState(posPlacement) != stateBefore)
         {
-            final int count = MathHelper.clamp(ConfigsGeneric.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
-
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < afterClickerClickCount; i++)
             {
                 //System.out.printf("processRightClickBlockWrapper() after-clicker - i: %d, pos: %s, side: %s, hitVec: %s\n", i, pos, side, hitVec);
                 controller.processRightClickBlock(player, world, posPlacement, side, hitVec, hand);
@@ -689,7 +688,7 @@ public class PlacementTweaks
         EntityPlayer player = mc.player;
         Container container = player != null ? player.openContainer : null;
 
-        if (ConfigsGeneric.SLOT_SYNC_WORKAROUND.getBooleanValue() &&
+        if (Configs.Generic.SLOT_SYNC_WORKAROUND.getBooleanValue() &&
             FeatureToggle.TWEAK_PICK_BEFORE_PLACE.getBooleanValue() == false &&
             container != null && container == player.inventoryContainer &&
             (slotNumber == 45 || (slotNumber - 36) == player.inventory.currentItem))
