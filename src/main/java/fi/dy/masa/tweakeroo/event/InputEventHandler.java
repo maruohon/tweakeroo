@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.event;
 
 import fi.dy.masa.malilib.hotkeys.IKeybindEventHandler;
 import fi.dy.masa.malilib.hotkeys.IKeybindManager;
+import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -41,6 +42,13 @@ public class InputEventHandler implements IKeybindEventHandler
         {
             manager.addKeybindToMap(hotkey.getKeybind());
         }
+    }
+
+    @Override
+    public void addHotkeys(IKeybindManager manager)
+    {
+        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.values());
+        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", FeatureToggle.values());
     }
 
     @Override
