@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.event.InputEventHandler;
+import fi.dy.masa.tweakeroo.event.InputHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.MovementInputFromOptions;
@@ -26,7 +26,7 @@ public class MixinMovementInputFromOptions extends MovementInput
     {
         if (FeatureToggle.TWEAK_MOVEMENT_KEYS.getBooleanValue())
         {
-            InputEventHandler.getInstance().handleMovementKeys(this);
+            InputHandler.getInstance().handleMovementKeys(this);
         }
 
         if (FeatureToggle.TWEAK_PERMANENT_SNEAK.getBooleanValue() &&

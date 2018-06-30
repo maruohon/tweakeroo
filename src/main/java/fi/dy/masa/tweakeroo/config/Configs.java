@@ -8,6 +8,7 @@ import com.google.gson.JsonPrimitive;
 import com.mumfrey.liteloader.core.LiteLoader;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.HudAlignment;
+import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.IConfigValue;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigColor;
@@ -19,7 +20,7 @@ import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.PlacementTweaks.FastMode;
 
-public class Configs
+public class Configs implements IConfigHandler
 {
     private static final String CONFIG_FILE_NAME = Reference.MOD_ID + ".json";
 
@@ -56,7 +57,7 @@ public class Configs
                 );
     }
 
-    public static void load()
+    public static void loadFromFile()
     {
         File configFile = new File(LiteLoader.getCommonConfigFolder(), CONFIG_FILE_NAME);
 
@@ -92,7 +93,7 @@ public class Configs
         InventoryUtils.setUnstackingItems(ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle")); // TODO add a string list config
     }
 
-    public static void save()
+    public static void saveToFile()
     {
         File dir = LiteLoader.getCommonConfigFolder();
 
@@ -114,5 +115,18 @@ public class Configs
 
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
         }
+    }
+
+    @Override
+    public void onConfigsChanged()
+    {
+        saveToFile();
+        loadFromFile();
+    }
+
+    @Override
+    public void save()
+    {
+        saveToFile();
     }
 }

@@ -17,11 +17,9 @@ public class Callbacks
 
     public static boolean skipWorldRendering;
 
-    public static void init()
+    public static void init(Minecraft mc)
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.setCallback(Callbacks.FEATURE_CALLBACK_GAMMA);
-
-        Minecraft mc = Minecraft.getMinecraft();
 
         IHotkeyCallback callback = new KeyCallbackHotkeys(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);

@@ -1,7 +1,9 @@
 package fi.dy.masa.tweakeroo.event;
 
-import fi.dy.masa.malilib.hotkeys.IKeybindEventHandler;
 import fi.dy.masa.malilib.hotkeys.IKeybindManager;
+import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
+import fi.dy.masa.malilib.hotkeys.IKeyboardInputHandler;
+import fi.dy.masa.malilib.hotkeys.IMouseInputHandler;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -14,18 +16,18 @@ import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-public class InputEventHandler implements IKeybindEventHandler
+public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IMouseInputHandler
 {
-    private static final InputEventHandler INSTANCE = new InputEventHandler();
+    private static final InputHandler INSTANCE = new InputHandler();
     private LeftRight lastSidewaysInput = LeftRight.NONE;
     private ForwardBack lastForwardInput = ForwardBack.NONE;
 
-    private InputEventHandler()
+    private InputHandler()
     {
         super();
     }
 
-    public static InputEventHandler getInstance()
+    public static InputHandler getInstance()
     {
         return INSTANCE;
     }
