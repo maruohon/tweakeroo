@@ -39,7 +39,7 @@ public class PlacementTweaks
     private static float playerYawFirst;
     private static ItemStack stackFirst = ItemStack.EMPTY;
     private static ItemStack[] stackBeforeUse = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY };
-    private static PlacementRestrictionMode placementRestrictionMode = PlacementRestrictionMode.PLANE;
+    private static PlacementRestrictionMode placementRestrictionMode = PlacementRestrictionMode.FACE;
     private static boolean isEmulatedClick;
     private static boolean firstWasRotation;
     private static boolean firstWasOffset;
@@ -179,9 +179,11 @@ public class PlacementTweaks
                         posNew.equals(posLast) == false &&
                         canPlaceBlockIntoPosition(posNew, world) &&
                         (
-                            (placementRestrictionMode == PlacementRestrictionMode.PLANE  && isNewPositionValidForPlaneMode(posNew)) ||
-                            (placementRestrictionMode == PlacementRestrictionMode.FACE   && isNewPositionValidForFaceMode(posNew, side)) ||
-                            (placementRestrictionMode == PlacementRestrictionMode.COLUMN && isNewPositionValidForColumnMode(posNew))
+                            (placementRestrictionMode == PlacementRestrictionMode.PLANE    && isNewPositionValidForPlaneMode(posNew)) ||
+                            (placementRestrictionMode == PlacementRestrictionMode.FACE     && isNewPositionValidForFaceMode(posNew, side)) ||
+                            (placementRestrictionMode == PlacementRestrictionMode.COLUMN   && isNewPositionValidForColumnMode(posNew)) ||
+                            (placementRestrictionMode == PlacementRestrictionMode.LINE     && isNewPositionValidForLineMode(posNew)) ||
+                            (placementRestrictionMode == PlacementRestrictionMode.DIAGONAL && isNewPositionValidForDiagonalMode(posNew))
                         )
                     )
                     {
@@ -597,15 +599,15 @@ public class PlacementTweaks
     {
         EnumFacing.Axis axis = sideFirst.getAxis();
 
-        // Cursor moved to adjacent position
-        if ((axis == EnumFacing.Axis.X && posNew.getX() == posFirst.getX()) ||
-            (axis == EnumFacing.Axis.Z && posNew.getZ() == posFirst.getZ()) ||
-            (axis == EnumFacing.Axis.Y && posNew.getY() == posFirst.getY()))
+        switch (axis)
         {
-            return true;
-        }
+            case X: return posNew.getX() == posFirst.getX();
+            case Y: return posNew.getY() == posFirst.getY();
+            case Z: return posNew.getZ() == posFirst.getZ();
 
-        return false;
+            default:
+                return false;
+        }
     }
 
     private static boolean isNewPositionValidForFaceMode(BlockPos posNew, EnumFacing side)
@@ -617,14 +619,46 @@ public class PlacementTweaks
     {
         EnumFacing.Axis axis = sideFirst.getAxis();
 
-        if ((axis == EnumFacing.Axis.X && posNew.getY() == posFirst.getY() && posNew.getZ() == posFirst.getZ()) ||
-            (axis == EnumFacing.Axis.Y && posNew.getX() == posFirst.getX() && posNew.getZ() == posFirst.getZ()) ||
-            (axis == EnumFacing.Axis.Z && posNew.getX() == posFirst.getX() && posNew.getY() == posFirst.getY()))
+        switch (axis)
         {
-            return true;
-        }
+            case X: return posNew.getY() == posFirst.getY() && posNew.getZ() == posFirst.getZ();
+            case Y: return posNew.getX() == posFirst.getX() && posNew.getZ() == posFirst.getZ();
+            case Z: return posNew.getX() == posFirst.getX() && posNew.getY() == posFirst.getY();
 
-        return false;
+            default:
+                return false;
+        }
+    }
+
+    private static boolean isNewPositionValidForLineMode(BlockPos posNew)
+    {
+        EnumFacing.Axis axis = sideFirst.getAxis();
+
+        switch (axis)
+        {
+            case X: return posNew.getX() == posFirst.getX() && (posNew.getY() == posFirst.getY() || posNew.getZ() == posFirst.getZ());
+            case Y: return posNew.getY() == posFirst.getY() && (posNew.getX() == posFirst.getX() || posNew.getZ() == posFirst.getZ());
+            case Z: return posNew.getZ() == posFirst.getZ() && (posNew.getX() == posFirst.getX() || posNew.getY() == posFirst.getY());
+
+            default:
+                return false;
+        }
+    }
+
+    private static boolean isNewPositionValidForDiagonalMode(BlockPos posNew)
+    {
+        EnumFacing.Axis axis = sideFirst.getAxis();
+        BlockPos relativePos = posNew.subtract(posFirst);
+
+        switch (axis)
+        {
+            case X: return posNew.getX() == posFirst.getX() && Math.abs(relativePos.getY()) == Math.abs(relativePos.getZ());
+            case Y: return posNew.getY() == posFirst.getY() && Math.abs(relativePos.getX()) == Math.abs(relativePos.getZ());
+            case Z: return posNew.getZ() == posFirst.getZ() && Math.abs(relativePos.getX()) == Math.abs(relativePos.getY());
+
+            default:
+                return false;
+        }
     }
 
     /*

@@ -1,30 +1,35 @@
 package fi.dy.masa.tweakeroo.util;
 
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
+import net.minecraft.client.resources.I18n;
 
 public enum PlacementRestrictionMode implements IConfigOptionListEntry
 {
-    PLANE   ("Plane"),
-    FACE    ("Face"),
-    COLUMN  ("Column");
+    PLANE       ("plane",       "tweakeroo.placement_restriction_mode.plane"),
+    FACE        ("face",        "tweakeroo.placement_restriction_mode.face"),
+    COLUMN      ("column",      "tweakeroo.placement_restriction_mode.column"),
+    LINE        ("line",        "tweakeroo.placement_restriction_mode.line"),
+    DIAGONAL    ("diagonal",    "tweakeroo.placement_restriction_mode.diagonal");
 
-    private final String displayName;
+    private final String configString;
+    private final String unlocName;
 
-    private PlacementRestrictionMode(String displayName)
+    private PlacementRestrictionMode(String configString, String unlocName)
     {
-        this.displayName = displayName;
+        this.configString = configString;
+        this.unlocName = unlocName;
     }
 
     @Override
     public String getStringValue()
     {
-        return this.name().toLowerCase();
+        return this.configString;
     }
 
     @Override
     public String getDisplayName()
     {
-        return this.displayName;
+        return I18n.format(this.unlocName);
     }
 
     @Override
@@ -60,7 +65,7 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry
     {
         for (PlacementRestrictionMode mode : PlacementRestrictionMode.values())
         {
-            if (mode.name().equalsIgnoreCase(name))
+            if (mode.configString.equalsIgnoreCase(name))
             {
                 return mode;
             }

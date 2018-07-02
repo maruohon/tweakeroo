@@ -27,6 +27,8 @@ public class Callbacks
         Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callback);
         Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callback);
         Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callback);
+        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callback);
+        Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callback);
@@ -152,6 +154,14 @@ public class Callbacks
                 else if (key == Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind())
                 {
                     PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
+                }
+                else if (key == Hotkeys.RESTRICTION_MODE_LINE.getKeybind())
+                {
+                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
+                }
+                else if (key == Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind())
+                {
+                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
                 }
 
                 return true;
