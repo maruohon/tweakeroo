@@ -1,11 +1,13 @@
-package fi.dy.masa.tweakeroo.util;
+package fi.dy.masa.tweakeroo.tweaks;
 
 import javax.annotation.Nullable;
-import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
+import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -37,7 +39,7 @@ public class PlacementTweaks
     private static float playerYawFirst;
     private static ItemStack stackFirst = ItemStack.EMPTY;
     private static ItemStack[] stackBeforeUse = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY };
-    private static FastMode fastMode = FastMode.PLANE;
+    private static PlacementRestrictionMode placementRestrictionMode = PlacementRestrictionMode.PLANE;
     private static boolean isEmulatedClick;
     private static boolean firstWasRotation;
     private static boolean firstWasOffset;
@@ -112,23 +114,23 @@ public class PlacementTweaks
         onProcessRightClickPost(Minecraft.getMinecraft().player, EnumHand.MAIN_HAND);
     }
 
-    public static void setFastPlacementMode(FastMode mode)
+    public static void setPlacementRestrictionMode(PlacementRestrictionMode mode)
     {
-        fastMode = mode;
-        Configs.Generic.FAST_PLACEMENT_MODE.setOptionListValue(mode);
+        placementRestrictionMode = mode;
+        Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
 
         String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
-        StringUtils.printActionbarMessage("tweakeroo.message.set_fast_placement_mode_to", str);
+        StringUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
     }
 
-    public static void setFastPlacementModeFromConfigs()
+    public static void setPlacementRestrictionModeFromConfigs()
     {
-        fastMode = (FastMode) Configs.Generic.FAST_PLACEMENT_MODE.getOptionListValue();
+        placementRestrictionMode = (PlacementRestrictionMode) Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue();
     }
 
-    public static FastMode getFastPlacementMode()
+    public static PlacementRestrictionMode getPlacementRestrictionMode()
     {
-        return fastMode;
+        return placementRestrictionMode;
     }
 
     private static void onAttackTick(Minecraft mc)
@@ -177,9 +179,9 @@ public class PlacementTweaks
                         posNew.equals(posLast) == false &&
                         canPlaceBlockIntoPosition(posNew, world) &&
                         (
-                            (fastMode == FastMode.PLANE  && isNewPositionValidForPlaneMode(posNew)) ||
-                            (fastMode == FastMode.FACE   && isNewPositionValidForFaceMode(posNew, side)) ||
-                            (fastMode == FastMode.COLUMN && isNewPositionValidForColumnMode(posNew))
+                            (placementRestrictionMode == PlacementRestrictionMode.PLANE  && isNewPositionValidForPlaneMode(posNew)) ||
+                            (placementRestrictionMode == PlacementRestrictionMode.FACE   && isNewPositionValidForFaceMode(posNew, side)) ||
+                            (placementRestrictionMode == PlacementRestrictionMode.COLUMN && isNewPositionValidForColumnMode(posNew))
                         )
                     )
                     {
@@ -713,73 +715,5 @@ public class PlacementTweaks
         RIGHT,
         BOTTOM,
         TOP;
-    }
-
-    public enum FastMode implements IConfigOptionListEntry
-    {
-        PLANE   ("Plane"),
-        FACE    ("Face"),
-        COLUMN  ("Column");
-
-        private final String displayName;
-
-        private FastMode(String displayName)
-        {
-            this.displayName = displayName;
-        }
-
-        @Override
-        public String getStringValue()
-        {
-            return this.name().toLowerCase();
-        }
-
-        @Override
-        public String getDisplayName()
-        {
-            return this.displayName;
-        }
-
-        @Override
-        public IConfigOptionListEntry cycle(boolean forward)
-        {
-            int id = this.ordinal();
-
-            if (forward)
-            {
-                if (++id >= values().length)
-                {
-                    id = 0;
-                }
-            }
-            else
-            {
-                if (--id < 0)
-                {
-                    id = values().length - 1;
-                }
-            }
-
-            return values()[id % values().length];
-        }
-
-        @Override
-        public FastMode fromString(String name)
-        {
-            return fromStringStatic(name);
-        }
-
-        public static FastMode fromStringStatic(String name)
-        {
-            for (FastMode al : FastMode.values())
-            {
-                if (al.name().equalsIgnoreCase(name))
-                {
-                    return al;
-                }
-            }
-
-            return FastMode.FACE;
-        }
     }
 }

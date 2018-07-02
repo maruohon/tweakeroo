@@ -2,8 +2,8 @@ package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.StackingTweaks;
 import fi.dy.masa.tweakeroo.util.IItemStackLimit;
-import fi.dy.masa.tweakeroo.util.StackingTweaks;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemShulkerBox;

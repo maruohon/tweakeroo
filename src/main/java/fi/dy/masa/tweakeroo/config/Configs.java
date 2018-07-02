@@ -16,9 +16,9 @@ import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.tweakeroo.Reference;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.PlacementTweaks;
-import fi.dy.masa.tweakeroo.util.PlacementTweaks.FastMode;
+import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 
 public class Configs implements IConfigHandler
 {
@@ -29,7 +29,7 @@ public class Configs implements IConfigHandler
         public static final ConfigInteger       AFTER_CLICKER_CLICK_COUNT           = new ConfigInteger     ("afterClickerClickCount",  1, 1, 32, "The number of right clicks to do per placed block when\ntweakAfterClicker is enabled");
         public static final ConfigInteger       FAST_LEFT_CLICK_COUNT               = new ConfigInteger     ("fastLeftClickCount",  10, 1, 64, "The number of left clicks to do per game tick when\ntweakFastLeftClick is enabled and the attack button is held down");
         public static final ConfigInteger       FAST_RIGHT_CLICK_COUNT              = new ConfigInteger     ("fastRightClickCount", 10, 1, 64, "The number of right clicks to do per game tick when\ntweakFastRightClick is enabled and the use button is held down");
-        public static final ConfigOptionList    FAST_PLACEMENT_MODE                 = new ConfigOptionList  ("fastPlacementMode", FastMode.FACE, "The Fast Block Placement mode to use (hotkey-selectable)");
+        public static final ConfigOptionList    PLACEMENT_RESTRICTION_MODE          = new ConfigOptionList  ("placementRestrictionMode", PlacementRestrictionMode.FACE, "The Placement Restriction mode to use (hotkey-selectable)");
         public static final ConfigColor         FLEXIBLE_PLACEMENT_OVERLAY_COLOR    = new ConfigColor       ("flexibleBlockPlacementOverlayColor", "#C03030F0", "The color of the currently pointed-at\nregion in block placement the overlay");
         public static final ConfigInteger       GAMMA_OVERRIDE_VALUE                = new ConfigInteger     ("gammaOverrideValue", 1000, 0, 1000, "The gamma value to use when the override option is enabled");
         public static final ConfigOptionList    HOTBAR_SWAP_OVERLAY_ALIGNMENT       = new ConfigOptionList  ("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, "The positioning of the hotbar swap overlay");
@@ -44,7 +44,7 @@ public class Configs implements IConfigHandler
                 AFTER_CLICKER_CLICK_COUNT,
                 FAST_LEFT_CLICK_COUNT,
                 FAST_RIGHT_CLICK_COUNT,
-                FAST_PLACEMENT_MODE,
+                PLACEMENT_RESTRICTION_MODE,
                 FLEXIBLE_PLACEMENT_OVERLAY_COLOR,
                 GAMMA_OVERRIDE_VALUE,
                 HOTBAR_SWAP_OVERLAY_ALIGNMENT,
@@ -89,7 +89,7 @@ public class Configs implements IConfigHandler
             }
         }
 
-        PlacementTweaks.setFastPlacementModeFromConfigs();
+        PlacementTweaks.setPlacementRestrictionModeFromConfigs();
         InventoryUtils.setUnstackingItems(ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle")); // TODO add a string list config
     }
 

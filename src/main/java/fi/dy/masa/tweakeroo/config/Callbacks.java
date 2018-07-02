@@ -4,9 +4,9 @@ import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.PlacementTweaks;
-import fi.dy.masa.tweakeroo.util.PlacementTweaks.FastMode;
+import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
@@ -24,9 +24,9 @@ public class Callbacks
         IHotkeyCallback callback = new KeyCallbackHotkeys(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
 
-        Hotkeys.FAST_MODE_PLANE.getKeybind().setCallback(callback);
-        Hotkeys.FAST_MODE_FACE.getKeybind().setCallback(callback);
-        Hotkeys.FAST_MODE_COLUMN.getKeybind().setCallback(callback);
+        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callback);
+        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callback);
+        Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callback);
@@ -141,17 +141,17 @@ public class Callbacks
                     InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 2);
                 }
                 // The values will be toggled after the callback (see above), thus inversed check here
-                else if (key == Hotkeys.FAST_MODE_PLANE.getKeybind())
+                else if (key == Hotkeys.RESTRICTION_MODE_PLANE.getKeybind())
                 {
-                    PlacementTweaks.setFastPlacementMode(FastMode.PLANE);
+                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
                 }
-                else if (key == Hotkeys.FAST_MODE_FACE.getKeybind())
+                else if (key == Hotkeys.RESTRICTION_MODE_FACE.getKeybind())
                 {
-                    PlacementTweaks.setFastPlacementMode(FastMode.FACE);
+                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
                 }
-                else if (key == Hotkeys.FAST_MODE_COLUMN.getKeybind())
+                else if (key == Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind())
                 {
-                    PlacementTweaks.setFastPlacementMode(FastMode.COLUMN);
+                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
                 }
 
                 return true;
@@ -186,7 +186,7 @@ public class Callbacks
 
                 if (enabled)
                 {
-                    String strMode = PlacementTweaks.getFastPlacementMode().name();
+                    String strMode = PlacementTweaks.getPlacementRestrictionMode().name();
                     StringUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
                 }
                 else

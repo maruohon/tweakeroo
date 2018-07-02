@@ -1,4 +1,4 @@
-package fi.dy.masa.tweakeroo.util;
+package fi.dy.masa.tweakeroo.tweaks;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
