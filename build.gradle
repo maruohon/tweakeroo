@@ -52,7 +52,7 @@ minecraft {
 }
 
 dependencies {
-    deobfCompile "fi.dy.masa.malilib:malilib-" + config.minecraft_version_out + ":" + config.malilib_version
+    deobfCompile "fi.dy.masa.malilib:malilib-" + config.minecraft_version_out + ":" + config.malilib_version + ":deobf"
 }
 
 sourceSets {
