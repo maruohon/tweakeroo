@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.IConfigBoolean;
+import fi.dy.masa.malilib.config.IConfigValueChangeCallback;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackToggleBooleanConfigWithMessage;
@@ -25,9 +26,10 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     TWEAK_HAND_RESTOCK              ("tweakHandRestock",                    false, "X,E", "Enables swapping a new stack to the main or the offhand when the previous stack runs out"),
     TWEAK_HOTBAR_SWAP               ("tweakHotbarSwap",                     false, "X,H", "Enables the hotbar swapping feature"),
     TWEAK_INVENTORY_PREVIEW         ("tweakInventoryPreview",               false, "X,I", "Enables an inventory preview while having the cursor over a block\nwith an inventory and holding the configured modifier key for it"),
-    TWEAK_ITEM_UNSTACKING_PROTECTION("tweakItemUnstackingProtection",       false, "X,P", "If enabled, then items configured in Generic -> unstackingItems won't be\nallowed to spill out when using. This is meant for example to\nprevent throwing buckets into lava when filling them."),
+    TWEAK_ITEM_UNSTACKING_PROTECTION("tweakItemUnstackingProtection",       false, "X,T", "If enabled, then items configured in Generic -> unstackingItems won't be\nallowed to spill out when using. This is meant for example to\nprevent throwing buckets into lava when filling them."),
     TWEAK_LAVA_VISIBILITY           ("tweakLavaVisibility",                 false, "X,A", "If enabled and the player has a Respiration helmet and/or Wather Breathing\nactive, the lava fog is greatly reduced"),
     TWEAK_MOVEMENT_KEYS             ("tweakMovementKeysLast",               false, "X,M", "If enabled, then opposite movement keys won't cancel each other,\nbut instead the last pressed key is the active input"),
+    TWEAK_PLACEMENT_RESTRICTION     ("tweakPlacementRestriction",           false, "X,P", "Enables the Placement Restriction mode (Plane, Face, Column, Line, Diagonal)"),
     TWEAK_PLAYER_INVENTORY_PEEK     ("tweakPlayerInventoryPeek",            false, "X,Q", "Enables a player inventory peek/preview, while holding the\nconfigured modifier key for it"),
     TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "",    "If enabled, then falling block entities won't be rendered at all"),
     TWEAK_NO_ITEM_SWITCH_COOLDOWN   ("tweakNoItemSwitchRenderCooldown",     false, "",    "If true, then there won't be any cooldown/equip animation\nwhen switching the held item or using the item."),
@@ -43,7 +45,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     private final IKeybind keybind;
     private final boolean defaultValueBoolean;
     private boolean valueBoolean;
-    private IFeatureCallback callback;
+    private IConfigValueChangeCallback callback;
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
@@ -59,11 +61,6 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
         this.prettyName = prettyName;
         this.keybind = KeybindMulti.fromStorageString(defaultHotkey);
         this.keybind.setCallback(new KeyCallbackToggleBooleanConfigWithMessage(this));
-    }
-
-    public void setCallback(IFeatureCallback callback)
-    {
-        this.callback = callback;
     }
 
     @Override
@@ -102,6 +99,21 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     }
 
     @Override
+    public void onValueChanged()
+    {
+        if (this.callback != null)
+        {
+            this.callback.onValueChanged(this);
+        }
+    }
+
+    @Override
+    public void setValueChangeCallback(IConfigValueChangeCallback callback)
+    {
+        this.callback = callback;
+    }
+
+    @Override
     public String getComment()
     {
         return comment != null ? comment : "";
@@ -131,9 +143,9 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
         boolean oldValue = this.valueBoolean;
         this.valueBoolean = value;
 
-        if (this.callback != null && oldValue != this.valueBoolean)
+        if (oldValue != this.valueBoolean)
         {
-            this.callback.onValueChange(this);
+            this.onValueChanged();
         }
     }
 

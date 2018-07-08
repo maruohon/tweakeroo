@@ -1,10 +1,11 @@
 package fi.dy.masa.tweakeroo.config;
 
+import fi.dy.masa.malilib.config.IConfigValue;
+import fi.dy.masa.malilib.config.IConfigValueChangeCallback;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.client.Minecraft;
@@ -13,13 +14,17 @@ import net.minecraft.util.text.TextFormatting;
 
 public class Callbacks
 {
-    private static final IFeatureCallback FEATURE_CALLBACK_GAMMA = new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, Minecraft.getMinecraft());
+    public static final FeatureCallbackGamma FEATURE_CALLBACK_GAMMA = new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, Minecraft.getMinecraft());
 
     public static boolean skipWorldRendering;
 
     public static void init(Minecraft mc)
     {
-        FeatureToggle.TWEAK_GAMMA_OVERRIDE.setCallback(Callbacks.FEATURE_CALLBACK_GAMMA);
+        FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(FEATURE_CALLBACK_GAMMA);
+
+        FeatureCallbackSpecial featureCallback = new FeatureCallbackSpecial();
+        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback(featureCallback);
+        FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setValueChangeCallback(featureCallback);
 
         IHotkeyCallback callback = new KeyCallbackHotkeys(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
@@ -32,7 +37,6 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callback);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callback);
-        Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().setCallback(callback);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
@@ -41,14 +45,16 @@ public class Callbacks
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
     }
 
-    public static class FeatureCallbackGamma implements IFeatureCallback
+    public static class FeatureCallbackGamma implements IConfigValueChangeCallback
     {
         private final Minecraft mc;
+        private final FeatureToggle feature;
         private float originalGamma;
 
         public FeatureCallbackGamma(FeatureToggle feature, Minecraft mc)
         {
             this.mc = mc;
+            this.feature = feature;
             this.originalGamma = this.mc.gameSettings.gammaSetting;
 
             // If the feature is enabled on game launch, apply it here
@@ -59,18 +65,44 @@ public class Callbacks
         }
 
         @Override
-        public void onValueChange(FeatureToggle feature)
+        public void onValueChanged(IConfigValue config)
         {
-            Minecraft mc = Minecraft.getMinecraft();
-
-            if (feature.getBooleanValue())
+            if (this.feature.getBooleanValue())
             {
-                this.originalGamma = mc.gameSettings.gammaSetting;
-                mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
+                this.originalGamma = this.mc.gameSettings.gammaSetting;
+                this.mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
             }
             else
             {
-                mc.gameSettings.gammaSetting = this.originalGamma;
+                this.restoreOriginalGamma();
+            }
+        }
+
+        public void restoreOriginalGamma()
+        {
+            this.mc.gameSettings.gammaSetting = this.originalGamma;
+        }
+    }
+
+    public static class FeatureCallbackSpecial implements IConfigValueChangeCallback
+    {
+        public FeatureCallbackSpecial()
+        {
+        }
+
+        @Override
+        public void onValueChanged(IConfigValue config)
+        {
+            if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
+            {
+                if (config == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT)
+                {
+                    FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setBooleanValue(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue());
+                }
+                else if (config == FeatureToggle.TWEAK_PLACEMENT_RESTRICTION)
+                {
+                    FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setBooleanValue(FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue());
+                }
             }
         }
     }
@@ -145,29 +177,37 @@ public class Callbacks
                 // The values will be toggled after the callback (see above), thus inversed check here
                 else if (key == Hotkeys.RESTRICTION_MODE_PLANE.getKeybind())
                 {
-                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
+                    this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
                 }
                 else if (key == Hotkeys.RESTRICTION_MODE_FACE.getKeybind())
                 {
-                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
+                    this.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
                 }
                 else if (key == Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind())
                 {
-                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
+                    this.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
                 }
                 else if (key == Hotkeys.RESTRICTION_MODE_LINE.getKeybind())
                 {
-                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
+                    this.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
                 }
                 else if (key == Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind())
                 {
-                    PlacementTweaks.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
+                    this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
                 }
 
                 return true;
             }
 
             return false;
+        }
+
+        private void setPlacementRestrictionMode(PlacementRestrictionMode mode)
+        {
+            Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
+
+            String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
+            StringUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
         }
     }
 
@@ -196,7 +236,7 @@ public class Callbacks
 
                 if (enabled)
                 {
-                    String strMode = PlacementTweaks.getPlacementRestrictionMode().name();
+                    String strMode = ((PlacementRestrictionMode) Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue()).name();
                     StringUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
                 }
                 else

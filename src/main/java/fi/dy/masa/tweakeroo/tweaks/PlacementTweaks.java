@@ -1,7 +1,6 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
 import javax.annotation.Nullable;
-import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -25,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class PlacementTweaks
@@ -39,7 +37,7 @@ public class PlacementTweaks
     private static float playerYawFirst;
     private static ItemStack stackFirst = ItemStack.EMPTY;
     private static ItemStack[] stackBeforeUse = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY };
-    private static PlacementRestrictionMode placementRestrictionMode = PlacementRestrictionMode.FACE;
+    private static boolean isFirstClick;
     private static boolean isEmulatedClick;
     private static boolean firstWasRotation;
     private static boolean firstWasOffset;
@@ -114,25 +112,6 @@ public class PlacementTweaks
         onProcessRightClickPost(Minecraft.getMinecraft().player, EnumHand.MAIN_HAND);
     }
 
-    public static void setPlacementRestrictionMode(PlacementRestrictionMode mode)
-    {
-        placementRestrictionMode = mode;
-        Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
-
-        String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
-        StringUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
-    }
-
-    public static void setPlacementRestrictionModeFromConfigs()
-    {
-        placementRestrictionMode = (PlacementRestrictionMode) Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue();
-    }
-
-    public static PlacementRestrictionMode getPlacementRestrictionMode()
-    {
-        return placementRestrictionMode;
-    }
-
     private static void onAttackTick(Minecraft mc)
     {
         if (FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue())
@@ -161,10 +140,10 @@ public class PlacementTweaks
         {
             EntityPlayerSP player = mc.player;
             World world = player.getEntityWorld();
-            double reach = mc.playerController.getBlockReachDistance();
-            int failSafe = 10;
+            final double reach = mc.playerController.getBlockReachDistance();
+            final int maxCount = Configs.Generic.FAST_BLOCK_PLACEMENT_COUNT.getIntegerValue();
 
-            while (failSafe-- > 0)
+            for (int i = 0; i < maxCount; ++i)
             {
                 RayTraceResult trace = mc.objectMouseOver;
 
@@ -178,13 +157,7 @@ public class PlacementTweaks
                     if (hand != null &&
                         posNew.equals(posLast) == false &&
                         canPlaceBlockIntoPosition(posNew, world) &&
-                        (
-                            (placementRestrictionMode == PlacementRestrictionMode.PLANE    && isNewPositionValidForPlaneMode(posNew)) ||
-                            (placementRestrictionMode == PlacementRestrictionMode.FACE     && isNewPositionValidForFaceMode(posNew, side)) ||
-                            (placementRestrictionMode == PlacementRestrictionMode.COLUMN   && isNewPositionValidForColumnMode(posNew)) ||
-                            (placementRestrictionMode == PlacementRestrictionMode.LINE     && isNewPositionValidForLineMode(posNew)) ||
-                            (placementRestrictionMode == PlacementRestrictionMode.DIAGONAL && isNewPositionValidForDiagonalMode(posNew))
-                        )
+                        isPositionAllowedByPlacementRestriction(posNew, side)
                     )
                     {
                         /*
@@ -478,6 +451,7 @@ public class PlacementTweaks
         stackFirst = ItemStack.EMPTY;
         firstWasRotation = false;
         firstWasOffset = false;
+        isFirstClick = true;
     }
 
     private static EnumFacing getRotatedFacing(EnumFacing originalSide, EnumFacing playerFacingH, HitPart hitPart)
@@ -576,6 +550,28 @@ public class PlacementTweaks
         else
         {
             return HitPart.CENTER;
+        }
+    }
+
+    private static boolean isPositionAllowedByPlacementRestriction(BlockPos pos, EnumFacing side)
+    {
+        PlacementRestrictionMode mode = (PlacementRestrictionMode) Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue();
+
+        if (FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue())
+        {
+            switch (mode)
+            {
+                case PLANE:     return isNewPositionValidForPlaneMode(pos);
+                case FACE:      return isNewPositionValidForFaceMode(pos, side);
+                case COLUMN:    return isNewPositionValidForColumnMode(pos);
+                case LINE:      return isNewPositionValidForLineMode(pos);
+                case DIAGONAL:  return isNewPositionValidForDiagonalMode(pos);
+                default:        return true;
+            }
+        }
+        else
+        {
+            return true;
         }
     }
 
