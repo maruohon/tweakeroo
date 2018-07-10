@@ -41,7 +41,8 @@ public class Callbacks
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
 
-        FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleAfterClicker(FeatureToggle.TWEAK_AFTER_CLICKER));
+        FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_AFTER_CLICKER));
+        FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_LIMIT));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
     }
 
@@ -251,11 +252,17 @@ public class Callbacks
         }
     }
 
-    private static class KeyCallbackToggleAfterClicker implements IHotkeyCallback
+    public static class KeyCallbackToggleOnRelease implements IHotkeyCallback
     {
         private final FeatureToggle feature;
+        private static boolean valueChanged;
 
-        private KeyCallbackToggleAfterClicker(FeatureToggle feature)
+        public static void setValueChanged()
+        {
+            valueChanged = true;
+        }
+
+        private KeyCallbackToggleOnRelease(FeatureToggle feature)
         {
             this.feature = feature;
         }
@@ -263,8 +270,15 @@ public class Callbacks
         @Override
         public boolean onKeyAction(KeyAction action, IKeybind key)
         {
-            if (action == KeyAction.PRESS)
+            if (action == KeyAction.RELEASE)
             {
+                // Don't toggle the state if the integer values were adjusted
+                if (valueChanged)
+                {
+                    valueChanged = false;
+                    return false;
+                }
+
                 this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
 
                 boolean enabled = this.feature.getBooleanValue();
@@ -274,16 +288,33 @@ public class Callbacks
                 String rst = TextFormatting.RESET.toString();
                 strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
-                if (enabled)
+                if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind())
                 {
-                    String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
+                    if (enabled)
+                    {
+                        String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
+                        StringUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
+                    }
+                    else
+                    {
+                        StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    }
                 }
-                else
+                else if (key == FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind())
                 {
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    if (enabled)
+                    {
+                        String strValue = Configs.Generic.PLACEMENT_LIMIT.getStringValue();
+                        StringUtils.printActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
+                    }
+                    else
+                    {
+                        StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    }
                 }
-
+            }
+            else if (action == KeyAction.PRESS)
+            {
                 return true;
             }
 

@@ -5,6 +5,7 @@ import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
 import fi.dy.masa.malilib.hotkeys.IKeyboardInputHandler;
 import fi.dy.masa.malilib.hotkeys.IMouseInputHandler;
 import fi.dy.masa.tweakeroo.Reference;
+import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -75,17 +76,28 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         // Not in a GUI
         if (mc.currentScreen == null && dWheel != 0)
         {
+            String preGreen = TextFormatting.GREEN.toString();
+            String rst = TextFormatting.RESET.toString();
+
             if (FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld())
             {
-                int change = dWheel > 0 ? 1 : -1;
-                int clicks = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + change, 1, 32);
+                int newValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + (dWheel > 0 ? 1 : -1);
+                Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(newValue);
+                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
-                Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(clicks);
-
-                String preGreen = TextFormatting.GREEN.toString();
-                String rst = TextFormatting.RESET.toString();
-                String strValue = preGreen + Integer.valueOf(clicks) + rst;
+                String strValue = preGreen + Integer.valueOf(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue()) + rst;
                 mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_after_clicker_count_to", strValue));
+
+                return true;
+            }
+            else if (FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().isKeybindHeld())
+            {
+                int newValue = Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + (dWheel > 0 ? 1 : -1);
+                Configs.Generic.PLACEMENT_LIMIT.setIntegerValue(newValue);
+                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+
+                String strValue = preGreen + Integer.valueOf(Configs.Generic.PLACEMENT_LIMIT.getIntegerValue()) + rst;
+                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_placement_limit_to", strValue));
 
                 return true;
             }

@@ -6,12 +6,14 @@ tweakeroo.hotkeys.category.generic_hotkeys=Generic hotkeys
 tweakeroo.hotkeys.category.tweak_toggle_hotkeys=Tweak toggle hotkeys
 
 tweakeroo.message.set_after_clicker_count_to=Set After Clicker count to %s
+tweakeroo.message.set_placement_limit_to=Set Placement Limit to %s
 tweakeroo.message.set_placement_restriction_mode_to=Set Placement Restriction mode to %s
 tweakeroo.message.swapped_low_durability_item_for_better_durability=Swapped a low durability item for one with more durability
 tweakeroo.message.swapped_low_durability_item_for_dummy_item=Swapped a low durability item for a dummy item
 tweakeroo.message.swapped_low_durability_item_off_players_hand=Swapped a low durability item off the player's hand
 tweakeroo.message.toggled=Toggled %s %s
-tweakeroo.message.toggled_after_clicker_on=Toggled After Clicker mode %s, clicks: %s
+tweakeroo.message.toggled_after_clicker_on=Toggled After Clicker tweak %s, clicks: %s
+tweakeroo.message.toggled_placement_limit_on=Toggled Placement Limit tweak %s, limit: %s
 tweakeroo.message.toggled_fast_placement_mode_on=Toggled Fast Placement mode %s, mode: %s
 tweakeroo.message.value.off=OFF
 tweakeroo.message.value.on=ON

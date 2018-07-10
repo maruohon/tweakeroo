@@ -41,6 +41,7 @@ public class PlacementTweaks
     private static boolean isEmulatedClick;
     private static boolean firstWasRotation;
     private static boolean firstWasOffset;
+    private static int placementCount;
 
     public static void onTick(Minecraft mc)
     {
@@ -332,6 +333,12 @@ public class PlacementTweaks
             Vec3d hitVec,
             EnumHand hand)
     {
+        if (FeatureToggle.TWEAK_PLACEMENT_LIMIT.getBooleanValue() &&
+            placementCount >= Configs.Generic.PLACEMENT_LIMIT.getIntegerValue())
+        {
+            return EnumActionResult.PASS;
+        }
+
         // We need to grab the stack here if the cached stack is still empty,
         // because this code runs before the cached stack gets set on the first click/use.
         ItemStack stackOriginal = stackFirst.isEmpty() == false ? stackFirst : player.getHeldItem(hand).copy();
@@ -379,6 +386,11 @@ public class PlacementTweaks
         else
         {
             result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
+        }
+
+        if (result == EnumActionResult.SUCCESS)
+        {
+            placementCount++;
         }
 
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
@@ -452,6 +464,7 @@ public class PlacementTweaks
         firstWasRotation = false;
         firstWasOffset = false;
         isFirstClick = true;
+        placementCount = 0;
     }
 
     private static EnumFacing getRotatedFacing(EnumFacing originalSide, EnumFacing playerFacingH, HitPart hitPart)
