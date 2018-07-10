@@ -219,7 +219,7 @@ public class PlacementTweaks
             Vec3d hitVec,
             EnumHand hand)
     {
-        boolean fastPlacement = FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue();
+        boolean restricted = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue();
         ItemStack stackPre = player.getHeldItem(hand).copy();
         EnumFacing playerFacingH = player.getHorizontalFacing();
         HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
@@ -229,7 +229,7 @@ public class PlacementTweaks
         EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, player.rotationYaw, hitVec, hand, hitPart, true);
 
         // Store the initial click data for the fast placement mode
-        if (posFirst == null && result == EnumActionResult.SUCCESS && fastPlacement)
+        if (posFirst == null && result == EnumActionResult.SUCCESS && restricted)
         {
             boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
             boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
@@ -345,7 +345,6 @@ public class PlacementTweaks
         BlockPos posPlacement = getPlacementPositionForTargetedPosition(pos, side, world);
         IBlockState stateBefore = world.getBlockState(posPlacement);
         IBlockState state = world.getBlockState(pos);
-        final int afterClickerClickCount = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
 
         if (state.getBlock().isReplaceable(world, pos) == false && state.getMaterial().isReplaceable())
         {
@@ -355,6 +354,14 @@ public class PlacementTweaks
             // FIXME This will break if the block behind the desired position is replaceable though... >_>
             pos = pos.offset(side.getOpposite());
         }
+
+        if (FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() &&
+            posFirst != null && isPositionAllowedByPlacementRestriction(pos, side) == false)
+        {
+            return EnumActionResult.PASS;
+        }
+
+        final int afterClickerClickCount = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
 
         // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
         if (FeatureToggle.CARPET_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())

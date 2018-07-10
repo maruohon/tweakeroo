@@ -100,10 +100,6 @@ public class Callbacks
                 {
                     FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setBooleanValue(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue());
                 }
-                else if (config == FeatureToggle.TWEAK_PLACEMENT_RESTRICTION)
-                {
-                    FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setBooleanValue(FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue());
-                }
             }
         }
     }
