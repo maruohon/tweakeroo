@@ -10,6 +10,8 @@ import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
 public enum Hotkeys implements IHotkey
 {
+    ACCURATE_BLOCK_PLACEMENT_IN         ("accurateBlockPlacementInto",      "LMENU",    false, "The key to activate the accurate block placement mode/overlay\nfor placing the block facing into the clicked block face"),
+    ACCURATE_BLOCK_PLACEMENT_REVERSE    ("accurateBlockPlacementReverse",   "LCONTROL", false, "The key to activate the accurate block placement mode/overlay\nfor placing the block facing the opposite way from what it would normally be"),
     RESTRICTION_MODE_PLANE              ("placementRestrictionModePlane",   "Z,1",  "Switch the Placement Restriction mode to the Plane mode"),
     RESTRICTION_MODE_FACE               ("placementRestrictionModeFace",    "Z,2",  "Switch the Placement Restriction mode to the Face mode"),
     RESTRICTION_MODE_COLUMN             ("placementRestrictionModeColumn",  "Z,3",  "Switch the Placement Restriction mode to the Column mode"),

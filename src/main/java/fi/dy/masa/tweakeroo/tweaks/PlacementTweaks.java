@@ -232,9 +232,13 @@ public class PlacementTweaks
         if (posFirst == null && result == EnumActionResult.SUCCESS && restricted)
         {
             boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
+            boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
             boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
             boolean offset = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld();
-            firstWasRotation = flexible && rotation;
+            boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld();
+            boolean accurateReverse = Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld();
+
+            firstWasRotation = (flexible && rotation) || (accurate && (accurateIn || accurateReverse));
             firstWasOffset = flexible && offset;
             posFirst = getPlacementPositionForTargetedPosition(posIn, sideIn, world);
             posLast = posFirst;
@@ -262,16 +266,19 @@ public class PlacementTweaks
             HitPart hitPart,
             boolean isFirstClick)
     {
-        if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
+        EnumFacing side = sideIn;
+        boolean handle = false;
+        BlockPos posNew = null;
+        boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
+
+        if (flexible)
         {
-            EnumFacing side = sideIn;
-            boolean handle = false;
             boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
             boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
             boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld();
             boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
             boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
-            BlockPos posNew = isFirstClick && (rotation || offset) ? getPlacementPositionForTargetedPosition(posIn, sideIn, world) : posIn;
+            posNew = isFirstClick && (rotation || offset) ? getPlacementPositionForTargetedPosition(posIn, sideIn, world) : posIn;
 
             // Place the block facing/against the adjacent block (= just rotated from normal)
             if (rotation)
@@ -291,21 +298,56 @@ public class PlacementTweaks
                 posNew = posNew.offset(sideRotatedIn.getOpposite());
                 handle = true;
             }
+        }
 
-            if (handle)
+        /*
+        if (FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue())
+        {
+            if (Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld())
             {
-                if (canPlaceBlockIntoPosition(posNew, world))
+                side = sideIn;
+                hitPart = null;
+                handle = true;
+            }
+
+            if (Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld())
+            {
+                side = side.getOpposite();
+                hitPart = null;
+                handle = true;
+            }
+
+            if (posNew == null)
+            {
+                if (flexible == false || isFirstClick == false)
                 {
-                    //System.out.printf("tryPlaceBlock() pos: %s, side: %s, part: %s, hitVec: %s\n", posNew, side, hitPart, hitVec);
-                    return handleFlexibleBlockPlacement(controller, player, world, posNew, side, playerYaw, hitVec, hand, hitPart);
+                    posNew = posIn;
                 }
                 else
                 {
-                    return EnumActionResult.FAIL;
+                    posNew = getPlacementPositionForTargetedPosition(posIn, side, world);
                 }
             }
+
+            System.out.printf("tryPlaceBlock side: %s, pos: %s\n", side, posNew);
+            return processRightClickBlockWrapper(controller, player, world, posNew, side, hitVec, hand);
         }
-        else if (isFirstClick == false && FeatureToggle.FAST_PLACEMENT_REMEMBER_ALWAYS.getBooleanValue())
+        */
+
+        if (handle)
+        {
+            if (canPlaceBlockIntoPosition(posNew, world))
+            {
+                //System.out.printf("tryPlaceBlock() pos: %s, side: %s, part: %s, hitVec: %s\n", posNew, side, hitPart, hitVec);
+                return handleFlexibleBlockPlacement(controller, player, world, posNew, side, playerYaw, hitVec, hand, hitPart);
+            }
+            else
+            {
+                return EnumActionResult.PASS;
+            }
+        }
+
+        if (isFirstClick == false && FeatureToggle.FAST_PLACEMENT_REMEMBER_ALWAYS.getBooleanValue())
         {
             return handleFlexibleBlockPlacement(controller, player, world, posIn, sideIn, playerYaw, hitVec, hand, null);
         }
@@ -363,16 +405,38 @@ public class PlacementTweaks
 
         final int afterClickerClickCount = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
 
-        // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
-        if (FeatureToggle.CARPET_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
+        EnumFacing facing = side;
+        boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
+        boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
+        boolean accurateActive = false;
+
+        if (accurate)
         {
-            int x = side.getIndex() + 2 + pos.getX();
+            if (Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld())
+            {
+                facing = side;
+                accurateActive = true;
+            }
+
+            if (Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld())
+            {
+                facing = facing.getOpposite();
+                accurateActive = true;
+            }
+        }
+
+        // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
+        if ((accurateActive || flexible) &&
+            FeatureToggle.CARPET_ACCURATE_BLOCK_PLACEMENT.getBooleanValue())
+        {
+            double x = facing.getIndex() + 2 + pos.getX();// + (hitVec.x % 1f);
 
             if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue())
             {
                 x += afterClickerClickCount * 10;
             }
 
+            //System.out.printf("processRightClickBlockWrapper facing: %s, x: %.3f, pos: %s, side: %s\n", facing, x, pos, side);
             hitVec = new Vec3d(x, hitVec.y, hitVec.z);
         }
 
@@ -408,7 +472,7 @@ public class PlacementTweaks
         }
 
         if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue() &&
-            FeatureToggle.CARPET_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() == false &&
+            FeatureToggle.CARPET_ACCURATE_BLOCK_PLACEMENT.getBooleanValue() == false &&
             world.getBlockState(posPlacement) != stateBefore)
         {
             for (int i = 0; i < afterClickerClickCount; i++)

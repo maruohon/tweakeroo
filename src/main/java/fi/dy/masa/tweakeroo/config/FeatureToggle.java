@@ -14,9 +14,10 @@ import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
 public enum FeatureToggle implements IConfigBoolean, IHotkey
 {
-    CARPET_FLEXIBLE_BLOCK_PLACEMENT ("carpetFlexibleBlockPlacement",        false, "LMENU,C", "If enabled, then the flexible block placement uses the protocol\nimplemented in the recent carpet mod versions", "Carpet protocol Flexible Placement"),
+    CARPET_ACCURATE_BLOCK_PLACEMENT ("carpetAccuratePlacementProtocol",     false, "LMENU,C", "If enabled, then the Flexible Block Placement and the Accurate Block Plamenet\nuse the protocol implemented in the recent carpet mod versions", "Carpet protocol Accurate Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "LSHIFT,X,F", "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
     REMEMBER_FLEXIBLE               ("rememberFlexibleFromClick",           true, "LSHIFT,X,L", "If enabled, then the flexible block placement status will be remembered\nfrom the first placed block, as long as the use key is held down.", "Remember Flexible Orientation From First Click"),
+    TWEAK_ACCURATE_BLOCK_PLACEMENT  ("tweakAccurateBlockPlacement",         false, "LSHIFT,X,L", "Enables a simpler version of Flexible placement, similar to the Carpet mod,\nso basically either facing into or out from the block face clicked on."),
     TWEAK_AFTER_CLICKER             ("tweakAfterClicker",                   false, "X,C", "Enables a \"after clicker\" tweak, which does automatic right clicks on the just-placed block.\nUseful for example for Repeaters (setting the delay)."),
     TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "X,F", "Enables fast/convenient block placement when moving the cursor over new blocks"),
     TWEAK_FAST_LEFT_CLICK           ("tweakFastLeftClick",                  false, "X,Y", "Enables automatic fast left clicking while holding down the attack button (left click).\nThe number of clicks per game tick is set in the Generic configs."),
