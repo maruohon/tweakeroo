@@ -26,17 +26,19 @@ public class Callbacks
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback(featureCallback);
         FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setValueChangeCallback(featureCallback);
 
-        IHotkeyCallback callback = new KeyCallbackHotkeys(mc);
+        IHotkeyCallback callbackPress = new KeyCallbackHotkeysPress(mc);
+        IHotkeyCallback callbackRelease = new KeyCallbackHotkeysRelease(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
 
-        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callback);
-        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callback);
-        Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callback);
-        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callback);
-        Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callback);
-        Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callback);
-        Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callback);
-        Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callback);
+        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackPress);
+        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackPress);
+        Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackPress);
+        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackPress);
+        Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackPress);
+        Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callbackPress);
+        Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackPress);
+        Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackPress);
+        Hotkeys.HOTBAR_SCROLL.getKeybind().setCallback(callbackRelease);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
@@ -145,11 +147,11 @@ public class Callbacks
         }
     }
 
-    private static class KeyCallbackHotkeys implements IHotkeyCallback
+    private static class KeyCallbackHotkeysPress implements IHotkeyCallback
     {
         private final Minecraft mc;
 
-        public KeyCallbackHotkeys(Minecraft mc)
+        public KeyCallbackHotkeysPress(Minecraft mc)
         {
             this.mc = mc;
         }
@@ -205,6 +207,33 @@ public class Callbacks
 
             String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
             StringUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
+        }
+    }
+
+    private static class KeyCallbackHotkeysRelease implements IHotkeyCallback
+    {
+        private final Minecraft mc;
+
+        public KeyCallbackHotkeysRelease(Minecraft mc)
+        {
+            this.mc = mc;
+        }
+
+        @Override
+        public boolean onKeyAction(KeyAction action, IKeybind key)
+        {
+            if (action == KeyAction.RELEASE)
+            {
+                if (key == Hotkeys.HOTBAR_SCROLL.getKeybind())
+                {
+                    int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
+                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, currentRow);
+
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

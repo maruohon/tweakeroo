@@ -32,6 +32,7 @@ public class Configs implements IConfigHandler
         public static final ConfigOptionList    PLACEMENT_RESTRICTION_MODE          = new ConfigOptionList  ("placementRestrictionMode", PlacementRestrictionMode.FACE, "The Placement Restriction mode to use (hotkey-selectable)");
         public static final ConfigColor         FLEXIBLE_PLACEMENT_OVERLAY_COLOR    = new ConfigColor       ("flexibleBlockPlacementOverlayColor", "#C03030F0", "The color of the currently pointed-at\nregion in block placement the overlay");
         public static final ConfigInteger       GAMMA_OVERRIDE_VALUE                = new ConfigInteger     ("gammaOverrideValue", 1000, 0, 1000, "The gamma value to use when the override option is enabled");
+        public static final ConfigInteger       HOTBAR_SCROLL_CURRENT_ROW           = new ConfigInteger     ("hotbarScrollCurrentRow", 3, 0, 3, "This is just for the mod internally to track the\n\"current hotbar row\" for the hotbar scrolling feature");
         public static final ConfigOptionList    HOTBAR_SWAP_OVERLAY_ALIGNMENT       = new ConfigOptionList  ("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, "The positioning of the hotbar swap overlay");
         public static final ConfigInteger       HOTBAR_SWAP_OVERLAY_OFFSET_X        = new ConfigInteger     ("hotbarSwapOverlayOffsetX", 4, "The horizontal offset of the hotbar swap overlay");
         public static final ConfigInteger       HOTBAR_SWAP_OVERLAY_OFFSET_Y        = new ConfigInteger     ("hotbarSwapOverlayOffsetY", 4, "The vertical offset of the hotbar swap overlay");
@@ -50,6 +51,7 @@ public class Configs implements IConfigHandler
                 PLACEMENT_RESTRICTION_MODE,
                 FLEXIBLE_PLACEMENT_OVERLAY_COLOR,
                 GAMMA_OVERRIDE_VALUE,
+                HOTBAR_SCROLL_CURRENT_ROW,
                 HOTBAR_SWAP_OVERLAY_ALIGNMENT,
                 HOTBAR_SWAP_OVERLAY_OFFSET_X,
                 HOTBAR_SWAP_OVERLAY_OFFSET_Y,

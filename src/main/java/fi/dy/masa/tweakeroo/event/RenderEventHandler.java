@@ -63,6 +63,11 @@ public class RenderEventHandler
         {
             RenderUtils.renderHotbarSwapOverlay(mc);
         }
+        else if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() &&
+                 Hotkeys.HOTBAR_SCROLL.getKeybind().isKeybindHeld())
+        {
+            RenderUtils.renderHotbarScrollOverlay(mc);
+        }
 
         if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
             Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld())

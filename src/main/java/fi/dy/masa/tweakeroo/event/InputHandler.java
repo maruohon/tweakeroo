@@ -12,7 +12,6 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -79,7 +78,20 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             String preGreen = TextFormatting.GREEN.toString();
             String rst = TextFormatting.RESET.toString();
 
-            if (FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld())
+            if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() && Hotkeys.HOTBAR_SCROLL.getKeybind().isKeybindHeld())
+            {
+                int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
+
+                int newRow = currentRow + (dWheel < 0 ? 1 : -1);
+                int max = 2;
+                if      (newRow < 0) { newRow = max; }
+                else if (newRow > max) { newRow = 0; }
+
+                Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.setIntegerValue(newRow);
+
+                return true;
+            }
+            else if (FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld())
             {
                 int newValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(newValue);

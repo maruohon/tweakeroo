@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -55,6 +56,7 @@ public class InventoryUtils
     public static void swapHotbarWithInventoryRow(EntityPlayer player, int row)
     {
         Container container = player.inventoryContainer;
+        row = MathHelper.clamp(row, 0, 2);
         int slot = row * 9 + 9;
 
         for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++)

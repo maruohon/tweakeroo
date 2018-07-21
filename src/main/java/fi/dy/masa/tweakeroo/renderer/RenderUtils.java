@@ -48,8 +48,6 @@ public class RenderUtils
     public static final ResourceLocation TEXTURE_HOPPER = new ResourceLocation("textures/gui/container/hopper.png");
     public static final ResourceLocation TEXTURE_PLAYER_INV = new ResourceLocation("textures/gui/container/hopper.png");
     public static final ResourceLocation TEXTURE_SINGLE_CHEST = new ResourceLocation("textures/gui/container/shulker_box.png");
-    private static final Vec3d LIGHT0_POS = (new Vec3d( 0.2D, 1.0D, -0.7D)).normalize();
-    private static final Vec3d LIGHT1_POS = (new Vec3d(-0.2D, 1.0D,  0.7D)).normalize();
     private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] { EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET };
 
     public static void renderBlockPlacementOverlay(Entity entity, BlockPos pos, EnumFacing side, Vec3d hitVec, double dx, double dy, double dz)
@@ -451,12 +449,39 @@ public class RenderUtils
             mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  83);
             mc.ingameGUI.drawTexturedModalRect(x, y +  83, 0, 161, 176,   5);
         }
+        else if (totalSlots <= 36)
+        {
+            mc.getTextureManager().bindTexture(TEXTURE_DOUBLE_CHEST);
+            mc.ingameGUI.drawTexturedModalRect(x, y     , 0,   0, 176,  89);
+            mc.ingameGUI.drawTexturedModalRect(x, y + 89, 0,   4, 176,   6);
+            mc.ingameGUI.drawTexturedModalRect(x, y + 95, 0, 219, 176,   3);
+        }
         else
         {
             mc.getTextureManager().bindTexture(TEXTURE_DOUBLE_CHEST);
             mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176, 139);
             mc.ingameGUI.drawTexturedModalRect(x, y + 139, 0, 219, 176,   3);
         }
+    }
+
+    public static void renderHotbarScrollOverlay(Minecraft mc)
+    {
+        IInventory inv = mc.player.inventory;
+        ScaledResolution res = new ScaledResolution(mc);
+        final int xCenter = res.getScaledWidth() / 2;
+        final int yCenter = res.getScaledHeight() / 2;
+        final int x = xCenter - 176 / 2;
+        final int y = yCenter + 10;
+
+        renderInventoryBackground(x, y, 9, 36, mc);
+
+        // Main inventory
+        renderInventoryStacks(inv, x + 8, y + 18, 9, 9, 27, mc);
+        // Hotbar
+        renderInventoryStacks(inv, x + 8, y + 72, 9, 0,  9, mc);
+
+        int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
+        fi.dy.masa.malilib.gui.RenderUtils.drawOutline(x + 7, y + currentRow * 18 + 17, 9 * 18, 18, 2, 0xFFFF2020);
     }
 
     private static void renderSprite(Minecraft mc, int x, int y, String texture, int width, int height)
@@ -547,40 +572,6 @@ public class RenderUtils
         //GlStateManager.disableBlend();
         RenderHelper.disableStandardItemLighting();
         GlStateManager.popMatrix();
-    }
-
-    public static void enableGUIStandardItemLighting(float scale)
-    {
-        GlStateManager.pushMatrix();
-        GlStateManager.rotate(-30.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotate(165.0F, 1.0F, 0.0F, 0.0F);
-
-        enableStandardItemLighting(scale);
-
-        GlStateManager.popMatrix();
-    }
-
-    public static void enableStandardItemLighting(float scale)
-    {
-        GlStateManager.enableLighting();
-        GlStateManager.enableLight(0);
-        GlStateManager.enableLight(1);
-        GlStateManager.enableColorMaterial();
-        GlStateManager.colorMaterial(1032, 5634);
-        GlStateManager.glLight(16384, 4611, RenderHelper.setColorBuffer((float) LIGHT0_POS.x, (float) LIGHT0_POS.y, (float) LIGHT0_POS.z, 0.0f));
-
-        float lightStrength = 0.3F * scale;
-        GlStateManager.glLight(16384, 4609, RenderHelper.setColorBuffer(lightStrength, lightStrength, lightStrength, 1.0F));
-        GlStateManager.glLight(16384, 4608, RenderHelper.setColorBuffer(0.0F, 0.0F, 0.0F, 1.0F));
-        GlStateManager.glLight(16384, 4610, RenderHelper.setColorBuffer(0.0F, 0.0F, 0.0F, 1.0F));
-        GlStateManager.glLight(16385, 4611, RenderHelper.setColorBuffer((float) LIGHT1_POS.x, (float) LIGHT1_POS.y, (float) LIGHT1_POS.z, 0.0f));
-        GlStateManager.glLight(16385, 4609, RenderHelper.setColorBuffer(lightStrength, lightStrength, lightStrength, 1.0F));
-        GlStateManager.glLight(16385, 4608, RenderHelper.setColorBuffer(0.0F, 0.0F, 0.0F, 1.0F));
-        GlStateManager.glLight(16385, 4610, RenderHelper.setColorBuffer(0.0F, 0.0F, 0.0F, 1.0F));
-        GlStateManager.shadeModel(7424);
-
-        float ambientLightStrength = 0.4F;
-        GlStateManager.glLightModel(2899, RenderHelper.setColorBuffer(ambientLightStrength, ambientLightStrength, ambientLightStrength, 1.0F));
     }
 
     public static float getLavaFog(Entity entity, float originalFog)
