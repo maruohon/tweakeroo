@@ -9,9 +9,16 @@ import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.util.PositionUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -72,8 +79,30 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     {
         Minecraft mc = Minecraft.getMinecraft();
 
+        if (mc.currentScreen == null && mc.player != null && mc.player.capabilities.isCreativeMode &&
+            eventButtonState && eventButton == mc.gameSettings.keyBindUseItem.getKeyCode() + 100 &&
+            FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
+            mc.objectMouseOver.typeOfHit == RayTraceResult.Type.MISS)
+        {
+            BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
+
+            if (mc.world.isAirBlock(posFront))
+            {
+                EnumFacing facing = PositionUtils.getClosestLookingDirection(mc.player).getOpposite();
+                Vec3d hitVec = PositionUtils.getHitVecCenter(posFront, facing);
+
+                EnumActionResult result = mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.MAIN_HAND);
+
+                if (result != EnumActionResult.SUCCESS)
+                {
+                    mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.OFF_HAND);
+                }
+
+                return true;
+            }
+        }
         // Not in a GUI
-        if (mc.currentScreen == null && dWheel != 0)
+        else if (mc.currentScreen == null && dWheel != 0)
         {
             String preGreen = TextFormatting.GREEN.toString();
             String rst = TextFormatting.RESET.toString();
