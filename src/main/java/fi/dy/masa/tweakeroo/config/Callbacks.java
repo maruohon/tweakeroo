@@ -163,15 +163,24 @@ public class Callbacks
             {
                 if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())
                 {
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 0);
+                    if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
+                    {
+                        InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 0);
+                    }
                 }
                 else if (key == Hotkeys.HOTBAR_SWAP_2.getKeybind())
                 {
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 1);
+                    if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
+                    {
+                        InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 1);
+                    }
                 }
                 else if (key == Hotkeys.HOTBAR_SWAP_3.getKeybind())
                 {
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 2);
+                    if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
+                    {
+                        InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 2);
+                    }
                 }
                 // The values will be toggled after the callback (see above), thus inversed check here
                 else if (key == Hotkeys.RESTRICTION_MODE_PLANE.getKeybind())
