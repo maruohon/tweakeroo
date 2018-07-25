@@ -220,7 +220,7 @@ public class PlacementTweaks
             Vec3d hitVec,
             EnumHand hand)
     {
-        boolean restricted = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue();
+        boolean restricted = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() || FeatureToggle.TWEAK_PLACEMENT_GRID.getBooleanValue();
         ItemStack stackPre = player.getHeldItem(hand).copy();
         EnumFacing playerFacingH = player.getHorizontalFacing();
         HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
@@ -250,6 +250,7 @@ public class PlacementTweaks
             sideRotatedFirst = sideRotated;
             playerYawFirst = player.rotationYaw;
             stackFirst = stackPre;
+            //System.out.printf("plop store @ %s\n", posFirst);
         }
 
         return result;
@@ -377,6 +378,7 @@ public class PlacementTweaks
             Vec3d hitVec,
             EnumHand hand)
     {
+        //System.out.printf("processRightClickBlockWrapper() start @ %s, side: %s\n", pos, side);
         if (FeatureToggle.TWEAK_PLACEMENT_LIMIT.getBooleanValue() &&
             placementCount >= Configs.Generic.PLACEMENT_LIMIT.getIntegerValue())
         {
@@ -399,9 +401,9 @@ public class PlacementTweaks
             pos = pos.offset(side.getOpposite());
         }
 
-        if (FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() &&
-            posFirst != null && isPositionAllowedByPlacementRestriction(pos, side) == false)
+        if (posFirst != null && isPositionAllowedByPlacementRestriction(pos, side) == false)
         {
+            //System.out.printf("processRightClickBlockWrapper() PASS @ %s, side: %s\n", pos, side);
             return EnumActionResult.PASS;
         }
 
@@ -458,6 +460,7 @@ public class PlacementTweaks
         }
         else
         {
+            //System.out.printf("processRightClickBlockWrapper() PLACE @ %s, side: %s\n", pos, side);
             result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
         }
 
@@ -657,6 +660,18 @@ public class PlacementTweaks
     private static boolean isPositionAllowedByPlacementRestriction(BlockPos pos, EnumFacing side)
     {
         PlacementRestrictionMode mode = (PlacementRestrictionMode) Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue();
+
+        if (FeatureToggle.TWEAK_PLACEMENT_GRID.getBooleanValue())
+        {
+            int grid = Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue();
+
+            if ((Math.abs(pos.getX() - posFirst.getX()) % grid) != 0 ||
+                (Math.abs(pos.getY() - posFirst.getY()) % grid) != 0 ||
+                (Math.abs(pos.getZ() - posFirst.getZ()) % grid) != 0)
+            {
+                return false;
+            }
+        }
 
         if (FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue())
         {
