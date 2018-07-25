@@ -31,6 +31,7 @@ public class PlacementTweaks
     private static BlockPos posFirst = null;
     private static BlockPos posLast = null;
     private static HitPart hitPartFirst = null;
+    private static EnumHand handFirst = EnumHand.MAIN_HAND;
     private static Vec3d hitVecFirst = null;
     private static EnumFacing sideFirst = null;
     private static EnumFacing sideRotatedFirst = null;
@@ -153,7 +154,7 @@ public class PlacementTweaks
                     EnumFacing side = trace.sideHit;
                     BlockPos pos = trace.getBlockPos();
                     BlockPos posNew = getPlacementPositionForTargetedPosition(pos, side, world);
-                    EnumHand hand = getHandWithItem(stackFirst, player);
+                    EnumHand hand = handFirst;
 
                     if (hand != null &&
                         posNew.equals(posLast) == false &&
@@ -243,6 +244,7 @@ public class PlacementTweaks
             posFirst = getPlacementPositionForTargetedPosition(posIn, sideIn, world);
             posLast = posFirst;
             hitPartFirst = hitPart;
+            handFirst = hand;
             hitVecFirst = hitVec.subtract(posFirst.getX(), posFirst.getY(), posFirst.getZ());
             sideFirst = sideIn;
             sideRotatedFirst = sideRotated;
@@ -383,7 +385,7 @@ public class PlacementTweaks
 
         // We need to grab the stack here if the cached stack is still empty,
         // because this code runs before the cached stack gets set on the first click/use.
-        ItemStack stackOriginal = stackFirst.isEmpty() == false ? stackFirst : player.getHeldItem(hand).copy();
+        ItemStack stackOriginal = stackFirst.isEmpty() == false && FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false ? stackFirst : player.getHeldItem(hand).copy();
         BlockPos posPlacement = getPlacementPositionForTargetedPosition(pos, side, world);
         IBlockState stateBefore = world.getBlockState(posPlacement);
         IBlockState state = world.getBlockState(pos);
@@ -479,6 +481,21 @@ public class PlacementTweaks
             {
                 //System.out.printf("processRightClickBlockWrapper() after-clicker - i: %d, pos: %s, side: %s, hitVec: %s\n", i, pos, side, hitVec);
                 controller.processRightClickBlock(player, world, posPlacement, side, hitVec, hand);
+            }
+        }
+
+        if (result == EnumActionResult.SUCCESS)
+        {
+            if (FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue())
+            {
+                int newSlot = player.inventory.currentItem + 1;
+
+                if (newSlot >= 9 || newSlot >= Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue())
+                {
+                    newSlot = 0;
+                }
+
+                player.inventory.currentItem = newSlot;
             }
         }
 
@@ -780,7 +797,6 @@ public class PlacementTweaks
             }
         }
     }
-    */
 
     @Nullable
     private static EnumHand getHandWithItem(ItemStack stack, EntityPlayerSP player)
@@ -797,6 +813,7 @@ public class PlacementTweaks
 
         return null;
     }
+    */
 
     public static boolean shouldSkipSlotSync(int slotNumber, ItemStack newStack)
     {
