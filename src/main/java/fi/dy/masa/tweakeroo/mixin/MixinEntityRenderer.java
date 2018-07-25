@@ -35,6 +35,15 @@ public class MixinEntityRenderer
         RenderEventHandler.onRenderWorldLast(partialTicks);
     }
 
+    @Inject(method = "updateCameraAndRender(FJ)V", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/GuiIngame;renderGameOverlay(F)V",
+            shift = Shift.AFTER))
+    private void onRenderGameOverlayPost(float partialTicks, long nanoTime, CallbackInfo ci)
+    {
+        RenderEventHandler.onRenderGameOverlayPost(partialTicks);
+    }
+
     @Inject(method = "setupFog(IF)V", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/renderer/GlStateManager;setFogDensity(F)V",

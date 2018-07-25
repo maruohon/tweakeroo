@@ -6,7 +6,6 @@
     "client": [
         "MixinEntityRenderer",
         "MixinGlStateManager",
-        "MixinGuiIngame",
         "MixinItem",
         "MixinItemRenderer",
         "MixinItemShulkerBox",
