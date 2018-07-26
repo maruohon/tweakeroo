@@ -237,10 +237,13 @@ public class Callbacks
             {
                 if (key == Hotkeys.HOTBAR_SCROLL.getKeybind())
                 {
-                    int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, currentRow);
+                    if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue())
+                    {
+                        int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
+                        InventoryUtils.swapHotbarWithInventoryRow(mc.player, currentRow);
 
-                    return true;
+                        return true;
+                    }
                 }
             }
 
