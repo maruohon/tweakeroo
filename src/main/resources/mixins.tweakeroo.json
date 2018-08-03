@@ -5,6 +5,7 @@
     "minVersion": "0.6",
     "client": [
         "MixinChatTabCompleter",
+        "MixinEntityPlayerSP",
         "MixinEntityRenderer",
         "MixinGlStateManager",
         "MixinItem",
