@@ -32,6 +32,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     TWEAK_INVENTORY_PREVIEW         ("tweakInventoryPreview",               false, "X,I", "Enables an inventory preview while having the cursor over a block\nwith an inventory and holding the configured modifier key for it"),
     TWEAK_ITEM_UNSTACKING_PROTECTION("tweakItemUnstackingProtection",       false, "X,T", "If enabled, then items configured in Generic -> unstackingItems won't be\nallowed to spill out when using. This is meant for example to\nprevent throwing buckets into lava when filling them."),
     TWEAK_LAVA_VISIBILITY           ("tweakLavaVisibility",                 false, "",    "If enabled and the player has a Respiration helmet and/or Wather Breathing\nactive, the lava fog is greatly reduced"),
+    TWEAK_MAP_PREVIEW               ("tweakMapPreview",                     false, "",    "If enabled, then holding shift over maps in an inventory will render a preview of the map"),
     TWEAK_MOVEMENT_KEYS             ("tweakMovementKeysLast",               false, "",    "If enabled, then opposite movement keys won't cancel each other,\nbut instead the last pressed key is the active input"),
     TWEAK_PLACEMENT_GRID            ("tweakPlacementGrid",                  false, "X,G", "When enabled, you can only place blocks in a grid pattern, with a configurable interval"),
     TWEAK_PLACEMENT_LIMIT           ("tweakPlacementLimit",                 false, "X,M", "When enabled, you can only place a set number of blocks per use/right click"),

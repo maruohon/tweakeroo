@@ -11,6 +11,7 @@ import fi.dy.masa.tweakeroo.util.RayTraceUtils;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -25,11 +26,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.tileentity.TileEntity;
@@ -40,6 +43,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.MapData;
 
 public class RenderUtils
 {
@@ -48,6 +52,7 @@ public class RenderUtils
     public static final ResourceLocation TEXTURE_HOPPER = new ResourceLocation("textures/gui/container/hopper.png");
     public static final ResourceLocation TEXTURE_PLAYER_INV = new ResourceLocation("textures/gui/container/hopper.png");
     public static final ResourceLocation TEXTURE_SINGLE_CHEST = new ResourceLocation("textures/gui/container/shulker_box.png");
+    public static final ResourceLocation TEXTURE_MAP_BACKGROUND = new ResourceLocation("textures/map/map_background.png");
     private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] { EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET };
 
     public static void renderBlockPlacementOverlay(Entity entity, BlockPos pos, EnumFacing side, Vec3d hitVec, double dx, double dy, double dz)
@@ -610,6 +615,51 @@ public class RenderUtils
         if (fog < 2.0F)
         {
             GlStateManager.setFogDensity(fog);
+        }
+    }
+
+    public static void renderMapPreview(ItemStack stack, int x, int y)
+    {
+        if (stack.getItem() instanceof ItemMap && GuiScreen.isShiftKeyDown())
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+
+            GlStateManager.pushMatrix();
+            GlStateManager.disableLighting();
+            GlStateManager.color(1, 1, 1, 1);
+            mc.getTextureManager().bindTexture(TEXTURE_MAP_BACKGROUND);
+
+            int size = Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue();
+            int y1 = y - size - 20;
+            int y2 = y1 + size;
+            int x1 = x + 8;
+            int x2 = x1 + size;
+            int z = 300;
+
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            buffer.pos(x1, y2, z).tex(0.0D, 1.0D).endVertex();
+            buffer.pos(x2, y2, z).tex(1.0D, 1.0D).endVertex();
+            buffer.pos(x2, y1, z).tex(1.0D, 0.0D).endVertex();
+            buffer.pos(x1, y1, z).tex(0.0D, 0.0D).endVertex();
+            tessellator.draw();
+
+            MapData mapdata = Items.FILLED_MAP.getMapData(stack, mc.world);
+
+            if (mapdata != null)
+            {
+                x1 += 8;
+                y1 += 8;
+                z = 310;
+                double scale = (double) (size - 16) / 128.0D;
+                GlStateManager.translate(x1, y1, z);
+                GlStateManager.scale(scale, scale, 0);
+                mc.entityRenderer.getMapItemRenderer().renderMap(mapdata, false);
+            }
+
+            GlStateManager.enableLighting();
+            GlStateManager.popMatrix();
         }
     }
 }

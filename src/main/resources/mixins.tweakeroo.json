@@ -8,6 +8,7 @@
         "MixinEntityPlayerSP",
         "MixinEntityRenderer",
         "MixinGlStateManager",
+        "MixinGuiScreen",
         "MixinItem",
         "MixinItemRenderer",
         "MixinItemShulkerBox",
