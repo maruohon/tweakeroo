@@ -18,6 +18,7 @@
         "MixinNetHandlerPlayClient",
         "MixinPlayerControllerMP",
         "MixinRenderGlobal",
+        "MixinRenderLivingBase",
         "MixinRenderManager"
     ],
     "injectors": {
