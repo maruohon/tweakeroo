@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.renderer;
 
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.malilib.config.HudAlignment;
+import fi.dy.masa.malilib.util.WorldUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks.HitPart;
@@ -14,7 +15,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -32,10 +32,10 @@ import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -45,12 +45,6 @@ import net.minecraft.world.storage.MapData;
 
 public class RenderUtils
 {
-    public static final ResourceLocation TEXTURE_DISPENSER = new ResourceLocation("textures/gui/container/dispenser.png");
-    public static final ResourceLocation TEXTURE_DOUBLE_CHEST = new ResourceLocation("textures/gui/container/generic_54.png");
-    public static final ResourceLocation TEXTURE_HOPPER = new ResourceLocation("textures/gui/container/hopper.png");
-    public static final ResourceLocation TEXTURE_PLAYER_INV = new ResourceLocation("textures/gui/container/hopper.png");
-    public static final ResourceLocation TEXTURE_SINGLE_CHEST = new ResourceLocation("textures/gui/container/shulker_box.png");
-    public static final ResourceLocation TEXTURE_MAP_BACKGROUND = new ResourceLocation("textures/map/map_background.png");
     private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] { EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET };
 
     public static void renderBlockPlacementOverlay(Entity entity, BlockPos pos, EnumFacing side, Vec3d hitVec, double dx, double dy, double dz)
@@ -227,7 +221,7 @@ public class RenderUtils
 
                     if (stack.isEmpty() == false)
                     {
-                        renderStackAt(stack, x, y, 1, mc);
+                        fi.dy.masa.malilib.gui.RenderUtils.renderStackAt(stack, x, y, 1, mc);
                     }
 
                     x += 18;
@@ -241,7 +235,7 @@ public class RenderUtils
 
     public static void renderInventoryOverlay(Minecraft mc)
     {
-        World world = getBestWorld(mc);
+        World world = WorldUtils.getBestWorld(mc);
 
         // We need to get the player from the server world, so that the player itself won't be included in the ray trace
         EntityPlayer player = world.getPlayerEntityByUUID(mc.player.getUniqueID());
@@ -327,6 +321,13 @@ public class RenderUtils
                 case 54: height = 142; break;
             }
 
+            if ((inv instanceof TileEntityFurnace) || (inv instanceof TileEntityBrewingStand))
+            {
+                height = 83;
+                slotOffsetX = 0;
+                slotOffsetY = 0;
+            }
+
             int x = xCenter - 176 / 2;
             int y = yCenter - 10 - height;
 
@@ -335,8 +336,8 @@ public class RenderUtils
                 y += (rows - 6) * 18;
             }
 
-            renderInventoryBackground(x, y, slotsPerRow, totalSlots, mc);
-            renderInventoryStacks(inv, x + slotOffsetX, y + slotOffsetY, slotsPerRow, 0, -1, mc);
+            fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(x, y, slotsPerRow, totalSlots, inv, mc);
+            fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, x + slotOffsetX, y + slotOffsetY, slotsPerRow, 0, -1, mc);
 
             if (entity != null)
             {
@@ -362,34 +363,15 @@ public class RenderUtils
         int slotOffsetX =  8;
         int slotOffsetY = 18;
 
-        renderInventoryBackground(x, y, 9, 27, mc);
-        renderInventoryStacks(mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
-    }
-
-    /**
-     * Best name. Returns the integrated server world for the current dimension
-     * in single player, otherwise just the client world.
-     * @param mc
-     * @return
-     */
-    public static World getBestWorld(Minecraft mc)
-    {
-        if (mc.isSingleplayer())
-        {
-            IntegratedServer server = mc.getIntegratedServer();
-            return server.getWorld(mc.world.provider.getDimensionType().getId());
-        }
-        else
-        {
-            return mc.world;
-        }
+        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(x, y, 9, 27, mc.player.inventory, mc);
+        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
     }
 
     private static void renderEquipmentOverlayBackground(Minecraft mc, int x, int y, EntityLivingBase entity)
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        mc.getTextureManager().bindTexture(TEXTURE_DISPENSER);
+        mc.getTextureManager().bindTexture(fi.dy.masa.malilib.gui.RenderUtils.TEXTURE_DISPENSER);
         mc.ingameGUI.drawTexturedModalRect(x     , y     ,   0,   0, 50, 83); // top-left (main part)
         mc.ingameGUI.drawTexturedModalRect(x + 50, y     , 173,   0,  3, 83); // right edge top
         mc.ingameGUI.drawTexturedModalRect(x     , y + 83,   0, 163, 50,  3); // bottom edge left
@@ -424,43 +406,6 @@ public class RenderUtils
         }
     }
 
-    private static void renderInventoryBackground(int x, int y, int slotsPerRow, int totalSlots, Minecraft mc)
-    {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-        if (totalSlots <= 5)
-        {
-            mc.getTextureManager().bindTexture(TEXTURE_HOPPER);
-            mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  50);
-            mc.ingameGUI.drawTexturedModalRect(x, y +  50, 0, 127, 176,   6);
-        }
-        else if (totalSlots <= 9)
-        {
-            mc.getTextureManager().bindTexture(TEXTURE_DISPENSER);
-            mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  83);
-            mc.ingameGUI.drawTexturedModalRect(x, y +  83, 0, 163, 176,   3);
-        }
-        else if (totalSlots <= 27)
-        {
-            mc.getTextureManager().bindTexture(TEXTURE_SINGLE_CHEST);
-            mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176,  83);
-            mc.ingameGUI.drawTexturedModalRect(x, y +  83, 0, 161, 176,   5);
-        }
-        else if (totalSlots <= 36)
-        {
-            mc.getTextureManager().bindTexture(TEXTURE_DOUBLE_CHEST);
-            mc.ingameGUI.drawTexturedModalRect(x, y     , 0,   0, 176,  89);
-            mc.ingameGUI.drawTexturedModalRect(x, y + 89, 0,   4, 176,   6);
-            mc.ingameGUI.drawTexturedModalRect(x, y + 95, 0, 219, 176,   3);
-        }
-        else
-        {
-            mc.getTextureManager().bindTexture(TEXTURE_DOUBLE_CHEST);
-            mc.ingameGUI.drawTexturedModalRect(x, y      , 0,   0, 176, 139);
-            mc.ingameGUI.drawTexturedModalRect(x, y + 139, 0, 219, 176,   3);
-        }
-    }
-
     public static void renderHotbarScrollOverlay(Minecraft mc)
     {
         IInventory inv = mc.player.inventory;
@@ -470,12 +415,12 @@ public class RenderUtils
         final int x = xCenter - 176 / 2;
         final int y = yCenter + 10;
 
-        renderInventoryBackground(x, y, 9, 36, mc);
+        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(x, y, 9, 36, inv, mc);
 
         // Main inventory
-        renderInventoryStacks(inv, x + 8, y + 18, 9, 9, 27, mc);
+        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, x + 8, y + 18, 9, 9, 27, mc);
         // Hotbar
-        renderInventoryStacks(inv, x + 8, y + 72, 9, 0,  9, mc);
+        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, x + 8, y + 72, 9, 0,  9, mc);
 
         int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
         fi.dy.masa.malilib.gui.RenderUtils.drawOutline(x + 7, y + currentRow * 18 + 17, 9 * 18, 18, 2, 0xFFFF2020);
@@ -492,36 +437,6 @@ public class RenderUtils
         }
     }
 
-    private static void renderInventoryStacks(IInventory inv, int startX, int startY, int slotsPerRow, int startSlot, int maxSlots, Minecraft mc)
-    {
-        final int slots = inv.getSizeInventory();
-        int x = startX;
-        int y = startY;
-
-        if (maxSlots < 0)
-        {
-            maxSlots = slots;
-        }
-
-        for (int slot = startSlot, i = 0; slot < slots && i < maxSlots;)
-        {
-            for (int column = 0; column < slotsPerRow && slot < slots && i < maxSlots; ++column, ++slot, ++i)
-            {
-                ItemStack stack = inv.getStackInSlot(slot);
-
-                if (stack.isEmpty() == false)
-                {
-                    renderStackAt(stack, x, y, 1, mc);
-                }
-
-                x += 18;
-            }
-
-            x = startX;
-            y += 18;
-        }
-    }
-
     private static void renderEquipmentStacks(EntityLivingBase entity, int x, int y, Minecraft mc)
     {
         for (int i = 0, xOff = 7, yOff = 7; i < 4; ++i, yOff += 18)
@@ -531,7 +446,7 @@ public class RenderUtils
 
             if (stack.isEmpty() == false)
             {
-                renderStackAt(stack, x + xOff + 1, y + yOff + 1, 1, mc);
+                fi.dy.masa.malilib.gui.RenderUtils.renderStackAt(stack, x + xOff + 1, y + yOff + 1, 1, mc);
             }
         }
 
@@ -539,36 +454,15 @@ public class RenderUtils
 
         if (stack.isEmpty() == false)
         {
-            renderStackAt(stack, x + 28, y + 2 * 18 + 7 + 1, 1, mc);
+            fi.dy.masa.malilib.gui.RenderUtils.renderStackAt(stack, x + 28, y + 2 * 18 + 7 + 1, 1, mc);
         }
 
         stack = entity.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
         if (stack.isEmpty() == false)
         {
-            renderStackAt(stack, x + 28, y + 3 * 18 + 7 + 1, 1, mc);
+            fi.dy.masa.malilib.gui.RenderUtils.renderStackAt(stack, x + 28, y + 3 * 18 + 7 + 1, 1, mc);
         }
-    }
-
-    private static void renderStackAt(ItemStack stack, float x, float y, float scale, Minecraft mc)
-    {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 0);
-        GlStateManager.scale(scale, scale, 1);
-        GlStateManager.disableLighting();
-
-        //Gui.drawRect(0, 0, 16, 16, 0x20FFFFFF); // light background for the item
-
-        RenderHelper.enableGUIStandardItemLighting();
-
-        mc.getRenderItem().zLevel += 100;
-        mc.getRenderItem().renderItemAndEffectIntoGUI(mc.player, stack, 0, 0);
-        mc.getRenderItem().renderItemOverlayIntoGUI(mc.fontRenderer, stack, 0, 0, null);
-        mc.getRenderItem().zLevel -= 100;
-
-        //GlStateManager.disableBlend();
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.popMatrix();
     }
 
     public static float getLavaFog(Entity entity, float originalFog)
@@ -619,7 +513,7 @@ public class RenderUtils
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
             GlStateManager.color(1, 1, 1, 1);
-            mc.getTextureManager().bindTexture(TEXTURE_MAP_BACKGROUND);
+            mc.getTextureManager().bindTexture(fi.dy.masa.malilib.gui.RenderUtils.TEXTURE_MAP_BACKGROUND);
 
             int size = Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue();
             int y1 = y - size - 20;
