@@ -3,8 +3,6 @@ package fi.dy.masa.tweakeroo.renderer;
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks.HitPart;
 import fi.dy.masa.tweakeroo.util.RayTraceUtils;
@@ -317,15 +315,7 @@ public class RenderUtils
                 slotOffsetY += -1;
             }
 
-            int x = xCenter - 176 / 2;
-            int y = yCenter + 10;
             final int rows = (int) Math.ceil(totalSlots / slotsPerRow);
-
-            if (rows > 6)
-            {
-                y -= (rows - 6) * 18;
-            }
-
             int height = 0;
 
             switch (totalSlots)
@@ -337,10 +327,12 @@ public class RenderUtils
                 case 54: height = 142; break;
             }
 
-            if (FeatureToggle.TWEAK_PLAYER_INVENTORY_PEEK.getBooleanValue() &&
-                Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().isKeybindHeld())
+            int x = xCenter - 176 / 2;
+            int y = yCenter - 10 - height;
+
+            if (rows > 6)
             {
-                y -= (y - yCenter + 10 + height);
+                y += (rows - 6) * 18;
             }
 
             renderInventoryBackground(x, y, slotsPerRow, totalSlots, mc);
