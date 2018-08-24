@@ -43,16 +43,6 @@ public class InventoryUtils
         }
     }
 
-    public static boolean areStacksEqual(ItemStack stack1, ItemStack stack2)
-    {
-        return ItemStack.areItemsEqual(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
-    }
-
-    public static boolean areStacksEqualIgnoreDurability(ItemStack stack1, ItemStack stack2)
-    {
-        return ItemStack.areItemsEqualIgnoreDurability(stack1, stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
-    }
-
     public static void swapHotbarWithInventoryRow(EntityPlayer player, int row)
     {
         Container container = player.inventoryContainer;
@@ -61,38 +51,19 @@ public class InventoryUtils
 
         for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++)
         {
-            swapSlots(container, slot, hotbarSlot);
+            fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, slot, hotbarSlot);
             slot++;
         }
     }
 
-    private static void swapSlots(Container container, int slot, int hotbarSlot)
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        mc.playerController.windowClick(container.windowId, slot, hotbarSlot, ClickType.SWAP, mc.player);
-    }
-
     public static void restockNewStackToHand(EntityPlayer player, EnumHand hand, ItemStack stackReference)
     {
-        int slotWithItem = findSlotWithItem(player.inventoryContainer, stackReference);
+        int slotWithItem = fi.dy.masa.malilib.util.InventoryUtils.findSlotWithItem(player.inventoryContainer, stackReference, true);
 
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
         }
-    }
-
-    private static int findSlotWithItem(Container container, ItemStack stackReference)
-    {
-        for (Slot slot : container.inventorySlots)
-        {
-            if (areStacksEqualIgnoreDurability(slot.getStack(), stackReference))
-            {
-                return slot.slotNumber;
-            }
-        }
-
-        return -1;
     }
 
     public static void trySwapCurrentToolIfNearlyBroken()
@@ -150,7 +121,7 @@ public class InventoryUtils
             return;
         }
 
-        slotWithItem = findEmptySlot(player.inventoryContainer, false);
+        slotWithItem = fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false);
 
         if (slotWithItem != -1)
         {
@@ -224,22 +195,6 @@ public class InventoryUtils
         return -1;
     }
 
-    private static int findEmptySlot(Container container, boolean allowOffhand)
-    {
-        for (Slot slot : container.inventorySlots)
-        {
-            ItemStack stackSlot = slot.getStack();
-
-            // Inventory crafting, armor and offhand slots are not valid
-            if (stackSlot.isEmpty() && slot.slotNumber > 8 && (allowOffhand || slot.slotNumber < 45))
-            {
-                return slot.slotNumber;
-            }
-        }
-
-        return -1;
-    }
-
     private static void tryCombineStacksInInventory(EntityPlayer player, ItemStack stackReference)
     {
         List<Slot> slots = new ArrayList<>();
@@ -256,7 +211,7 @@ public class InventoryUtils
 
             ItemStack stack = slot.getStack();
 
-            if (stack.getCount() < stack.getMaxStackSize() && areStacksEqual(stackReference, stack))
+            if (stack.getCount() < stack.getMaxStackSize() && fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackReference, stack))
             {
                 slots.add(slot);
             }
@@ -304,11 +259,11 @@ public class InventoryUtils
             stack.getCount() > 1 &&
             UNSTACKING_ITEMS.contains(stack.getItem()))
         {
-            if (findEmptySlot(player.inventoryContainer, false) == -1)
+            if (fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1)
             {
                 tryCombineStacksInInventory(player, stack);
 
-                if (findEmptySlot(player.inventoryContainer, false) == -1)
+                if (fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1)
                 {
                     return true;
                 }
@@ -354,7 +309,7 @@ public class InventoryUtils
                 }
                 else
                 {
-                    int slot = findSlotWithItem(player.inventoryContainer, stack); //player.inventory.getSlotFor(stack);
+                    int slot = fi.dy.masa.malilib.util.InventoryUtils.findSlotWithItem(player.inventoryContainer, stack, true); //player.inventory.getSlotFor(stack);
 
                     if (slot != -1)
                     {

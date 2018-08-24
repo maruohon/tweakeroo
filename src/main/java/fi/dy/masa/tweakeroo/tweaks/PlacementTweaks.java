@@ -363,7 +363,7 @@ public class PlacementTweaks
         ItemStack stackCurrent = player.getHeldItem(hand);
 
         if (stackOriginal.isEmpty() == false &&
-            (stackCurrent.isEmpty() || InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
+            (stackCurrent.isEmpty() || fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
         {
             InventoryUtils.restockNewStackToHand(player, hand, stackOriginal);
         }
