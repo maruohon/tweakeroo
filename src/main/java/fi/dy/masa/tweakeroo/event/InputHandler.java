@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.event;
 
+import com.google.common.collect.ImmutableList;
 import fi.dy.masa.malilib.hotkeys.IKeybindManager;
 import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
 import fi.dy.masa.malilib.hotkeys.IKeyboardInputHandler;
@@ -56,8 +57,8 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     @Override
     public void addHotkeys(IKeybindManager manager)
     {
-        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.values());
-        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", FeatureToggle.values());
+        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", ImmutableList.copyOf(Hotkeys.values()));
+        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", ImmutableList.copyOf(FeatureToggle.values()));
     }
 
     @Override
