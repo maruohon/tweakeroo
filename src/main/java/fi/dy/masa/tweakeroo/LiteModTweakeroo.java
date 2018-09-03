@@ -23,6 +23,9 @@ public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteList
 {
     public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
 
+    public static int renderCountItems;
+    public static int renderCountXPOrbs;
+
     public LiteModTweakeroo()
     {
     }
@@ -70,6 +73,10 @@ public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteList
     public void onTick(Minecraft mc, float partialTicks, boolean inGame, boolean clock)
     {
         PlacementTweaks.onTick(mc);
+
+        // Reset the counters after rendering each frame
+        renderCountItems = 0;
+        renderCountXPOrbs = 0;
     }
 
     @Override

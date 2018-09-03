@@ -45,6 +45,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
     TWEAK_PERMANENT_SNEAK           ("tweakPermanentSneak",                 false, "LSHIFT,X,S", "If enabled, the player will be sneaking the entire time"),
     TWEAK_PICK_BEFORE_PLACE         ("tweakPickBeforePlace",                false, "X,K", "If enabled, then before each block placement, the same block\nis switched to hand that you are placing against"),
     TWEAK_RENDER_INVISIBLE_ENTITIES ("tweakRenderInvisibleEntities",        false, "",    "When enabled, invisible entities and other spectator mode players are rendered even when not in spectator mode"),
+    TWEAK_RENDER_LIMIT_ENTITIES     ("tweakRenderLimitEntities",            false, "LCONTROL,LSHIFT,X,R", "Enables limiting the number of certain types of entities to render per frame.\nCurrently XP Orbs and Item entities are supported, see Generic configs for the limits."),
     TWEAK_SHULKERBOX_STACKING       ("tweakEmptyShulkerBoxesStack",         false, "",    "Enables empty Shulker Boxes stacking up to 64"),
     TWEAK_SWAP_ALMOST_BROKEN_TOOLS  ("tweakSwapAlmostBrokenTools",          false, "X,W", "If enabled, then any damageable items held in the hand that are\nabout to break will be swapped to fresh ones"),
     TWEAK_TAB_COMPLETE_COORDINATE   ("tweakTabCompleteCoordinate",          false, "",    "If enabled, then tab-completing coordinates while not looking at a block,\nwill use the player's position instead of adding the ~ character.");
