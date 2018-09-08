@@ -3,16 +3,16 @@ package fi.dy.masa.tweakeroo.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
-import fi.dy.masa.malilib.config.IConfigBoolean;
 import fi.dy.masa.malilib.config.IConfigValueChangeCallback;
-import fi.dy.masa.malilib.hotkeys.IHotkey;
+import fi.dy.masa.malilib.config.IHotkeyTogglable;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackToggleBooleanConfigWithMessage;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
+import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
-public enum FeatureToggle implements IConfigBoolean, IHotkey
+public enum FeatureToggle implements IHotkeyTogglable
 {
     CARPET_ACCURATE_BLOCK_PLACEMENT ("carpetAccuratePlacementProtocol",     false, "LMENU,C", "If enabled, then the Flexible Block Placement and the Accurate Block Plamenet\nuse the protocol implemented in the recent carpet mod versions", "Carpet protocol Accurate Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "LSHIFT,X,F", "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
@@ -70,7 +70,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey
         this.defaultValueBoolean = defaultValue;
         this.comment = comment;
         this.prettyName = prettyName;
-        this.keybind = KeybindMulti.fromStorageString(defaultHotkey);
+        this.keybind = KeybindMulti.fromStorageString(defaultHotkey, KeybindSettings.DEFAULT);
         this.keybind.setCallback(new KeyCallbackToggleBooleanConfigWithMessage(this));
     }
 

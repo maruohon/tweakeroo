@@ -4,7 +4,6 @@ import java.io.File;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mumfrey.liteloader.core.LiteLoader;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.HudAlignment;
@@ -85,24 +84,10 @@ public class Configs implements IConfigHandler
             if (element != null && element.isJsonObject())
             {
                 JsonObject root = element.getAsJsonObject();
-                JsonObject objTweakToggles      = JsonUtils.getNestedObject(root, "TweakToggles", false);
-                JsonObject objTweakHotkeys      = JsonUtils.getNestedObject(root, "TweakHotkeys", false);
 
-                ConfigUtils.readConfigValues(root, "Generic", Configs.Generic.OPTIONS);
+                ConfigUtils.readConfigBase(root, "Generic", Configs.Generic.OPTIONS);
                 ConfigUtils.readConfigBase(root, "GenericHotkeys", ImmutableList.copyOf(Hotkeys.values()));
-
-                for (FeatureToggle toggle : FeatureToggle.values())
-                {
-                    if (objTweakToggles != null && JsonUtils.hasBoolean(objTweakToggles, toggle.getName()))
-                    {
-                        toggle.setBooleanValue(JsonUtils.getBoolean(objTweakToggles, toggle.getName()));
-                    }
-
-                    if (objTweakHotkeys != null && JsonUtils.hasString(objTweakHotkeys, toggle.getName()))
-                    {
-                        toggle.getKeybind().setValueFromString(JsonUtils.getString(objTweakHotkeys, toggle.getName()));
-                    }
-                }
+                ConfigUtils.readHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));
             }
         }
 
@@ -117,17 +102,9 @@ public class Configs implements IConfigHandler
         {
             JsonObject root = new JsonObject();
 
-            JsonObject objTweakToggles      = JsonUtils.getNestedObject(root, "TweakToggles", true);
-            JsonObject objTweakHotkeys      = JsonUtils.getNestedObject(root, "TweakHotkeys", true);
-
-            ConfigUtils.writeConfigValues(root, "Generic", Configs.Generic.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "Generic", Configs.Generic.OPTIONS);
             ConfigUtils.writeConfigBase(root, "GenericHotkeys", ImmutableList.copyOf(Hotkeys.values()));
-
-            for (FeatureToggle toggle : FeatureToggle.values())
-            {
-                objTweakToggles.add(toggle.getName(), new JsonPrimitive(toggle.getBooleanValue()));
-                objTweakHotkeys.add(toggle.getName(), new JsonPrimitive(toggle.getKeybind().getStringValue()));
-            }
+            ConfigUtils.writeHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));
 
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
         }
