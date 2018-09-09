@@ -44,6 +44,7 @@ public enum FeatureToggle implements IHotkeyTogglable
     TWEAK_NO_PORTAL_GUI_CLOSING     ("tweakNoPortalGuiClosing",             false, "",    "If enabled, then you can still open GUIs while in a Nether Portal"),
     TWEAK_PERMANENT_SNEAK           ("tweakPermanentSneak",                 false, "LSHIFT,X,S", "If enabled, the player will be sneaking the entire time"),
     TWEAK_PICK_BEFORE_PLACE         ("tweakPickBeforePlace",                false, "X,K", "If enabled, then before each block placement, the same block\nis switched to hand that you are placing against"),
+    TWEAK_REMOVE_OWN_POTION_EFFECTS ("tweakRemoveOwnPotionEffects",         false, "LCONTROL,X,P", "Removes the potion effect particles from the player itself in first person mode"),
     TWEAK_RENDER_INVISIBLE_ENTITIES ("tweakRenderInvisibleEntities",        false, "",    "When enabled, invisible entities and other spectator mode players are rendered even when not in spectator mode"),
     TWEAK_RENDER_LIMIT_ENTITIES     ("tweakRenderLimitEntities",            false, "LCONTROL,LSHIFT,X,R", "Enables limiting the number of certain types of entities to render per frame.\nCurrently XP Orbs and Item entities are supported, see Generic configs for the limits."),
     TWEAK_SHULKERBOX_STACKING       ("tweakEmptyShulkerBoxesStack",         false, "",    "Enables empty Shulker Boxes stacking up to 64"),

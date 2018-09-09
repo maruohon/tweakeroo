@@ -2,8 +2,12 @@ package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,5 +26,17 @@ public abstract class MixinEntityLivingBase extends Entity
     private boolean fixElytraLanding(World world)
     {
         return world.isRemote && (Configs.Fixes.ELYTRA_FIX.getBooleanValue() == false || ((Object) this instanceof EntityPlayerSP) == false);
+    }
+
+    @Inject(method = "updatePotionEffects", at = @At(value = "FIELD", ordinal = 0,
+            target = "Lnet/minecraft/entity/EntityLivingBase;dataManager"), cancellable = true)
+    private void removeOwnPotionEffects(CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_REMOVE_OWN_POTION_EFFECTS.getBooleanValue() &&
+            ((Object) this) == Minecraft.getMinecraft().player &&
+            Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
+        {
+            ci.cancel();
+        }
     }
 }
