@@ -73,6 +73,15 @@ public class Configs implements IConfigHandler
                 );
     }
 
+    public static class Fixes
+    {
+        public static final ConfigBoolean ELYTRA_FIX    = new ConfigBoolean("elytraFix", false, "Elytra deployment/landing fix by Earthcomputer and Nessie");
+
+        public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
+                ELYTRA_FIX
+        );
+    }
+
     public static void loadFromFile()
     {
         File configFile = new File(LiteLoader.getCommonConfigFolder(), CONFIG_FILE_NAME);
