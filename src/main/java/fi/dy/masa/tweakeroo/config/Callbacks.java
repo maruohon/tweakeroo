@@ -5,6 +5,7 @@ import fi.dy.masa.malilib.config.IConfigValueChangeCallback;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
+import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
@@ -26,22 +27,27 @@ public class Callbacks
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback(featureCallback);
         FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setValueChangeCallback(featureCallback);
 
-        IHotkeyCallback callbackPress = new KeyCallbackHotkeysPress(mc);
-        IHotkeyCallback callbackRelease = new KeyCallbackHotkeysRelease(mc);
+        IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
 
-        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackPress);
-        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackPress);
-        Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackPress);
-        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackPress);
-        Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackPress);
-        Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callbackPress);
-        Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackPress);
-        Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackPress);
-        Hotkeys.HOTBAR_SCROLL.getKeybind().setCallback(callbackRelease);
+        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.HOTBAR_SCROLL.getKeybind().setCallback(callbackGeneric);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
+
+        KeybindSettings settings = KeybindSettings.RELEASE;
+        FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setSettings(settings);
+        FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind().setSettings(settings);
+        FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().setSettings(settings);
+        FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setSettings(settings);
 
         FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_AFTER_CLICKER));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
@@ -120,40 +126,35 @@ public class Callbacks
         @Override
         public boolean onKeyAction(KeyAction action, IKeybind key)
         {
-            if (action == KeyAction.PRESS)
+            if (key == Hotkeys.SKIP_ALL_RENDERING.getKeybind())
             {
-                if (key == Hotkeys.SKIP_ALL_RENDERING.getKeybind())
-                {
-                    this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
+                this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
 
-                    String pre = mc.skipRenderWorld ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
-                    String status = I18n.format("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
-                    String message = I18n.format("tweakeroo.message.toggled", "Skip All Rendering", pre + status + TextFormatting.RESET);
-                    StringUtils.printActionbarMessage(message);
-                }
-                else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
-                {
-                    skipWorldRendering = ! skipWorldRendering;
+                String pre = mc.skipRenderWorld ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
+                String status = I18n.format("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
+                String message = I18n.format("tweakeroo.message.toggled", "Skip All Rendering", pre + status + TextFormatting.RESET);
+                StringUtils.printActionbarMessage(message);
+            }
+            else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
+            {
+                skipWorldRendering = ! skipWorldRendering;
 
-                    boolean enabled = skipWorldRendering;
-                    String pre = enabled ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
-                    String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                    String message = I18n.format("tweakeroo.message.toggled", "Skip World Rendering", pre + status + TextFormatting.RESET);
-                    StringUtils.printActionbarMessage(message);
-                }
-
-                return true;
+                boolean enabled = skipWorldRendering;
+                String pre = enabled ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
+                String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
+                String message = I18n.format("tweakeroo.message.toggled", "Skip World Rendering", pre + status + TextFormatting.RESET);
+                StringUtils.printActionbarMessage(message);
             }
 
-            return false;
+            return true;
         }
     }
 
-    private static class KeyCallbackHotkeysPress implements IHotkeyCallback
+    private static class KeyCallbackHotkeysGeneric implements IHotkeyCallback
     {
         private final Minecraft mc;
 
-        public KeyCallbackHotkeysPress(Minecraft mc)
+        public KeyCallbackHotkeysGeneric(Minecraft mc)
         {
             this.mc = mc;
         }
@@ -161,51 +162,63 @@ public class Callbacks
         @Override
         public boolean onKeyAction(KeyAction action, IKeybind key)
         {
-            if (action == KeyAction.PRESS)
+            if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())
             {
-                if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())
+                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
                 {
-                    if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
-                    {
-                        InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 0);
-                    }
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 0);
+                    return true;
                 }
-                else if (key == Hotkeys.HOTBAR_SWAP_2.getKeybind())
+            }
+            else if (key == Hotkeys.HOTBAR_SWAP_2.getKeybind())
+            {
+                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
                 {
-                    if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
-                    {
-                        InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 1);
-                    }
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 1);
+                    return true;
                 }
-                else if (key == Hotkeys.HOTBAR_SWAP_3.getKeybind())
+            }
+            else if (key == Hotkeys.HOTBAR_SWAP_3.getKeybind())
+            {
+                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
                 {
-                    if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
-                    {
-                        InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 2);
-                    }
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 2);
+                    return true;
                 }
-                // The values will be toggled after the callback (see above), thus inversed check here
-                else if (key == Hotkeys.RESTRICTION_MODE_PLANE.getKeybind())
+            }
+            else if (key == Hotkeys.HOTBAR_SCROLL.getKeybind())
+            {
+                if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue())
                 {
-                    this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
+                    int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
+                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, currentRow);
+                    return true;
                 }
-                else if (key == Hotkeys.RESTRICTION_MODE_FACE.getKeybind())
-                {
-                    this.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
-                }
-                else if (key == Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind())
-                {
-                    this.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
-                }
-                else if (key == Hotkeys.RESTRICTION_MODE_LINE.getKeybind())
-                {
-                    this.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
-                }
-                else if (key == Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind())
-                {
-                    this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
-                }
-
+            }
+            // The values will be toggled after the callback (see above), thus inversed check here
+            else if (key == Hotkeys.RESTRICTION_MODE_PLANE.getKeybind())
+            {
+                this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
+                return true;
+            }
+            else if (key == Hotkeys.RESTRICTION_MODE_FACE.getKeybind())
+            {
+                this.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
+                return true;
+            }
+            else if (key == Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind())
+            {
+                this.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
+                return true;
+            }
+            else if (key == Hotkeys.RESTRICTION_MODE_LINE.getKeybind())
+            {
+                this.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
+                return true;
+            }
+            else if (key == Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind())
+            {
+                this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
                 return true;
             }
 
@@ -221,36 +234,6 @@ public class Callbacks
         }
     }
 
-    private static class KeyCallbackHotkeysRelease implements IHotkeyCallback
-    {
-        private final Minecraft mc;
-
-        public KeyCallbackHotkeysRelease(Minecraft mc)
-        {
-            this.mc = mc;
-        }
-
-        @Override
-        public boolean onKeyAction(KeyAction action, IKeybind key)
-        {
-            if (action == KeyAction.RELEASE)
-            {
-                if (key == Hotkeys.HOTBAR_SCROLL.getKeybind())
-                {
-                    if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue())
-                    {
-                        int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-                        InventoryUtils.swapHotbarWithInventoryRow(mc.player, currentRow);
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-    }
-
     private static class KeyCallbackToggleFastMode implements IHotkeyCallback
     {
         private final FeatureToggle feature;
@@ -263,31 +246,26 @@ public class Callbacks
         @Override
         public boolean onKeyAction(KeyAction action, IKeybind key)
         {
-            if (action == KeyAction.PRESS)
+            this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
+
+            boolean enabled = this.feature.getBooleanValue();
+            String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
+            String preGreen = TextFormatting.GREEN.toString();
+            String preRed = TextFormatting.RED.toString();
+            String rst = TextFormatting.RESET.toString();
+            strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
+
+            if (enabled)
             {
-                this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
-
-                boolean enabled = this.feature.getBooleanValue();
-                String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String preGreen = TextFormatting.GREEN.toString();
-                String preRed = TextFormatting.RED.toString();
-                String rst = TextFormatting.RESET.toString();
-                strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
-
-                if (enabled)
-                {
-                    String strMode = ((PlacementRestrictionMode) Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue()).name();
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
-                }
-                else
-                {
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
-                }
-
-                return true;
+                String strMode = ((PlacementRestrictionMode) Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue()).name();
+                StringUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
+            }
+            else
+            {
+                StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
             }
 
-            return false;
+            return true;
         }
     }
 
@@ -309,79 +287,72 @@ public class Callbacks
         @Override
         public boolean onKeyAction(KeyAction action, IKeybind key)
         {
-            if (action == KeyAction.RELEASE)
+            // Don't toggle the state if the integer values were adjusted
+            if (valueChanged)
             {
-                // Don't toggle the state if the integer values were adjusted
-                if (valueChanged)
-                {
-                    valueChanged = false;
-                    return false;
-                }
-
-                this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
-
-                boolean enabled = this.feature.getBooleanValue();
-                String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String preGreen = TextFormatting.GREEN.toString();
-                String preRed = TextFormatting.RED.toString();
-                String rst = TextFormatting.RESET.toString();
-                strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
-
-                if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind())
-                {
-                    if (enabled)
-                    {
-                        String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
-                        StringUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
-                    }
-                    else
-                    {
-                        StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
-                    }
-                }
-                else if (key == FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind())
-                {
-                    if (enabled)
-                    {
-                        String strValue = Configs.Generic.PLACEMENT_LIMIT.getStringValue();
-                        StringUtils.printActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
-                    }
-                    else
-                    {
-                        StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
-                    }
-                }
-                else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind())
-                {
-                    if (enabled)
-                    {
-                        String strValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getStringValue();
-                        StringUtils.printActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
-                    }
-                    else
-                    {
-                        StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
-                    }
-                }
-                else if (key == FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind())
-                {
-                    if (enabled)
-                    {
-                        String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
-                        StringUtils.printActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
-                    }
-                    else
-                    {
-                        StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
-                    }
-                }
-            }
-            else if (action == KeyAction.PRESS)
-            {
+                valueChanged = false;
                 return true;
             }
 
-            return false;
+            this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
+
+            boolean enabled = this.feature.getBooleanValue();
+            String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
+            String preGreen = TextFormatting.GREEN.toString();
+            String preRed = TextFormatting.RED.toString();
+            String rst = TextFormatting.RESET.toString();
+            strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
+
+            if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind())
+            {
+                if (enabled)
+                {
+                    String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
+                }
+                else
+                {
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                }
+            }
+            else if (key == FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind())
+            {
+                if (enabled)
+                {
+                    String strValue = Configs.Generic.PLACEMENT_LIMIT.getStringValue();
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
+                }
+                else
+                {
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                }
+            }
+            else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind())
+            {
+                if (enabled)
+                {
+                    String strValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getStringValue();
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
+                }
+                else
+                {
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                }
+            }
+            else if (key == FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind())
+            {
+                if (enabled)
+                {
+                    String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
+                }
+                else
+                {
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                }
+            }
+
+            return true;
         }
     }
 }

@@ -86,7 +86,7 @@ public class Configs implements IConfigHandler
                 JsonObject root = element.getAsJsonObject();
 
                 ConfigUtils.readConfigBase(root, "Generic", Configs.Generic.OPTIONS);
-                ConfigUtils.readConfigBase(root, "GenericHotkeys", ImmutableList.copyOf(Hotkeys.values()));
+                ConfigUtils.readHotkeys(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
                 ConfigUtils.readHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));
             }
         }
@@ -103,7 +103,7 @@ public class Configs implements IConfigHandler
             JsonObject root = new JsonObject();
 
             ConfigUtils.writeConfigBase(root, "Generic", Configs.Generic.OPTIONS);
-            ConfigUtils.writeConfigBase(root, "GenericHotkeys", ImmutableList.copyOf(Hotkeys.values()));
+            ConfigUtils.writeHotkeys(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
             ConfigUtils.writeHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));
 
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
