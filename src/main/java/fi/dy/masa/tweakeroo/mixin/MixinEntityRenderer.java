@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.event.RenderEventHandler;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -23,25 +22,6 @@ public class MixinEntityRenderer
         {
             ci.cancel();
         }
-    }
-
-    @Inject(method = "renderWorldPass(IFJ)V", at = @At(
-            value = "INVOKE_STRING",
-            target = "Lnet/minecraft/profiler/Profiler;endStartSection(Ljava/lang/String;)V",
-            args = "ldc=hand"
-        ))
-    private void onRenderWorldLast(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci)
-    {
-        RenderEventHandler.onRenderWorldLast(partialTicks);
-    }
-
-    @Inject(method = "updateCameraAndRender(FJ)V", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/GuiIngame;renderGameOverlay(F)V",
-            shift = Shift.AFTER))
-    private void onRenderGameOverlayPost(float partialTicks, long nanoTime, CallbackInfo ci)
-    {
-        RenderEventHandler.onRenderGameOverlayPost(partialTicks);
     }
 
     @Inject(method = "setupFog(IF)V", at = @At(
