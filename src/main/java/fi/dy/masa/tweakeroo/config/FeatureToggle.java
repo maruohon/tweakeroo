@@ -89,7 +89,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigValueNotifyable
     @Override
     public ConfigType getType()
     {
-        return ConfigType.BOOLEAN;
+        return ConfigType.HOTKEY;
     }
 
     @Override
