@@ -48,28 +48,31 @@ public class Configs implements IConfigHandler
         public static final ConfigBoolean       SLOT_SYNC_WORKAROUND                = new ConfigBoolean     ("slotSyncWorkaround", true, "This prevents the server from overriding the durability or stack size on items\nthat are being used quickly for example with the fast right click tweak");
 
         public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
+                LAVA_VISIBILITY_OPTIFINE,
+                PERMANENT_SNEAK_ALLOW_IN_GUIS,
+                PLACEMENT_RESTRICTION_TIED_TO_FAST,
+                SLOT_SYNC_WORKAROUND,
+
+                PLACEMENT_RESTRICTION_MODE,
+                HOTBAR_SWAP_OVERLAY_ALIGNMENT,
+
+                FLEXIBLE_PLACEMENT_OVERLAY_COLOR,
+
                 AFTER_CLICKER_CLICK_COUNT,
                 FAST_BLOCK_PLACEMENT_COUNT,
                 FAST_LEFT_CLICK_COUNT,
                 FAST_RIGHT_CLICK_COUNT,
-                PLACEMENT_RESTRICTION_MODE,
-                FLEXIBLE_PLACEMENT_OVERLAY_COLOR,
                 GAMMA_OVERRIDE_VALUE,
                 HOTBAR_SCROLL_CURRENT_ROW,
                 HOTBAR_SLOT_CYCLE_MAX,
-                HOTBAR_SWAP_OVERLAY_ALIGNMENT,
                 HOTBAR_SWAP_OVERLAY_OFFSET_X,
                 HOTBAR_SWAP_OVERLAY_OFFSET_Y,
                 ITEM_SWAP_DURABILITY_THRESHOLD,
-                LAVA_VISIBILITY_OPTIFINE,
                 MAP_PREVIEW_SIZE,
-                PERMANENT_SNEAK_ALLOW_IN_GUIS,
                 PLACEMENT_GRID_SIZE,
                 PLACEMENT_LIMIT,
-                PLACEMENT_RESTRICTION_TIED_TO_FAST,
                 RENDER_LIMIT_ITEM,
-                RENDER_LIMIT_XP_ORB,
-                SLOT_SYNC_WORKAROUND
+                RENDER_LIMIT_XP_ORB
                 );
     }
 

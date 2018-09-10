@@ -4,7 +4,6 @@ import fi.dy.masa.malilib.config.IConfigValue;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
-import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
@@ -24,6 +23,7 @@ public class Callbacks
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(FEATURE_CALLBACK_GAMMA);
 
         FeatureCallbackSpecial featureCallback = new FeatureCallbackSpecial();
+        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback(featureCallback);
         FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setValueChangeCallback(featureCallback);
 
@@ -43,14 +43,7 @@ public class Callbacks
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
 
-        KeybindSettings settings = KeybindSettings.RELEASE;
-        FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setSettings(settings);
-        FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind().setSettings(settings);
-        FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().setSettings(settings);
-        FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setSettings(settings);
-
         FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_AFTER_CLICKER));
-        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
         FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE));
         FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_GRID));
         FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_LIMIT));
@@ -287,6 +280,13 @@ public class Callbacks
         @Override
         public boolean onKeyAction(KeyAction action, IKeybind key)
         {
+            // These keybinds activate on both edges to be able to cancel further processing
+            // of the press event.
+            if (action == KeyAction.PRESS)
+            {
+                return true;
+            }
+
             // Don't toggle the state if the integer values were adjusted
             if (valueChanged)
             {
