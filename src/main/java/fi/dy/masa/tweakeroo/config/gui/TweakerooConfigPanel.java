@@ -32,7 +32,7 @@ public class TweakerooConfigPanel extends ConfigPanelBase
 
         configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(FeatureToggle.values()));
         this.addSubPanel((new GuiModConfigs(modId, "Tweak Toggles", configs)).setConfigWidth(100));
-        this.addSubPanel(new GuiModConfigs(modId, "Fixes", Configs.Fixes.OPTIONS));
+        this.addSubPanel((new GuiModConfigs(modId, "Fixes", Configs.Fixes.OPTIONS)).setConfigWidth(100));
 
         this.addSubPanel(new GuiModConfigs(modId, "Generic Hotkeys", Hotkeys.HOTKEY_LIST));
 

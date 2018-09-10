@@ -1,11 +1,11 @@
 package fi.dy.masa.tweakeroo.config;
 
 import fi.dy.masa.malilib.config.IConfigValue;
-import fi.dy.masa.malilib.config.IConfigValueChangeCallback;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
+import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
@@ -56,7 +56,7 @@ public class Callbacks
         FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_LIMIT));
     }
 
-    public static class FeatureCallbackGamma implements IConfigValueChangeCallback
+    public static class FeatureCallbackGamma implements IValueChangeCallback
     {
         private final Minecraft mc;
         private final FeatureToggle feature;
@@ -95,7 +95,7 @@ public class Callbacks
         }
     }
 
-    public static class FeatureCallbackSpecial implements IConfigValueChangeCallback
+    public static class FeatureCallbackSpecial implements IValueChangeCallback
     {
         public FeatureCallbackSpecial()
         {

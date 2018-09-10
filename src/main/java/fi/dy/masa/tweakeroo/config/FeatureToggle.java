@@ -3,16 +3,17 @@ package fi.dy.masa.tweakeroo.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
-import fi.dy.masa.malilib.config.IConfigValueChangeCallback;
+import fi.dy.masa.malilib.config.IConfigValueNotifyable;
 import fi.dy.masa.malilib.config.IHotkeyTogglable;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackToggleBooleanConfigWithMessage;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
+import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
-public enum FeatureToggle implements IHotkeyTogglable
+public enum FeatureToggle implements IHotkeyTogglable, IConfigValueNotifyable
 {
     CARPET_ACCURATE_BLOCK_PLACEMENT ("carpetAccuratePlacementProtocol",     false, "LMENU,C", "If enabled, then the Flexible Block Placement and the Accurate Block Plamenet\nuse the protocol implemented in the recent carpet mod versions", "Carpet protocol Accurate Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "LSHIFT,X,F", "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
@@ -57,7 +58,7 @@ public enum FeatureToggle implements IHotkeyTogglable
     private final IKeybind keybind;
     private final boolean defaultValueBoolean;
     private boolean valueBoolean;
-    private IConfigValueChangeCallback callback;
+    private IValueChangeCallback callback;
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
@@ -120,7 +121,7 @@ public enum FeatureToggle implements IHotkeyTogglable
     }
 
     @Override
-    public void setValueChangeCallback(IConfigValueChangeCallback callback)
+    public void setValueChangeCallback(IValueChangeCallback callback)
     {
         this.callback = callback;
     }
