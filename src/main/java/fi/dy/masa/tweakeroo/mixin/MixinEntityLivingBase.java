@@ -28,8 +28,9 @@ public abstract class MixinEntityLivingBase extends Entity
         return world.isRemote && (Configs.Fixes.ELYTRA_FIX.getBooleanValue() == false || ((Object) this instanceof EntityPlayerSP) == false);
     }
 
-    @Inject(method = "updatePotionEffects", at = @At(value = "FIELD", ordinal = 0,
-            target = "Lnet/minecraft/entity/EntityLivingBase;dataManager"), cancellable = true)
+    @Inject(method = "updatePotionEffects", at = @At(value = "INVOKE", ordinal = 0,
+            target = "Lnet/minecraft/network/datasync/EntityDataManager;get(Lnet/minecraft/network/datasync/DataParameter;)Ljava/lang/Object;"),
+            cancellable = true)
     private void removeOwnPotionEffects(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_REMOVE_OWN_POTION_EFFECTS.getBooleanValue() &&
