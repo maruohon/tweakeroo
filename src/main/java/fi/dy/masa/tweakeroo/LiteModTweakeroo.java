@@ -19,6 +19,7 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.gui.TweakerooConfigPanel;
 import fi.dy.masa.tweakeroo.event.InputHandler;
 import fi.dy.masa.tweakeroo.event.RenderHandler;
+import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.minecraft.client.Minecraft;
 
@@ -81,6 +82,7 @@ public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteList
     public void onTick(Minecraft mc, float partialTicks, boolean inGame, boolean clock)
     {
         PlacementTweaks.onTick(mc);
+        MiscTweaks.onTick(mc);
 
         // Reset the counters after rendering each frame
         renderCountItems = 0;

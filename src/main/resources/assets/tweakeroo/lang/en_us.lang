@@ -5,6 +5,7 @@ language.code=en_US
 tweakeroo.hotkeys.category.generic_hotkeys=Generic hotkeys
 tweakeroo.hotkeys.category.tweak_toggle_hotkeys=Tweak toggle hotkeys
 
+tweakeroo.message.potion_effects_running_out=§6!! WARNING - %s potion effect(s) about to run out in %s seconds !!§r
 tweakeroo.message.set_after_clicker_count_to=Set After Clicker count to %s
 tweakeroo.message.set_hotbar_slot_cycle_max_to=Set Hotbar Slot Cycle max slot to %s
 tweakeroo.message.set_placement_grid_size_to=Set Placement Grid size to %s
