@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.authlib.GameProfile;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -24,13 +23,16 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
 
     @Redirect(method = "onLivingUpdate()V",
               at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/client/Minecraft;displayGuiScreen(Lnet/minecraft/client/gui/GuiScreen;)V"))
-    private void onCloseGui(Minecraft mc, GuiScreen gui)
+                       target = "Lnet/minecraft/client/gui/GuiScreen;doesGuiPauseGame()Z"))
+    private boolean onDoesGuiPauseGame(GuiScreen gui)
     {
-        if (FeatureToggle.TWEAK_NO_PORTAL_GUI_CLOSING.getBooleanValue() == false)
+        // Spoof the return value to prevent entering the if block
+        if (FeatureToggle.TWEAK_NO_PORTAL_GUI_CLOSING.getBooleanValue())
         {
-            mc.displayGuiScreen(gui);
+            return true;
         }
+
+        return gui.doesGuiPauseGame();
     }
 
     @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
