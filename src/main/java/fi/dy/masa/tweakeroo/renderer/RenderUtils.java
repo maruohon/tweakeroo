@@ -433,7 +433,6 @@ public class RenderUtils
             TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(texture);
             GlStateManager.disableLighting();
             mc.ingameGUI.drawTexturedModalRect(x, y, sprite, width, height);
-            GlStateManager.enableLighting();
         }
     }
 
