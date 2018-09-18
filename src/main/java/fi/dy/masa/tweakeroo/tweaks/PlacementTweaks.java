@@ -392,7 +392,8 @@ public class PlacementTweaks
         IBlockState stateBefore = world.getBlockState(posPlacement);
         IBlockState state = world.getBlockState(pos);
 
-        if (state.getBlock().isReplaceable(world, pos) == false && state.getMaterial().isReplaceable())
+        if (FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() &&
+            state.getBlock().isReplaceable(world, pos) == false && state.getMaterial().isReplaceable())
         {
             // If the block itself says it's not replaceable, but the material is (fluids),
             // then we need to offset the position back, otherwise the check in ItemBlock
