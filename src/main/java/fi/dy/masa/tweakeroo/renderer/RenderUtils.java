@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.malilib.util.WorldUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks.HitPart;
 import fi.dy.masa.tweakeroo.util.RayTraceUtils;
@@ -22,6 +23,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -33,8 +35,6 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -253,7 +253,7 @@ public class RenderUtils
         }
 
         IInventory inv = null;
-        EntityLivingBase entity = null;
+        EntityLivingBase entityLivingBase = null;
 
         if (trace.typeOfHit == RayTraceResult.Type.BLOCK)
         {
@@ -276,82 +276,81 @@ public class RenderUtils
                 }
             }
         }
-        else if (trace.typeOfHit == RayTraceResult.Type.ENTITY && trace.entityHit instanceof EntityLivingBase)
+        else if (trace.typeOfHit == RayTraceResult.Type.ENTITY)
         {
-            entity = (EntityLivingBase) trace.entityHit;
+            Entity entity = trace.entityHit;
 
-            if (entity instanceof EntityVillager)
+            if (entity instanceof EntityLivingBase)
             {
-                inv = ((EntityVillager) trace.entityHit).getVillagerInventory();
+                entityLivingBase = (EntityLivingBase) entity;
+            }
+
+            if (entity instanceof IInventory)
+            {
+                inv = (IInventory) entity;
+            }
+            else if (entity instanceof EntityVillager)
+            {
+                inv = ((EntityVillager) entity).getVillagerInventory();
+            }
+            else if (entity instanceof AbstractHorse)
+            {
+                inv = ((IMixinAbstractHorse) entity).getHorseChest();
             }
         }
 
         ScaledResolution res = new ScaledResolution(mc);
         final int xCenter = res.getScaledWidth() / 2;
         final int yCenter = res.getScaledHeight() / 2;
+        int x = xCenter - 52 / 2;
+        int y = yCenter - 92;
 
-        if (inv != null)
+        if (inv != null && inv.getSizeInventory() > 0)
         {
-            final int totalSlots = inv.getSizeInventory();
-            int slotsPerRow = 9;
-            int slotOffsetX =  8;
-            int slotOffsetY = 18;
-
-            if (totalSlots <= 5)
-            {
-                slotOffsetX += 2 * 18;
-                slotOffsetY += 2;
-            }
-            else if (totalSlots <= 9)
-            {
-                slotsPerRow = 3;
-                slotOffsetX += 3 * 18;
-                slotOffsetY += -1;
-            }
-
+            final int totalSlots = (entityLivingBase instanceof AbstractHorse) ? inv.getSizeInventory() - 2 : inv.getSizeInventory();
+            final int firstSlot = (entityLivingBase instanceof AbstractHorse) ? 2 : 0;
+            final int slotConfig = fi.dy.masa.malilib.gui.RenderUtils.getInventorySlotConfiguration(inv, totalSlots);
+            final int slotsPerRow = (slotConfig >>> 16) & 0xFF;
+            final int slotOffsetX = (slotConfig >>> 8) & 0xFF;
+            final int slotOffsetY = slotConfig & 0xFF;
+            final int wh = fi.dy.masa.malilib.gui.RenderUtils.getInventoryBackgroundWidthHeight(inv, totalSlots, slotsPerRow);
             final int rows = (int) Math.ceil(totalSlots / slotsPerRow);
-            int height = 0;
-
-            switch (totalSlots)
-            {
-                case 3:
-                case 5:  height =  56; break;
-                case 9:  height =  86; break;
-                case 27: height =  88; break;
-                case 54: height = 142; break;
-            }
-
-            if ((inv instanceof TileEntityFurnace) || (inv instanceof TileEntityBrewingStand))
-            {
-                height = 83;
-                slotOffsetX = 0;
-                slotOffsetY = 0;
-            }
-
-            int x = xCenter - 176 / 2;
-            int y = yCenter - 10 - height;
+            final int width = (wh >>> 16) & 0xFFFF;
+            final int height = wh & 0xFFFF;
+            int xInv = xCenter - (width / 2);
+            int yInv = yCenter - height - 6;
 
             if (rows > 6)
             {
-                y += (rows - 6) * 18;
+                yInv -= (rows - 6) * 18;
+                y -= (rows - 6) * 18;
             }
 
-            fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(x, y, slotsPerRow, totalSlots, inv, mc);
-            fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, x + slotOffsetX, y + slotOffsetY, slotsPerRow, 0, -1, mc);
-
-            if (entity != null)
+            if (entityLivingBase != null)
             {
-                x = x - 56;
-                renderEquipmentOverlayBackground(mc, x, y, entity);
-                renderEquipmentStacks(entity, x, y, mc);
+                x = xCenter - 55;
+                xInv = xCenter + 2;
+                yInv = Math.min(yInv, yCenter - 92);
+            }
+
+            if (entityLivingBase instanceof AbstractHorse)
+            {
+                fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(xInv, yInv, 1, 2, inv, mc);
+                fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, xInv + slotOffsetX, yInv + slotOffsetY, 1, 0, 2, mc);
+                xInv += 32 + 4;
+            }
+
+            if (totalSlots > 0)
+            {
+                fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(xInv, yInv, slotsPerRow, totalSlots, inv, mc);
+                fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, xInv + slotOffsetX, yInv + slotOffsetY, slotsPerRow, firstSlot, totalSlots, mc);
             }
         }
-        else if (entity != null)
+
+        if (entityLivingBase != null)
         {
-            int x = xCenter - 54 / 2;
-            int y = yCenter + 10;
-            renderEquipmentOverlayBackground(mc, x, y, entity);
-            renderEquipmentStacks(entity, x, y, mc);
+            renderEquipmentOverlayBackground(mc, x, y, entityLivingBase);
+            renderEquipmentStacks(entityLivingBase, x, y, mc);
         }
     }
 
@@ -371,20 +370,27 @@ public class RenderUtils
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
         mc.getTextureManager().bindTexture(fi.dy.masa.malilib.gui.RenderUtils.TEXTURE_DISPENSER);
-        mc.ingameGUI.drawTexturedModalRect(x     , y     ,   0,   0, 50, 83); // top-left (main part)
-        mc.ingameGUI.drawTexturedModalRect(x + 50, y     , 173,   0,  3, 83); // right edge top
-        mc.ingameGUI.drawTexturedModalRect(x     , y + 83,   0, 163, 50,  3); // bottom edge left
-        mc.ingameGUI.drawTexturedModalRect(x + 50, y + 83, 173, 163,  3,  3); // bottom right corner
+
+        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x     , y     ,   0,   0, 50, 83, buffer); // top-left (main part)
+        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + 50, y     , 173,   0,  3, 83, buffer); // right edge top
+        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x     , y + 83,   0, 163, 50,  3, buffer); // bottom edge left
+        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + 50, y + 83, 173, 163,  3,  3, buffer); // bottom right corner
 
         for (int i = 0, xOff = 7, yOff = 7; i < 4; ++i, yOff += 18)
         {
-            mc.ingameGUI.drawTexturedModalRect(x + xOff, y + yOff, 61, 16, 18, 18);
+            fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + xOff, y + yOff, 61, 16, 18, 18, buffer);
         }
 
         // Main hand and offhand
-        mc.ingameGUI.drawTexturedModalRect(x + 28, y + 2 * 18 + 7, 61, 16, 18, 18);
-        mc.ingameGUI.drawTexturedModalRect(x + 28, y + 3 * 18 + 7, 61, 16, 18, 18);
+        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + 28, y + 2 * 18 + 7, 61, 16, 18, 18, buffer);
+        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + 28, y + 3 * 18 + 7, 61, 16, 18, 18, buffer);
+
+        tessellator.draw();
 
         mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
