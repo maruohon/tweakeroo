@@ -29,12 +29,12 @@ public class TweakerooConfigPanel extends ConfigPanelBase
         ConfigInfoProviderSimple provider;
 
         this.addSubPanel((new GuiModConfigs(modId, "Generic", Configs.Generic.OPTIONS)).setConfigWidth(120));
-
-        configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(FeatureToggle.values()));
-        this.addSubPanel((new GuiModConfigs(modId, "Tweak Toggles", configs)).setConfigWidth(100));
         this.addSubPanel((new GuiModConfigs(modId, "Fixes", Configs.Fixes.OPTIONS)).setConfigWidth(100));
 
         this.addSubPanel(new GuiModConfigs(modId, "Generic Hotkeys", Hotkeys.HOTKEY_LIST));
+
+        configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(FeatureToggle.values()));
+        this.addSubPanel((new GuiModConfigs(modId, "Tweak Toggles", configs)).setConfigWidth(100));
 
         configs = ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(FeatureToggle.values()));
         provider = new ConfigInfoProviderSimple("Hotkey to toggle the '", "' tweak");
