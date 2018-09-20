@@ -359,8 +359,8 @@ public class RenderUtils
         ScaledResolution res = new ScaledResolution(mc);
         int x = res.getScaledWidth() / 2 - 176 / 2;
         int y = res.getScaledHeight() / 2 + 10;
-        int slotOffsetX =  8;
-        int slotOffsetY = 18;
+        int slotOffsetX = 8;
+        int slotOffsetY = 8;
 
         fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(x, y, 9, 27, mc.player.inventory, mc);
         fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
