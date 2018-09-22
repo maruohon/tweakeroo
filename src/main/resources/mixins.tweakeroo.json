@@ -9,6 +9,7 @@
         "MixinEntityLivingBase",
         "MixinEntityPlayerSP",
         "MixinEntityRenderer",
+        "MixinExplosion",
         "MixinGlStateManager",
         "MixinGuiScreen",
         "MixinItem",
