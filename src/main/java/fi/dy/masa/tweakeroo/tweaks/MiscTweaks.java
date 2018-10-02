@@ -4,6 +4,7 @@ import java.util.Collection;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
@@ -16,7 +17,12 @@ public class MiscTweaks
     {
         EntityPlayer player = mc.player;
 
-        if (FeatureToggle.TWEAK_POTION_WARNING.getBooleanValue() && player != null &&
+        if (player == null)
+        {
+            return;
+        }
+
+        if (FeatureToggle.TWEAK_POTION_WARNING.getBooleanValue() &&
             player.getEntityWorld().getTotalWorldTime() - lastPotionWarning >= 100)
         {
             lastPotionWarning = mc.player.getEntityWorld().getTotalWorldTime();
@@ -47,6 +53,11 @@ public class MiscTweaks
                             Integer.valueOf(count), Integer.valueOf(minDuration / 20));
                 }
             }
+        }
+
+        if (FeatureToggle.TWEAK_REPAIR_MODE.getBooleanValue())
+        {
+            InventoryUtils.repairModeSwapItems(player);
         }
     }
 }

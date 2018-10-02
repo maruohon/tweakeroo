@@ -3,15 +3,19 @@ package fi.dy.masa.tweakeroo.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -149,6 +153,56 @@ public class InventoryUtils
             swapItemToHand(player, hand, slotWithItem);
             mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.swapped_low_durability_item_for_dummy_item"));
         }
+    }
+
+    public static void repairModeSwapItems(EntityPlayer player)
+    {
+        if (player.openContainer instanceof ContainerPlayer)
+        {
+            repairModeHandleHand(player, EnumHand.MAIN_HAND);
+            repairModeHandleHand(player, EnumHand.OFF_HAND);
+        }
+    }
+
+    private static void repairModeHandleHand(EntityPlayer player, EnumHand hand)
+    {
+        ItemStack stackHand = player.getHeldItem(hand);
+
+        if (stackHand.isEmpty() == false &&
+            (stackHand.isItemStackDamageable() == false ||
+             stackHand.isItemDamaged() == false ||
+             EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, stackHand) <= 0))
+        {
+            int slotNumber = findRepairableItemNotInHand(player);
+
+            if (slotNumber != -1)
+            {
+                swapItemToHand(player, hand, slotNumber);
+                StringUtils.printActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_hand");
+            }
+        }
+    }
+
+    private static int findRepairableItemNotInHand(EntityPlayer player)
+    {
+        Container containerPlayer = player.openContainer;
+        int slotHand = player.inventory.currentItem;
+
+        for (Slot slot : containerPlayer.inventorySlots)
+        {
+            if (slot.slotNumber != slotHand && slot.getHasStack())
+            {
+                ItemStack stack = slot.getStack();
+
+                if (stack.isItemStackDamageable() && stack.isItemDamaged() &&
+                    EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, stack) > 0)
+                {
+                    return slot.slotNumber;
+                }
+            }
+        }
+
+        return -1;
     }
 
     private static void swapItemToHand(EntityPlayer player, EnumHand hand, int slotNumber)
