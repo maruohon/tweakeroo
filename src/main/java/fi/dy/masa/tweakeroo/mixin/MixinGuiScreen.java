@@ -8,6 +8,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemMap;
+import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 
 @Mixin(GuiScreen.class)
@@ -16,9 +17,19 @@ public class MixinGuiScreen
     @Inject(method = "renderToolTip", at = @At("RETURN"))
     private void onRenderToolTip(ItemStack stack, int x, int y, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_MAP_PREVIEW.getBooleanValue() && stack.getItem() instanceof ItemMap)
+        if (stack.getItem() instanceof ItemMap)
         {
-            RenderUtils.renderMapPreview(stack, x, y);
+            if (FeatureToggle.TWEAK_MAP_PREVIEW.getBooleanValue())
+            {
+                RenderUtils.renderMapPreview(stack, x, y);
+            }
+        }
+        else if (stack.getItem() instanceof ItemShulkerBox)
+        {
+            if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
+            {
+                RenderUtils.renderShulkerBoxPreview(stack, x, y);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks.HitPart;
 import fi.dy.masa.tweakeroo.util.RayTraceUtils;
 import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -31,11 +33,15 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemMap;
+import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -550,6 +556,41 @@ public class RenderUtils
             }
 
             GlStateManager.enableLighting();
+            GlStateManager.popMatrix();
+        }
+    }
+
+    public static void renderShulkerBoxPreview(ItemStack stack, int x, int y)
+    {
+        if (GuiScreen.isShiftKeyDown() && stack.getItem() instanceof ItemShulkerBox && stack.hasTagCompound())
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+
+            GlStateManager.pushMatrix();
+            RenderHelper.enableGUIStandardItemLighting();
+            GlStateManager.enableRescaleNormal();
+            GlStateManager.translate(0F, 0F, 700F);
+
+            x += 8;
+            y -= 86;
+
+            final EnumDyeColor dye = ((BlockShulkerBox) ((ItemBlock) stack.getItem()).getBlock()).getColor();
+            final float[] colors = dye.getColorComponentValues();
+            GlStateManager.color(colors[0], colors[1], colors[2]);
+
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+
+            fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground27(x, y, buffer, mc);
+
+            tessellator.draw();
+            GlStateManager.enableDepth();
+
+            NonNullList<ItemStack> items = fi.dy.masa.malilib.util.InventoryUtils.getShulkerBoxItems(stack, true);
+            fi.dy.masa.malilib.gui.RenderUtils.renderItemStacks(items, x + 8, y + 8, 9, 0, -1, mc);
+
+            GlStateManager.disableDepth();
             GlStateManager.popMatrix();
         }
     }
