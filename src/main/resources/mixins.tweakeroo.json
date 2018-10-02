@@ -19,6 +19,7 @@
         "MixinMinecraft",
         "MixinMovementInputFromOptions",
         "MixinNetHandlerPlayClient",
+        "MixinParticleManager",
         "MixinPlayerControllerMP",
         "MixinRenderGlobal",
         "MixinRenderLivingBase",
