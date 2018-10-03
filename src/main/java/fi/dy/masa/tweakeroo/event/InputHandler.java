@@ -111,14 +111,14 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
             if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() && Hotkeys.HOTBAR_SCROLL.getKeybind().isKeybindHeld())
             {
-                int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
+                int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
 
                 int newRow = currentRow + (dWheel < 0 ? 1 : -1);
                 int max = 2;
                 if      (newRow < 0) { newRow = max; }
                 else if (newRow > max) { newRow = 0; }
 
-                Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.setIntegerValue(newRow);
+                Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.setIntegerValue(newRow);
 
                 return true;
             }

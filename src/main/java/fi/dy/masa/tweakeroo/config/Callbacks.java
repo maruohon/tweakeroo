@@ -14,13 +14,11 @@ import net.minecraft.util.text.TextFormatting;
 
 public class Callbacks
 {
-    public static final FeatureCallbackGamma FEATURE_CALLBACK_GAMMA = new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, Minecraft.getMinecraft());
-
     public static boolean skipWorldRendering;
 
     public static void init(Minecraft mc)
     {
-        FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(FEATURE_CALLBACK_GAMMA);
+        FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
 
         FeatureCallbackSpecial featureCallback = new FeatureCallbackSpecial();
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
@@ -53,13 +51,16 @@ public class Callbacks
     {
         private final Minecraft mc;
         private final FeatureToggle feature;
-        private float originalGamma;
 
         public FeatureCallbackGamma(FeatureToggle feature, Minecraft mc)
         {
             this.mc = mc;
             this.feature = feature;
-            this.originalGamma = this.mc.gameSettings.gammaSetting;
+
+            if (this.mc.gameSettings.gammaSetting <= 1.0F)
+            {
+                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.gameSettings.gammaSetting);
+            }
 
             // If the feature is enabled on game launch, apply it here
             if (feature.getBooleanValue())
@@ -73,18 +74,13 @@ public class Callbacks
         {
             if (this.feature.getBooleanValue())
             {
-                this.originalGamma = this.mc.gameSettings.gammaSetting;
+                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.gameSettings.gammaSetting);
                 this.mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
             }
             else
             {
-                this.restoreOriginalGamma();
+                this.mc.gameSettings.gammaSetting = (float) Configs.Internal.GAMMA_VALUE_ORIGINAL.getDoubleValue();
             }
-        }
-
-        public void restoreOriginalGamma()
-        {
-            this.mc.gameSettings.gammaSetting = this.originalGamma;
         }
     }
 
@@ -183,7 +179,7 @@ public class Callbacks
             {
                 if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue())
                 {
-                    int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
+                    int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
                     InventoryUtils.swapHotbarWithInventoryRow(mc.player, currentRow);
                     return true;
                 }

@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import com.mumfrey.liteloader.Configurable;
 import com.mumfrey.liteloader.InitCompleteListener;
 import com.mumfrey.liteloader.LiteMod;
-import com.mumfrey.liteloader.ShutdownListener;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.core.LiteLoader;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
@@ -23,7 +22,7 @@ import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.minecraft.client.Minecraft;
 
-public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteListener, ShutdownListener, Tickable
+public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteListener, Tickable
 {
     public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
 
@@ -87,12 +86,5 @@ public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteList
         // Reset the counters after rendering each frame
         renderCountItems = 0;
         renderCountXPOrbs = 0;
-    }
-
-    @Override
-    public void onShutDown()
-    {
-        // Does this even do anything in here anymore? Ie. when are the settings saved?
-        Callbacks.FEATURE_CALLBACK_GAMMA.restoreOriginalGamma();
     }
 }

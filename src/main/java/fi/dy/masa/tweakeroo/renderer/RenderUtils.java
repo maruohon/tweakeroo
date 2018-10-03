@@ -434,7 +434,7 @@ public class RenderUtils
         // Hotbar
         fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, x + 8, y + 72, 9, 0,  9, mc);
 
-        int currentRow = Configs.Generic.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
+        int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
         fi.dy.masa.malilib.gui.RenderUtils.drawOutline(x + 7, y + currentRow * 18 + 17, 9 * 18, 18, 2, 0xFFFF2020);
     }
 
