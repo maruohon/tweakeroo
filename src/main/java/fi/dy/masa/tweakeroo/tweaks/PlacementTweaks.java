@@ -43,6 +43,8 @@ public class PlacementTweaks
     private static boolean firstWasRotation;
     private static boolean firstWasOffset;
     private static int placementCount;
+    private static ItemStack stackClickedOn = ItemStack.EMPTY;
+    @Nullable private static IBlockState stateClickedOn = null;
 
     public static void onTick(Minecraft mc)
     {
@@ -159,7 +161,8 @@ public class PlacementTweaks
                     if (hand != null &&
                         posNew.equals(posLast) == false &&
                         canPlaceBlockIntoPosition(posNew, world) &&
-                        isPositionAllowedByPlacementRestriction(posNew, side)
+                        isPositionAllowedByPlacementRestriction(posNew, side) &&
+                        canPlaceBlockAgainst(world, pos, player, hand)
                     )
                     {
                         /*
@@ -225,6 +228,18 @@ public class PlacementTweaks
         EnumFacing playerFacingH = player.getHorizontalFacing();
         HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
         EnumFacing sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
+
+        if (FeatureToggle.TWEAK_PLACEMENT_REST_FIRST.getBooleanValue() && stateClickedOn == null)
+        {
+            IBlockState state = world.getBlockState(posIn);
+            stackClickedOn = state.getBlock().getItem(world, posIn, state);
+            stateClickedOn = state;
+        }
+
+        if (canPlaceBlockAgainst(world, posIn, player, hand) == false)
+        {
+            return EnumActionResult.PASS;
+        }
 
         //System.out.printf("onProcessRightClickBlock() pos: %s, side: %s, part: %s, hitVec: %s\n", posIn, sideIn, hitPart, hitVec);
         EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, player.rotationYaw, hitVec, hand, hitPart, true);
@@ -356,6 +371,45 @@ public class PlacementTweaks
         }
 
         return processRightClickBlockWrapper(controller, player, world, posIn, sideIn, hitVec, hand);
+    }
+
+    private static boolean canPlaceBlockAgainst(World world, BlockPos pos, EntityPlayer player, EnumHand hand)
+    {
+        if (FeatureToggle.TWEAK_PLACEMENT_REST_FIRST.getBooleanValue())
+        {
+            IBlockState state = world.getBlockState(pos);
+
+            if (stackClickedOn.isEmpty() == false)
+            {
+                ItemStack stack = state.getBlock().getItem(world, pos, state);
+
+                if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackClickedOn, stack) == false)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (state != stateClickedOn)
+                {
+                    return false;
+                }
+            }
+        }
+
+        if (FeatureToggle.TWEAK_PLACEMENT_REST_HAND.getBooleanValue())
+        {
+            IBlockState state = world.getBlockState(pos);
+            ItemStack stackClicked = state.getBlock().getItem(world, pos, state);
+            ItemStack stackHand = player.getHeldItem(hand);
+
+            if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackClicked, stackHand) == false)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static void tryRestockHand(EntityPlayer player, EnumHand hand, ItemStack stackOriginal)
@@ -557,6 +611,8 @@ public class PlacementTweaks
         firstWasOffset = false;
         isFirstClick = true;
         placementCount = 0;
+        stackClickedOn = ItemStack.EMPTY;
+        stateClickedOn = null;
     }
 
     private static EnumFacing getRotatedFacing(EnumFacing originalSide, EnumFacing playerFacingH, HitPart hitPart)
