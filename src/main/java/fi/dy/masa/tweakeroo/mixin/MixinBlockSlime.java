@@ -9,6 +9,7 @@ import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.BlockSlime;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -23,7 +24,7 @@ public abstract class MixinBlockSlime extends BlockBreakable
     @Inject(method = "onEntityWalk", at = @At("HEAD"), cancellable = true)
     private void onEntityWalkOnSlime(World worldIn, BlockPos pos, Entity entityIn, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN.getBooleanValue())
+        if (FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN.getBooleanValue() && entityIn instanceof EntityPlayer)
         {
             super.onEntityWalk(worldIn, pos, entityIn);
             ci.cancel();
