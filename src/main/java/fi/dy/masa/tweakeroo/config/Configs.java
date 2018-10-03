@@ -88,12 +88,14 @@ public class Configs implements IConfigHandler
 
     public static class Internal
     {
-        public static final ConfigDouble        GAMMA_VALUE_ORIGINAL        = new ConfigDouble      ("gammaValueOriginal", 0, 0, 1, "The original gamma value, before the gamma override was enabled");
-        public static final ConfigInteger       HOTBAR_SCROLL_CURRENT_ROW   = new ConfigInteger     ("hotbarScrollCurrentRow", 3, 0, 3, "This is just for the mod internally to track the\n\"current hotbar row\" for the hotbar scrolling feature");
+        public static final ConfigDouble        GAMMA_VALUE_ORIGINAL                = new ConfigDouble      ("gammaValueOriginal", 0, 0, 1, "The original gamma value, before the gamma override was enabled");
+        public static final ConfigInteger       HOTBAR_SCROLL_CURRENT_ROW           = new ConfigInteger     ("hotbarScrollCurrentRow", 3, 0, 3, "This is just for the mod internally to track the\n\"current hotbar row\" for the hotbar scrolling feature");
+        public static final ConfigDouble        SLIME_BLOCK_SLIPPERINESS_ORIGINAL   = new ConfigDouble      ("slimeBlockSlipperinessOriginal", 0.8, 0, 1, "The original slipperiness value of Slime Blocks");
 
         public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
                 GAMMA_VALUE_ORIGINAL,
-                HOTBAR_SCROLL_CURRENT_ROW
+                HOTBAR_SCROLL_CURRENT_ROW,
+                SLIME_BLOCK_SLIPPERINESS_ORIGINAL
         );
     }
 

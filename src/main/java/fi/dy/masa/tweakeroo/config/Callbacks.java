@@ -10,6 +10,7 @@ import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.text.TextFormatting;
 
 public class Callbacks
@@ -19,6 +20,7 @@ public class Callbacks
     public static void init(Minecraft mc)
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
+        FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN));
 
         FeatureCallbackSpecial featureCallback = new FeatureCallbackSpecial();
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
@@ -80,6 +82,36 @@ public class Callbacks
             else
             {
                 this.mc.gameSettings.gammaSetting = (float) Configs.Internal.GAMMA_VALUE_ORIGINAL.getDoubleValue();
+            }
+        }
+    }
+
+    public static class FeatureCallbackSlime implements IValueChangeCallback
+    {
+        private final FeatureToggle feature;
+
+        public FeatureCallbackSlime(FeatureToggle feature)
+        {
+            this.feature = feature;
+            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.slipperiness);
+
+            // If the feature is enabled on game launch, apply the overridden value here
+            if (feature.getBooleanValue())
+            {
+                Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness;
+            }
+        }
+
+        @Override
+        public void onValueChanged(IConfigValue config)
+        {
+            if (this.feature.getBooleanValue())
+            {
+                Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness;
+            }
+            else
+            {
+                Blocks.SLIME_BLOCK.slipperiness = (float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue();
             }
         }
     }
