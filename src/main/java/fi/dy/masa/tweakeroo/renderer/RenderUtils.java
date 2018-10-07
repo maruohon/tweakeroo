@@ -587,7 +587,7 @@ public class RenderUtils
             tessellator.draw();
             GlStateManager.enableDepth();
 
-            NonNullList<ItemStack> items = fi.dy.masa.malilib.util.InventoryUtils.getShulkerBoxItems(stack, true);
+            NonNullList<ItemStack> items = fi.dy.masa.malilib.util.InventoryUtils.getShulkerBoxItems(stack, 27);
             fi.dy.masa.malilib.gui.RenderUtils.renderItemStacks(items, x + 8, y + 8, 9, 0, -1, mc);
 
             GlStateManager.disableDepth();
