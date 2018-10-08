@@ -574,9 +574,16 @@ public class RenderUtils
             x += 8;
             y -= 86;
 
-            final EnumDyeColor dye = ((BlockShulkerBox) ((ItemBlock) stack.getItem()).getBlock()).getColor();
-            final float[] colors = dye.getColorComponentValues();
-            GlStateManager.color(colors[0], colors[1], colors[2]);
+            if (Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue())
+            {
+                final EnumDyeColor dye = ((BlockShulkerBox) ((ItemBlock) stack.getItem()).getBlock()).getColor();
+                final float[] colors = dye.getColorComponentValues();
+                GlStateManager.color(colors[0], colors[1], colors[2]);
+            }
+            else
+            {
+                GlStateManager.color(1, 1, 1, 1);
+            }
 
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buffer = tessellator.getBuffer();
