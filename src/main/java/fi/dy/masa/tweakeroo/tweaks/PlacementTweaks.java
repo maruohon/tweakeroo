@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
+import java.util.Map;
 import javax.annotation.Nullable;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -7,6 +8,9 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
+import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -14,6 +18,8 @@ import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumActionResult;
@@ -486,7 +492,8 @@ public class PlacementTweaks
 
         // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
         if ((accurateActive || flexible) &&
-            FeatureToggle.CARPET_ACCURATE_BLOCK_PLACEMENT.getBooleanValue())
+            FeatureToggle.CARPET_ACCURATE_BLOCK_PLACEMENT.getBooleanValue() &&
+            isFacingValidFor(facing, stackOriginal))
         {
             double x = facing.getIndex() + 2 + pos.getX();// + (hitVec.x % 1f);
 
@@ -746,6 +753,27 @@ public class PlacementTweaks
         {
             return true;
         }
+    }
+
+    private static boolean isFacingValidFor(EnumFacing facing, ItemStack stack)
+    {
+        Item item = stack.getItem();
+
+        if (stack.isEmpty() == false && item instanceof ItemBlock)
+        {
+            Block block = ((ItemBlock) item).getBlock();
+            IBlockState state = block.getDefaultState();
+
+            for (Map.Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet())
+            {
+                if (entry.getKey() instanceof PropertyDirection)
+                {
+                    return ((PropertyDirection) entry.getKey()).getAllowedValues().contains(facing);
+                }
+            }
+        }
+
+        return false;
     }
 
     private static BlockPos getPlacementPositionForTargetedPosition(BlockPos pos, EnumFacing side, World world)
