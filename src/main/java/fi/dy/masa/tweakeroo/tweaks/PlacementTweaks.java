@@ -153,54 +153,58 @@ public class PlacementTweaks
             final double reach = mc.playerController.getBlockReachDistance();
             final int maxCount = Configs.Generic.FAST_BLOCK_PLACEMENT_COUNT.getIntegerValue();
 
+            mc.objectMouseOver = player.rayTrace(reach, mc.getRenderPartialTicks());
+
             for (int i = 0; i < maxCount; ++i)
             {
                 RayTraceResult trace = mc.objectMouseOver;
 
-                if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+                if (trace == null || trace.typeOfHit != RayTraceResult.Type.BLOCK)
                 {
-                    EnumFacing side = trace.sideHit;
-                    BlockPos pos = trace.getBlockPos();
-                    BlockPos posNew = getPlacementPositionForTargetedPosition(pos, side, world);
-                    EnumHand hand = handFirst;
+                    break;
+                }
 
-                    if (hand != null &&
-                        posNew.equals(posLast) == false &&
-                        canPlaceBlockIntoPosition(posNew, world) &&
-                        isPositionAllowedByPlacementRestriction(posNew, side) &&
-                        canPlaceBlockAgainst(world, pos, player, hand)
-                    )
+                EnumHand hand = handFirst;
+                EnumFacing side = trace.sideHit;
+                BlockPos pos = trace.getBlockPos();
+                BlockPos posNew = getPlacementPositionForTargetedPosition(pos, side, world);
+
+                if (hand != null &&
+                    posNew.equals(posLast) == false &&
+                    canPlaceBlockIntoPosition(posNew, world) &&
+                    isPositionAllowedByPlacementRestriction(posNew, side) &&
+                    canPlaceBlockAgainst(world, pos, player, hand)
+                )
+                {
+                    /*
+                    IBlockState state = world.getBlockState(pos);
+                    float x = (float) (trace.hitVec.x - pos.getX());
+                    float y = (float) (trace.hitVec.y - pos.getY());
+                    float z = (float) (trace.hitVec.z - pos.getZ());
+
+                    if (state.getBlock().onBlockActivated(world, posNew, state, player, hand, side, x, y, z))
                     {
-                        /*
-                        IBlockState state = world.getBlockState(pos);
-                        float x = (float) (trace.hitVec.x - pos.getX());
-                        float y = (float) (trace.hitVec.y - pos.getY());
-                        float z = (float) (trace.hitVec.z - pos.getZ());
+                        return;
+                    }
+                    */
 
-                        if (state.getBlock().onBlockActivated(world, posNew, state, player, hand, side, x, y, z))
-                        {
-                            return;
-                        }
-                        */
+                    Vec3d hitVec = hitVecFirst.addVector(posNew.getX(), posNew.getY(), posNew.getZ());
+                    EnumActionResult result = tryPlaceBlock(mc.playerController, player, mc.world,
+                            posNew, sideFirst, sideRotatedFirst, playerYawFirst, hitVec, hand, hitPartFirst, false);
 
-                        Vec3d hitVec = hitVecFirst.addVector(posNew.getX(), posNew.getY(), posNew.getZ());
-                        EnumActionResult result = tryPlaceBlock(mc.playerController, player, mc.world,
-                                posNew, sideFirst, sideRotatedFirst, playerYawFirst, hitVec, hand, hitPartFirst, false);
-
-                        if (result == EnumActionResult.SUCCESS)
-                        {
-                            posLast = posNew;
-                            mc.objectMouseOver = player.rayTrace(reach, mc.getRenderPartialTicks());
-                        }
-                        else
-                        {
-                            break;
-                        }
+                    if (result == EnumActionResult.SUCCESS)
+                    {
+                        posLast = posNew;
+                        mc.objectMouseOver = player.rayTrace(reach, mc.getRenderPartialTicks());
                     }
                     else
                     {
                         break;
                     }
+                }
+                else
+                {
+                    break;
                 }
             }
 
@@ -789,7 +793,7 @@ public class PlacementTweaks
     private static boolean canPlaceBlockIntoPosition(BlockPos pos, World world)
     {
         IBlockState state = world.getBlockState(pos);
-        return state.getBlock().isReplaceable(world, pos) || state.getMaterial().isReplaceable();
+        return state.getBlock().isReplaceable(world, pos) || state.getMaterial().isLiquid() || state.getMaterial().isReplaceable();
     }
 
     private static boolean isNewPositionValidForPlaneMode(BlockPos posNew)
