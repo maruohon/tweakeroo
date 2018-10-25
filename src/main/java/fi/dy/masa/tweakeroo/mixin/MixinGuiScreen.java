@@ -8,7 +8,6 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemMap;
-import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 
 @Mixin(GuiScreen.class)
@@ -24,12 +23,9 @@ public class MixinGuiScreen
                 RenderUtils.renderMapPreview(stack, x, y);
             }
         }
-        else if (stack.getItem() instanceof ItemShulkerBox)
+        else if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
         {
-            if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
-            {
-                RenderUtils.renderShulkerBoxPreview(stack, x, y);
-            }
+            RenderUtils.renderShulkerBoxPreview(stack, x, y);
         }
     }
 }

@@ -2,8 +2,6 @@ package fi.dy.masa.tweakeroo.renderer;
 
 import javax.annotation.Nullable;
 import org.lwjgl.opengl.GL11;
-import fi.dy.masa.malilib.config.HudAlignment;
-import fi.dy.masa.malilib.util.WorldUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
@@ -21,8 +19,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -32,11 +28,9 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemShulkerBox;
@@ -53,8 +47,6 @@ import net.minecraft.world.storage.MapData;
 
 public class RenderUtils
 {
-    private static final EntityEquipmentSlot[] VALID_EQUIPMENT_SLOTS = new EntityEquipmentSlot[] { EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET };
-
     public static void renderBlockPlacementOverlay(Entity entity, BlockPos pos, EnumFacing side, Vec3d hitVec, double dx, double dy, double dz)
     {
         EnumFacing playerFacing = entity.getHorizontalFacing();
@@ -191,7 +183,7 @@ public class RenderUtils
             int startX = offX;
             int startY = offY;
 
-            HudAlignment align = (HudAlignment) Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
+            fi.dy.masa.malilib.config.HudAlignment align = (fi.dy.masa.malilib.config.HudAlignment) Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
 
             switch (align)
             {
@@ -229,7 +221,7 @@ public class RenderUtils
 
                     if (stack.isEmpty() == false)
                     {
-                        fi.dy.masa.malilib.gui.RenderUtils.renderStackAt(stack, x, y, 1, mc);
+                        fi.dy.masa.malilib.render.InventoryOverlay.renderStackAt(stack, x, y, 1, mc);
                     }
 
                     x += 18;
@@ -243,7 +235,7 @@ public class RenderUtils
 
     public static void renderInventoryOverlay(Minecraft mc)
     {
-        World world = WorldUtils.getBestWorld(mc);
+        World world = fi.dy.masa.malilib.util.WorldUtils.getBestWorld(mc);
 
         // We need to get the player from the server world, so that the player itself won't be included in the ray trace
         EntityPlayer player = world.getPlayerEntityByUUID(mc.player.getUniqueID());
@@ -323,18 +315,15 @@ public class RenderUtils
 
         if (inv != null && inv.getSizeInventory() > 0)
         {
-            final int totalSlots = (entityLivingBase instanceof AbstractHorse) ? inv.getSizeInventory() - 2 : inv.getSizeInventory();
-            final int firstSlot = (entityLivingBase instanceof AbstractHorse) ? 2 : 0;
-            final int slotConfig = fi.dy.masa.malilib.gui.RenderUtils.getInventorySlotConfiguration(inv, totalSlots);
-            final int slotsPerRow = (slotConfig >>> 16) & 0xFF;
-            final int slotOffsetX = (slotConfig >>> 8) & 0xFF;
-            final int slotOffsetY = slotConfig & 0xFF;
-            final int wh = fi.dy.masa.malilib.gui.RenderUtils.getInventoryBackgroundWidthHeight(inv, totalSlots, slotsPerRow);
-            final int rows = (int) Math.ceil(totalSlots / slotsPerRow);
-            final int width = (wh >>> 16) & 0xFFFF;
-            final int height = wh & 0xFFFF;
-            int xInv = xCenter - (width / 2);
-            int yInv = yCenter - height - 6;
+            final boolean isHorse = (entityLivingBase instanceof AbstractHorse);
+            final int totalSlots = isHorse ? inv.getSizeInventory() - 2 : inv.getSizeInventory();
+            final int firstSlot = isHorse ? 2 : 0;
+
+            final fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = (entityLivingBase instanceof EntityVillager) ? fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.VILLAGER : fi.dy.masa.malilib.render.InventoryOverlay.getInventoryType(inv);
+            final fi.dy.masa.malilib.render.InventoryOverlay.InventoryProperties props = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryPropsTemp(type, totalSlots);
+            final int rows = (int) Math.ceil(totalSlots / props.slotsPerRow);
+            int xInv = xCenter - (props.width / 2);
+            int yInv = yCenter - props.height - 6;
 
             if (rows > 6)
             {
@@ -351,24 +340,24 @@ public class RenderUtils
 
             setShulkerboxBackgroundTintColor(block);
 
-            if (entityLivingBase instanceof AbstractHorse)
+            if (isHorse)
             {
-                fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(xInv, yInv, 1, 2, inv, mc);
-                fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, xInv + slotOffsetX, yInv + slotOffsetY, 1, 0, 2, mc);
+                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, xInv, yInv, 1, 2, mc);
+                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, 1, 0, 2, mc);
                 xInv += 32 + 4;
             }
 
             if (totalSlots > 0)
             {
-                fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(xInv, yInv, slotsPerRow, totalSlots, inv, mc);
-                fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, xInv + slotOffsetX, yInv + slotOffsetY, slotsPerRow, firstSlot, totalSlots, mc);
+                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, xInv, yInv, props.slotsPerRow, totalSlots, mc);
+                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, props.slotsPerRow, firstSlot, totalSlots, mc);
             }
         }
 
         if (entityLivingBase != null)
         {
-            renderEquipmentOverlayBackground(mc, x, y, entityLivingBase);
-            renderEquipmentStacks(entityLivingBase, x, y, mc);
+            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(mc, x, y, entityLivingBase);
+            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, mc);
         }
     }
 
@@ -379,57 +368,12 @@ public class RenderUtils
         int y = res.getScaledHeight() / 2 + 10;
         int slotOffsetX = 8;
         int slotOffsetY = 8;
+        fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
         GlStateManager.color(1, 1, 1, 1);
 
-        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(x, y, 9, 27, mc.player.inventory, mc);
-        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
-    }
-
-    private static void renderEquipmentOverlayBackground(Minecraft mc, int x, int y, EntityLivingBase entity)
-    {
-        GlStateManager.color(1, 1, 1, 1);
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-        mc.getTextureManager().bindTexture(fi.dy.masa.malilib.gui.RenderUtils.TEXTURE_DISPENSER);
-
-        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x     , y     ,   0,   0, 50, 83, buffer); // top-left (main part)
-        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + 50, y     , 173,   0,  3, 83, buffer); // right edge top
-        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x     , y + 83,   0, 163, 50,  3, buffer); // bottom edge left
-        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + 50, y + 83, 173, 163,  3,  3, buffer); // bottom right corner
-
-        for (int i = 0, xOff = 7, yOff = 7; i < 4; ++i, yOff += 18)
-        {
-            fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + xOff, y + yOff, 61, 16, 18, 18, buffer);
-        }
-
-        // Main hand and offhand
-        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + 28, y + 2 * 18 + 7, 61, 16, 18, 18, buffer);
-        fi.dy.masa.malilib.gui.RenderUtils.drawTexturedRectBatched(x + 28, y + 3 * 18 + 7, 61, 16, 18, 18, buffer);
-
-        tessellator.draw();
-
-        mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
-        if (entity.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND).isEmpty())
-        {
-            String texture = "minecraft:items/empty_armor_slot_shield";
-            renderSprite(mc, x + 28 + 1, y + 3 * 18 + 7 + 1, texture, 16, 16);
-        }
-
-        for (int i = 0, xOff = 7, yOff = 7; i < 4; ++i, yOff += 18)
-        {
-            final EntityEquipmentSlot eqSlot = VALID_EQUIPMENT_SLOTS[i];
-
-            if (entity.getItemStackFromSlot(eqSlot).isEmpty())
-            {
-                String texture = ItemArmor.EMPTY_SLOT_NAMES[eqSlot.getIndex()];
-                renderSprite(mc, x + xOff + 1, y + yOff + 1, texture, 16, 16);
-            }
-        }
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, 9, 27, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
     }
 
     public static void renderHotbarScrollOverlay(Minecraft mc)
@@ -440,56 +384,19 @@ public class RenderUtils
         final int yCenter = res.getScaledHeight() / 2;
         final int x = xCenter - 176 / 2;
         final int y = yCenter + 10;
+        fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
         GlStateManager.color(1, 1, 1, 1);
 
-        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground(x, y, 9, 36, inv, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, 9, 36, mc);
 
         // Main inventory
-        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, x + 8, y + 18, 9, 9, 27, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 18, 9, 9, 27, mc);
         // Hotbar
-        fi.dy.masa.malilib.gui.RenderUtils.renderInventoryStacks(inv, x + 8, y + 72, 9, 0,  9, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 72, 9, 0,  9, mc);
 
         int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-        fi.dy.masa.malilib.gui.RenderUtils.drawOutline(x + 7, y + currentRow * 18 + 17, 9 * 18, 18, 2, 0xFFFF2020);
-    }
-
-    private static void renderSprite(Minecraft mc, int x, int y, String texture, int width, int height)
-    {
-        if (texture != null)
-        {
-            TextureAtlasSprite sprite = mc.getTextureMapBlocks().getAtlasSprite(texture);
-            GlStateManager.disableLighting();
-            mc.ingameGUI.drawTexturedModalRect(x, y, sprite, width, height);
-        }
-    }
-
-    private static void renderEquipmentStacks(EntityLivingBase entity, int x, int y, Minecraft mc)
-    {
-        for (int i = 0, xOff = 7, yOff = 7; i < 4; ++i, yOff += 18)
-        {
-            final EntityEquipmentSlot eqSlot = VALID_EQUIPMENT_SLOTS[i];
-            ItemStack stack = entity.getItemStackFromSlot(eqSlot);
-
-            if (stack.isEmpty() == false)
-            {
-                fi.dy.masa.malilib.gui.RenderUtils.renderStackAt(stack, x + xOff + 1, y + yOff + 1, 1, mc);
-            }
-        }
-
-        ItemStack stack = entity.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-
-        if (stack.isEmpty() == false)
-        {
-            fi.dy.masa.malilib.gui.RenderUtils.renderStackAt(stack, x + 28, y + 2 * 18 + 7 + 1, 1, mc);
-        }
-
-        stack = entity.getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
-
-        if (stack.isEmpty() == false)
-        {
-            fi.dy.masa.malilib.gui.RenderUtils.renderStackAt(stack, x + 28, y + 3 * 18 + 7 + 1, 1, mc);
-        }
+        fi.dy.masa.malilib.render.RenderUtils.drawOutline(x + 7, y + currentRow * 18 + 17, 9 * 18, 18, 2, 0xFFFF2020);
     }
 
     public static float getLavaFog(Entity entity, float originalFog)
@@ -540,7 +447,7 @@ public class RenderUtils
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
             GlStateManager.color(1, 1, 1, 1);
-            mc.getTextureManager().bindTexture(fi.dy.masa.malilib.gui.RenderUtils.TEXTURE_MAP_BACKGROUND);
+            mc.getTextureManager().bindTexture(fi.dy.masa.malilib.render.RenderUtils.TEXTURE_MAP_BACKGROUND);
 
             int size = Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue();
             int y1 = y - size - 20;
@@ -578,33 +485,43 @@ public class RenderUtils
 
     public static void renderShulkerBoxPreview(ItemStack stack, int x, int y)
     {
-        if (GuiScreen.isShiftKeyDown() && stack.getItem() instanceof ItemShulkerBox && stack.hasTagCompound())
+        if (GuiScreen.isShiftKeyDown() && stack.hasTagCompound())
         {
-            Minecraft mc = Minecraft.getMinecraft();
+            NonNullList<ItemStack> items = fi.dy.masa.malilib.util.InventoryUtils.getStoredItems(stack, -1);
+
+            if (items.size() == 0)
+            {
+                return;
+            }
 
             GlStateManager.pushMatrix();
             RenderHelper.disableStandardItemLighting();
             GlStateManager.translate(0F, 0F, 700F);
 
+            fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryType(stack);
+            fi.dy.masa.malilib.render.InventoryOverlay.InventoryProperties props = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryPropsTemp(type, items.size());
+
             x += 8;
-            y -= 86;
+            y -= (props.height + 18);
 
-            setShulkerboxBackgroundTintColor((BlockShulkerBox) ((ItemBlock) stack.getItem()).getBlock());
+            if (stack.getItem() instanceof ItemShulkerBox)
+            {
+                setShulkerboxBackgroundTintColor((BlockShulkerBox) ((ItemBlock) stack.getItem()).getBlock());
+            }
+            else
+            {
+                GlStateManager.color(1, 1, 1, 1);
+            }
 
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder buffer = tessellator.getBuffer();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-            fi.dy.masa.malilib.gui.RenderUtils.renderInventoryBackground27(x, y, buffer, mc);
-
-            tessellator.draw();
+            Minecraft mc = Minecraft.getMinecraft();
+            fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, props.slotsPerRow, items.size(), mc);
 
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.enableDepth();
             GlStateManager.enableRescaleNormal();
 
-            NonNullList<ItemStack> items = fi.dy.masa.malilib.util.InventoryUtils.getShulkerBoxItems(stack, 27);
-            fi.dy.masa.malilib.gui.RenderUtils.renderItemStacks(items, x + 8, y + 8, 9, 0, -1, mc);
+            IInventory inv = fi.dy.masa.malilib.util.InventoryUtils.getAsInventory(items);
+            fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + props.slotOffsetX, y + props.slotOffsetY, props.slotsPerRow, 0, -1, mc);
 
             GlStateManager.disableDepth();
             GlStateManager.popMatrix();

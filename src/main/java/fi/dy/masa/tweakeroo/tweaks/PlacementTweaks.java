@@ -526,7 +526,7 @@ public class PlacementTweaks
         }
         else
         {
-            //System.out.printf("processRightClickBlockWrapper() PLACE @ %s, side: %s\n", pos, side);
+            //System.out.printf("processRightClickBlockWrapper() PLACE @ %s, side: %s, hit: %s\n", pos, side, hitVec);
             result = controller.processRightClickBlock(player, world, pos, side, hitVec, hand);
         }
 
