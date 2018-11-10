@@ -7,6 +7,7 @@
         "IMixinAbstractHorse",
         "MixinBlockSlime",
         "MixinChatTabCompleter",
+        "MixinChunk",
         "MixinEntityLivingBase",
         "MixinEntityPlayerSP",
         "MixinEntityRenderer",
@@ -24,7 +25,8 @@
         "MixinPlayerControllerMP",
         "MixinRenderGlobal",
         "MixinRenderLivingBase",
-        "MixinRenderManager"
+        "MixinRenderManager",
+        "MixinWorldClient"
     ],
     "injectors": {
         "defaultRequire": 1
