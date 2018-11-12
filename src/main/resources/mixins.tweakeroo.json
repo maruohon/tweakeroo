@@ -8,6 +8,7 @@
         "MixinBlockSlime",
         "MixinChatTabCompleter",
         "MixinChunk",
+        "MixinCommandFillClone",
         "MixinEntityLivingBase",
         "MixinEntityPlayerSP",
         "MixinEntityRenderer",
