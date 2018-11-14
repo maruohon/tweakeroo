@@ -30,6 +30,8 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigValueNotifyable
     TWEAK_FLEXIBLE_BLOCK_PLACEMENT  ("tweakFlexibleBlockPlacement",         false, "X,L", "Enables placing blocks in different orientations\nor with an offset, while holding down the\nhotkeys for those modes."),
     TWEAK_GAMMA_OVERRIDE            ("tweakGammaOverride",                  false, "LCONTROL,X,G", "Overrides the video settings gamma value with\nthe one set in the Generic configs"),
     TWEAK_HAND_RESTOCK              ("tweakHandRestock",                    false, "X,R", "Enables swapping a new stack to the main or the offhand\nwhen the previous stack runs out"),
+    TWEAK_HOLD_ATTACK               ("tweakHoldAttack",                     false, "",    "Emulates holding down the attack button"),
+    TWEAK_HOLD_USE                  ("tweakHoldUse",                        false, "",    "Emulates holding down the use button"),
     TWEAK_HOTBAR_SCROLL             ("tweakHotbarScroll",                   false, "",    "Enables the hotbar swapping via scrolling feature"),
     TWEAK_HOTBAR_SLOT_CYCLE         ("tweakHotbarSlotCycle",                false, "",    KeybindSettings.INGAME_BOTH, "Enables cycling the hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
     TWEAK_HOTBAR_SWAP               ("tweakHotbarSwap",                     false, "",    "Enables the hotbar swapping via hotkeys feature"),

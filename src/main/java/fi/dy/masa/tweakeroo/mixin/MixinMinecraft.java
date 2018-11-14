@@ -6,12 +6,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -91,5 +93,21 @@ public class MixinMinecraft implements IMinecraftAccessor
             EnumHand hand)
     {
         return PlacementTweaks.onProcessRightClickBlock(controller, player, world, pos, side, hitVec, hand);
+    }
+
+    @Inject(method = "processKeyBinds", at = @At("HEAD"))
+    private void onProcessKeybindsPre(CallbackInfo ci)
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue() && mc.currentScreen == null)
+        {
+            KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), true);
+        }
+
+        if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue() && mc.currentScreen == null)
+        {
+            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+        }
     }
 }
