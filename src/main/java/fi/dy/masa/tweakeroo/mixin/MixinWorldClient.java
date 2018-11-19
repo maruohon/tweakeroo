@@ -3,6 +3,8 @@ package fi.dy.masa.tweakeroo.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
@@ -36,6 +38,15 @@ public abstract class MixinWorldClient extends World
         if (FeatureToggle.TWEAK_NO_LIGHT_UPDATES_ALL.getBooleanValue() == false)
         {
             super.setLightFor(type, pos, lightValue);
+        }
+    }
+
+    @Override
+    public void updateEntity(Entity entity)
+    {
+        if (FeatureToggle.TWEAK_NO_CLIENT_ENTITY_UPDATES.getBooleanValue() == false || entity instanceof EntityPlayer)
+        {
+            super.updateEntity(entity);
         }
     }
 }

@@ -41,6 +41,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigValueNotifyable
     TWEAK_MAP_PREVIEW               ("tweakMapPreview",                     false, "",    "If enabled, then holding shift over maps in an inventory\nwill render a preview of the map"),
     TWEAK_MOVEMENT_KEYS             ("tweakMovementKeysLast",               false, "",    "If enabled, then opposite movement keys won't cancel each other,\nbut instead the last pressed key is the active input."),
     TWEAK_NO_BLOCK_BREAK_PARTICLES  ("tweakNoBlockBreakingParticles",       false, "",    "Removes the block breaking particles.\n(This is originally from usefulmod by nessie.)"),
+    TWEAK_NO_CLIENT_ENTITY_UPDATES  ("tweakNoClientEntityUpdates",          false, "",    "Disables ALL except player entity updates on the client.\nThis is mainly meant for situations where you need to be\nable to do stuff to fix excessive entity count related problems"),
     TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "",    "If enabled, then falling block entities won't be rendered at all"),
     TWEAK_NO_ITEM_SWITCH_COOLDOWN   ("tweakNoItemSwitchRenderCooldown",     false, "",    "If true, then there won't be any cooldown/equip animation\nwhen switching the held item or using the item."),
     TWEAK_NO_LIGHT_UPDATES          ("tweakNoLightUpdates",                 false, "",    "If enabled, disables some client-side (rendering related) light updates"),
