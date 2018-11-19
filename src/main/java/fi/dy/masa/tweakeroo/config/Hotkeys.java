@@ -22,6 +22,7 @@ public class Hotkeys
     public static final ConfigHotkey HOTBAR_SWAP_2                      = new ConfigHotkey("hotbarSwap2",                       "C,2",  "Swap the hotbar with the middle inventory row");
     public static final ConfigHotkey HOTBAR_SWAP_3                      = new ConfigHotkey("hotbarSwap3",                       "C,3",  "Swap the hotbar with the bottom-most inventory row");
     public static final ConfigHotkey INVENTORY_PREVIEW                  = new ConfigHotkey("inventoryPreview",                  "LMENU", KeybindSettings.PRESS_ALLOWEXTRA, "The key to activate the inventory preview feature");
+    public static final ConfigHotkey OPEN_CONFIG_GUI                    = new ConfigHotkey("openConfigGui",                     "",      "The key open the in-game config GUI");
     public static final ConfigHotkey PLAYER_INVENTORY_PEEK              = new ConfigHotkey("playerInventoryPeek",               "Q",     KeybindSettings.PRESS_ALLOWEXTRA, "The key to activate the player inventory peek/preview feature");
     public static final ConfigHotkey SKIP_ALL_RENDERING                 = new ConfigHotkey("skipAllRendering",                  "LSHIFT,X,DELETE",  "Toggles skipping _all_ rendering");
     public static final ConfigHotkey SKIP_WORLD_RENDERING               = new ConfigHotkey("skipWorldRendering",                "X,DELETE",  "Toggles skipping world rendering");
@@ -42,6 +43,7 @@ public class Hotkeys
             HOTBAR_SWAP_2,
             HOTBAR_SWAP_3,
             INVENTORY_PREVIEW,
+            OPEN_CONFIG_GUI,
             PLAYER_INVENTORY_PEEK,
             SKIP_ALL_RENDERING,
             SKIP_WORLD_RENDERING

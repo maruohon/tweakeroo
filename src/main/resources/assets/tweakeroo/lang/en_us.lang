@@ -2,6 +2,16 @@ language.name=English
 language.region=US
 language.code=en_US
 
+
+tweakeroo.gui.button.config_gui.generic=Generic
+tweakeroo.gui.button.config_gui.fixes=Fixes
+tweakeroo.gui.button.config_gui.tweak_toggle=Tweak Toggles
+tweakeroo.gui.button.config_gui.tweak_hotkeys=Tweak Hotkeys
+tweakeroo.gui.button.config_gui.generic_hotkeys=Generic Hotkeys
+tweakeroo.gui.button.config_gui.placement=Placement stuff
+
+tweakeroo.gui.title.configs=Tweakeroo Configs
+
 tweakeroo.hotkeys.category.generic_hotkeys=Generic hotkeys
 tweakeroo.hotkeys.category.tweak_toggle_hotkeys=Tweak toggle hotkeys
 
@@ -29,3 +39,4 @@ tweakeroo.placement_restriction_mode.face=Face
 tweakeroo.placement_restriction_mode.column=Column
 tweakeroo.placement_restriction_mode.line=Line
 tweakeroo.placement_restriction_mode.diagonal=Diagonal
+

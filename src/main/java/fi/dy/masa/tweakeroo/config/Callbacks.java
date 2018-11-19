@@ -6,6 +6,7 @@ import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.tweakeroo.gui.GuiConfigs;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.client.Minecraft;
@@ -39,6 +40,7 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SCROLL.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.OPEN_CONFIG_GUI.getKeybind().setCallback(callbackGeneric);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
@@ -240,6 +242,11 @@ public class Callbacks
             else if (key == Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
+                return true;
+            }
+            else if (key == Hotkeys.OPEN_CONFIG_GUI.getKeybind())
+            {
+                this.mc.displayGuiScreen(new GuiConfigs());
                 return true;
             }
 
