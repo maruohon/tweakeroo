@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.player.EntityPlayer;
 
 @Mixin(RenderManager.class)
 public class MixinRenderManager
@@ -20,6 +21,13 @@ public class MixinRenderManager
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     private void onShouldRender(Entity entityIn, ICamera camera, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> ci)
     {
+        if (FeatureToggle.TWEAK_NO_ENTITY_RENDERING.getBooleanValue() && (entityIn instanceof EntityPlayer) == false)
+        {
+            ci.setReturnValue(false);
+            ci.cancel();
+            return;
+        }
+
         if (entityIn instanceof EntityFallingBlock && FeatureToggle.TWEAK_NO_FALLING_BLOCK_RENDER.getBooleanValue())
         {
             ci.setReturnValue(false);
