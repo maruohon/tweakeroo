@@ -383,20 +383,21 @@ public class RenderUtils
         final int xCenter = res.getScaledWidth() / 2;
         final int yCenter = res.getScaledHeight() / 2;
         final int x = xCenter - 176 / 2;
-        final int y = yCenter + 10;
+        final int y = yCenter + 6;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
         GlStateManager.color(1, 1, 1, 1);
 
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, 9, 36, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y     , 9, 27, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y + 70, 9,  9, mc);
 
         // Main inventory
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 18, 9, 9, 27, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y +  8, 9, 9, 27, mc);
         // Hotbar
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 72, 9, 0,  9, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 78, 9, 0,  9, mc);
 
         int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-        fi.dy.masa.malilib.render.RenderUtils.drawOutline(x + 7, y + currentRow * 18 + 17, 9 * 18, 18, 2, 0xFFFF2020);
+        fi.dy.masa.malilib.render.RenderUtils.drawOutline(x + 5, y + currentRow * 18 + 5, 9 * 18 + 4, 22, 2, 0xFFFF2020);
     }
 
     public static float getLavaFog(Entity entity, float originalFog)
