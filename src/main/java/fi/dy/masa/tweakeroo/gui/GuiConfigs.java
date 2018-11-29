@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.ConfigUtils;
-import fi.dy.masa.malilib.config.IConfigValue;
+import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
@@ -77,7 +77,7 @@ public class GuiConfigs extends GuiConfigsBase
     @Override
     public List<ConfigOptionWrapper> getConfigs()
     {
-        List<? extends IConfigValue> configs;
+        List<? extends IConfigBase> configs;
         ConfigGuiTab tab = GuiConfigs.tab;
 
         if (tab == ConfigGuiTab.GENERIC)

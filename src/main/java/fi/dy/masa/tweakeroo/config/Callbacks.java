@@ -1,6 +1,6 @@
 package fi.dy.masa.tweakeroo.config;
 
-import fi.dy.masa.malilib.config.IConfigValue;
+import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
@@ -74,7 +74,7 @@ public class Callbacks
         }
 
         @Override
-        public void onValueChanged(IConfigValue config)
+        public void onValueChanged(IConfigBase config)
         {
             if (this.feature.getBooleanValue())
             {
@@ -105,7 +105,7 @@ public class Callbacks
         }
 
         @Override
-        public void onValueChanged(IConfigValue config)
+        public void onValueChanged(IConfigBase config)
         {
             if (this.feature.getBooleanValue())
             {
@@ -125,7 +125,7 @@ public class Callbacks
         }
 
         @Override
-        public void onValueChanged(IConfigValue config)
+        public void onValueChanged(IConfigBase config)
         {
             if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
             {

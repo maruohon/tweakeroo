@@ -7,8 +7,8 @@ import com.google.gson.JsonObject;
 import com.mumfrey.liteloader.core.LiteLoader;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.HudAlignment;
+import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
-import fi.dy.masa.malilib.config.IConfigValue;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
@@ -50,7 +50,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBoolean       SHULKER_DISPLAY_BACKGROUND_COLOR    = new ConfigBoolean     ("shulkerDisplayBgColor", true, "Enables tinting/coloring the Shulker Box display\nbackground texture with the dye color of the box");
         public static final ConfigBoolean       SLOT_SYNC_WORKAROUND                = new ConfigBoolean     ("slotSyncWorkaround", true, "This prevents the server from overriding the durability or\nstack size on items that are being used quickly for example\nwith the fast right click tweak.");
 
-        public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 LAVA_VISIBILITY_OPTIFINE,
                 PERMANENT_SNEAK_ALLOW_IN_GUIS,
                 PLACEMENT_RESTRICTION_TIED_TO_FAST,
@@ -85,7 +85,7 @@ public class Configs implements IConfigHandler
     {
         public static final ConfigBoolean ELYTRA_FIX    = new ConfigBoolean("elytraFix", false, "Elytra deployment/landing fix by Earthcomputer and Nessie");
 
-        public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ELYTRA_FIX
         );
     }
@@ -96,7 +96,7 @@ public class Configs implements IConfigHandler
         public static final ConfigInteger       HOTBAR_SCROLL_CURRENT_ROW           = new ConfigInteger     ("hotbarScrollCurrentRow", 3, 0, 3, "This is just for the mod internally to track the\n\"current hotbar row\" for the hotbar scrolling feature");
         public static final ConfigDouble        SLIME_BLOCK_SLIPPERINESS_ORIGINAL   = new ConfigDouble      ("slimeBlockSlipperinessOriginal", 0.8, 0, 1, "The original slipperiness value of Slime Blocks");
 
-        public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 GAMMA_VALUE_ORIGINAL,
                 HOTBAR_SCROLL_CURRENT_ROW,
                 SLIME_BLOCK_SLIPPERINESS_ORIGINAL
