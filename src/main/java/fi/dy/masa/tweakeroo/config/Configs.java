@@ -14,9 +14,12 @@ import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
+import fi.dy.masa.malilib.config.options.ConfigStringList;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.tweakeroo.Reference;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.ListType;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 
 public class Configs implements IConfigHandler
@@ -90,6 +93,21 @@ public class Configs implements IConfigHandler
         );
     }
 
+    public static class Lists
+    {
+        public static final ConfigOptionList FAST_RIGHT_CLICK_LIST_TYPE    = new ConfigOptionList("fastRightClickListType", ListType.NONE, "The item restriction type for the Fast Right Click tweak");
+        public static final ConfigStringList FAST_RIGHT_CLICK_BLACKLIST    = new ConfigStringList("fastRightClickBlackList", ImmutableList.of("minecraft:fireworks"), "The items that are NOT allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to Black List");
+        public static final ConfigStringList FAST_RIGHT_CLICK_WHITELIST    = new ConfigStringList("fastRightClickWhiteList", ImmutableList.of("minecraft:bucket", "minecraft:water_bucket", "minecraft:lava_bucket", "minecraft:glass_bottle"), "The items that are allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to White List");
+        public static final ConfigStringList UNSTACKING_ITEMS              = new ConfigStringList("unstackingItems", ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle"), "The items that should be considered for the\n'tweakItemUnstackingProtection' tweak");
+
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                FAST_RIGHT_CLICK_LIST_TYPE,
+                FAST_RIGHT_CLICK_BLACKLIST,
+                FAST_RIGHT_CLICK_WHITELIST,
+                UNSTACKING_ITEMS
+        );
+    }
+
     public static class Internal
     {
         public static final ConfigDouble        GAMMA_VALUE_ORIGINAL                = new ConfigDouble      ("gammaValueOriginal", 0, 0, 1, "The original gamma value, before the gamma override was enabled");
@@ -117,13 +135,18 @@ public class Configs implements IConfigHandler
 
                 ConfigUtils.readConfigBase(root, "Generic", Configs.Generic.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Fixes", Configs.Fixes.OPTIONS);
+                ConfigUtils.readConfigBase(root, "Lists", Configs.Lists.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Internal", Configs.Internal.OPTIONS);
                 ConfigUtils.readHotkeys(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
                 ConfigUtils.readHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));
             }
         }
 
-        InventoryUtils.setUnstackingItems(ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle")); // TODO add a string list config
+        InventoryUtils.setUnstackingItems(Lists.UNSTACKING_ITEMS.getStrings());
+        PlacementTweaks.FAST_RIGHT_CLICK_RESTRICTION.setValues(
+                (ListType) Lists.FAST_RIGHT_CLICK_LIST_TYPE.getOptionListValue(),
+                Lists.FAST_RIGHT_CLICK_BLACKLIST.getStrings(),
+                Lists.FAST_RIGHT_CLICK_WHITELIST.getStrings());
     }
 
     public static void saveToFile()
@@ -136,6 +159,7 @@ public class Configs implements IConfigHandler
 
             ConfigUtils.writeConfigBase(root, "Generic", Configs.Generic.OPTIONS);
             ConfigUtils.writeConfigBase(root, "Fixes", Configs.Fixes.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "Lists", Configs.Lists.OPTIONS);
             ConfigUtils.writeConfigBase(root, "Internal", Configs.Internal.OPTIONS);
             ConfigUtils.writeHotkeys(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
             ConfigUtils.writeHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));

@@ -3,21 +3,19 @@ package fi.dy.masa.tweakeroo.util;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import net.minecraft.client.resources.I18n;
 
-public enum PlacementRestrictionMode implements IConfigOptionListEntry
+public enum ListType implements IConfigOptionListEntry
 {
-    PLANE       ("plane",       "tweakeroo.label.placement_restriction_mode.plane"),
-    FACE        ("face",        "tweakeroo.label.placement_restriction_mode.face"),
-    COLUMN      ("column",      "tweakeroo.label.placement_restriction_mode.column"),
-    LINE        ("line",        "tweakeroo.label.placement_restriction_mode.line"),
-    DIAGONAL    ("diagonal",    "tweakeroo.label.placement_restriction_mode.diagonal");
+    NONE        ("none",        "tweakeroo.label.list_type.none"),
+    BLACKLIST   ("blacklist",   "tweakeroo.label.list_type.blacklist"),
+    WHITELIST   ("whitelist",   "tweakeroo.label.list_type.whitelist");
 
     private final String configString;
-    private final String unlocName;
+    private final String translationKey;
 
-    private PlacementRestrictionMode(String configString, String unlocName)
+    private ListType(String configString, String translationKey)
     {
         this.configString = configString;
-        this.unlocName = unlocName;
+        this.translationKey = translationKey;
     }
 
     @Override
@@ -29,7 +27,7 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry
     @Override
     public String getDisplayName()
     {
-        return I18n.format(this.unlocName);
+        return I18n.format(this.translationKey);
     }
 
     @Override
@@ -56,14 +54,14 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry
     }
 
     @Override
-    public PlacementRestrictionMode fromString(String name)
+    public ListType fromString(String name)
     {
         return fromStringStatic(name);
     }
 
-    public static PlacementRestrictionMode fromStringStatic(String name)
+    public static ListType fromStringStatic(String name)
     {
-        for (PlacementRestrictionMode mode : PlacementRestrictionMode.values())
+        for (ListType mode : ListType.values())
         {
             if (mode.configString.equalsIgnoreCase(name))
             {
@@ -71,6 +69,6 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry
             }
         }
 
-        return PlacementRestrictionMode.FACE;
+        return ListType.NONE;
     }
 }

@@ -30,6 +30,7 @@ public class TweakerooConfigPanel extends ConfigPanelBase
 
         this.addSubPanel((new GuiModConfigs(modId, "Generic", Configs.Generic.OPTIONS)).setConfigWidth(120));
         this.addSubPanel((new GuiModConfigs(modId, "Fixes", Configs.Fixes.OPTIONS)).setConfigWidth(100));
+        this.addSubPanel((new GuiModConfigs(modId, "Lists", Configs.Lists.OPTIONS)).setConfigWidth(200));
 
         this.addSubPanel(new GuiModConfigs(modId, "Generic Hotkeys", Hotkeys.HOTKEY_LIST));
 

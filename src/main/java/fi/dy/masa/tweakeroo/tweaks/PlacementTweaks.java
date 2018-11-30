@@ -7,6 +7,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.ItemRestriction;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -51,6 +52,7 @@ public class PlacementTweaks
     private static int placementCount;
     private static ItemStack stackClickedOn = ItemStack.EMPTY;
     @Nullable private static IBlockState stateClickedOn = null;
+    public static final ItemRestriction FAST_RIGHT_CLICK_RESTRICTION = new ItemRestriction();
 
     public static void onTick(Minecraft mc)
     {
@@ -146,7 +148,12 @@ public class PlacementTweaks
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (posFirst != null && mc.player != null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
+        if (mc.player == null)
+        {
+            return;
+        }
+
+        if (posFirst != null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
         {
             EntityPlayerSP player = mc.player;
             World world = player.getEntityWorld();
@@ -211,7 +218,9 @@ public class PlacementTweaks
             // Reset the timer to prevent the regular process method from re-firing
             ((IMinecraftAccessor) mc).setRightClickDelayTimer(4);
         }
-        else if (FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue() && mc.gameSettings.keyBindUseItem.isKeyDown())
+        else if (FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue() &&
+                mc.gameSettings.keyBindUseItem.isKeyDown() &&
+                canUseFastRightClick(mc.player))
         {
             final int count = Configs.Generic.FAST_RIGHT_CLICK_COUNT.getIntegerValue();
 
@@ -457,6 +466,25 @@ public class PlacementTweaks
             {
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    private static boolean canUseFastRightClick(EntityPlayer player)
+    {
+        ItemStack stack = player.getHeldItemMainhand();
+
+        if (stack.isEmpty() == false && FAST_RIGHT_CLICK_RESTRICTION.isItemAllowed(stack) == false)
+        {
+            return false;
+        }
+
+        stack = player.getHeldItemOffhand();
+
+        if (stack.isEmpty() == false && FAST_RIGHT_CLICK_RESTRICTION.isItemAllowed(stack) == false)
+        {
+            return false;
         }
 
         return true;

@@ -5,6 +5,7 @@ language.code=en_US
 
 tweakeroo.gui.button.config_gui.generic=Generic
 tweakeroo.gui.button.config_gui.fixes=Fixes
+tweakeroo.gui.button.config_gui.lists=Lists
 tweakeroo.gui.button.config_gui.tweak_toggle=Tweak Toggles
 tweakeroo.gui.button.config_gui.tweak_hotkeys=Tweak Hotkeys
 tweakeroo.gui.button.config_gui.generic_hotkeys=Generic Hotkeys
@@ -14,6 +15,16 @@ tweakeroo.gui.title.configs=Tweakeroo Configs
 
 tweakeroo.hotkeys.category.generic_hotkeys=Generic hotkeys
 tweakeroo.hotkeys.category.tweak_toggle_hotkeys=Tweak toggle hotkeys
+
+tweakeroo.label.list_type.blacklist=Black List
+tweakeroo.label.list_type.none=None
+tweakeroo.label.list_type.whitelist=White List
+
+tweakeroo.label.placement_restriction_mode.plane=Plane
+tweakeroo.label.placement_restriction_mode.face=Face
+tweakeroo.label.placement_restriction_mode.column=Column
+tweakeroo.label.placement_restriction_mode.line=Line
+tweakeroo.label.placement_restriction_mode.diagonal=Diagonal
 
 tweakeroo.message.potion_effects_running_out=§6!! WARNING - %s potion effect(s) about to run out in %s seconds !!§r
 tweakeroo.message.repair_mode.swapped_repairable_item_to_hand=Swapped a repairable item to hand
@@ -33,10 +44,3 @@ tweakeroo.message.toggled_placement_limit_on=Toggled Placement Limit tweak %s, l
 tweakeroo.message.toggled_fast_placement_mode_on=Toggled Fast Placement mode %s, mode: %s
 tweakeroo.message.value.off=OFF
 tweakeroo.message.value.on=ON
-
-tweakeroo.placement_restriction_mode.plane=Plane
-tweakeroo.placement_restriction_mode.face=Face
-tweakeroo.placement_restriction_mode.column=Column
-tweakeroo.placement_restriction_mode.line=Line
-tweakeroo.placement_restriction_mode.diagonal=Diagonal
-

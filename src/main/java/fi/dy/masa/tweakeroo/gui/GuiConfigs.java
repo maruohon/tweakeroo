@@ -70,6 +70,10 @@ public class GuiConfigs extends GuiConfigsBase
         {
             return 120;
         }
+        else if (tab == ConfigGuiTab.LISTS)
+        {
+            return 200;
+        }
 
         return super.getConfigWidth();
     }
@@ -87,6 +91,10 @@ public class GuiConfigs extends GuiConfigsBase
         else if (tab == ConfigGuiTab.FIXES)
         {
             configs = Configs.Fixes.OPTIONS;
+        }
+        else if (tab == ConfigGuiTab.LISTS)
+        {
+            configs = Configs.Lists.OPTIONS;
         }
         else if (tab == ConfigGuiTab.TWEAK_TOGGLES)
         {
@@ -146,6 +154,7 @@ public class GuiConfigs extends GuiConfigsBase
     {
         GENERIC         ("tweakeroo.gui.button.config_gui.generic"),
         FIXES           ("tweakeroo.gui.button.config_gui.fixes"),
+        LISTS           ("tweakeroo.gui.button.config_gui.lists"),
         TWEAK_TOGGLES   ("tweakeroo.gui.button.config_gui.tweak_toggle"),
         TWEAK_HOTKEYS   ("tweakeroo.gui.button.config_gui.tweak_hotkeys"),
         GENERIC_HOTKEYS ("tweakeroo.gui.button.config_gui.generic_hotkeys"),
