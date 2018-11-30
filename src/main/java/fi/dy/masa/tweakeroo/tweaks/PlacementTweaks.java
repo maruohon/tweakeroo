@@ -195,7 +195,7 @@ public class PlacementTweaks
                     }
                     */
 
-                    Vec3d hitVec = hitVecFirst.addVector(posNew.getX(), posNew.getY(), posNew.getZ());
+                    Vec3d hitVec = hitVecFirst.add(posNew.getX(), posNew.getY(), posNew.getZ());
                     EnumActionResult result = tryPlaceBlock(mc.playerController, player, mc.world,
                             posNew, sideFirst, sideRotatedFirst, playerYawFirst, hitVec, hand, hitPartFirst, false);
 
@@ -652,7 +652,7 @@ public class PlacementTweaks
             EnumHand hand,
             @Nullable HitPart hitPart)
     {
-        EnumFacing facing = EnumFacing.getHorizontal(MathHelper.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3);
+        EnumFacing facing = EnumFacing.byHorizontalIndex(MathHelper.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3);
         float yawOrig = player.rotationYaw;
 
         if (hitPart == HitPart.CENTER)
