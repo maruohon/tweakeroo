@@ -6,12 +6,13 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.init.Particles;
+import net.minecraft.particles.IParticleData;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 @Mixin(Explosion.class)
-public class MixinExplosion
+public abstract class MixinExplosion
 {
     @Redirect(method = "doExplosionB",
               slice = @Slice(
@@ -19,17 +20,17 @@ public class MixinExplosion
                             to = @At(value = "FIELD", ordinal = 1,
                                      target = "Lnet/minecraft/world/Explosion;damagesTerrain:Z")),
               at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/world/World;spawnParticle(" +
-                                "Lnet/minecraft/util/EnumParticleTypes;DDDDDD[I)V"))
-    private void redirectSpawnParticles(World world, EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed, int... parameters)
+                       target = "Lnet/minecraft/world/World;addParticle(" +
+                                "Lnet/minecraft/particles/IParticleData;DDDDDD)V"))
+    private void redirectSpawnParticles(World world, IParticleData particle, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed)
     {
         if (FeatureToggle.TWEAK_EXPLOSION_REDUCED_PARTICLES.getBooleanValue() &&
-            particleType == EnumParticleTypes.EXPLOSION_HUGE)
+            particle == Particles.EXPLOSION_EMITTER)
         {
-            particleType = EnumParticleTypes.EXPLOSION_LARGE;
+            particle = Particles.EXPLOSION;
         }
 
-        world.spawnParticle(particleType, xCoord, yCoord, zCoord, xSpeed, ySpeed, zSpeed, parameters);
+        world.addParticle(particle, xCoord, yCoord, zCoord, xSpeed, ySpeed, zSpeed);
     }
 
     @ModifyVariable(method = "doExplosionB", at = @At("HEAD"), argsOnly = true)

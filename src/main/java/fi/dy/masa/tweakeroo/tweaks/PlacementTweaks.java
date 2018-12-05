@@ -10,8 +10,6 @@ import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.ItemRestriction;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -19,16 +17,21 @@ import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.network.play.client.CPacketPlayer;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IProperty;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceFluidMode;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -116,12 +119,12 @@ public class PlacementTweaks
 
     public static void onLeftClickMousePre()
     {
-        onProcessRightClickPre(Minecraft.getMinecraft().player, EnumHand.MAIN_HAND);
+        onProcessRightClickPre(Minecraft.getInstance().player, EnumHand.MAIN_HAND);
     }
 
     public static void onLeftClickMousePost()
     {
-        onProcessRightClickPost(Minecraft.getMinecraft().player, EnumHand.MAIN_HAND);
+        onProcessRightClickPost(Minecraft.getInstance().player, EnumHand.MAIN_HAND);
     }
 
     private static void onAttackTick(Minecraft mc)
@@ -146,7 +149,7 @@ public class PlacementTweaks
 
     private static void onUsingTick()
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
 
         if (mc.player == null)
         {
@@ -160,13 +163,13 @@ public class PlacementTweaks
             final double reach = mc.playerController.getBlockReachDistance();
             final int maxCount = Configs.Generic.FAST_BLOCK_PLACEMENT_COUNT.getIntegerValue();
 
-            mc.objectMouseOver = player.rayTrace(reach, mc.getRenderPartialTicks());
+            mc.objectMouseOver = player.rayTrace(reach, mc.getRenderPartialTicks(), RayTraceFluidMode.NEVER);
 
             for (int i = 0; i < maxCount; ++i)
             {
                 RayTraceResult trace = mc.objectMouseOver;
 
-                if (trace == null || trace.typeOfHit != RayTraceResult.Type.BLOCK)
+                if (trace == null || trace.type != RayTraceResult.Type.BLOCK)
                 {
                     break;
                 }
@@ -174,11 +177,15 @@ public class PlacementTweaks
                 EnumHand hand = handFirst;
                 EnumFacing side = trace.sideHit;
                 BlockPos pos = trace.getBlockPos();
-                BlockPos posNew = getPlacementPositionForTargetedPosition(pos, side, world);
+                Vec3d hitVec = trace.hitVec;
+                ItemStack stack = player.getHeldItem(hand);
+                BlockItemUseContext ctx = new BlockItemUseContext(new ItemUseContext(player, stack, pos, side, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z));
+                BlockPos posNew = getPlacementPositionForTargetedPosition(world, pos, side, ctx);
+                ctx = new BlockItemUseContext(new ItemUseContext(player, stack, posNew, side, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z));
 
                 if (hand != null &&
                     posNew.equals(posLast) == false &&
-                    canPlaceBlockIntoPosition(posNew, world) &&
+                    canPlaceBlockIntoPosition(world, posNew, ctx) &&
                     isPositionAllowedByPlacementRestriction(posNew, side) &&
                     canPlaceBlockAgainst(world, pos, player, hand)
                 )
@@ -195,14 +202,14 @@ public class PlacementTweaks
                     }
                     */
 
-                    Vec3d hitVec = hitVecFirst.add(posNew.getX(), posNew.getY(), posNew.getZ());
+                    hitVec = hitVecFirst.add(posNew.getX(), posNew.getY(), posNew.getZ());
                     EnumActionResult result = tryPlaceBlock(mc.playerController, player, mc.world,
                             posNew, sideFirst, sideRotatedFirst, playerYawFirst, hitVec, hand, hitPartFirst, false);
 
                     if (result == EnumActionResult.SUCCESS)
                     {
                         posLast = posNew;
-                        mc.objectMouseOver = player.rayTrace(reach, mc.getRenderPartialTicks());
+                        mc.objectMouseOver = player.rayTrace(reach, mc.getRenderPartialTicks(), RayTraceFluidMode.NEVER);
                     }
                     else
                     {
@@ -275,7 +282,8 @@ public class PlacementTweaks
 
             firstWasRotation = (flexible && rotation) || (accurate && (accurateIn || accurateReverse));
             firstWasOffset = flexible && offset;
-            posFirst = getPlacementPositionForTargetedPosition(posIn, sideIn, world);
+            BlockItemUseContext ctx = new BlockItemUseContext(new ItemUseContext(player, stackPre, posIn, sideIn, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z));
+            posFirst = getPlacementPositionForTargetedPosition(world, posIn, sideIn, ctx);
             posLast = posFirst;
             hitPartFirst = hitPart;
             handFirst = hand;
@@ -312,10 +320,12 @@ public class PlacementTweaks
         boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
         boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
         boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
+        ItemStack stack = player.getHeldItem(hand);
 
         if (flexible)
         {
-            posNew = isFirstClick && (rotation || offset) ? getPlacementPositionForTargetedPosition(posIn, sideIn, world) : posIn;
+            BlockItemUseContext ctx = new BlockItemUseContext(new ItemUseContext(player, stack, posIn, sideIn, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z));
+            posNew = isFirstClick && (rotation || offset) ? getPlacementPositionForTargetedPosition(world, posIn, sideIn, ctx) : posIn;
 
             // Place the block facing/against the adjacent block (= just rotated from normal)
             if (rotation)
@@ -349,11 +359,10 @@ public class PlacementTweaks
                 }
                 else
                 {
-                    posNew = getPlacementPositionForTargetedPosition(posIn, side, world);
+                    BlockItemUseContext ctx = new BlockItemUseContext(new ItemUseContext(player, stack, posIn, side, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z));
+                    posNew = getPlacementPositionForTargetedPosition(world, posIn, side, ctx);
                 }
             }
-
-            ItemStack stack = player.getHeldItem(hand);
 
             if (Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld())
             {
@@ -366,10 +375,9 @@ public class PlacementTweaks
             {
                 if (stack.getItem() instanceof ItemBlock)
                 {
+                    BlockItemUseContext ctx = new BlockItemUseContext(new ItemUseContext(player, stack, posNew, sideIn, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z));
                     ItemBlock item = (ItemBlock) stack.getItem();
-                    int meta = item.getMetadata(stack.getMetadata());
-                    IBlockState state = item.getBlock().getStateForPlacement(world, posNew, sideIn,
-                            (float) hitVec.x, (float) hitVec.y, (float) hitVec.z, meta, player);
+                    IBlockState state = item.getBlock().getStateForPlacement(ctx);
                     EnumFacing facingTmp = BlockUtils.getFirstPropertyFacingValue(state);
 
                     if (facingTmp != null)
@@ -413,7 +421,9 @@ public class PlacementTweaks
 
         if (handle)
         {
-            if (canPlaceBlockIntoPosition(posNew, world))
+            BlockItemUseContext ctx = new BlockItemUseContext(new ItemUseContext(player, stack, posNew, side, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z));
+
+            if (canPlaceBlockIntoPosition(world, posNew, ctx))
             {
                 //System.out.printf("tryPlaceBlock() pos: %s, side: %s, part: %s, hitVec: %s\n", posNew, side, hitPart, hitVec);
                 return handleFlexibleBlockPlacement(controller, player, world, posNew, side, playerYaw, hitVec, hand, hitPart);
@@ -520,12 +530,13 @@ public class PlacementTweaks
         // We need to grab the stack here if the cached stack is still empty,
         // because this code runs before the cached stack gets set on the first click/use.
         ItemStack stackOriginal = stackFirst.isEmpty() == false && FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false ? stackFirst : player.getHeldItem(hand).copy();
-        BlockPos posPlacement = getPlacementPositionForTargetedPosition(pos, side, world);
+        BlockItemUseContext ctx = new BlockItemUseContext(new ItemUseContext(player, stackOriginal, pos, side, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z));
+        BlockPos posPlacement = getPlacementPositionForTargetedPosition(world, pos, side, ctx);
         IBlockState stateBefore = world.getBlockState(posPlacement);
         IBlockState state = world.getBlockState(pos);
 
         if (FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() &&
-            state.getBlock().isReplaceable(world, pos) == false && state.getMaterial().isReplaceable())
+            state.isReplaceable(ctx) == false && state.getMaterial().isReplaceable())
         {
             // If the block itself says it's not replaceable, but the material is (fluids),
             // then we need to offset the position back, otherwise the check in ItemBlock
@@ -838,11 +849,11 @@ public class PlacementTweaks
             Block block = ((ItemBlock) item).getBlock();
             IBlockState state = block.getDefaultState();
 
-            for (IProperty<?> prop : state.getProperties().keySet())
+            for (IProperty<?> prop : state.getProperties())
             {
-                if (prop instanceof PropertyDirection)
+                if (prop instanceof DirectionProperty)
                 {
-                    return ((PropertyDirection) prop).getAllowedValues().contains(facing);
+                    return ((DirectionProperty) prop).getAllowedValues().contains(facing);
                 }
             }
         }
@@ -850,9 +861,9 @@ public class PlacementTweaks
         return false;
     }
 
-    private static BlockPos getPlacementPositionForTargetedPosition(BlockPos pos, EnumFacing side, World world)
+    private static BlockPos getPlacementPositionForTargetedPosition(World world, BlockPos pos, EnumFacing side, BlockItemUseContext useContext)
     {
-        if (canPlaceBlockIntoPosition(pos, world))
+        if (canPlaceBlockIntoPosition(world, pos, useContext))
         {
             return pos;
         }
@@ -860,10 +871,10 @@ public class PlacementTweaks
         return pos.offset(side);
     }
 
-    private static boolean canPlaceBlockIntoPosition(BlockPos pos, World world)
+    private static boolean canPlaceBlockIntoPosition(World world, BlockPos pos, BlockItemUseContext useContext)
     {
         IBlockState state = world.getBlockState(pos);
-        return state.getBlock().isReplaceable(world, pos) || state.getMaterial().isLiquid() || state.getMaterial().isReplaceable();
+        return state.isReplaceable(useContext) || state.getMaterial().isLiquid() || state.getMaterial().isReplaceable();
     }
 
     private static boolean isNewPositionValidForPlaneMode(BlockPos posNew)
@@ -991,7 +1002,7 @@ public class PlacementTweaks
 
     public static boolean shouldSkipSlotSync(int slotNumber, ItemStack newStack)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
         EntityPlayer player = mc.player;
         Container container = player != null ? player.openContainer : null;
 

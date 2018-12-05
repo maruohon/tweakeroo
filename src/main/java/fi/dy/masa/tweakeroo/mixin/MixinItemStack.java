@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 @Mixin(ItemStack.class)
-public class MixinItemStack
+public abstract class MixinItemStack
 {
     @Shadow
     public Item getItem() { return null; }
@@ -18,6 +18,6 @@ public class MixinItemStack
     @Inject(method = "getMaxStackSize", at = @At("HEAD"), cancellable = true)
     public void getMaxStackSizeStackSensitive(CallbackInfoReturnable<Integer> ci)
     {
-        ci.setReturnValue(((IItemStackLimit) this.getItem()).getItemStackLimit((ItemStack) (Object) this));
+        ci.setReturnValue(((IItemStackLimit) this.getItem()).getMaxStackSize((ItemStack) (Object) this));
     }
 }

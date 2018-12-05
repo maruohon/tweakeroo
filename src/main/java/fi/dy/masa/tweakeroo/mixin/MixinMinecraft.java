@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 @Mixin(Minecraft.class)
-public class MixinMinecraft implements IMinecraftAccessor
+public abstract class MixinMinecraft implements IMinecraftAccessor
 {
     @Shadow
     private int rightClickDelayTimer;
@@ -98,16 +98,16 @@ public class MixinMinecraft implements IMinecraftAccessor
     @Inject(method = "processKeyBinds", at = @At("HEAD"))
     private void onProcessKeybindsPre(CallbackInfo ci)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
 
         if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue() && mc.currentScreen == null)
         {
-            KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), true);
+            KeyBinding.setKeyBindState(((IMixinKeyBinding) mc.gameSettings.keyBindAttack).getInput(), true);
         }
 
         if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue() && mc.currentScreen == null)
         {
-            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+            KeyBinding.setKeyBindState(((IMixinKeyBinding) mc.gameSettings.keyBindUseItem).getInput(), true);
         }
     }
 }

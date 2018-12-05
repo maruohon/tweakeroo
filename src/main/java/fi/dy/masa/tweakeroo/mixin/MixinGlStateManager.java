@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 @Mixin(GlStateManager.class)
 public class MixinGlStateManager
 {
-    @ModifyVariable(method = "setFogDensity", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(method = "fogDensity", at = @At("HEAD"), argsOnly = true)
     private static float adjustFogDensity(float fogDensity)
     {
         // This is nessie's nice & clean lava visibility hack :P
@@ -23,7 +23,7 @@ public class MixinGlStateManager
             FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() &&
             Configs.Generic.LAVA_VISIBILITY_OPTIFINE.getBooleanValue())
         {
-            return RenderUtils.getLavaFog(Minecraft.getMinecraft().getRenderViewEntity(), fogDensity);
+            return RenderUtils.getLavaFog(Minecraft.getInstance().getRenderViewEntity(), fogDensity);
         }
         else
         {

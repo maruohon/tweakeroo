@@ -23,9 +23,9 @@ public class MiscTweaks
         }
 
         if (FeatureToggle.TWEAK_POTION_WARNING.getBooleanValue() &&
-            player.getEntityWorld().getTotalWorldTime() - lastPotionWarning >= 100)
+            player.getEntityWorld().getGameTime() - lastPotionWarning >= 100)
         {
-            lastPotionWarning = mc.player.getEntityWorld().getTotalWorldTime();
+            lastPotionWarning = mc.player.getEntityWorld().getGameTime();
 
             Collection<PotionEffect> effects = player.getActivePotionEffects();
 
@@ -36,7 +36,7 @@ public class MiscTweaks
 
                 for (PotionEffect effect : effects)
                 {
-                    if (effect.getIsAmbient() == false && effect.getDuration() <= Configs.Generic.POTION_WARNING_THRESHOLD.getIntegerValue())
+                    if (effect.isAmbient() == false && effect.getDuration() <= Configs.Generic.POTION_WARNING_THRESHOLD.getIntegerValue())
                     {
                         ++count;
 

@@ -2,11 +2,12 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.util.HashSet;
 import java.util.List;
-import fi.dy.masa.tweakeroo.LiteModTweakeroo;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.IRegistry;
 
 public class ItemRestriction
 {
@@ -28,7 +29,7 @@ public class ItemRestriction
 
         for (String name : names)
         {
-            Item item = Item.REGISTRY.getObject(new ResourceLocation(name));
+            Item item = IRegistry.ITEM.get(new ResourceLocation(name));
 
             if (item != null && item != Items.AIR)
             {
@@ -36,7 +37,7 @@ public class ItemRestriction
             }
             else
             {
-                LiteModTweakeroo.logger.warn("Invalid item name in a black- or whitelist: '{}", name);
+                Tweakeroo.logger.warn("Invalid item name in a black- or whitelist: '{}", name);
             }
         }
     }

@@ -5,11 +5,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.math.BlockPos;
 
-@Mixin(RenderGlobal.class)
-public class MixinRenderGlobal
+@Mixin(WorldRenderer.class)
+public abstract class MixinWorldRenderer
 {
     @Inject(method = "notifyLightSet", at = @At("HEAD"), cancellable = true)
     public void notifyLightSet(BlockPos pos, CallbackInfo ci)

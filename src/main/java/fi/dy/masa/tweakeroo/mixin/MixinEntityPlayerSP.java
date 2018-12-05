@@ -21,7 +21,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
         super(worldIn, playerProfile);
     }
 
-    @Redirect(method = "onLivingUpdate()V",
+    @Redirect(method = "livingTick()V",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/client/gui/GuiScreen;doesGuiPauseGame()Z"))
     private boolean onDoesGuiPauseGame(GuiScreen gui)
@@ -35,7 +35,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
         return gui.doesGuiPauseGame();
     }
 
-    @Inject(method = "onLivingUpdate", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
+    @Inject(method = "livingTick", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/network/NetHandlerPlayClient;sendPacket(Lnet/minecraft/network/Packet;)V"))
     private void fixElytraDeployment(CallbackInfo ci)
     {

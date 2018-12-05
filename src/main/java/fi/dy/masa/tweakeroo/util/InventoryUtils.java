@@ -23,7 +23,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceFluidMode;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.registry.IRegistry;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -38,7 +40,7 @@ public class InventoryUtils
 
         for (String name : names)
         {
-            Item item = Item.REGISTRY.getObject(new ResourceLocation(name));
+            Item item = IRegistry.ITEM.get(new ResourceLocation(name));
 
             if (item != null && item != Items.AIR)
             {
@@ -74,7 +76,7 @@ public class InventoryUtils
     {
         if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
         {
-            Minecraft mc = Minecraft.getMinecraft();
+            Minecraft mc = Minecraft.getInstance();
             EntityPlayerSP player = mc.player;
 
             for (EnumHand hand : EnumHand.values())
@@ -96,7 +98,7 @@ public class InventoryUtils
 
     private static boolean isItemAtLowDurability(ItemStack stack, int minDurability)
     {
-        return stack.getItem().isDamageable() && stack.getItemDamage() >= stack.getMaxDamage() - minDurability;
+        return stack.getItem().isDamageable() && stack.getDamage() >= stack.getMaxDamage() - minDurability;
     }
 
     private static int getMinDurability(ItemStack stack)
@@ -115,7 +117,7 @@ public class InventoryUtils
 
     private static void swapItemWithHigherDurabilityToHand(EntityPlayer player, EnumHand hand, ItemStack stackReference, int minDurabilityLeft)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
         int slotWithItem = findSlotWithIdenticalItemWithDurabilityLeft(player.inventoryContainer, stackReference, minDurabilityLeft);
 
         if (slotWithItem != -1)
@@ -169,8 +171,8 @@ public class InventoryUtils
         ItemStack stackHand = player.getHeldItem(hand);
 
         if (stackHand.isEmpty() == false &&
-            (stackHand.isItemStackDamageable() == false ||
-             stackHand.isItemDamaged() == false ||
+            (stackHand.isDamageable() == false ||
+             stackHand.isDamaged() == false ||
              EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, stackHand) <= 0))
         {
             int slotNumber = findRepairableItemNotInHand(player);
@@ -194,7 +196,7 @@ public class InventoryUtils
             {
                 ItemStack stack = slot.getStack();
 
-                if (stack.isItemStackDamageable() && stack.isItemDamaged() &&
+                if (stack.isDamageable() && stack.isDamaged() &&
                     EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, stack) > 0)
                 {
                     return slot.slotNumber;
@@ -209,7 +211,7 @@ public class InventoryUtils
     {
         if (slotNumber != -1)
         {
-            Minecraft mc = Minecraft.getMinecraft();
+            Minecraft mc = Minecraft.getInstance();
             Container container = player.inventoryContainer;
 
             if (hand == EnumHand.MAIN_HAND)
@@ -239,7 +241,7 @@ public class InventoryUtils
             ItemStack stackSlot = slot.getStack();
 
             if (stackSlot.isItemEqualIgnoreDurability(stackReference) &&
-                stackReference.getMaxDamage() - stackSlot.getItemDamage() > minDurabilityLeft &&
+                stackReference.getMaxDamage() - stackSlot.getDamage() > minDurabilityLeft &&
                 ItemStack.areItemStackTagsEqual(stackSlot, stackReference))
             {
                 return slot.slotNumber;
@@ -253,7 +255,7 @@ public class InventoryUtils
     {
         List<Slot> slots = new ArrayList<>();
         Container container = player.inventoryContainer;
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
 
         for (Slot slot : container.inventorySlots)
         {
@@ -329,14 +331,14 @@ public class InventoryUtils
 
     public static void switchToPickedBlock()
     {
-        Minecraft mc  = Minecraft.getMinecraft();
+        Minecraft mc  = Minecraft.getInstance();
         EntityPlayer player = mc.player;
         World world = mc.world;
         double reach = mc.playerController.getBlockReachDistance();
-        boolean isCreative = player.capabilities.isCreativeMode;
-        RayTraceResult trace = player.rayTrace(reach, mc.getRenderPartialTicks());
+        boolean isCreative = player.abilities.isCreativeMode;
+        RayTraceResult trace = player.rayTrace(reach, mc.getRenderPartialTicks(), RayTraceFluidMode.NEVER);
 
-        if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        if (trace != null && trace.type == RayTraceResult.Type.BLOCK)
         {
             BlockPos pos = trace.getBlockPos();
             IBlockState stateTargeted = world.getBlockState(pos);

@@ -1,5 +1,0 @@
-{
-    "name": "tweakeroo",
-    "mcversion": "1.12",
-    "mixinConfigs": [ "mixins.tweakeroo.json" ]
-}

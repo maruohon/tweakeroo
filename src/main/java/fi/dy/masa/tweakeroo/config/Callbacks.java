@@ -7,6 +7,7 @@ import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
+import fi.dy.masa.tweakeroo.mixin.IMixinBlock;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.client.Minecraft;
@@ -95,12 +96,12 @@ public class Callbacks
         public FeatureCallbackSlime(FeatureToggle feature)
         {
             this.feature = feature;
-            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.slipperiness);
+            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.getSlipperiness());
 
             // If the feature is enabled on game launch, apply the overridden value here
             if (feature.getBooleanValue())
             {
-                Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness;
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setSlipperiness(Blocks.STONE.getSlipperiness());
             }
         }
 
@@ -109,11 +110,11 @@ public class Callbacks
         {
             if (this.feature.getBooleanValue())
             {
-                Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness;
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setSlipperiness(Blocks.STONE.getSlipperiness());
             }
             else
             {
-                Blocks.SLIME_BLOCK.slipperiness = (float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue();
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setSlipperiness((float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue());
             }
         }
     }

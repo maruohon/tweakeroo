@@ -7,14 +7,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 @Mixin(Item.class)
-public class MixinItem implements IItemStackLimit
+public abstract class MixinItem implements IItemStackLimit
 {
     @Shadow
-    public int getItemStackLimit() { return 0; }
+    public int getMaxStackSize() { return 0; }
 
     @Override
-    public int getItemStackLimit(ItemStack stack)
+    public int getMaxStackSize(ItemStack stack)
     {
-        return this.getItemStackLimit();
+        return this.getMaxStackSize();
     }
 }

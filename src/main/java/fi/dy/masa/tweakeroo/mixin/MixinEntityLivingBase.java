@@ -11,14 +11,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
 
 @Mixin(EntityLivingBase.class)
 public abstract class MixinEntityLivingBase extends Entity
 {
-    public MixinEntityLivingBase(World worldIn)
+    public MixinEntityLivingBase(EntityType<?> type, World worldIn)
     {
-        super(worldIn);
+        super(type, worldIn);
     }
 
     @Redirect(method = "travel", at = @At(value = "FIELD", ordinal = 1,
@@ -33,9 +34,10 @@ public abstract class MixinEntityLivingBase extends Entity
             cancellable = true)
     private void removeOwnPotionEffects(CallbackInfo ci)
     {
+        Minecraft mc = Minecraft.getInstance();
+
         if (FeatureToggle.TWEAK_REMOVE_OWN_POTION_EFFECTS.getBooleanValue() &&
-            ((Object) this) == Minecraft.getMinecraft().player &&
-            Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
+            ((Object) this) == mc.player && mc.gameSettings.thirdPersonView == 0)
         {
             ci.cancel();
         }

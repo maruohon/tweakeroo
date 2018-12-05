@@ -5,12 +5,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.FirstPersonRenderer;
 
-@Mixin(ItemRenderer.class)
-public class MixinItemRenderer
+@Mixin(FirstPersonRenderer.class)
+public abstract class MixinFirstPersonRenderer
 {
-    @Redirect(method = "updateEquippedItem()V", at = @At(
+    @Redirect(method = "tick()V", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;getCooledAttackStrength(F)F"))
     public float redirectedGetCooledAttackStrength(EntityPlayerSP player, float adjustTicks)

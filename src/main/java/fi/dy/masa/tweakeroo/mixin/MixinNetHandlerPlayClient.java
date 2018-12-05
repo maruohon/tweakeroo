@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import fi.dy.masa.tweakeroo.LiteModTweakeroo;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.minecraft.client.Minecraft;
@@ -19,7 +19,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 
 @Mixin(NetHandlerPlayClient.class)
-public class MixinNetHandlerPlayClient
+public abstract class MixinNetHandlerPlayClient
 {
     @Inject(method = "handleSetSlot", at = @At(
             value = "INVOKE",
@@ -44,8 +44,8 @@ public class MixinNetHandlerPlayClient
             String str = String.format("You died @ %d, %d, %d", pos.getX(), pos.getY(), pos.getZ());
             ITextComponent message = new TextComponentString(str);
             message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, pos.getX() + " " + pos.getY() + " " + pos.getZ()));
-            Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(message);
-            LiteModTweakeroo.logger.info(str);
+            Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(message);
+            Tweakeroo.logger.info(str);
         }
     }
 }

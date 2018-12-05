@@ -7,11 +7,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 @Mixin(Chunk.class)
-public class MixinChunk
+public abstract class MixinChunk
 {
     @Shadow
     @Final
@@ -27,7 +28,7 @@ public class MixinChunk
     }
 
     @Inject(method = "relightBlock", at = @At("HEAD"), cancellable = true)
-    private void onRelightBlock(int x, int y, int z, CallbackInfo ci)
+    private void onRelightBlock(int x, int y, int z, IBlockState state, CallbackInfo ci)
     {
         if (this.world.isRemote && FeatureToggle.TWEAK_NO_LIGHT_UPDATES_ALL.getBooleanValue())
         {

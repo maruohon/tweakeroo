@@ -14,7 +14,7 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.MovementInputFromOptions;
 
 @Mixin(MovementInputFromOptions.class)
-public class MixinMovementInputFromOptions extends MovementInput
+public abstract class MixinMovementInputFromOptions extends MovementInput
 {
     @Inject(method = "updatePlayerMoveState()V", at = @At(
             value = "FIELD",
@@ -30,7 +30,7 @@ public class MixinMovementInputFromOptions extends MovementInput
         }
 
         if (FeatureToggle.TWEAK_PERMANENT_SNEAK.getBooleanValue() &&
-            (Configs.Generic.PERMANENT_SNEAK_ALLOW_IN_GUIS.getBooleanValue() || Minecraft.getMinecraft().currentScreen == null))
+            (Configs.Generic.PERMANENT_SNEAK_ALLOW_IN_GUIS.getBooleanValue() || Minecraft.getInstance().currentScreen == null))
         {
             this.sneak = true;
         }

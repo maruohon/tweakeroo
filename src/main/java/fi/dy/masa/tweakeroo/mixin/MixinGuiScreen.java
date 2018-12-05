@@ -11,7 +11,7 @@ import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 
 @Mixin(GuiScreen.class)
-public class MixinGuiScreen
+public abstract class MixinGuiScreen
 {
     @Inject(method = "renderToolTip", at = @At("RETURN"))
     private void onRenderToolTip(ItemStack stack, int x, int y, CallbackInfo ci)

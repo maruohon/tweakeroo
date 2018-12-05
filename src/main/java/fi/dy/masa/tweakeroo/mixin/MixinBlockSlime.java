@@ -5,9 +5,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.BlockSlime;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -16,9 +16,9 @@ import net.minecraft.world.World;
 @Mixin(BlockSlime.class)
 public abstract class MixinBlockSlime extends BlockBreakable
 {
-    protected MixinBlockSlime(Material materialIn, boolean ignoreSimilarityIn)
+    public MixinBlockSlime(Block.Properties properties)
     {
-        super(materialIn, ignoreSimilarityIn);
+        super(properties);
     }
 
     @Inject(method = "onEntityWalk", at = @At("HEAD"), cancellable = true)

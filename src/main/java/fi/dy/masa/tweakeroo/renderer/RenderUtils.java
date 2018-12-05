@@ -11,9 +11,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -26,14 +26,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemMap;
-import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -57,33 +55,33 @@ public class RenderUtils
         double z = pos.getZ() + 0.5d - dz;
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
+        GlStateManager.translated(x, y, z);
 
         switch (side)
         {
             case DOWN:
-                GlStateManager.rotate(180f - playerFacing.getHorizontalAngle(), 0, 1f, 0);
-                GlStateManager.rotate( 90f, 1f, 0, 0);
+                GlStateManager.rotatef(180f - playerFacing.getHorizontalAngle(), 0, 1f, 0);
+                GlStateManager.rotatef( 90f, 1f, 0, 0);
                 break;
             case UP:
-                GlStateManager.rotate(180f - playerFacing.getHorizontalAngle(), 0, 1f, 0);
-                GlStateManager.rotate(-90f, 1f, 0, 0);
+                GlStateManager.rotatef(180f - playerFacing.getHorizontalAngle(), 0, 1f, 0);
+                GlStateManager.rotatef(-90f, 1f, 0, 0);
                 break;
             case NORTH:
-                GlStateManager.rotate(180f, 0, 1f, 0);
+                GlStateManager.rotatef(180f, 0, 1f, 0);
                 break;
             case SOUTH:
-                GlStateManager.rotate(   0, 0, 1f, 0);
+                GlStateManager.rotatef(   0, 0, 1f, 0);
                 break;
             case WEST:
-                GlStateManager.rotate(-90f, 0, 1f, 0);
+                GlStateManager.rotatef(-90f, 0, 1f, 0);
                 break;
             case EAST:
-                GlStateManager.rotate( 90f, 0, 1f, 0);
+                GlStateManager.rotatef( 90f, 0, 1f, 0);
                 break;
         }
 
-        GlStateManager.translate(-x, -y, -z + 0.501);
+        GlStateManager.translated(-x, -y, -z + 0.501);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
@@ -139,7 +137,7 @@ public class RenderUtils
 
         tessellator.draw();
 
-        GlStateManager.glLineWidth(1.6f);
+        GlStateManager.lineWidth(1.6f);
 
         buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
 
@@ -177,7 +175,7 @@ public class RenderUtils
 
         if (player != null)
         {
-            ScaledResolution res = new ScaledResolution(mc);
+            MainWindow win = mc.mainWindow;
             final int offX = Configs.Generic.HOTBAR_SWAP_OVERLAY_OFFSET_X.getIntegerValue();
             final int offY = Configs.Generic.HOTBAR_SWAP_OVERLAY_OFFSET_Y.getIntegerValue();
             int startX = offX;
@@ -188,18 +186,18 @@ public class RenderUtils
             switch (align)
             {
                 case TOP_RIGHT:
-                    startX = (int) res.getScaledWidth() - offX - 9 * 18;
+                    startX = (int) win.getScaledWidth() - offX - 9 * 18;
                     break;
                 case BOTTOM_LEFT:
-                    startY = (int) res.getScaledHeight() - offY - 3 * 18;
+                    startY = (int) win.getScaledHeight() - offY - 3 * 18;
                     break;
                 case BOTTOM_RIGHT:
-                    startX = (int) res.getScaledWidth() - offX - 9 * 18;
-                    startY = (int) res.getScaledHeight() - offY - 3 * 18;
+                    startX = (int) win.getScaledWidth() - offX - 9 * 18;
+                    startY = (int) win.getScaledHeight() - offY - 3 * 18;
                     break;
                 case CENTER:
-                    startX = (int) res.getScaledWidth() / 2 - offX - 9 * 18 / 2;
-                    startY = (int) res.getScaledHeight() / 2 - offY - 3 * 18 / 2;
+                    startX = (int) win.getScaledWidth() / 2 - offX - 9 * 18 / 2;
+                    startY = (int) win.getScaledHeight() / 2 - offY - 3 * 18 / 2;
                     break;
                 default:
             }
@@ -207,7 +205,7 @@ public class RenderUtils
             int x = startX;
             int y = startY;
 
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            GlStateManager.color4f(1f, 1f, 1f, 1f);
             mc.getTextureManager().bindTexture(GuiInventory.INVENTORY_BACKGROUND);
             mc.ingameGUI.drawTexturedModalRect(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18);
 
@@ -256,7 +254,7 @@ public class RenderUtils
         BlockShulkerBox block = null;
         EntityLivingBase entityLivingBase = null;
 
-        if (trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        if (trace.type == RayTraceResult.Type.BLOCK)
         {
             BlockPos pos = trace.getBlockPos();
             TileEntity te = world.getTileEntity(pos);
@@ -268,7 +266,7 @@ public class RenderUtils
 
                 if (state.getBlock() instanceof BlockChest)
                 {
-                    ILockableContainer cont = ((BlockChest) state.getBlock()).getLockableContainer(world, pos);
+                    ILockableContainer cont = ((BlockChest) state.getBlock()).getContainer(state, world, pos, true);
 
                     if (cont instanceof InventoryLargeChest)
                     {
@@ -284,9 +282,9 @@ public class RenderUtils
                 }
             }
         }
-        else if (trace.typeOfHit == RayTraceResult.Type.ENTITY)
+        else if (trace.type == RayTraceResult.Type.ENTITY)
         {
-            Entity entity = trace.entityHit;
+            Entity entity = trace.entity;
 
             if (entity instanceof EntityLivingBase)
             {
@@ -307,9 +305,9 @@ public class RenderUtils
             }
         }
 
-        ScaledResolution res = new ScaledResolution(mc);
-        final int xCenter = res.getScaledWidth() / 2;
-        final int yCenter = res.getScaledHeight() / 2;
+        MainWindow win = mc.mainWindow;
+        final int xCenter = win.getScaledWidth() / 2;
+        final int yCenter = win.getScaledHeight() / 2;
         int x = xCenter - 52 / 2;
         int y = yCenter - 92;
 
@@ -363,14 +361,14 @@ public class RenderUtils
 
     public static void renderPlayerInventoryOverlay(Minecraft mc)
     {
-        ScaledResolution res = new ScaledResolution(mc);
-        int x = res.getScaledWidth() / 2 - 176 / 2;
-        int y = res.getScaledHeight() / 2 + 10;
+        MainWindow win = mc.mainWindow;
+        int x = win.getScaledWidth() / 2 - 176 / 2;
+        int y = win.getScaledHeight() / 2 + 10;
         int slotOffsetX = 8;
         int slotOffsetY = 8;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
-        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
 
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, 9, 27, mc);
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
@@ -379,14 +377,14 @@ public class RenderUtils
     public static void renderHotbarScrollOverlay(Minecraft mc)
     {
         IInventory inv = mc.player.inventory;
-        ScaledResolution res = new ScaledResolution(mc);
-        final int xCenter = res.getScaledWidth() / 2;
-        final int yCenter = res.getScaledHeight() / 2;
+        MainWindow win = mc.mainWindow;
+        final int xCenter = win.getScaledWidth() / 2;
+        final int yCenter = win.getScaledHeight() / 2;
         final int x = xCenter - 176 / 2;
         final int y = yCenter + 6;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
-        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.color4f(1f, 1f, 1f, 1f);
 
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y     , 9, 27, mc);
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y + 70, 9,  9, mc);
@@ -435,7 +433,7 @@ public class RenderUtils
 
         if (fog < 2.0F)
         {
-            GlStateManager.setFogDensity(fog);
+            GlStateManager.fogDensity(fog);
         }
     }
 
@@ -443,11 +441,11 @@ public class RenderUtils
     {
         if (stack.getItem() instanceof ItemMap && GuiScreen.isShiftKeyDown())
         {
-            Minecraft mc = Minecraft.getMinecraft();
+            Minecraft mc = Minecraft.getInstance();
 
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
-            GlStateManager.color(1, 1, 1, 1);
+            GlStateManager.color4f(1f, 1f, 1f, 1f);
             mc.getTextureManager().bindTexture(fi.dy.masa.malilib.render.RenderUtils.TEXTURE_MAP_BACKGROUND);
 
             int size = Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue();
@@ -466,7 +464,7 @@ public class RenderUtils
             buffer.pos(x1, y1, z).tex(0.0D, 0.0D).endVertex();
             tessellator.draw();
 
-            MapData mapdata = Items.FILLED_MAP.getMapData(stack, mc.world);
+            MapData mapdata = ItemMap.getMapData(stack, mc.world);
 
             if (mapdata != null)
             {
@@ -474,9 +472,9 @@ public class RenderUtils
                 y1 += 8;
                 z = 310;
                 double scale = (double) (size - 16) / 128.0D;
-                GlStateManager.translate(x1, y1, z);
-                GlStateManager.scale(scale, scale, 0);
-                mc.entityRenderer.getMapItemRenderer().renderMap(mapdata, false);
+                GlStateManager.translated(x1, y1, z);
+                GlStateManager.scaled(scale, scale, 0);
+                mc.gameRenderer.getMapItemRenderer().renderMap(mapdata, false);
             }
 
             GlStateManager.enableLighting();
@@ -486,7 +484,7 @@ public class RenderUtils
 
     public static void renderShulkerBoxPreview(ItemStack stack, int x, int y)
     {
-        if (GuiScreen.isShiftKeyDown() && stack.hasTagCompound())
+        if (GuiScreen.isShiftKeyDown() && stack.hasTag())
         {
             NonNullList<ItemStack> items = fi.dy.masa.malilib.util.InventoryUtils.getStoredItems(stack, -1);
 
@@ -497,7 +495,7 @@ public class RenderUtils
 
             GlStateManager.pushMatrix();
             RenderHelper.disableStandardItemLighting();
-            GlStateManager.translate(0F, 0F, 700F);
+            GlStateManager.translatef(0F, 0F, 700F);
 
             fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryType(stack);
             fi.dy.masa.malilib.render.InventoryOverlay.InventoryProperties props = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryPropsTemp(type, items.size());
@@ -505,26 +503,26 @@ public class RenderUtils
             x += 8;
             y -= (props.height + 18);
 
-            if (stack.getItem() instanceof ItemShulkerBox)
+            if (stack.getItem() instanceof ItemBlock && ((ItemBlock) stack.getItem()).getBlock() instanceof BlockShulkerBox)
             {
                 setShulkerboxBackgroundTintColor((BlockShulkerBox) ((ItemBlock) stack.getItem()).getBlock());
             }
             else
             {
-                GlStateManager.color(1, 1, 1, 1);
+                GlStateManager.color4f(1f, 1f, 1f, 1f);
             }
 
-            Minecraft mc = Minecraft.getMinecraft();
+            Minecraft mc = Minecraft.getInstance();
             fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, props.slotsPerRow, items.size(), mc);
 
             RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.enableDepth();
+            GlStateManager.enableDepthTest();
             GlStateManager.enableRescaleNormal();
 
             IInventory inv = fi.dy.masa.malilib.util.InventoryUtils.getAsInventory(items);
             fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + props.slotOffsetX, y + props.slotOffsetY, props.slotsPerRow, 0, -1, mc);
 
-            GlStateManager.disableDepth();
+            GlStateManager.disableDepthTest();
             GlStateManager.popMatrix();
         }
     }
@@ -535,11 +533,11 @@ public class RenderUtils
         {
             final EnumDyeColor dye = block.getColor();
             final float[] colors = dye.getColorComponentValues();
-            GlStateManager.color(colors[0], colors[1], colors[2]);
+            GlStateManager.color3f(colors[0], colors[1], colors[2]);
         }
         else
         {
-            GlStateManager.color(1, 1, 1, 1);
+            GlStateManager.color4f(1f, 1f, 1f, 1f);
         }
     }
 }

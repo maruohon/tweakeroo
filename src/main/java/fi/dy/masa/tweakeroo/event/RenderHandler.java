@@ -14,7 +14,7 @@ public class RenderHandler implements IRenderer
     @Override
     public void onRenderGameOverlayPost(float partialTicks)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
 
         if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
             Hotkeys.HOTBAR_SWAP_BASE.getKeybind().isKeybindHeld())
@@ -43,7 +43,7 @@ public class RenderHandler implements IRenderer
     @Override
     public void onRenderWorldLast(float partialTicks)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
 
         if (mc.player != null)
         {
@@ -55,7 +55,7 @@ public class RenderHandler implements IRenderer
     {
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
             mc.objectMouseOver != null &&
-            mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK &&
+            mc.objectMouseOver.type == RayTraceResult.Type.BLOCK &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld()))
         {
