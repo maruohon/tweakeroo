@@ -531,7 +531,7 @@ public class RenderUtils
     {
         if (block != null && Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue())
         {
-            final EnumDyeColor dye = block.getColor();
+            final EnumDyeColor dye = block.getColor() != null ? block.getColor() : EnumDyeColor.PURPLE;
             final float[] colors = dye.getColorComponentValues();
             GlStateManager.color3f(colors[0], colors[1], colors[2]);
         }
