@@ -15,7 +15,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 @Mixin(PlayerControllerMP.class)
-public class MixinPlayerControllerMP
+public abstract class MixinPlayerControllerMP
 {
     @Inject(method = "processRightClick", at = @At(
             value = "INVOKE",

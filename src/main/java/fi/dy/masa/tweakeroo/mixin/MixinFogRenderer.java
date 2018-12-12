@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.FogRenderer;
 public abstract class MixinFogRenderer
 {
     @Inject(method = "setupFog(IF)V",
-            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/tags/FluidTags;LAVA")),
+            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/tags/FluidTags;LAVA:Lnet/minecraft/tags/Tag;")),
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GlStateManager;fogDensity(F)V",
                      ordinal = 0, shift = Shift.AFTER))
     private void onSetupLavaFog(int startCoords, float partialTicks, CallbackInfo ci)
