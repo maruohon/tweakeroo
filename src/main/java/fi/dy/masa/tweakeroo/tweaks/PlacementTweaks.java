@@ -497,7 +497,9 @@ public class PlacementTweaks
         if (stackOriginal.isEmpty() == false &&
             (stackCurrent.isEmpty() || fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
         {
-            InventoryUtils.restockNewStackToHand(player, hand, stackOriginal);
+            // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
+            boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false;
+            InventoryUtils.restockNewStackToHand(player, hand, stackOriginal, allowHotbar);
         }
     }
 
@@ -609,6 +611,7 @@ public class PlacementTweaks
         {
             // This restock needs to happen even with the pick-before-place tweak active,
             // otherwise the fast placement mode's checks (getHandWithItem()) will fail...
+            //System.out.printf("processRightClickBlockWrapper -> tryRestockHand with: %s, current: %s\n", stackOriginal, player.getHeldItem(hand));
             tryRestockHand(player, hand, stackOriginal);
         }
 
