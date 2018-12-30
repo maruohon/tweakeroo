@@ -6,11 +6,13 @@ import java.util.List;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.mixin.IMixinSlot;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
@@ -62,9 +64,9 @@ public class InventoryUtils
         }
     }
 
-    public static void restockNewStackToHand(EntityPlayer player, EnumHand hand, ItemStack stackReference)
+    public static void restockNewStackToHand(EntityPlayer player, EnumHand hand, ItemStack stackReference, boolean allowHotbar)
     {
-        int slotWithItem = fi.dy.masa.malilib.util.InventoryUtils.findSlotWithItem(player.inventoryContainer, stackReference, true);
+        int slotWithItem = findSlotWithItem(player.inventoryContainer, stackReference, allowHotbar, true);
 
         if (slotWithItem != -1)
         {
@@ -205,6 +207,43 @@ public class InventoryUtils
         }
 
         return -1;
+    }
+
+    /**
+     * Finds a slot with an identical item than <b>stackReference</b>, ignoring the durability
+     * of damageable items. Does not allow crafting or armor slots or the offhand slot
+     * in the ContainerPlayer container.
+     * @param container
+     * @param stackReference
+     * @param reverse
+     * @return the slot number, or -1 if none were found
+     */
+    public static int findSlotWithItem(Container container, ItemStack stackReference, boolean allowHotbar, boolean reverse)
+    {
+        final int startSlot = reverse ? container.inventorySlots.size() - 1 : 0;
+        final int endSlot = reverse ? -1 : container.inventorySlots.size();
+        final int increment = reverse ? -1 : 1;
+        final boolean isPlayerInv = container instanceof ContainerPlayer;
+
+        for (int slotNum = startSlot; slotNum != endSlot; slotNum += increment)
+        {
+            Slot slot = container.inventorySlots.get(slotNum);
+
+            if ((isPlayerInv == false || fi.dy.masa.malilib.util.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false)) &&
+                (allowHotbar || isHotbarSlot(slot) == false) &&
+                fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(slot.getStack(), stackReference))
+            {
+                return slot.slotNumber;
+            }
+        }
+
+        return -1;
+    }
+
+    private static boolean isHotbarSlot(Slot slot)
+    {
+        // This isn't correct for modded Forge IItemHandler-based inventories
+        return (slot.inventory instanceof InventoryPlayer) && ((IMixinSlot) slot).getSlotIndex() <= 8;
     }
 
     private static void swapItemToHand(EntityPlayer player, EnumHand hand, int slotNumber)

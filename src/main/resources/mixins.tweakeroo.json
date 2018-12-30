@@ -7,6 +7,7 @@
         "IMixinAbstractHorse",
         "IMixinBlock",
         "IMixinKeyBinding",
+        "IMixinSlot",
         "MixinBlockSlime",
         "MixinChunk",
         "MixinClientSuggestionProvider",
