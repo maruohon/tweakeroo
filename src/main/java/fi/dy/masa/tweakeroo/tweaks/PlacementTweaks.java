@@ -378,6 +378,13 @@ public class PlacementTweaks
                     BlockItemUseContext ctx = new BlockItemUseContext(new ItemUseContext(player, stack, posNew, sideIn, (float) hitVec.x, (float) hitVec.y, (float) hitVec.z));
                     ItemBlock item = (ItemBlock) stack.getItem();
                     IBlockState state = item.getBlock().getStateForPlacement(ctx);
+
+                    // getStateForPlacement can return null in 1.13+
+                    if (state == null)
+                    {
+                        return EnumActionResult.PASS;
+                    }
+
                     EnumFacing facingTmp = BlockUtils.getFirstPropertyFacingValue(state);
 
                     if (facingTmp != null)
