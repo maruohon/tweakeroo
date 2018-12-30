@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinSlot;
@@ -42,11 +43,18 @@ public class InventoryUtils
 
         for (String name : names)
         {
-            Item item = IRegistry.ITEM.get(new ResourceLocation(name));
-
-            if (item != null && item != Items.AIR)
+            try
             {
-                UNSTACKING_ITEMS.add(item);
+                Item item = IRegistry.ITEM.get(new ResourceLocation(name));
+
+                if (item != null && item != Items.AIR)
+                {
+                    UNSTACKING_ITEMS.add(item);
+                }
+            }
+            catch (Exception e)
+            {
+                Tweakeroo.logger.warn("Failed to set an unstacking protected item from name '{}'", name, e);
             }
         }
     }

@@ -29,15 +29,22 @@ public class ItemRestriction
 
         for (String name : names)
         {
-            Item item = IRegistry.ITEM.get(new ResourceLocation(name));
+            try
+            {
+                Item item = IRegistry.ITEM.get(new ResourceLocation(name));
 
-            if (item != null && item != Items.AIR)
-            {
-                set.add(item);
+                if (item != null && item != Items.AIR)
+                {
+                    set.add(item);
+                }
+                else
+                {
+                    Tweakeroo.logger.warn("Invalid item name in a black- or whitelist: '{}", name);
+                }
             }
-            else
+            catch (Exception e)
             {
-                Tweakeroo.logger.warn("Invalid item name in a black- or whitelist: '{}", name);
+                Tweakeroo.logger.warn("Invalid item name in a black- or whitelist: '{}", name, e);
             }
         }
     }
