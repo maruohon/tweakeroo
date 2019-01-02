@@ -70,7 +70,8 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         // Not in a GUI
         if (mc.currentScreen == null && eventKeyState)
         {
-            this.storeLastMovementDirection(eventKey, mc);
+            int scanCode = 0; // FIXME
+            this.storeLastMovementDirection(eventKey, scanCode, mc);
         }
 
         return false;
@@ -191,21 +192,21 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         return this.lastForwardInput;
     }
 
-    private void storeLastMovementDirection(int eventKey, Minecraft mc)
+    private void storeLastMovementDirection(int eventKey, int scanCode, Minecraft mc)
     {
-        if (mc.gameSettings.keyBindForward.func_197984_a(eventKey))
+        if (mc.gameSettings.keyBindForward.matchesKey(eventKey, scanCode))
         {
             this.lastForwardInput = ForwardBack.FORWARD;
         }
-        else if (mc.gameSettings.keyBindBack.func_197984_a(eventKey))
+        else if (mc.gameSettings.keyBindBack.matchesKey(eventKey, scanCode))
         {
             this.lastForwardInput = ForwardBack.BACK;
         }
-        else if (mc.gameSettings.keyBindLeft.func_197984_a(eventKey))
+        else if (mc.gameSettings.keyBindLeft.matchesKey(eventKey, scanCode))
         {
             this.lastSidewaysInput = LeftRight.LEFT;
         }
-        else if (mc.gameSettings.keyBindRight.func_197984_a(eventKey))
+        else if (mc.gameSettings.keyBindRight.matchesKey(eventKey, scanCode))
         {
             this.lastSidewaysInput = LeftRight.RIGHT;
         }
