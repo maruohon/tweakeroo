@@ -179,6 +179,17 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 return true;
             }
+            else if (FeatureToggle.TWEAK_ZOOM.getKeybind().isKeybindHeld())
+            {
+                double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (dWheel > 0 ? 1 : -1);
+                Configs.Generic.ZOOM_FOV.setDoubleValue(newValue);
+                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+
+                String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_zoom_fov_to", strValue));
+
+                return true;
+            }
         }
 
         return false;
