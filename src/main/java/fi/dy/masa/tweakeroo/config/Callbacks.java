@@ -49,6 +49,7 @@ public class Callbacks
         FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE));
         FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_GRID));
         FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_LIMIT));
+        FeatureToggle.TWEAK_ZOOM.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_ZOOM));
     }
 
     public static class FeatureCallbackGamma implements IValueChangeCallback
@@ -380,6 +381,18 @@ public class Callbacks
                 {
                     String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
                     StringUtils.printActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
+                }
+                else
+                {
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                }
+            }
+            else if (key == FeatureToggle.TWEAK_ZOOM.getKeybind())
+            {
+                if (enabled)
+                {
+                    String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_zoom_on", strStatus, strValue);
                 }
                 else
                 {
