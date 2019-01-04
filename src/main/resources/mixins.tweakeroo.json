@@ -6,6 +6,9 @@
     "client": [
         "IMixinAbstractHorse",
         "IMixinSlot",
+        "MixinBlockDispenser",
+        "MixinBlockFurnace",
+        "MixinBlockRotationFixes",
         "MixinBlockSlime",
         "MixinChatTabCompleter",
         "MixinChunk",
@@ -17,6 +20,7 @@
         "MixinGlStateManager",
         "MixinGuiScreen",
         "MixinItem",
+        "MixinItemBlock",
         "MixinItemRenderer",
         "MixinItemShulkerBox",
         "MixinItemStack",

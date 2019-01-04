@@ -18,6 +18,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -360,6 +361,13 @@ public class PlacementTweaks
                 facing = sideIn;
                 hitPart = null;
                 handle = true;
+
+                // Pistons, Droppers, Dispensers should face into the block, but Observers should point their back/output
+                // side into the block when the Accurate Placement In hotkey is used
+                if ((stack.getItem() instanceof ItemBlock) == false || ((ItemBlock) stack.getItem()).getBlock() != Blocks.OBSERVER)
+                {
+                    facing = facing.getOpposite();
+                }
                 //System.out.printf("accurate - IN - facing: %s\n", facing);
             }
             else if (flexible == false || (rotation == false && offset == false))
