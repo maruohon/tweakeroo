@@ -5,6 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.Entity;
@@ -15,7 +17,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 @Mixin(PlayerControllerMP.class)
-public class MixinPlayerControllerMP
+public abstract class MixinPlayerControllerMP
 {
     @Inject(method = "processRightClick", at = @At(
             value = "INVOKE",
@@ -87,6 +89,26 @@ public class MixinPlayerControllerMP
         if (PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(EnumActionResult.PASS);
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "getBlockReachDistance", at = @At("HEAD"), cancellable = true)
+    private void overrideReachDistance(CallbackInfoReturnable<Float> cir)
+    {
+        if (FeatureToggle.TWEAK_BLOCK_REACH_OVERRIDE.getBooleanValue())
+        {
+            cir.setReturnValue((float) Configs.Generic.BLOCK_REACH_DISTANCE.getDoubleValue());
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "extendedReach", at = @At("HEAD"), cancellable = true)
+    private void overrideExtendedReach(CallbackInfoReturnable<Boolean> cir)
+    {
+        if (FeatureToggle.TWEAK_BLOCK_REACH_OVERRIDE.getBooleanValue())
+        {
+            cir.setReturnValue(false);
             cir.cancel();
         }
     }
