@@ -14,6 +14,7 @@
         "MixinChatTabCompleter",
         "MixinChunk",
         "MixinCommandFillClone",
+        "MixinEntityItem",
         "MixinEntityLivingBase",
         "MixinEntityPlayerSP",
         "MixinEntityRenderer",

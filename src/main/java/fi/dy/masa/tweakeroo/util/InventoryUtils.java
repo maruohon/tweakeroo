@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import fi.dy.masa.malilib.util.Constants;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -21,6 +22,7 @@ import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -423,5 +425,39 @@ public class InventoryUtils
                 }
             }
         }
+    }
+
+    public static boolean cleanUpShulkerBoxNBT(ItemStack stack)
+    {
+        boolean changed = false;
+        NBTTagCompound nbt = stack.getTagCompound();
+
+        if (nbt != null)
+        {
+            if (nbt.hasKey("BlockEntityTag", Constants.NBT.TAG_COMPOUND))
+            {
+                NBTTagCompound tag = nbt.getCompoundTag("BlockEntityTag");
+
+                if (tag.hasKey("Items", Constants.NBT.TAG_LIST) &&
+                    tag.getTagList("Items", Constants.NBT.TAG_COMPOUND).tagCount() == 0)
+                {
+                    tag.removeTag("Items");
+                    changed = true;
+                }
+
+                if (tag.isEmpty())
+                {
+                    nbt.removeTag("BlockEntityTag");
+                }
+            }
+
+            if (nbt.isEmpty())
+            {
+                stack.setTagCompound(null);
+                changed = true;
+            }
+        }
+
+        return changed;
     }
 }
