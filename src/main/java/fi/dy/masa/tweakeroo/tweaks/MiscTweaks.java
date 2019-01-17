@@ -25,7 +25,7 @@ public class MiscTweaks
             return;
         }
 
-        if (mc.currentScreen == null || Configs.Generic.PERIODIC_CLICKS_ALLOW_IN_GUIS.getBooleanValue())
+        if (mc.currentScreen == null)
         {
             if (FeatureToggle.TWEAK_PERIODIC_ATTACK.getBooleanValue() &&
                 ++periodicAttackCounter >= Configs.Generic.PERIODIC_ATTACK_INTERVAL.getIntegerValue())
