@@ -4,6 +4,7 @@ import java.util.Collection;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +13,8 @@ import net.minecraft.potion.PotionEffect;
 public class MiscTweaks
 {
     private static long lastPotionWarning;
+    private static int periodicAttackCounter;
+    private static int periodicUseCounter;
 
     public static void onTick(Minecraft mc)
     {
@@ -20,6 +23,23 @@ public class MiscTweaks
         if (player == null)
         {
             return;
+        }
+
+        if (mc.currentScreen == null || Configs.Generic.PERIODIC_CLICKS_ALLOW_IN_GUIS.getBooleanValue())
+        {
+            if (FeatureToggle.TWEAK_PERIODIC_ATTACK.getBooleanValue() &&
+                ++periodicAttackCounter >= Configs.Generic.PERIODIC_ATTACK_INTERVAL.getIntegerValue())
+            {
+                ((IMinecraftAccessor) mc).leftClickMouseAccessor();
+                periodicAttackCounter = 0;
+            }
+
+            if (FeatureToggle.TWEAK_PERIODIC_USE.getBooleanValue() &&
+                ++periodicUseCounter >= Configs.Generic.PERIODIC_USE_INTERVAL.getIntegerValue())
+            {
+                ((IMinecraftAccessor) mc).rightClickMouseAccessor();
+                periodicUseCounter = 0;
+            }
         }
 
         if (FeatureToggle.TWEAK_POTION_WARNING.getBooleanValue() &&

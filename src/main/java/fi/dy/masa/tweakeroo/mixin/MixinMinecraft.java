@@ -5,8 +5,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import net.minecraft.client.Minecraft;
@@ -98,7 +100,7 @@ public class MixinMinecraft implements IMinecraftAccessor
     @Inject(method = "processKeyBinds", at = @At("HEAD"))
     private void onProcessKeybindsPre(CallbackInfo ci)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = (Minecraft) (Object) this;
 
         if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue() && mc.currentScreen == null)
         {
@@ -109,5 +111,14 @@ public class MixinMinecraft implements IMinecraftAccessor
         {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
         }
+    }
+
+    @Inject(method = "runTick",
+            slice = @Slice(
+                    from = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;runTickKeyboard()V")),
+            at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;world", ordinal = 0))
+    private void onRunTick(CallbackInfo ci)
+    {
+        MiscTweaks.onTick((Minecraft) (Object) this);
     }
 }

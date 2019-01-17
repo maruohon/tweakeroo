@@ -44,6 +44,9 @@ public class Configs implements IConfigHandler
         public static final ConfigInteger       ITEM_SWAP_DURABILITY_THRESHOLD      = new ConfigInteger     ("itemSwapDurabilityThreshold", 20, 0, 10000, "This is the durability threshold (in uses left)\nfor the low-durability item swap feature.\nNote that items with low total durability will go lower\nand be swapped at 5%% left.");
         public static final ConfigBoolean       LAVA_VISIBILITY_OPTIFINE            = new ConfigBoolean     ("lavaVisibilityOptifineCompat", true, "Use an alternative version of the Lava Visibility,\nwhich is Optifine compatible (but more hacky).\nImplementation credit to Nessie.");
         public static final ConfigInteger       MAP_PREVIEW_SIZE                    = new ConfigInteger     ("mapPreviewSize", 160, 16, 512, "The size of the rendered map previews");
+        public static final ConfigInteger       PERIODIC_ATTACK_INTERVAL            = new ConfigInteger     ("periodicAttackInterval", 20, 0, Integer.MAX_VALUE, "The number of game tick between automatic attacks (left clicks)");
+        public static final ConfigBoolean       PERIODIC_CLICKS_ALLOW_IN_GUIS       = new ConfigBoolean     ("periodicClicksAllowInGuis", false, "Whether or not to allow the periodic clicks in GUIs");
+        public static final ConfigInteger       PERIODIC_USE_INTERVAL               = new ConfigInteger     ("periodicUseInterval", 20, 0, Integer.MAX_VALUE, "The number of game tick between automatic uses (right clicks)");
         public static final ConfigBoolean       PERMANENT_SNEAK_ALLOW_IN_GUIS       = new ConfigBoolean     ("permanentSneakAllowInGUIs", false, "If true, then the permanent sneak tweak will\nalso work while GUIs are open");
         public static final ConfigInteger       PLACEMENT_GRID_SIZE                 = new ConfigInteger     ("placementGridSize", 3, 1, 1000, "The grid interval size for the grid placement mode.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind.");
         public static final ConfigInteger       PLACEMENT_LIMIT                     = new ConfigInteger     ("placementLimit", 3, 1, 10000, "The number of blocks you are able to place at maximum per\nright click, if tweakPlacementLimit is enabled.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind.");
@@ -60,6 +63,7 @@ public class Configs implements IConfigHandler
                 CLIENT_PLACEMENT_ROTATION,
                 LAVA_VISIBILITY_OPTIFINE,
                 PERMANENT_SNEAK_ALLOW_IN_GUIS,
+                PERIODIC_CLICKS_ALLOW_IN_GUIS,
                 PLACEMENT_RESTRICTION_TIED_TO_FAST,
                 SHULKER_DISPLAY_BACKGROUND_COLOR,
                 SLOT_SYNC_WORKAROUND,
@@ -81,6 +85,8 @@ public class Configs implements IConfigHandler
                 HOTBAR_SWAP_OVERLAY_OFFSET_Y,
                 ITEM_SWAP_DURABILITY_THRESHOLD,
                 MAP_PREVIEW_SIZE,
+                PERIODIC_ATTACK_INTERVAL,
+                PERIODIC_USE_INTERVAL,
                 PLACEMENT_GRID_SIZE,
                 PLACEMENT_LIMIT,
                 POTION_WARNING_THRESHOLD,
