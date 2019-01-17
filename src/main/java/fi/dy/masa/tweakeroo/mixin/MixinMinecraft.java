@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 @Mixin(Minecraft.class)
-public class MixinMinecraft implements IMinecraftAccessor
+public abstract class MixinMinecraft implements IMinecraftAccessor
 {
     @Shadow
     private int rightClickDelayTimer;
@@ -116,7 +116,7 @@ public class MixinMinecraft implements IMinecraftAccessor
     @Inject(method = "runTick",
             slice = @Slice(
                     from = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;runTickKeyboard()V")),
-            at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;world", ordinal = 0))
+            at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;world:Lnet/minecraft/client/multiplayer/WorldClient;", ordinal = 0))
     private void onRunTick(CallbackInfo ci)
     {
         MiscTweaks.onTick((Minecraft) (Object) this);
