@@ -17,6 +17,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -437,6 +438,24 @@ public class RenderUtils
         {
             GlStateManager.setFogDensity(fog);
         }
+    }
+
+    public static void renderDirectionsCursor(ScaledResolution sr, float zLevel, float partialTicks)
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        GlStateManager.pushMatrix();
+
+        int width = sr.getScaledWidth();
+        int height = sr.getScaledHeight();
+        GlStateManager.translate(width / 2, height / 2, zLevel);
+        Entity entity = mc.getRenderViewEntity();
+        GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
+        GlStateManager.scale(-1.0F, -1.0F, -1.0F);
+        OpenGlHelper.renderDirections(10);
+
+        GlStateManager.popMatrix();
     }
 
     public static void renderMapPreview(ItemStack stack, int x, int y)
