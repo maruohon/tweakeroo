@@ -37,6 +37,9 @@ public class Configs implements IConfigHandler
         public static final ConfigInteger       FAST_RIGHT_CLICK_COUNT              = new ConfigInteger     ("fastRightClickCount", 10, 1, 64, "The number of right clicks to do per game tick when\ntweakFastRightClick is enabled and the use button is held down");
         public static final ConfigInteger       FILL_CLONE_LIMIT                    = new ConfigInteger     ("fillCloneLimit", 10000000, 1, 1000000000, "The new /fill and /clone block limit in single player,\nif the tweak to override them is enabled");
         public static final ConfigColor         FLEXIBLE_PLACEMENT_OVERLAY_COLOR    = new ConfigColor       ("flexibleBlockPlacementOverlayColor", "#C03030F0", "The color of the currently pointed-at\nregion in block placement the overlay");
+        public static final ConfigDouble        FLY_SPEED_PRESET_1                  = new ConfigDouble      ("flySpeedPreset1", 0.05, 0, 4, "The fly speed for preset 1");
+        public static final ConfigDouble        FLY_SPEED_PRESET_2                  = new ConfigDouble      ("flySpeedPreset2", 0.15, 0, 4, "The fly speed for preset 2");
+        public static final ConfigDouble        FLY_SPEED_PRESET_3                  = new ConfigDouble      ("flySpeedPreset3", 0.35, 0, 4, "The fly speed for preset 3");
         public static final ConfigInteger       GAMMA_OVERRIDE_VALUE                = new ConfigInteger     ("gammaOverrideValue", 16, 0, 1000, "The gamma value to use when the override option is enabled");
         public static final ConfigInteger       HOTBAR_SLOT_CYCLE_MAX               = new ConfigInteger     ("hotbarSlotCycleMax", 2, 1, 9, "This is the last hotbar slot to use/cycle through\nif the hotbar slot cycle tweak is enabled.\nBasically the cycle will jump back to the first slot\nwhen going over the maximum slot number set here.");
         public static final ConfigOptionList    HOTBAR_SWAP_OVERLAY_ALIGNMENT       = new ConfigOptionList  ("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, "The positioning of the hotbar swap overlay");
@@ -80,6 +83,9 @@ public class Configs implements IConfigHandler
                 FAST_LEFT_CLICK_COUNT,
                 FAST_RIGHT_CLICK_COUNT,
                 FILL_CLONE_LIMIT,
+                FLY_SPEED_PRESET_1,
+                FLY_SPEED_PRESET_2,
+                FLY_SPEED_PRESET_3,
                 GAMMA_OVERRIDE_VALUE,
                 HOTBAR_SLOT_CYCLE_MAX,
                 HOTBAR_SWAP_OVERLAY_OFFSET_X,
@@ -129,15 +135,23 @@ public class Configs implements IConfigHandler
 
     public static class Internal
     {
+        public static final ConfigInteger       FLY_SPEED_PRESET                    = new ConfigInteger     ("flySpeedPreset", 0, 0, 2, "This is just for the mod internally to track the\ncurrently selected fly speed preset");
         public static final ConfigDouble        GAMMA_VALUE_ORIGINAL                = new ConfigDouble      ("gammaValueOriginal", 0, 0, 1, "The original gamma value, before the gamma override was enabled");
         public static final ConfigInteger       HOTBAR_SCROLL_CURRENT_ROW           = new ConfigInteger     ("hotbarScrollCurrentRow", 3, 0, 3, "This is just for the mod internally to track the\n\"current hotbar row\" for the hotbar scrolling feature");
         public static final ConfigDouble        SLIME_BLOCK_SLIPPERINESS_ORIGINAL   = new ConfigDouble      ("slimeBlockSlipperinessOriginal", 0.8, 0, 1, "The original slipperiness value of Slime Blocks");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                FLY_SPEED_PRESET,
                 GAMMA_VALUE_ORIGINAL,
                 HOTBAR_SCROLL_CURRENT_ROW,
                 SLIME_BLOCK_SLIPPERINESS_ORIGINAL
         );
+    }
+
+    public static ConfigDouble getActiveFlySpeedConfig()
+    {
+        int i = Configs.Internal.FLY_SPEED_PRESET.getIntegerValue();
+        return i == 0 ? Configs.Generic.FLY_SPEED_PRESET_1 : (i == 1 ? Configs.Generic.FLY_SPEED_PRESET_2 : Configs.Generic.FLY_SPEED_PRESET_3);
     }
 
     public static void loadFromFile()

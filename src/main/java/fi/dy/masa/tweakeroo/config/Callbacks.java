@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.config;
 
 import fi.dy.masa.malilib.config.IConfigBase;
+import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
@@ -13,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TextFormatting;
 
 public class Callbacks
 {
@@ -32,22 +32,26 @@ public class Callbacks
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
 
-        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.FLY_PRESET_1.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.FLY_PRESET_2.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.FLY_PRESET_3.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SCROLL.getKeybind().setCallback(callbackGeneric);
         Hotkeys.OPEN_CONFIG_GUI.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
 
         FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_AFTER_CLICKER));
+        FeatureToggle.TWEAK_FLY_SPEED.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_FLY_SPEED));
         FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE));
         FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_GRID));
         FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_LIMIT));
@@ -156,9 +160,9 @@ public class Callbacks
             {
                 this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
 
-                String pre = mc.skipRenderWorld ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
+                String pre = mc.skipRenderWorld ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
                 String status = I18n.format("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
-                String message = I18n.format("tweakeroo.message.toggled", "Skip All Rendering", pre + status + TextFormatting.RESET);
+                String message = I18n.format("tweakeroo.message.toggled", "Skip All Rendering", pre + status + GuiBase.TXT_RST);
                 StringUtils.printActionbarMessage(message);
             }
             else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
@@ -166,9 +170,9 @@ public class Callbacks
                 skipWorldRendering = ! skipWorldRendering;
 
                 boolean enabled = skipWorldRendering;
-                String pre = enabled ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
+                String pre = enabled ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
                 String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String message = I18n.format("tweakeroo.message.toggled", "Skip World Rendering", pre + status + TextFormatting.RESET);
+                String message = I18n.format("tweakeroo.message.toggled", "Skip World Rendering", pre + status + GuiBase.TXT_RST);
                 StringUtils.printActionbarMessage(message);
             }
 
@@ -220,6 +224,21 @@ public class Callbacks
                     return true;
                 }
             }
+            else if (key == Hotkeys.FLY_PRESET_1.getKeybind())
+            {
+                this.setFlySpeedPreset(0);
+                return true;
+            }
+            else if (key == Hotkeys.FLY_PRESET_2.getKeybind())
+            {
+                this.setFlySpeedPreset(1);
+                return true;
+            }
+            else if (key == Hotkeys.FLY_PRESET_3.getKeybind())
+            {
+                this.setFlySpeedPreset(2);
+                return true;
+            }
             else if (key == Hotkeys.HOTBAR_SCROLL.getKeybind())
             {
                 if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue())
@@ -264,11 +283,21 @@ public class Callbacks
             return false;
         }
 
+        private void setFlySpeedPreset(int preset)
+        {
+            Configs.Internal.FLY_SPEED_PRESET.setIntegerValue(preset);
+
+            float speed = (float) Configs.getActiveFlySpeedConfig().getDoubleValue();
+            String strPreset = GuiBase.TXT_GREEN + (preset + 1) + GuiBase.TXT_RST;
+            String strSpeed = String.format("%s%.3f%s", GuiBase.TXT_GREEN, speed, GuiBase.TXT_RST);
+            StringUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
+        }
+
         private void setPlacementRestrictionMode(PlacementRestrictionMode mode)
         {
             Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
 
-            String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
+            String str = GuiBase.TXT_GREEN + mode.name() + GuiBase.TXT_RST;
             StringUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
         }
     }
@@ -289,9 +318,9 @@ public class Callbacks
 
             boolean enabled = this.feature.getBooleanValue();
             String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-            String preGreen = TextFormatting.GREEN.toString();
-            String preRed = TextFormatting.RED.toString();
-            String rst = TextFormatting.RESET.toString();
+            String preGreen = GuiBase.TXT_GREEN;
+            String preRed = GuiBase.TXT_RED;
+            String rst = GuiBase.TXT_RST;
             strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
             if (enabled)
@@ -333,7 +362,7 @@ public class Callbacks
                 return true;
             }
 
-            // Don't toggle the state if the integer values were adjusted
+            // Don't toggle the state if a value was adjusted
             if (valueChanged)
             {
                 valueChanged = false;
@@ -344,9 +373,9 @@ public class Callbacks
 
             boolean enabled = this.feature.getBooleanValue();
             String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-            String preGreen = TextFormatting.GREEN.toString();
-            String preRed = TextFormatting.RED.toString();
-            String rst = TextFormatting.RESET.toString();
+            String preGreen = GuiBase.TXT_GREEN;
+            String preRed = GuiBase.TXT_RED;
+            String rst = GuiBase.TXT_RST;
             strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
             if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind())
@@ -355,6 +384,19 @@ public class Callbacks
                 {
                     String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
                     StringUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
+                }
+                else
+                {
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                }
+            }
+            else if (key == FeatureToggle.TWEAK_FLY_SPEED.getKeybind())
+            {
+                if (enabled)
+                {
+                    String strPreset = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
+                    String strSpeed = String.format("%s%.3f%s", preGreen, Configs.getActiveFlySpeedConfig().getDoubleValue(), rst);
+                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_fly_speed_on", strStatus, strPreset, strSpeed);
                 }
                 else
                 {
