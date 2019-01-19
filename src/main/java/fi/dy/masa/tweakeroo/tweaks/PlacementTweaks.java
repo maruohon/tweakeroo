@@ -249,6 +249,13 @@ public class PlacementTweaks
         HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
         EnumFacing sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
 
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackPre.isEmpty() == false)
+        {
+            //System.out.printf("onProcessRightClickBlock storing stack: %s\n", stackPre);
+            stackBeforeUse[hand.ordinal()] = stackPre.copy();
+            stackFirst = stackPre.copy();
+        }
+
         if (FeatureToggle.TWEAK_PLACEMENT_REST_FIRST.getBooleanValue() && stateClickedOn == null)
         {
             IBlockState state = world.getBlockState(posIn);
