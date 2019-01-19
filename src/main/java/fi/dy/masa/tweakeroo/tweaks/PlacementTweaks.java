@@ -44,7 +44,6 @@ public class PlacementTweaks
     private static EnumFacing sideFirst = null;
     private static EnumFacing sideRotatedFirst = null;
     private static float playerYawFirst;
-    private static ItemStack stackFirst = ItemStack.EMPTY;
     private static ItemStack[] stackBeforeUse = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY };
     private static boolean isFirstClick;
     private static boolean isEmulatedClick;
@@ -253,7 +252,6 @@ public class PlacementTweaks
         {
             //System.out.printf("onProcessRightClickBlock storing stack: %s\n", stackPre);
             stackBeforeUse[hand.ordinal()] = stackPre.copy();
-            stackFirst = stackPre.copy();
         }
 
         if (FeatureToggle.TWEAK_PLACEMENT_REST_FIRST.getBooleanValue() && stateClickedOn == null)
@@ -291,7 +289,7 @@ public class PlacementTweaks
             sideFirst = sideIn;
             sideRotatedFirst = sideRotated;
             playerYawFirst = player.rotationYaw;
-            stackFirst = stackPre;
+            stackBeforeUse[hand.ordinal()] = stackPre;
             //System.out.printf("plop store @ %s\n", posFirst);
         }
 
@@ -527,7 +525,7 @@ public class PlacementTweaks
             Vec3d hitVec,
             EnumHand hand)
     {
-        //System.out.printf("processRightClickBlockWrapper() start @ %s, side: %s\n", pos, side);
+        //System.out.printf("processRightClickBlockWrapper() start @ %s, side: %s, hand: %s\n", pos, side, hand);
         if (FeatureToggle.TWEAK_PLACEMENT_LIMIT.getBooleanValue() &&
             placementCount >= Configs.Generic.PLACEMENT_LIMIT.getIntegerValue())
         {
@@ -536,7 +534,7 @@ public class PlacementTweaks
 
         // We need to grab the stack here if the cached stack is still empty,
         // because this code runs before the cached stack gets set on the first click/use.
-        ItemStack stackOriginal = stackFirst.isEmpty() == false && FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false ? stackFirst : player.getHeldItem(hand).copy();
+        ItemStack stackOriginal = stackBeforeUse[hand.ordinal()].isEmpty() == false && FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false ? stackBeforeUse[hand.ordinal()] : player.getHeldItem(hand).copy();
         BlockPos posPlacement = getPlacementPositionForTargetedPosition(pos, side, world);
         IBlockState stateBefore = world.getBlockState(posPlacement);
         IBlockState state = world.getBlockState(pos);
@@ -705,7 +703,6 @@ public class PlacementTweaks
         hitVecFirst = null;
         sideFirst = null;
         sideRotatedFirst = null;
-        stackFirst = ItemStack.EMPTY;
         firstWasRotation = false;
         firstWasOffset = false;
         isFirstClick = true;
