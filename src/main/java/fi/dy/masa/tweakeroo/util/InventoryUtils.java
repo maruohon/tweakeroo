@@ -10,7 +10,6 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinSlot;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -79,7 +78,7 @@ public class InventoryUtils
         if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
         {
             Minecraft mc = Minecraft.getMinecraft();
-            EntityPlayerSP player = mc.player;
+            EntityPlayer player = mc.player;
 
             for (EnumHand hand : EnumHand.values())
             {
@@ -93,6 +92,28 @@ public class InventoryUtils
                     {
                         swapItemWithHigherDurabilityToHand(player, hand, stack, minDurability);
                     }
+                }
+            }
+        }
+    }
+
+    public static void trySwitchToEffectiveTool(BlockPos pos)
+    {
+        if (FeatureToggle.TWEAK_TOOL_SWITCH.getBooleanValue())
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+            EntityPlayer player = mc.player;
+            IBlockState state = mc.world.getBlockState(pos);
+            ItemStack stack = player.getHeldItemMainhand();
+
+            if (stack.isEmpty() || stack.getDestroySpeed(state) <= 1f)
+            {
+                Container container = player.inventoryContainer;
+                int slotNumber = findSlotWithEffectiveItemWithDurabilityLeft(container, state);
+
+                if (slotNumber != -1)
+                {
+                    swapItemToHand(player, EnumHand.MAIN_HAND, slotNumber);
                 }
             }
         }
@@ -142,13 +163,17 @@ public class InventoryUtils
 
         for (Slot slot : container.inventorySlots)
         {
-            ItemStack stack = slot.getStack();
+            if (slot.slotNumber <= 8)
             {
-                if (slot.slotNumber > 8 && stack.isEmpty() == false && stack.getItem().isDamageable() == false)
-                {
-                    slotWithItem = slot.slotNumber;
-                    break;
-                }
+                continue;
+            }
+
+            ItemStack stack = slot.getStack();
+
+            if (stack.isEmpty() == false && stack.getItem().isDamageable() == false)
+            {
+                slotWithItem = slot.slotNumber;
+                break;
             }
         }
 
@@ -280,7 +305,7 @@ public class InventoryUtils
             ItemStack stackSlot = slot.getStack();
 
             if (stackSlot.isItemEqualIgnoreDurability(stackReference) &&
-                stackReference.getMaxDamage() - stackSlot.getItemDamage() > minDurabilityLeft &&
+                stackSlot.getMaxDamage() - stackSlot.getItemDamage() > minDurabilityLeft &&
                 ItemStack.areItemStackTagsEqual(stackSlot, stackReference))
             {
                 return slot.slotNumber;
@@ -288,6 +313,42 @@ public class InventoryUtils
         }
 
         return -1;
+    }
+
+    private static int findSlotWithEffectiveItemWithDurabilityLeft(Container container, IBlockState state)
+    {
+        int slotNum = -1;
+        float bestSpeed = -1f;
+
+        for (Slot slot : container.inventorySlots)
+        {
+            // Don't consider armor and crafting slots
+            if (slot.slotNumber <= 8 || slot.getHasStack() == false)
+            {
+                continue;
+            }
+
+            ItemStack stack = slot.getStack();
+
+            if (stack.getMaxDamage() - stack.getItemDamage() > getMinDurability(stack))
+            {
+                float speed = stack.getDestroySpeed(state);
+                int effLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack);
+
+                if (effLevel > 0)
+                {
+                    speed += (effLevel * effLevel) + 1;
+                }
+
+                if (speed > 1f && (slotNum == -1 || speed > bestSpeed))
+                {
+                    slotNum = slot.slotNumber;
+                    bestSpeed = speed;
+                }
+            }
+        }
+
+        return slotNum;
     }
 
     private static void tryCombineStacksInInventory(EntityPlayer player, ItemStack stackReference)

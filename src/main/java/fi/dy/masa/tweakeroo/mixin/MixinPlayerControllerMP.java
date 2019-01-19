@@ -8,11 +8,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
+import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -58,6 +61,17 @@ public abstract class MixinPlayerControllerMP
     private void onProcessRightClickPost(EntityPlayer player, World worldIn, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
         PlacementTweaks.onProcessRightClickPost(player, hand);
+    }
+
+    @Inject(method = "clickBlock",
+            slice = @Slice(from = @At(value = "FIELD", ordinal = 0,
+                                      target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;isHittingBlock:Z")),
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/WorldClient;getBlockState(" +
+                                                "Lnet/minecraft/util/math/BlockPos;" +
+                                                ")Lnet/minecraft/block/state/IBlockState;", ordinal = 0))
+    private void onClickBlockPre(BlockPos pos, EnumFacing face, CallbackInfoReturnable<Boolean> cir)
+    {
+        InventoryUtils.trySwitchToEffectiveTool(pos);
     }
 
     @Inject(method = "interactWithEntity(" +

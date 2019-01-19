@@ -12,6 +12,7 @@ import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 
 public class Callbacks
@@ -41,6 +42,7 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SCROLL.getKeybind().setCallback(callbackGeneric);
         Hotkeys.OPEN_CONFIG_GUI.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
@@ -186,7 +188,15 @@ public class Callbacks
         @Override
         public boolean onKeyAction(KeyAction action, IKeybind key)
         {
-            if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())
+            if (key == Hotkeys.TOOL_PICK.getKeybind())
+            {
+                if (this.mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
+                {
+                    InventoryUtils.trySwitchToEffectiveTool(this.mc.objectMouseOver.getBlockPos());
+                    return true;
+                }
+            }
+            else if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())
             {
                 if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
                 {
