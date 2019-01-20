@@ -28,8 +28,32 @@ public abstract class MixinItemBlock
                                                     "Lnet/minecraft/util/EnumFacing;" +
                                                     "FFFI" +
                                                     "Lnet/minecraft/entity/EntityLivingBase;)" +
-                                                    "Lnet/minecraft/block/state/IBlockState;"))
+                                                    "Lnet/minecraft/block/state/IBlockState;"), require = 0)
     private IBlockState modifyPlacementState(Block block, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer,
+            EntityPlayer playerIn, World worldIn, BlockPos posIn, EnumHand handIn, EnumFacing facingIn, float hitXIn, float hitYIn, float hitZIn)
+    {
+        IBlockState stateOriginal = block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer);
+
+        if (Configs.Generic.CLIENT_PLACEMENT_ROTATION.getBooleanValue())
+        {
+            UseContext context = UseContext.of(world, pos, facing, new Vec3d(hitX, hitY, hitZ), placer, handIn);
+            return PlacementHandler.getStateForPlacement(stateOriginal, context);
+        }
+
+        return stateOriginal;
+    }
+
+    // This variant is for Forge, which adds the EnumHand argument at the end
+    @Redirect(method = "onItemUse", at = @At(value = "INVOKE",
+                                             target = "Lnet/minecraft/block/Block;getStateForPlacement(" +
+                                                   "Lnet/minecraft/world/World;" +
+                                                   "Lnet/minecraft/util/math/BlockPos;" +
+                                                   "Lnet/minecraft/util/EnumFacing;" +
+                                                   "FFFI" +
+                                                   "Lnet/minecraft/entity/EntityLivingBase;" +
+                                                   "Lnet/minecraft/util/EnumHand;)" +
+                                                   "Lnet/minecraft/block/state/IBlockState;"), require = 0, remap = false)
+    private IBlockState modifyPlacementState(Block block, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand,
             EntityPlayer playerIn, World worldIn, BlockPos posIn, EnumHand handIn, EnumFacing facingIn, float hitXIn, float hitYIn, float hitZIn)
     {
         IBlockState stateOriginal = block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer);
