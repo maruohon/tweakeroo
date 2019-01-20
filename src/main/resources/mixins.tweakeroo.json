@@ -21,6 +21,7 @@
         "MixinExplosion",
         "MixinGlStateManager",
         "MixinGuiIngame",
+        "MixinGuiNewChat",
         "MixinGuiScreen",
         "MixinItem",
         "MixinItemBlock",
