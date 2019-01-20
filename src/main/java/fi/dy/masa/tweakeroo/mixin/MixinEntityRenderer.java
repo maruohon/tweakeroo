@@ -48,4 +48,22 @@ public abstract class MixinEntityRenderer
             cir.cancel();
         }
     }
+
+    @Inject(method = "renderRainSnow", at = @At("HEAD"), cancellable = true)
+    private void cancelRainRender(float partialTicks, CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_NO_RAIN_EFFECTS.getBooleanValue())
+        {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "addRainParticles", at = @At("HEAD"), cancellable = true)
+    private void cancelRainRender(CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_NO_RAIN_EFFECTS.getBooleanValue())
+        {
+            ci.cancel();
+        }
+    }
 }
