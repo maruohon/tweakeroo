@@ -28,6 +28,7 @@
         "MixinItemShulkerBox",
         "MixinItemStack",
         "MixinMinecraft",
+        "MixinMobSpawnerBaseLogic",
         "MixinMovementInputFromOptions",
         "MixinNetHandlerPlayClient",
         "MixinParticleManager",
@@ -36,6 +37,7 @@
         "MixinRenderGlobal",
         "MixinRenderLivingBase",
         "MixinRenderManager",
+        "MixinTileEntityMobSpawnerRenderer",
         "MixinWorldClient"
     ],
     "injectors": {
