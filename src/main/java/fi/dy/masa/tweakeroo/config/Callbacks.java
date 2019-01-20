@@ -40,11 +40,12 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SCROLL.getKeybind().setCallback(callbackGeneric);
         Hotkeys.OPEN_CONFIG_GUI.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_LAYER.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
@@ -248,10 +249,14 @@ public class Callbacks
                     return true;
                 }
             }
-            // The values will be toggled after the callback (see above), thus inversed check here
-            else if (key == Hotkeys.RESTRICTION_MODE_PLANE.getKeybind())
+            else if (key == Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind())
             {
-                this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
+                this.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
+                return true;
+            }
+            else if (key == Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind())
+            {
+                this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
                 return true;
             }
             else if (key == Hotkeys.RESTRICTION_MODE_FACE.getKeybind())
@@ -259,9 +264,9 @@ public class Callbacks
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
                 return true;
             }
-            else if (key == Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind())
+            else if (key == Hotkeys.RESTRICTION_MODE_LAYER.getKeybind())
             {
-                this.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
+                this.setPlacementRestrictionMode(PlacementRestrictionMode.LAYER);
                 return true;
             }
             else if (key == Hotkeys.RESTRICTION_MODE_LINE.getKeybind())
@@ -269,9 +274,9 @@ public class Callbacks
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
                 return true;
             }
-            else if (key == Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind())
+            else if (key == Hotkeys.RESTRICTION_MODE_PLANE.getKeybind())
             {
-                this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
+                this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
                 return true;
             }
             else if (key == Hotkeys.OPEN_CONFIG_GUI.getKeybind())

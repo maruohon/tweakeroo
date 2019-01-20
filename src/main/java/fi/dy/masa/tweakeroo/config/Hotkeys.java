@@ -22,11 +22,12 @@ public class Hotkeys
     public static final ConfigHotkey INVENTORY_PREVIEW                  = new ConfigHotkey("inventoryPreview",                  "LMENU", KeybindSettings.PRESS_ALLOWEXTRA, "The key to activate the inventory preview feature");
     public static final ConfigHotkey OPEN_CONFIG_GUI                    = new ConfigHotkey("openConfigGui",                     "",     "The key open the in-game config GUI");
     public static final ConfigHotkey PLAYER_INVENTORY_PEEK              = new ConfigHotkey("playerInventoryPeek",               "",     KeybindSettings.PRESS_ALLOWEXTRA, "The key to activate the player inventory peek/preview feature");
-    public static final ConfigHotkey RESTRICTION_MODE_PLANE             = new ConfigHotkey("placementRestrictionModePlane",     "Z,1",  "Switch the Placement Restriction mode to the Plane mode");
-    public static final ConfigHotkey RESTRICTION_MODE_FACE              = new ConfigHotkey("placementRestrictionModeFace",      "Z,2",  "Switch the Placement Restriction mode to the Face mode");
     public static final ConfigHotkey RESTRICTION_MODE_COLUMN            = new ConfigHotkey("placementRestrictionModeColumn",    "Z,3",  "Switch the Placement Restriction mode to the Column mode");
-    public static final ConfigHotkey RESTRICTION_MODE_LINE              = new ConfigHotkey("placementRestrictionModeLine",      "Z,4",  "Switch the Placement Restriction mode to the Line mode");
     public static final ConfigHotkey RESTRICTION_MODE_DIAGONAL          = new ConfigHotkey("placementRestrictionModeDiagonal",  "Z,5",  "Switch the Placement Restriction mode to the Diagonal mode");
+    public static final ConfigHotkey RESTRICTION_MODE_FACE              = new ConfigHotkey("placementRestrictionModeFace",      "Z,2",  "Switch the Placement Restriction mode to the Face mode");
+    public static final ConfigHotkey RESTRICTION_MODE_LAYER             = new ConfigHotkey("placementRestrictionModeLayer",     "Z,6",  "Switch the Placement Restriction mode to the Layer mode");
+    public static final ConfigHotkey RESTRICTION_MODE_LINE              = new ConfigHotkey("placementRestrictionModeLine",      "Z,4",  "Switch the Placement Restriction mode to the Line mode");
+    public static final ConfigHotkey RESTRICTION_MODE_PLANE             = new ConfigHotkey("placementRestrictionModePlane",     "Z,1",  "Switch the Placement Restriction mode to the Plane mode");
     public static final ConfigHotkey SKIP_ALL_RENDERING                 = new ConfigHotkey("skipAllRendering",                  "",     "Toggles skipping _all_ rendering");
     public static final ConfigHotkey SKIP_WORLD_RENDERING               = new ConfigHotkey("skipWorldRendering",                "",     "Toggles skipping world rendering");
     public static final ConfigHotkey TOOL_PICK                          = new ConfigHotkey("toolPick",                          "",     "Switches to the effective tool for the targeted block");
@@ -48,11 +49,12 @@ public class Hotkeys
             INVENTORY_PREVIEW,
             OPEN_CONFIG_GUI,
             PLAYER_INVENTORY_PEEK,
-            RESTRICTION_MODE_PLANE,
-            RESTRICTION_MODE_FACE,
             RESTRICTION_MODE_COLUMN,
-            RESTRICTION_MODE_LINE,
             RESTRICTION_MODE_DIAGONAL,
+            RESTRICTION_MODE_FACE,
+            RESTRICTION_MODE_LAYER,
+            RESTRICTION_MODE_LINE,
+            RESTRICTION_MODE_PLANE,
             SKIP_ALL_RENDERING,
             SKIP_WORLD_RENDERING,
             TOOL_PICK,

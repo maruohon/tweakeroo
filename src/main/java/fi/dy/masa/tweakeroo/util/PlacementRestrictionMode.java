@@ -9,6 +9,7 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry
     FACE        ("face",        "tweakeroo.label.placement_restriction_mode.face"),
     COLUMN      ("column",      "tweakeroo.label.placement_restriction_mode.column"),
     LINE        ("line",        "tweakeroo.label.placement_restriction_mode.line"),
+    LAYER       ("layer",       "tweakeroo.label.placement_restriction_mode.layer"),
     DIAGONAL    ("diagonal",    "tweakeroo.label.placement_restriction_mode.diagonal");
 
     private final String configString;

@@ -830,11 +830,12 @@ public class PlacementTweaks
         {
             switch (mode)
             {
-                case PLANE:     return isNewPositionValidForPlaneMode(pos);
-                case FACE:      return isNewPositionValidForFaceMode(pos, side);
                 case COLUMN:    return isNewPositionValidForColumnMode(pos);
-                case LINE:      return isNewPositionValidForLineMode(pos);
                 case DIAGONAL:  return isNewPositionValidForDiagonalMode(pos);
+                case FACE:      return isNewPositionValidForFaceMode(pos, side);
+                case LAYER:     return isNewPositionValidForLayerMode(pos);
+                case LINE:      return isNewPositionValidForLineMode(pos);
+                case PLANE:     return isNewPositionValidForPlaneMode(pos);
                 default:        return true;
             }
         }
@@ -881,26 +882,6 @@ public class PlacementTweaks
         return state.getBlock().isReplaceable(world, pos) || state.getMaterial().isLiquid() || state.getMaterial().isReplaceable();
     }
 
-    private static boolean isNewPositionValidForPlaneMode(BlockPos posNew)
-    {
-        EnumFacing.Axis axis = sideFirst.getAxis();
-
-        switch (axis)
-        {
-            case X: return posNew.getX() == posFirst.getX();
-            case Y: return posNew.getY() == posFirst.getY();
-            case Z: return posNew.getZ() == posFirst.getZ();
-
-            default:
-                return false;
-        }
-    }
-
-    private static boolean isNewPositionValidForFaceMode(BlockPos posNew, EnumFacing side)
-    {
-        return side == sideFirst;
-    }
-
     private static boolean isNewPositionValidForColumnMode(BlockPos posNew)
     {
         EnumFacing.Axis axis = sideFirst.getAxis();
@@ -914,6 +895,32 @@ public class PlacementTweaks
             default:
                 return false;
         }
+    }
+
+    private static boolean isNewPositionValidForDiagonalMode(BlockPos posNew)
+    {
+        EnumFacing.Axis axis = sideFirst.getAxis();
+        BlockPos relativePos = posNew.subtract(posFirst);
+
+        switch (axis)
+        {
+            case X: return posNew.getX() == posFirst.getX() && Math.abs(relativePos.getY()) == Math.abs(relativePos.getZ());
+            case Y: return posNew.getY() == posFirst.getY() && Math.abs(relativePos.getX()) == Math.abs(relativePos.getZ());
+            case Z: return posNew.getZ() == posFirst.getZ() && Math.abs(relativePos.getX()) == Math.abs(relativePos.getY());
+
+            default:
+                return false;
+        }
+    }
+
+    private static boolean isNewPositionValidForFaceMode(BlockPos posNew, EnumFacing side)
+    {
+        return side == sideFirst;
+    }
+
+    private static boolean isNewPositionValidForLayerMode(BlockPos posNew)
+    {
+        return posNew.getY() == posFirst.getY();
     }
 
     private static boolean isNewPositionValidForLineMode(BlockPos posNew)
@@ -931,16 +938,15 @@ public class PlacementTweaks
         }
     }
 
-    private static boolean isNewPositionValidForDiagonalMode(BlockPos posNew)
+    private static boolean isNewPositionValidForPlaneMode(BlockPos posNew)
     {
         EnumFacing.Axis axis = sideFirst.getAxis();
-        BlockPos relativePos = posNew.subtract(posFirst);
 
         switch (axis)
         {
-            case X: return posNew.getX() == posFirst.getX() && Math.abs(relativePos.getY()) == Math.abs(relativePos.getZ());
-            case Y: return posNew.getY() == posFirst.getY() && Math.abs(relativePos.getX()) == Math.abs(relativePos.getZ());
-            case Z: return posNew.getZ() == posFirst.getZ() && Math.abs(relativePos.getX()) == Math.abs(relativePos.getY());
+            case X: return posNew.getX() == posFirst.getX();
+            case Y: return posNew.getY() == posFirst.getY();
+            case Z: return posNew.getZ() == posFirst.getZ();
 
             default:
                 return false;
