@@ -12,6 +12,7 @@ import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.RayTraceResult;
 
@@ -405,6 +406,13 @@ public class Callbacks
                 }
                 else
                 {
+                    EntityPlayer player = Minecraft.getMinecraft().player;
+
+                    if (player != null)
+                    {
+                        player.capabilities.setFlySpeed(0.05f);
+                    }
+
                     StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
                 }
             }
