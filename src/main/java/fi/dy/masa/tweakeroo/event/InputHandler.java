@@ -130,7 +130,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 config.setDoubleValue(newValue);
                 Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
-                String strIndex = preGreen + Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + rst;
+                String strIndex = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
                 String strValue = preGreen + String.format("%.3f", config.getDoubleValue()) + rst;
                 mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_fly_speed_to", strIndex, strValue));
 
