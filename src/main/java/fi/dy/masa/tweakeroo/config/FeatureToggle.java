@@ -55,6 +55,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable
     TWEAK_NO_MOB_SPAWNER_MOB_RENDER ("tweakNoMobSpawnerMobRendering",       false, "",    "Removes the entity rendering from mob spawners"),
     TWEAK_NO_PORTAL_GUI_CLOSING     ("tweakNoPortalGuiClosing",             false, "",    "If enabled, then you can still open GUIs while in a Nether Portal"),
     TWEAK_NO_RAIN_EFFECTS           ("tweakNoRainEffects",                  false, "",    "Disables rain rendering and sounds"),
+    TWEAK_NO_SIGN_GUI               ("tweakNoSignGui",                      false, "",    "Prevent the Sign edit GUI from opening"),
     TWEAK_NO_SLIME_BLOCK_SLOWDOWN   ("tweakNoSlimeBlockSlowdown",           false, "",    "Removes the slowdown from walking on Slime Blocks.\n(This is originally from usefulmod by nessie.)"),
     TWEAK_OBSERVER_DISABLE          ("tweakObserverDisable",                false, "",    "Disable Observers from triggering at all"),
     TWEAK_OBSERVER_PLACE_NO_UPDATE  ("tweakObserverPlaceNoUpdate",          false, "",    "Prevent Observers from triggering when placed"),
