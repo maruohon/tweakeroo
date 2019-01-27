@@ -595,6 +595,18 @@ public class PlacementTweaks
         }
         */
 
+        if (FeatureToggle.TWEAK_Y_MIRROR.getBooleanValue() && Hotkeys.PLACEMENT_Y_MIRROR.getKeybind().isKeybindHeld())
+        {
+            double y = 1 - hitVec.y + 2 * pos.getY(); // = 1 - (hitVec.y - pos.getY()) + pos.getY();
+            hitVec = new Vec3d(hitVec.x, y, hitVec.z);
+
+            if (side.getAxis() == EnumFacing.Axis.Y)
+            {
+                pos = pos.offset(side);
+                side = side.getOpposite();
+            }
+        }
+
         if (FeatureToggle.TWEAK_PICK_BEFORE_PLACE.getBooleanValue())
         {
             InventoryUtils.switchToPickedBlock();
