@@ -123,6 +123,7 @@ public class Configs implements IConfigHandler
         public static final ConfigOptionList POTION_WARNING_LIST_TYPE      = new ConfigOptionList("potionWarningListType", ListType.NONE, "The list type for potion warning effects");
         public static final ConfigStringList POTION_WARNING_BLACKLIST      = new ConfigStringList("potionWarningBlackList", ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), "The potion effects that will not be warned about");
         public static final ConfigStringList POTION_WARNING_WHITELIST      = new ConfigStringList("potionWarningWhiteList", ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing"), "The only potion effects that will be warned about");
+        public static final ConfigStringList REPAIR_MODE_SLOTS             = new ConfigStringList("repairModeSlots", ImmutableList.of("mainhand", "offhand"), "The slots the repair mode should use\nValid values: mainhand, offhand, head, chest, legs, feet");
         public static final ConfigStringList UNSTACKING_ITEMS              = new ConfigStringList("unstackingItems", ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle"), "The items that should be considered for the\n'tweakItemUnstackingProtection' tweak");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
@@ -132,6 +133,7 @@ public class Configs implements IConfigHandler
                 FAST_RIGHT_CLICK_WHITELIST,
                 POTION_WARNING_BLACKLIST,
                 POTION_WARNING_WHITELIST,
+                REPAIR_MODE_SLOTS,
                 UNSTACKING_ITEMS
         );
     }
@@ -178,6 +180,7 @@ public class Configs implements IConfigHandler
             }
         }
 
+        InventoryUtils.setRepairModeSlots(Lists.REPAIR_MODE_SLOTS.getStrings());
         InventoryUtils.setUnstackingItems(Lists.UNSTACKING_ITEMS.getStrings());
         PlacementTweaks.FAST_RIGHT_CLICK_RESTRICTION.setValues(
                 (ListType) Lists.FAST_RIGHT_CLICK_LIST_TYPE.getOptionListValue(),
