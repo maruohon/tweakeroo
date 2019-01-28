@@ -231,7 +231,7 @@ public class InventoryUtils
     private static void swapItemWithHigherDurabilityToHand(EntityPlayer player, EnumHand hand, ItemStack stackReference, int minDurabilityLeft)
     {
         Minecraft mc = Minecraft.getMinecraft();
-        int slotWithItem = findSlotWithIdenticalItemWithDurabilityLeft(player.inventoryContainer, stackReference, minDurabilityLeft);
+        int slotWithItem = findSlotWithSuitableReplacementToolWithDurabilityLeft(player.inventoryContainer, stackReference, minDurabilityLeft);
 
         if (slotWithItem != -1)
         {
@@ -436,7 +436,7 @@ public class InventoryUtils
         }
     }
 
-    private static int findSlotWithIdenticalItemWithDurabilityLeft(Container container, ItemStack stackReference, int minDurabilityLeft)
+    private static int findSlotWithSuitableReplacementToolWithDurabilityLeft(Container container, ItemStack stackReference, int minDurabilityLeft)
     {
         for (Slot slot : container.inventorySlots)
         {
@@ -444,13 +444,32 @@ public class InventoryUtils
 
             if (stackSlot.isItemEqualIgnoreDurability(stackReference) &&
                 stackSlot.getMaxDamage() - stackSlot.getItemDamage() > minDurabilityLeft &&
-                ItemStack.areItemStackTagsEqual(stackSlot, stackReference))
+                hasSameIshEnchantments(stackReference, stackSlot))
             {
                 return slot.slotNumber;
             }
         }
 
         return -1;
+    }
+
+    private static boolean hasSameIshEnchantments(ItemStack stackReference, ItemStack stack)
+    {
+        int level = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stackReference);
+
+        if (level > 0)
+        {
+            return EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) >= level;
+        }
+
+        level = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stackReference);
+
+        if (level > 0)
+        {
+            return EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack) >= level;
+        }
+
+        return true;
     }
 
     private static int findSlotWithEffectiveItemWithDurabilityLeft(Container container, IBlockState state)
