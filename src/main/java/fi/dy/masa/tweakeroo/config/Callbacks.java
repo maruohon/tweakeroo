@@ -9,11 +9,15 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
 public class Callbacks
@@ -33,6 +37,7 @@ public class Callbacks
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
 
+        Hotkeys.COPY_SIGN_TEXT.getKeybind().setCallback(callbackGeneric);
         Hotkeys.FLY_PRESET_1.getKeybind().setCallback(callbackGeneric);
         Hotkeys.FLY_PRESET_2.getKeybind().setCallback(callbackGeneric);
         Hotkeys.FLY_PRESET_3.getKeybind().setCallback(callbackGeneric);
@@ -201,6 +206,23 @@ public class Callbacks
                     InventoryUtils.trySwitchToEffectiveTool(this.mc.objectMouseOver.getBlockPos());
                     return true;
                 }
+            }
+            else if (key == Hotkeys.COPY_SIGN_TEXT.getKeybind())
+            {
+                RayTraceResult trace = this.mc.objectMouseOver;
+
+                if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+                {
+                    BlockPos pos = trace.getBlockPos();
+                    TileEntity te = this.mc.world.getTileEntity(pos);
+
+                    if (te instanceof TileEntitySign)
+                    {
+                        MiscUtils.copyTextFromSign((TileEntitySign) te);
+                        StringUtils.printActionbarMessage("tweakeroo.message.sign_text_copied");
+                    }
+                }
+                return true;
             }
             else if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())
             {
