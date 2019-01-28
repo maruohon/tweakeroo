@@ -9,7 +9,7 @@
         "MixinBlockDispenser",
         "MixinBlockFurnace",
         "MixinBlockObserver",
-        "MixinBlockRotationFixes",
+        "MixinBlockPistonBase",
         "MixinBlockSlime",
         "MixinChatTabCompleter",
         "MixinChunk",
