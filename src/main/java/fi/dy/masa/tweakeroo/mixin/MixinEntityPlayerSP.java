@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -11,6 +12,8 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.init.MobEffects;
+import net.minecraft.util.MovementInput;
 import net.minecraft.world.World;
 
 @Mixin(EntityPlayerSP.class)
@@ -20,6 +23,9 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     {
         super(worldIn, playerProfile);
     }
+
+    @Shadow
+    public MovementInput movementInput;
 
     @Redirect(method = "onLivingUpdate()V",
               at = @At(value = "INVOKE",
@@ -43,5 +49,30 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
         {
             this.setFlag(7, true);
         }
+    }
+
+    @Inject(method = "onLivingUpdate", at = @At(value = "FIELD",
+            target = "Lnet/minecraft/entity/player/PlayerCapabilities;allowFlying:Z", ordinal = 1))
+    private void overrideSprint(CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_PERMANENT_SPRINT.getBooleanValue() &&
+            ! this.isSprinting() && ! this.isHandActive() && this.movementInput.moveForward >= 0.8F &&
+            (this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying) &&
+            ! this.isPotionActive(MobEffects.BLINDNESS))
+        {
+            this.setSprinting(true);
+        }
+    }
+
+    @Redirect(method = "onLivingUpdate", at = @At(value = "FIELD",
+            target = "Lnet/minecraft/client/entity/EntityPlayerSP;collidedHorizontally:Z"))
+    private boolean overrideCollidedHorizontally(EntityPlayerSP player)
+    {
+        if (FeatureToggle.TWEAK_NO_WALL_UNSPRINT.getBooleanValue())
+        {
+            return false;
+        }
+
+        return player.collidedHorizontally;
     }
 }
