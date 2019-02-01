@@ -4,8 +4,6 @@ import javax.annotation.Nullable;
 import org.lwjgl.opengl.GL11;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
-import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
-import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks.HitPart;
 import fi.dy.masa.tweakeroo.util.RayTraceUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -37,141 +35,15 @@ import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapData;
 
 public class RenderUtils
 {
-    public static void renderBlockPlacementOverlay(Entity entity, BlockPos pos, EnumFacing side, Vec3d hitVec, double dx, double dy, double dz)
-    {
-        EnumFacing playerFacing = entity.getHorizontalFacing();
-        HitPart part = PlacementTweaks.getHitPart(side, playerFacing, pos, hitVec);
-
-        double x = pos.getX() + 0.5d - dx;
-        double y = pos.getY() + 0.5d - dy;
-        double z = pos.getZ() + 0.5d - dz;
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
-
-        switch (side)
-        {
-            case DOWN:
-                GlStateManager.rotate(180f - playerFacing.getHorizontalAngle(), 0, 1f, 0);
-                GlStateManager.rotate( 90f, 1f, 0, 0);
-                break;
-            case UP:
-                GlStateManager.rotate(180f - playerFacing.getHorizontalAngle(), 0, 1f, 0);
-                GlStateManager.rotate(-90f, 1f, 0, 0);
-                break;
-            case NORTH:
-                GlStateManager.rotate(180f, 0, 1f, 0);
-                break;
-            case SOUTH:
-                GlStateManager.rotate(   0, 0, 1f, 0);
-                break;
-            case WEST:
-                GlStateManager.rotate(-90f, 0, 1f, 0);
-                break;
-            case EAST:
-                GlStateManager.rotate( 90f, 0, 1f, 0);
-                break;
-        }
-
-        GlStateManager.translate(-x, -y, -z + 0.501);
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
-        float quadAlpha = 0.18f;
-        int color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getIntegerValue();
-        float ha = ((color >>> 24) & 0xFF) / 255f;
-        float hr = ((color >>> 16) & 0xFF) / 255f;
-        float hg = ((color >>>  8) & 0xFF) / 255f;
-        float hb = ((color       ) & 0xFF) / 255f;
-
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-
-        // White full block background
-        buffer.pos(x - 0.5, y - 0.5, z).color(1f, 1f, 1f, quadAlpha).endVertex();
-        buffer.pos(x + 0.5, y - 0.5, z).color(1f, 1f, 1f, quadAlpha).endVertex();
-        buffer.pos(x + 0.5, y + 0.5, z).color(1f, 1f, 1f, quadAlpha).endVertex();
-        buffer.pos(x - 0.5, y + 0.5, z).color(1f, 1f, 1f, quadAlpha).endVertex();
-
-        switch (part)
-        {
-            case CENTER:
-                buffer.pos(x - 0.25, y - 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x + 0.25, y - 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x + 0.25, y + 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x - 0.25, y + 0.25, z).color(hr, hg, hb, ha).endVertex();
-                break;
-            case LEFT:
-                buffer.pos(x - 0.50, y - 0.50, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x - 0.25, y - 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x - 0.25, y + 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x - 0.50, y + 0.50, z).color(hr, hg, hb, ha).endVertex();
-                break;
-            case RIGHT:
-                buffer.pos(x + 0.50, y - 0.50, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x + 0.25, y - 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x + 0.25, y + 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x + 0.50, y + 0.50, z).color(hr, hg, hb, ha).endVertex();
-                break;
-            case TOP:
-                buffer.pos(x - 0.50, y + 0.50, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x - 0.25, y + 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x + 0.25, y + 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x + 0.50, y + 0.50, z).color(hr, hg, hb, ha).endVertex();
-                break;
-            case BOTTOM:
-                buffer.pos(x - 0.50, y - 0.50, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x - 0.25, y - 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x + 0.25, y - 0.25, z).color(hr, hg, hb, ha).endVertex();
-                buffer.pos(x + 0.50, y - 0.50, z).color(hr, hg, hb, ha).endVertex();
-                break;
-            default:
-        }
-
-        tessellator.draw();
-
-        GlStateManager.glLineWidth(1.6f);
-
-        buffer.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
-
-        // Middle small rectangle
-        buffer.pos(x - 0.25, y - 0.25, z).color(1f, 1f, 1f, 1f).endVertex();
-        buffer.pos(x + 0.25, y - 0.25, z).color(1f, 1f, 1f, 1f).endVertex();
-        buffer.pos(x + 0.25, y + 0.25, z).color(1f, 1f, 1f, 1f).endVertex();
-        buffer.pos(x - 0.25, y + 0.25, z).color(1f, 1f, 1f, 1f).endVertex();
-        tessellator.draw();
-
-        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        // Bottom left
-        buffer.pos(x - 0.50, y - 0.50, z).color(1f, 1f, 1f, 1f).endVertex();
-        buffer.pos(x - 0.25, y - 0.25, z).color(1f, 1f, 1f, 1f).endVertex();
-
-        // Top left
-        buffer.pos(x - 0.50, y + 0.50, z).color(1f, 1f, 1f, 1f).endVertex();
-        buffer.pos(x - 0.25, y + 0.25, z).color(1f, 1f, 1f, 1f).endVertex();
-
-        // Bottom right
-        buffer.pos(x + 0.50, y - 0.50, z).color(1f, 1f, 1f, 1f).endVertex();
-        buffer.pos(x + 0.25, y - 0.25, z).color(1f, 1f, 1f, 1f).endVertex();
-
-        // Top right
-        buffer.pos(x + 0.50, y + 0.50, z).color(1f, 1f, 1f, 1f).endVertex();
-        buffer.pos(x + 0.25, y + 0.25, z).color(1f, 1f, 1f, 1f).endVertex();
-        tessellator.draw();
-
-        GlStateManager.popMatrix();
-    }
-
     public static void renderHotbarSwapOverlay(Minecraft mc)
     {
         EntityPlayer player = mc.player;

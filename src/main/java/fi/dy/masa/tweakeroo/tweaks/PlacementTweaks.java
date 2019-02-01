@@ -2,6 +2,8 @@ package fi.dy.masa.tweakeroo.tweaks;
 
 import javax.annotation.Nullable;
 import fi.dy.masa.malilib.util.BlockUtils;
+import fi.dy.masa.malilib.util.PositionUtils;
+import fi.dy.masa.malilib.util.PositionUtils.HitPart;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -26,7 +28,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -245,7 +246,7 @@ public class PlacementTweaks
         boolean restricted = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() || FeatureToggle.TWEAK_PLACEMENT_GRID.getBooleanValue();
         ItemStack stackPre = player.getHeldItem(hand).copy();
         EnumFacing playerFacingH = player.getHorizontalFacing();
-        HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
+        HitPart hitPart = PositionUtils.getHitPart(sideIn, playerFacingH, posIn, hitVec);
         EnumFacing sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
 
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackPre.isEmpty() == false)
@@ -751,77 +752,6 @@ public class PlacementTweaks
         }
     }
 
-    public static HitPart getHitPart(EnumFacing originalSide, EnumFacing playerFacingH, BlockPos pos, Vec3d hitVec)
-    {
-        double x = hitVec.x - pos.getX();
-        double y = hitVec.y - pos.getY();
-        double z = hitVec.z - pos.getZ();
-        double posH = 0;
-        double posV = 0;
-
-        switch (originalSide)
-        {
-            case DOWN:
-            case UP:
-                switch (playerFacingH)
-                {
-                    case NORTH:
-                        posH = x;
-                        posV = 1.0d - z;
-                        break;
-                    case SOUTH:
-                        posH = 1.0d - x;
-                        posV = z;
-                        break;
-                    case WEST:
-                        posH = 1.0d - z;
-                        posV = 1.0d - x;
-                        break;
-                    case EAST:
-                        posH = z;
-                        posV = x;
-                        break;
-                    default:
-                }
-
-                if (originalSide == EnumFacing.DOWN)
-                {
-                    posV = 1.0d - posV;
-                }
-
-                break;
-            case NORTH:
-            case SOUTH:
-                posH = originalSide.getAxisDirection() == AxisDirection.POSITIVE ? x : 1.0d - x;
-                posV = y;
-                break;
-            case WEST:
-            case EAST:
-                posH = originalSide.getAxisDirection() == AxisDirection.NEGATIVE ? z : 1.0d - z;
-                posV = y;
-                break;
-        }
-
-        double offH = Math.abs(posH - 0.5d);
-        double offV = Math.abs(posV - 0.5d);
-
-        if (offH > 0.25d || offV > 0.25d)
-        {
-            if (offH > offV)
-            {
-                return posH < 0.5d ? HitPart.LEFT : HitPart.RIGHT;
-            }
-            else
-            {
-                return posV < 0.5d ? HitPart.BOTTOM : HitPart.TOP;
-            }
-        }
-        else
-        {
-            return HitPart.CENTER;
-        }
-    }
-
     private static boolean isPositionAllowedByPlacementRestriction(BlockPos pos, EnumFacing side)
     {
         PlacementRestrictionMode mode = (PlacementRestrictionMode) Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue();
@@ -1044,14 +974,5 @@ public class PlacementTweaks
         }
 
         return false;
-    }
-
-    public enum HitPart
-    {
-        CENTER,
-        LEFT,
-        RIGHT,
-        BOTTOM,
-        TOP;
     }
 }

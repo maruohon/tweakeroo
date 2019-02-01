@@ -1,6 +1,8 @@
 package fi.dy.masa.tweakeroo.event;
 
 import fi.dy.masa.malilib.interfaces.IRenderer;
+import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
@@ -65,19 +67,22 @@ public class RenderHandler implements IRenderer
             GlStateManager.disableCull();
             GlStateManager.enableBlend();
             //GlStateManager.pushMatrix();
+            GlStateManager.disableDepth();
             GlStateManager.disableTexture2D();
             double dx = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
             double dy = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
             double dz = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
+            Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
 
-            RenderUtils.renderBlockPlacementOverlay(
+            fi.dy.masa.malilib.render.RenderUtils.renderBlockTargetingOverlay(
                     entity,
                     mc.objectMouseOver.getBlockPos(),
                     mc.objectMouseOver.sideHit,
                     mc.objectMouseOver.hitVec,
-                    dx, dy, dz);
+                    dx, dy, dz, color);
 
             GlStateManager.enableTexture2D();
+            GlStateManager.enableDepth();
             //GlStateManager.popMatrix();
             GlStateManager.disableBlend();
             GlStateManager.enableCull();
