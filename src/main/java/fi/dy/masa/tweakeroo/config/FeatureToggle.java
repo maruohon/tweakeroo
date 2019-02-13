@@ -58,6 +58,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable
     TWEAK_NO_RAIN_EFFECTS           ("tweakNoRainEffects",                  false, "",    "Disables rain rendering and sounds"),
     TWEAK_NO_SIGN_GUI               ("tweakNoSignGui",                      false, "",    "Prevent the Sign edit GUI from opening"),
     TWEAK_NO_SLIME_BLOCK_SLOWDOWN   ("tweakNoSlimeBlockSlowdown",           false, "",    "Removes the slowdown from walking on Slime Blocks.\n(This is originally from usefulmod by nessie.)"),
+    TWEAK_NO_TILE_ENTITY_RENDERING  ("tweakNoTileEntityRendering",          false, "",    "Prevents all TileEntity renderers from rendering"),
     TWEAK_NO_VILLAGER_TRADE_LOCKING ("tweakNoVillagerTradeLocking",         false, "",    "Prevents villager trades from ever locking, by always incrementing\nthe max uses as well when the recipe uses is incremented"),
     TWEAK_NO_WALL_UNSPRINT          ("tweakNoWallUnsprint",                 false, "",    "Touching a wall doesn't drop you out from sprint mode"),
     TWEAK_OBSERVER_DISABLE          ("tweakObserverDisable",                false, "",    "Disable Observers from triggering at all"),

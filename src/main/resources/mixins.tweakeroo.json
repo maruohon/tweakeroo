@@ -41,6 +41,7 @@
         "MixinRenderLivingBase",
         "MixinRenderManager",
         "MixinTileEntityMobSpawnerRenderer",
+        "MixinTileEntityRendererDispatcher",
         "MixinWorldClient"
     ],
     "injectors": {
