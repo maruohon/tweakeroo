@@ -29,6 +29,7 @@
         "MixinItemRenderer",
         "MixinItemShulkerBox",
         "MixinItemStack",
+        "MixinMerchantRecipe",
         "MixinMinecraft",
         "MixinMobSpawnerBaseLogic",
         "MixinMovementInputFromOptions",
