@@ -4,7 +4,6 @@ import java.io.File;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mumfrey.liteloader.core.LiteLoader;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.malilib.config.IConfigBase;
@@ -16,6 +15,7 @@ import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.config.options.ConfigStringList;
+import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
@@ -161,7 +161,7 @@ public class Configs implements IConfigHandler
 
     public static void loadFromFile()
     {
-        File configFile = new File(LiteLoader.getCommonConfigFolder(), CONFIG_FILE_NAME);
+        File configFile = new File(FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
 
         if (configFile.exists() && configFile.isFile() && configFile.canRead())
         {
@@ -191,7 +191,7 @@ public class Configs implements IConfigHandler
 
     public static void saveToFile()
     {
-        File dir = LiteLoader.getCommonConfigFolder();
+        File dir = FileUtils.getConfigDirectory();
 
         if (dir.exists() && dir.isDirectory())
         {
