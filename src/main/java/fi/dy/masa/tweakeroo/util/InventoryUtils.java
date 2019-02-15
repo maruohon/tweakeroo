@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import javax.annotation.Nullable;
 import fi.dy.masa.malilib.util.Constants;
-import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinSlot;
@@ -307,7 +307,7 @@ public class InventoryUtils
             if (slotRepairableItem != -1)
             {
                 swapItemToEqupmentSlot(player, type, slotRepairableItem);
-                StringUtils.printActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_slot", type.getName());
+                InfoUtils.printActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_slot", type.getName());
             }
         }
     }

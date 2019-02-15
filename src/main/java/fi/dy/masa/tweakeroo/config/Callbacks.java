@@ -6,7 +6,7 @@ import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
-import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -170,7 +170,7 @@ public class Callbacks
                 String pre = mc.skipRenderWorld ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
                 String status = I18n.format("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
                 String message = I18n.format("tweakeroo.message.toggled", "Skip All Rendering", pre + status + GuiBase.TXT_RST);
-                StringUtils.printActionbarMessage(message);
+                InfoUtils.printActionbarMessage(message);
             }
             else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
             {
@@ -180,7 +180,7 @@ public class Callbacks
                 String pre = enabled ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
                 String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
                 String message = I18n.format("tweakeroo.message.toggled", "Skip World Rendering", pre + status + GuiBase.TXT_RST);
-                StringUtils.printActionbarMessage(message);
+                InfoUtils.printActionbarMessage(message);
             }
 
             return true;
@@ -219,7 +219,7 @@ public class Callbacks
                     if (te instanceof TileEntitySign)
                     {
                         MiscUtils.copyTextFromSign((TileEntitySign) te);
-                        StringUtils.printActionbarMessage("tweakeroo.message.sign_text_copied");
+                        InfoUtils.printActionbarMessage("tweakeroo.message.sign_text_copied");
                     }
                 }
                 return true;
@@ -318,7 +318,7 @@ public class Callbacks
             float speed = (float) Configs.getActiveFlySpeedConfig().getDoubleValue();
             String strPreset = GuiBase.TXT_GREEN + (preset + 1) + GuiBase.TXT_RST;
             String strSpeed = String.format("%s%.3f%s", GuiBase.TXT_GREEN, speed, GuiBase.TXT_RST);
-            StringUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
+            InfoUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
         }
 
         private void setPlacementRestrictionMode(PlacementRestrictionMode mode)
@@ -326,7 +326,7 @@ public class Callbacks
             Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
 
             String str = GuiBase.TXT_GREEN + mode.name() + GuiBase.TXT_RST;
-            StringUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
+            InfoUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
         }
     }
 
@@ -354,11 +354,11 @@ public class Callbacks
             if (enabled)
             {
                 String strMode = ((PlacementRestrictionMode) Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue()).name();
-                StringUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
+                InfoUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
             }
             else
             {
-                StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
             }
 
             return true;
@@ -411,11 +411,11 @@ public class Callbacks
                 if (enabled)
                 {
                     String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
                 }
                 else
                 {
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_FLY_SPEED.getKeybind())
@@ -424,7 +424,7 @@ public class Callbacks
                 {
                     String strPreset = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
                     String strSpeed = String.format("%s%.3f%s", preGreen, Configs.getActiveFlySpeedConfig().getDoubleValue(), rst);
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_fly_speed_on", strStatus, strPreset, strSpeed);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_fly_speed_on", strStatus, strPreset, strSpeed);
                 }
                 else
                 {
@@ -435,7 +435,7 @@ public class Callbacks
                         player.capabilities.setFlySpeed(0.05f);
                     }
 
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind())
@@ -443,11 +443,11 @@ public class Callbacks
                 if (enabled)
                 {
                     String strValue = Configs.Generic.PLACEMENT_LIMIT.getStringValue();
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
                 }
                 else
                 {
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind())
@@ -455,11 +455,11 @@ public class Callbacks
                 if (enabled)
                 {
                     String strValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getStringValue();
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
                 }
                 else
                 {
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind())
@@ -467,11 +467,11 @@ public class Callbacks
                 if (enabled)
                 {
                     String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
                 }
                 else
                 {
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_ZOOM.getKeybind())
@@ -479,11 +479,11 @@ public class Callbacks
                 if (enabled)
                 {
                     String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled_zoom_on", strStatus, strValue);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_zoom_on", strStatus, strValue);
                 }
                 else
                 {
-                    StringUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
                 }
             }
 

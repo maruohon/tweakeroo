@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -93,7 +93,7 @@ public class MiscTweaks
 
                 if (count > 0)
                 {
-                    StringUtils.printActionbarMessage("tweakeroo.message.potion_effects_running_out",
+                    InfoUtils.printActionbarMessage("tweakeroo.message.potion_effects_running_out",
                             Integer.valueOf(count), Integer.valueOf(minDuration / 20));
                 }
             }
