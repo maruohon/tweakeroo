@@ -62,6 +62,7 @@ public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteList
 
         IRenderer renderer = new RenderHandler();
         RenderEventHandler.getInstance().registerGameOverlayRenderer(renderer);
+        RenderEventHandler.getInstance().registerTooltipLastRenderer(renderer);
         RenderEventHandler.getInstance().registerWorldLastRenderer(renderer);
     }
 

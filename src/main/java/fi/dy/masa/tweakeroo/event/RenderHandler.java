@@ -9,6 +9,8 @@ import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemMap;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 
 public class RenderHandler implements IRenderer
@@ -39,6 +41,22 @@ public class RenderHandler implements IRenderer
             Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().isKeybindHeld())
         {
             RenderUtils.renderPlayerInventoryOverlay(mc);
+        }
+    }
+
+    @Override
+    public void onRenderTooltipLast(ItemStack stack, int x, int y)
+    {
+        if (stack.getItem() instanceof ItemMap)
+        {
+            if (FeatureToggle.TWEAK_MAP_PREVIEW.getBooleanValue())
+            {
+                fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue());
+            }
+        }
+        else if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
+        {
+            fi.dy.masa.malilib.render.RenderUtils.renderShulkerBoxPreview(stack, x, y, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue());
         }
     }
 

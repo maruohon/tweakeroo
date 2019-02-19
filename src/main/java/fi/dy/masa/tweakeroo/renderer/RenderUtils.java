@@ -1,7 +1,5 @@
 package fi.dy.masa.tweakeroo.renderer;
 
-import javax.annotation.Nullable;
-import org.lwjgl.opengl.GL11;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
 import fi.dy.masa.tweakeroo.util.RayTraceUtils;
@@ -10,37 +8,25 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryLargeChest;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemMap;
-import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapData;
 
 public class RenderUtils
 {
@@ -211,7 +197,7 @@ public class RenderUtils
                 yInv = Math.min(yInv, yCenter - 92);
             }
 
-            setShulkerboxBackgroundTintColor(block);
+            fi.dy.masa.malilib.render.RenderUtils.setShulkerboxBackgroundTintColor(block, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue());
 
             if (isHorse)
             {
@@ -328,109 +314,5 @@ public class RenderUtils
         OpenGlHelper.renderDirections(10);
 
         GlStateManager.popMatrix();
-    }
-
-    public static void renderMapPreview(ItemStack stack, int x, int y)
-    {
-        if (stack.getItem() instanceof ItemMap && GuiScreen.isShiftKeyDown())
-        {
-            Minecraft mc = Minecraft.getMinecraft();
-
-            GlStateManager.pushMatrix();
-            GlStateManager.disableLighting();
-            GlStateManager.color(1, 1, 1, 1);
-            mc.getTextureManager().bindTexture(fi.dy.masa.malilib.render.RenderUtils.TEXTURE_MAP_BACKGROUND);
-
-            int size = Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue();
-            int y1 = y - size - 20;
-            int y2 = y1 + size;
-            int x1 = x + 8;
-            int x2 = x1 + size;
-            int z = 300;
-
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder buffer = tessellator.getBuffer();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-            buffer.pos(x1, y2, z).tex(0.0D, 1.0D).endVertex();
-            buffer.pos(x2, y2, z).tex(1.0D, 1.0D).endVertex();
-            buffer.pos(x2, y1, z).tex(1.0D, 0.0D).endVertex();
-            buffer.pos(x1, y1, z).tex(0.0D, 0.0D).endVertex();
-            tessellator.draw();
-
-            MapData mapdata = Items.FILLED_MAP.getMapData(stack, mc.world);
-
-            if (mapdata != null)
-            {
-                x1 += 8;
-                y1 += 8;
-                z = 310;
-                double scale = (double) (size - 16) / 128.0D;
-                GlStateManager.translate(x1, y1, z);
-                GlStateManager.scale(scale, scale, 0);
-                mc.entityRenderer.getMapItemRenderer().renderMap(mapdata, false);
-            }
-
-            GlStateManager.enableLighting();
-            GlStateManager.popMatrix();
-        }
-    }
-
-    public static void renderShulkerBoxPreview(ItemStack stack, int x, int y)
-    {
-        if (GuiScreen.isShiftKeyDown() && stack.hasTagCompound())
-        {
-            NonNullList<ItemStack> items = fi.dy.masa.malilib.util.InventoryUtils.getStoredItems(stack, -1);
-
-            if (items.size() == 0)
-            {
-                return;
-            }
-
-            GlStateManager.pushMatrix();
-            RenderHelper.disableStandardItemLighting();
-            GlStateManager.translate(0F, 0F, 700F);
-
-            fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryType(stack);
-            fi.dy.masa.malilib.render.InventoryOverlay.InventoryProperties props = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryPropsTemp(type, items.size());
-
-            x += 8;
-            y -= (props.height + 18);
-
-            if (stack.getItem() instanceof ItemShulkerBox)
-            {
-                setShulkerboxBackgroundTintColor((BlockShulkerBox) ((ItemBlock) stack.getItem()).getBlock());
-            }
-            else
-            {
-                GlStateManager.color(1, 1, 1, 1);
-            }
-
-            Minecraft mc = Minecraft.getMinecraft();
-            fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, props.slotsPerRow, items.size(), mc);
-
-            RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.enableDepth();
-            GlStateManager.enableRescaleNormal();
-
-            IInventory inv = fi.dy.masa.malilib.util.InventoryUtils.getAsInventory(items);
-            fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + props.slotOffsetX, y + props.slotOffsetY, props.slotsPerRow, 0, -1, mc);
-
-            GlStateManager.disableDepth();
-            GlStateManager.popMatrix();
-        }
-    }
-
-    private static void setShulkerboxBackgroundTintColor(@Nullable BlockShulkerBox block)
-    {
-        if (block != null && Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue())
-        {
-            final EnumDyeColor dye = block.getColor();
-            final float[] colors = dye.getColorComponentValues();
-            GlStateManager.color(colors[0], colors[1], colors[2]);
-        }
-        else
-        {
-            GlStateManager.color(1, 1, 1, 1);
-        }
     }
 }

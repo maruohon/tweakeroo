@@ -23,7 +23,6 @@
         "MixinGuiEditSign",
         "MixinGuiIngame",
         "MixinGuiNewChat",
-        "MixinGuiScreen",
         "MixinItem",
         "MixinItemBlock",
         "MixinItemRenderer",
