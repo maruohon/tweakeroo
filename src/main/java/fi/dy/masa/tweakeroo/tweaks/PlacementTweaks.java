@@ -558,8 +558,8 @@ public class PlacementTweaks
 
         final int afterClickerClickCount = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
 
-        //EnumFacing facing = side;
-        //boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
+        EnumFacing facing = side;
+        boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
         //boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
         //boolean accurateActive = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue() || (Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld() || Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld());
 
@@ -578,9 +578,10 @@ public class PlacementTweaks
                 accurateActive = true;
             }
         }
+        */
 
         // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
-        if ((accurateActive || flexible) &&
+        if (flexible &&
             FeatureToggle.CARPET_ACCURATE_BLOCK_PLACEMENT.getBooleanValue() &&
             isFacingValidFor(facing, stackOriginal))
         {
@@ -594,7 +595,6 @@ public class PlacementTweaks
             //System.out.printf("processRightClickBlockWrapper facing: %s, x: %.3f, pos: %s, side: %s\n", facing, x, pos, side);
             hitVec = new Vec3d(x, hitVec.y, hitVec.z);
         }
-        */
 
         if (FeatureToggle.TWEAK_Y_MIRROR.getBooleanValue() && Hotkeys.PLACEMENT_Y_MIRROR.getKeybind().isKeybindHeld())
         {
