@@ -79,6 +79,12 @@ public class GuiConfigs extends GuiConfigsBase
     }
 
     @Override
+    protected boolean useKeybindSearch()
+    {
+        return GuiConfigs.tab == ConfigGuiTab.TWEAK_HOTKEYS || GuiConfigs.tab == ConfigGuiTab.GENERIC_HOTKEYS;
+    }
+
+    @Override
     public List<ConfigOptionWrapper> getConfigs()
     {
         List<? extends IConfigBase> configs;
