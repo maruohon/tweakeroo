@@ -17,11 +17,11 @@ import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.config.options.ConfigStringList;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
+import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.ListType;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 
 public class Configs implements IConfigHandler
@@ -117,20 +117,32 @@ public class Configs implements IConfigHandler
 
     public static class Lists
     {
-        public static final ConfigOptionList FAST_RIGHT_CLICK_LIST_TYPE    = new ConfigOptionList("fastRightClickListType", ListType.NONE, "The item restriction type for the Fast Right Click tweak");
-        public static final ConfigStringList FAST_RIGHT_CLICK_BLACKLIST    = new ConfigStringList("fastRightClickBlackList", ImmutableList.of("minecraft:fireworks"), "The items that are NOT allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to Black List");
-        public static final ConfigStringList FAST_RIGHT_CLICK_WHITELIST    = new ConfigStringList("fastRightClickWhiteList", ImmutableList.of("minecraft:bucket", "minecraft:water_bucket", "minecraft:lava_bucket", "minecraft:glass_bottle"), "The items that are allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to White List");
-        public static final ConfigOptionList POTION_WARNING_LIST_TYPE      = new ConfigOptionList("potionWarningListType", ListType.NONE, "The list type for potion warning effects");
-        public static final ConfigStringList POTION_WARNING_BLACKLIST      = new ConfigStringList("potionWarningBlackList", ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), "The potion effects that will not be warned about");
-        public static final ConfigStringList POTION_WARNING_WHITELIST      = new ConfigStringList("potionWarningWhiteList", ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing"), "The only potion effects that will be warned about");
-        public static final ConfigStringList REPAIR_MODE_SLOTS             = new ConfigStringList("repairModeSlots", ImmutableList.of("mainhand", "offhand"), "The slots the repair mode should use\nValid values: mainhand, offhand, head, chest, legs, feet");
-        public static final ConfigStringList UNSTACKING_ITEMS              = new ConfigStringList("unstackingItems", ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle"), "The items that should be considered for the\n'tweakItemUnstackingProtection' tweak");
+        public static final ConfigOptionList FAST_PLACEMENT_ITEM_LIST_TYPE      = new ConfigOptionList("fastPlacementItemListType", ListType.BLACKLIST, "The item restriction type for the Fast Block Placement tweak");
+        public static final ConfigStringList FAST_PLACEMENT_ITEM_BLACKLIST      = new ConfigStringList("fastPlacementItemBlackList", ImmutableList.of("minecraft:ender_chest", "minecraft:white_shulker_box"), "The items that are NOT allowed to be used for the Fast Block Placement tweak,\nif the fastPlacementItemListType is set to Black List");
+        public static final ConfigStringList FAST_PLACEMENT_ITEM_WHITELIST      = new ConfigStringList("fastPlacementItemWhiteList", ImmutableList.of(), "The items that are allowed to be used for the Fast Block Placement tweak,\nif the fastPLacementItemListType is set to White List");
+        public static final ConfigOptionList FAST_RIGHT_CLICK_BLOCK_LIST_TYPE   = new ConfigOptionList("fastRightClickBlockListType", ListType.BLACKLIST, "The targeted block restriction type for the Fast Right Click tweak");
+        public static final ConfigStringList FAST_RIGHT_CLICK_BLOCK_BLACKLIST   = new ConfigStringList("fastRightClickBlockBlackList", ImmutableList.of("minecraft:chest", "minecraft:ender_chest", "minecraft:trapped_chest", "minecraft:white_shulker_box"), "The blocks that are NOT allowed to be right clicked on with\nthe Fast Right Click tweak, if the fastRightClickBlockListType is set to Black List");
+        public static final ConfigStringList FAST_RIGHT_CLICK_BLOCK_WHITELIST   = new ConfigStringList("fastRightClickBlockWhiteList", ImmutableList.of(), "The blocks that are allowed to be right clicked on with\nthe Fast Right Click tweak, if the fastRightClickBlockListType is set to White List");
+        public static final ConfigOptionList FAST_RIGHT_CLICK_ITEM_LIST_TYPE    = new ConfigOptionList("fastRightClickListType", ListType.NONE, "The item restriction type for the Fast Right Click tweak");
+        public static final ConfigStringList FAST_RIGHT_CLICK_ITEM_BLACKLIST    = new ConfigStringList("fastRightClickBlackList", ImmutableList.of("minecraft:fireworks"), "The items that are NOT allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to Black List");
+        public static final ConfigStringList FAST_RIGHT_CLICK_ITEM_WHITELIST    = new ConfigStringList("fastRightClickWhiteList", ImmutableList.of("minecraft:bucket", "minecraft:water_bucket", "minecraft:lava_bucket", "minecraft:glass_bottle"), "The items that are allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to White List");
+        public static final ConfigOptionList POTION_WARNING_LIST_TYPE           = new ConfigOptionList("potionWarningListType", ListType.NONE, "The list type for potion warning effects");
+        public static final ConfigStringList POTION_WARNING_BLACKLIST           = new ConfigStringList("potionWarningBlackList", ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), "The potion effects that will not be warned about");
+        public static final ConfigStringList POTION_WARNING_WHITELIST           = new ConfigStringList("potionWarningWhiteList", ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing"), "The only potion effects that will be warned about");
+        public static final ConfigStringList REPAIR_MODE_SLOTS                  = new ConfigStringList("repairModeSlots", ImmutableList.of("mainhand", "offhand"), "The slots the repair mode should use\nValid values: mainhand, offhand, head, chest, legs, feet");
+        public static final ConfigStringList UNSTACKING_ITEMS                   = new ConfigStringList("unstackingItems", ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle"), "The items that should be considered for the\n'tweakItemUnstackingProtection' tweak");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                FAST_RIGHT_CLICK_LIST_TYPE,
+                FAST_PLACEMENT_ITEM_LIST_TYPE,
+                FAST_RIGHT_CLICK_BLOCK_LIST_TYPE,
+                FAST_RIGHT_CLICK_ITEM_LIST_TYPE,
                 POTION_WARNING_LIST_TYPE,
-                FAST_RIGHT_CLICK_BLACKLIST,
-                FAST_RIGHT_CLICK_WHITELIST,
+                FAST_PLACEMENT_ITEM_BLACKLIST,
+                FAST_PLACEMENT_ITEM_WHITELIST,
+                FAST_RIGHT_CLICK_BLOCK_BLACKLIST,
+                FAST_RIGHT_CLICK_BLOCK_WHITELIST,
+                FAST_RIGHT_CLICK_ITEM_BLACKLIST,
+                FAST_RIGHT_CLICK_ITEM_WHITELIST,
                 POTION_WARNING_BLACKLIST,
                 POTION_WARNING_WHITELIST,
                 REPAIR_MODE_SLOTS,
@@ -182,11 +194,26 @@ public class Configs implements IConfigHandler
 
         InventoryUtils.setRepairModeSlots(Lists.REPAIR_MODE_SLOTS.getStrings());
         InventoryUtils.setUnstackingItems(Lists.UNSTACKING_ITEMS.getStrings());
-        PlacementTweaks.FAST_RIGHT_CLICK_RESTRICTION.setValues(
-                (ListType) Lists.FAST_RIGHT_CLICK_LIST_TYPE.getOptionListValue(),
-                Lists.FAST_RIGHT_CLICK_BLACKLIST.getStrings(),
-                Lists.FAST_RIGHT_CLICK_WHITELIST.getStrings());
-        MiscTweaks.setPotionWarningLists(Lists.POTION_WARNING_BLACKLIST.getStrings(), Lists.POTION_WARNING_WHITELIST.getStrings());
+
+        PlacementTweaks.FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListType((ListType) Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.getOptionListValue());
+        PlacementTweaks.FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListContents(
+                Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.getStrings(),
+                Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.getStrings());
+
+        PlacementTweaks.FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListType((ListType) Lists.FAST_RIGHT_CLICK_ITEM_LIST_TYPE.getOptionListValue());
+        PlacementTweaks.FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListContents(
+                Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.getStrings(),
+                Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.getStrings());
+
+        PlacementTweaks.FAST_PLACEMENT_ITEM_RESTRICTION.setListType((ListType) Lists.FAST_PLACEMENT_ITEM_LIST_TYPE.getOptionListValue());
+        PlacementTweaks.FAST_PLACEMENT_ITEM_RESTRICTION.setListContents(
+                Lists.FAST_PLACEMENT_ITEM_BLACKLIST.getStrings(),
+                Lists.FAST_PLACEMENT_ITEM_WHITELIST.getStrings());
+
+        MiscTweaks.POTION_RESTRICTION.setListType((ListType) Lists.POTION_WARNING_LIST_TYPE.getOptionListValue());
+        MiscTweaks.POTION_RESTRICTION.setListContents(
+                Lists.POTION_WARNING_BLACKLIST.getStrings(),
+                Lists.POTION_WARNING_WHITELIST.getStrings());
     }
 
     public static void saveToFile()

@@ -4,12 +4,13 @@ import javax.annotation.Nullable;
 import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
+import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
+import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.ItemRestriction;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -53,7 +54,9 @@ public class PlacementTweaks
     private static int placementCount;
     private static ItemStack stackClickedOn = ItemStack.EMPTY;
     @Nullable private static IBlockState stateClickedOn = null;
-    public static final ItemRestriction FAST_RIGHT_CLICK_RESTRICTION = new ItemRestriction();
+    public static final BlockRestriction FAST_RIGHT_CLICK_BLOCK_RESTRICTION = new BlockRestriction();
+    public static final ItemRestriction FAST_RIGHT_CLICK_ITEM_RESTRICTION = new ItemRestriction();
+    public static final ItemRestriction FAST_PLACEMENT_ITEM_RESTRICTION = new ItemRestriction();
 
     public static void onTick(Minecraft mc)
     {
@@ -154,7 +157,8 @@ public class PlacementTweaks
             return;
         }
 
-        if (posFirst != null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue())
+        if (posFirst != null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue() &&
+            canUseItemWithRestriction(FAST_PLACEMENT_ITEM_RESTRICTION, mc.player))
         {
             EntityPlayerSP player = mc.player;
             World world = player.getEntityWorld();
@@ -485,23 +489,42 @@ public class PlacementTweaks
         return true;
     }
 
-    private static boolean canUseFastRightClick(EntityPlayer player)
+    private static boolean canUseItemWithRestriction(ItemRestriction restriction, EntityPlayer player)
     {
         ItemStack stack = player.getHeldItemMainhand();
 
-        if (stack.isEmpty() == false && FAST_RIGHT_CLICK_RESTRICTION.isItemAllowed(stack) == false)
+        if (stack.isEmpty() == false && restriction.isAllowed(stack.getItem()) == false)
         {
             return false;
         }
 
         stack = player.getHeldItemOffhand();
 
-        if (stack.isEmpty() == false && FAST_RIGHT_CLICK_RESTRICTION.isItemAllowed(stack) == false)
+        if (stack.isEmpty() == false && restriction.isAllowed(stack.getItem()) == false)
         {
             return false;
         }
 
         return true;
+    }
+
+    private static boolean canUseFastRightClick(EntityPlayer player)
+    {
+        if (canUseItemWithRestriction(FAST_RIGHT_CLICK_ITEM_RESTRICTION, player) == false)
+        {
+            return false;
+        }
+
+        RayTraceResult trace = player.rayTrace(6, 0f);
+
+        if (trace == null || trace.typeOfHit != RayTraceResult.Type.BLOCK)
+        {
+            return FAST_RIGHT_CLICK_BLOCK_RESTRICTION.isAllowed(Blocks.AIR);
+        }
+
+        Block block = player.getEntityWorld().getBlockState(trace.getBlockPos()).getBlock();
+
+        return FAST_RIGHT_CLICK_BLOCK_RESTRICTION.isAllowed(block);
     }
 
     private static void tryRestockHand(EntityPlayer player, EnumHand hand, ItemStack stackOriginal)
