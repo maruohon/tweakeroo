@@ -16,7 +16,7 @@ import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
 public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfigBoolean>
 {
-    CARPET_ACCURATE_BLOCK_PLACEMENT ("carpetAccuratePlacementProtocol",     false, "",    "If enabled, then the Flexible Block Placement and the\nAccurate Block Plamenet use the protocol implemented\nin the recent carpet mod versions", "Carpet protocol Accurate Placement"),
+    CARPET_ACCURATE_PLACEMENT_PROTOCOL ("carpetAccuratePlacementProtocol",     false, "",    "If enabled, then the Flexible Block Placement and the\nAccurate Block Plamenet use the protocol implemented\nin the recent carpet mod versions", "Carpet protocol Accurate Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "",     "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
     REMEMBER_FLEXIBLE               ("rememberFlexibleFromClick",           true, "",     "If enabled, then the flexible block placement status\nwill be remembered from the first placed block,\nas long as the use key is held down.", "Remember Flexible Orientation From First Click"),
     TWEAK_ACCURATE_BLOCK_PLACEMENT  ("tweakAccurateBlockPlacement",         false, "",    "Enables a simpler version of Flexible placement, similar to\nthe Carpet mod, so basically either facing into or out\nfrom the block face clicked on."),
