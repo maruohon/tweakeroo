@@ -9,6 +9,7 @@ import net.minecraft.util.text.ITextComponent;
 public class MiscUtils
 {
     private static ITextComponent[] previousSignText;
+    private static String previousChatText = "";
     private static final Date DATE = new Date();
 
     public static String getChatTimestamp()
@@ -16,6 +17,16 @@ public class MiscUtils
         SimpleDateFormat sdf = new SimpleDateFormat(Configs.Generic.CHAT_TIME_FORMAT.getStringValue());
         DATE.setTime(System.currentTimeMillis());
         return sdf.format(DATE);
+    }
+
+    public static void setLastChatText(String text)
+    {
+        previousChatText = text;
+    }
+
+    public static String getLastChatText()
+    {
+        return previousChatText;
     }
 
     public static void copyTextFromSign(TileEntitySign te)

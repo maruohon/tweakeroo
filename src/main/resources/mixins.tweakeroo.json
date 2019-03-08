@@ -21,6 +21,7 @@
         "MixinEntityRenderer",
         "MixinExplosion",
         "MixinGlStateManager",
+        "MixinGuiChat",
         "MixinGuiEditSign",
         "MixinGuiIngame",
         "MixinGuiNewChat",
