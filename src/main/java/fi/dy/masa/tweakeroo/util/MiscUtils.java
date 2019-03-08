@@ -29,6 +29,12 @@ public class MiscUtils
         return previousChatText;
     }
 
+    public static int getChatBackgroundColor(int colorOrig)
+    {
+        int newColor = Configs.Generic.CHAT_BACKGROUND_COLOR.getIntegerValue();
+        return (newColor & 0x00FFFFFF) | ((int) (((newColor >>> 24) / 255.0) * ((colorOrig >>> 24) / 255.0) / 0.5 * 255) << 24);
+    }
+
     public static void copyTextFromSign(TileEntitySign te)
     {
         int size = te.signText.length;

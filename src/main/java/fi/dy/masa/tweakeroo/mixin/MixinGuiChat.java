@@ -4,9 +4,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.client.gui.GuiChat;
@@ -53,5 +56,16 @@ public abstract class MixinGuiChat
     private void onSendMessage(char typedChar, int keyCode, CallbackInfo ci)
     {
         MiscUtils.setLastChatText("");
+    }
+
+    @ModifyConstant(method = "drawScreen", constant = @Constant(intValue = Integer.MIN_VALUE))
+    private int overrideChatBackgroundColor(int original)
+    {
+        if (FeatureToggle.TWEAK_CHAT_BACKGROUND_COLOR.getBooleanValue())
+        {
+            return Configs.Generic.CHAT_BACKGROUND_COLOR.getIntegerValue();
+        }
+
+        return original;
     }
 }
