@@ -351,8 +351,9 @@ public class PlacementTweaks
         boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
         boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld();
         boolean accurateReverse = Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld();
+        boolean afterClicker = FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue();
 
-        if (accurate && (accurateIn || accurateReverse))
+        if (accurate && (accurateIn || accurateReverse || afterClicker))
         {
             EnumFacing facing = side;
             boolean handleAccurate = false;
@@ -420,20 +421,21 @@ public class PlacementTweaks
                 handleAccurate = true;
             }
 
-            if (handleAccurate && FeatureToggle.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue())
+            if ((handleAccurate || afterClicker) && FeatureToggle.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue())
             {
                 // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
-                double x = isFacingValidFor(facing, stack) ? facing.getIndex() + 2 + posNew.getX() : hitVec.x;
+                double x = handleAccurate && isFacingValidFor(facing, stack) ? facing.getIndex() + 2 + posNew.getX() : hitVec.x;
                 int afterClickerClickCount = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
 
-                if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue())
+                if (afterClicker)
                 {
                     x += afterClickerClickCount * 10;
                 }
 
+                //System.out.printf("accurate - pre hitVec: %s\n", hitVec);
                 //System.out.printf("processRightClickBlockWrapper facing: %s, x: %.3f, pos: %s, side: %s\n", facing, x, pos, side);
                 hitVec = new Vec3d(x, hitVec.y, hitVec.z);
-                //System.out.printf("accurate - hitVec: %s\n", hitVec);
+                //System.out.printf("accurate - post hitVec: %s\n", hitVec);
             }
 
             //System.out.printf("accurate - facing: %s, side: %s, posNew: %s, hit: %s\n", facing, side, posNew, hitVec);
