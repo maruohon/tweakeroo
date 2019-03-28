@@ -87,9 +87,7 @@ public class RenderHandler implements IRenderer
             //GlStateManager.pushMatrix();
             GlStateManager.disableDepth();
             GlStateManager.disableTexture2D();
-            double dx = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
-            double dy = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
-            double dz = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
+
             Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
 
             fi.dy.masa.malilib.render.RenderUtils.renderBlockTargetingOverlay(
@@ -97,7 +95,7 @@ public class RenderHandler implements IRenderer
                     mc.objectMouseOver.getBlockPos(),
                     mc.objectMouseOver.sideHit,
                     mc.objectMouseOver.hitVec,
-                    dx, dy, dz, color);
+                    color, partialTicks);
 
             GlStateManager.enableTexture2D();
             GlStateManager.enableDepth();
