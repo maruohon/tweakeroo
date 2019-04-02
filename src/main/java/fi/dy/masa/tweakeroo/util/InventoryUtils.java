@@ -490,11 +490,15 @@ public class InventoryUtils
             if (stack.getMaxDamage() - stack.getItemDamage() > getMinDurability(stack))
             {
                 float speed = stack.getDestroySpeed(state);
-                int effLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack);
 
-                if (effLevel > 0)
+                if (speed > 1.0f)
                 {
-                    speed += (effLevel * effLevel) + 1;
+                    int effLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.EFFICIENCY, stack);
+
+                    if (effLevel > 0)
+                    {
+                        speed += (effLevel * effLevel) + 1;
+                    }
                 }
 
                 if (speed > 1f && (slotNum == -1 || speed > bestSpeed))
