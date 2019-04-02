@@ -24,6 +24,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.client.CPacketHeldItemChange;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -380,7 +381,17 @@ public class InventoryUtils
             if (hand == EnumHand.MAIN_HAND)
             {
                 int currentHotbarSlot = player.inventory.currentItem;
-                mc.playerController.windowClick(container.windowId, slotNumber, currentHotbarSlot, ClickType.SWAP, mc.player);
+                Slot slot = container.getSlot(slotNumber);
+
+                if (slot != null && isHotbarSlot(slot))
+                {
+                    player.inventory.currentItem = slotNumber - 36;
+                    mc.getConnection().sendPacket(new CPacketHeldItemChange(player.inventory.currentItem));
+                }
+                else
+                {
+                    mc.playerController.windowClick(container.windowId, slotNumber, currentHotbarSlot, ClickType.SWAP, mc.player);
+                }
             }
             else if (hand == EnumHand.OFF_HAND)
             {
