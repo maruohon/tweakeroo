@@ -41,6 +41,7 @@ public class Callbacks
         Hotkeys.FLY_PRESET_1.getKeybind().setCallback(callbackGeneric);
         Hotkeys.FLY_PRESET_2.getKeybind().setCallback(callbackGeneric);
         Hotkeys.FLY_PRESET_3.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.FLY_PRESET_4.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
@@ -256,6 +257,11 @@ public class Callbacks
             else if (key == Hotkeys.FLY_PRESET_3.getKeybind())
             {
                 this.setFlySpeedPreset(2);
+                return true;
+            }
+            else if (key == Hotkeys.FLY_PRESET_4.getKeybind())
+            {
+                this.setFlySpeedPreset(3);
                 return true;
             }
             else if (key == Hotkeys.HOTBAR_SCROLL.getKeybind())
