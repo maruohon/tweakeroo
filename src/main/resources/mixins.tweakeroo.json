@@ -31,6 +31,7 @@
         "MixinPlayerControllerMP",
         "MixinRenderLivingBase",
         "MixinRenderManager",
+        "MixinWorld",
         "MixinWorldClient",
         "MixinWorldRenderer"
     ],
