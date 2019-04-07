@@ -114,10 +114,12 @@ public class Configs implements IConfigHandler
 
     public static class Fixes
     {
-        public static final ConfigBoolean ELYTRA_FIX    = new ConfigBoolean("elytraFix", false, "Elytra deployment/landing fix by Earthcomputer and Nessie");
+        public static final ConfigBoolean ELYTRA_FIX                = new ConfigBoolean("elytraFix", false, "Elytra deployment/landing fix by Earthcomputer and Nessie");
+        public static final ConfigBoolean TILE_UNLOAD_OPTIMIZATION  = new ConfigBoolean("tileEntityUnloadOptimization", false, "Optimizes the removal of unloading TileEntities from the World lists.\nThis can greatly improve performance if there are lots of\nTileEntities loaded and/or unloading at once.");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                ELYTRA_FIX
+                ELYTRA_FIX,
+                TILE_UNLOAD_OPTIMIZATION
         );
     }
 
