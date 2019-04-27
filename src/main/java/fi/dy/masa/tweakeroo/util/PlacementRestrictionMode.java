@@ -1,7 +1,7 @@
 package fi.dy.masa.tweakeroo.util;
 
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resource.language.I18n;
 
 public enum PlacementRestrictionMode implements IConfigOptionListEntry
 {
@@ -29,7 +29,7 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry
     @Override
     public String getDisplayName()
     {
-        return I18n.format(this.unlocName);
+        return I18n.translate(this.unlocName);
     }
 
     @Override

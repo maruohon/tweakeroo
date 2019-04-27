@@ -5,17 +5,17 @@ import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class MiscTweaks
 {
     private static long lastPotionWarning;
 
-    public static void onTick(Minecraft mc)
+    public static void onTick(MinecraftClient mc)
     {
-        EntityPlayer player = mc.player;
+        PlayerEntity player = mc.player;
 
         if (player == null)
         {
@@ -23,26 +23,27 @@ public class MiscTweaks
         }
 
         if (FeatureToggle.TWEAK_POTION_WARNING.getBooleanValue() &&
-            player.getEntityWorld().getGameTime() - lastPotionWarning >= 100)
+            player.getEntityWorld().getTime() - lastPotionWarning >= 100)
         {
-            lastPotionWarning = mc.player.getEntityWorld().getGameTime();
+            lastPotionWarning = mc.player.getEntityWorld().getTime();
 
-            Collection<PotionEffect> effects = player.getActivePotionEffects();
+            Collection<StatusEffectInstance> effects = player.getStatusEffects();
 
             if (effects.isEmpty() == false)
             {
                 int minDuration = -1;
                 int count = 0;
 
-                for (PotionEffect effect : effects)
+                for (StatusEffectInstance effectInstance : effects)
                 {
-                    if (effect.isAmbient() == false && effect.getDuration() <= Configs.Generic.POTION_WARNING_THRESHOLD.getIntegerValue())
+                    if (effectInstance.isAmbient() == false &&
+                        effectInstance.getDuration() <= Configs.Generic.POTION_WARNING_THRESHOLD.getIntegerValue())
                     {
                         ++count;
 
-                        if (effect.getDuration() < minDuration || minDuration < 0)
+                        if (effectInstance.getDuration() < minDuration || minDuration < 0)
                         {
-                            minDuration = effect.getDuration();
+                            minDuration = effectInstance.getDuration();
                         }
                     }
                 }

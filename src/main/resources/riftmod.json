@@ -1,6 +1,0 @@
-{
-    "id": "tweakeroo",
-    "name": "Tweakeroo",
-    "authors": [ "masa" ],
-    "listeners": [ "fi.dy.masa.tweakeroo.Tweakeroo" ]
-}

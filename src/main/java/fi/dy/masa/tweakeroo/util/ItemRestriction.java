@@ -3,11 +3,11 @@ package fi.dy.masa.tweakeroo.util;
 import java.util.HashSet;
 import java.util.List;
 import fi.dy.masa.tweakeroo.Tweakeroo;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.IRegistry;
+import net.minecraft.item.Items;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class ItemRestriction
 {
@@ -31,7 +31,7 @@ public class ItemRestriction
         {
             try
             {
-                Item item = IRegistry.ITEM.get(new ResourceLocation(name));
+                Item item = Registry.ITEM.get(new Identifier(name));
 
                 if (item != null && item != Items.AIR)
                 {

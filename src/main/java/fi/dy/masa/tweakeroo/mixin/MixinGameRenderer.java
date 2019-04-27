@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Callbacks;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.render.GameRenderer;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer

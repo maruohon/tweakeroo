@@ -8,23 +8,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.authlib.GameProfile;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.Screen;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.world.ClientWorld;
 
-@Mixin(EntityPlayerSP.class)
-public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
+@Mixin(ClientPlayerEntity.class)
+public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 {
-    public MixinEntityPlayerSP(World worldIn, GameProfile playerProfile)
+    public MixinClientPlayerEntity(ClientWorld worldIn, GameProfile playerProfile)
     {
         super(worldIn, playerProfile);
     }
 
-    @Redirect(method = "livingTick()V",
+    @Redirect(method = "updateNausea()V",
               at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/client/gui/GuiScreen;doesGuiPauseGame()Z"))
-    private boolean onDoesGuiPauseGame(GuiScreen gui)
+                       target = "Lnet/minecraft/client/gui/Screen;isPauseScreen()Z"))
+    private boolean onDoesGuiPauseGame(Screen gui)
     {
         // Spoof the return value to prevent entering the if block
         if (FeatureToggle.TWEAK_NO_PORTAL_GUI_CLOSING.getBooleanValue())
@@ -32,11 +32,11 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
             return true;
         }
 
-        return gui.doesGuiPauseGame();
+        return gui.isPauseScreen();
     }
 
-    @Inject(method = "livingTick", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/network/NetHandlerPlayClient;sendPacket(Lnet/minecraft/network/Packet;)V"))
+    @Inject(method = "updateState", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
+            target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V"))
     private void fixElytraDeployment(CallbackInfo ci)
     {
         if (Configs.Fixes.ELYTRA_FIX.getBooleanValue())

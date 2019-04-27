@@ -5,15 +5,15 @@ import fi.dy.masa.malilib.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockShulkerBox;
+import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-@Mixin(ItemBlock.class)
-public abstract class MixinItemBlock extends Item implements IItemStackLimit
+@Mixin(BlockItem.class)
+public abstract class MixinBlockItem extends Item implements IItemStackLimit
 {
-    public MixinItemBlock(Block blockIn, Item.Properties builder)
+    public MixinBlockItem(Block blockIn, Item.Settings builder)
     {
         super(builder);
     }
@@ -22,13 +22,13 @@ public abstract class MixinItemBlock extends Item implements IItemStackLimit
     public int getMaxStackSize(ItemStack stack)
     {
         if (FeatureToggle.TWEAK_SHULKERBOX_STACKING.getBooleanValue() &&
-            ((ItemBlock) (Object) this).getBlock() instanceof BlockShulkerBox &&
+            ((BlockItem) (Object) this).getBlock() instanceof ShulkerBoxBlock &&
             InventoryUtils.shulkerBoxHasItems(stack) == false)
         {
             return 64;
         }
 
         // FIXME How to call the stack-sensitive version on the super class?
-        return super.getMaxStackSize();
+        return super.getMaxAmount();
     }
 }

@@ -12,18 +12,19 @@ import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import net.minecraft.client.GameSettings;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.MovementInput;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.input.Input;
+import net.minecraft.client.options.GameOptions;
+import net.minecraft.text.ChatMessageType;
+import net.minecraft.text.TextFormat;
+import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 
 public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IMouseInputHandler
 {
@@ -65,7 +66,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     @Override
     public boolean onKeyInput(int eventKey, boolean eventKeyState)
     {
-        Minecraft mc = Minecraft.getInstance();
+        MinecraftClient mc = MinecraftClient.getInstance();
 
         // Not in a GUI
         if (mc.currentScreen == null && eventKeyState)
@@ -80,25 +81,26 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     @Override
     public boolean onMouseClick(int mouseX, int mouseY, int eventButton, boolean eventButtonState)
     {
-        Minecraft mc = Minecraft.getInstance();
+        MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.currentScreen == null && mc.player != null && mc.player.abilities.isCreativeMode &&
-            eventButtonState && mc.gameSettings.keyBindUseItem.func_197984_a(eventButton) &&
+        if (mc.currentScreen == null && mc.player != null && mc.player.abilities.creativeMode &&
+            eventButtonState && mc.options.keyUse.matchesMouse(eventButton) &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
-            mc.objectMouseOver.type == RayTraceResult.Type.MISS)
+            mc.hitResult.getType() == HitResult.Type.NONE)
         {
             BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
 
-            if (mc.world.isAirBlock(posFront))
+            if (mc.world.isAir(posFront))
             {
-                EnumFacing facing = PositionUtils.getClosestLookingDirection(mc.player).getOpposite();
+                Direction facing = PositionUtils.getClosestLookingDirection(mc.player).getOpposite();
                 Vec3d hitVec = PositionUtils.getHitVecCenter(posFront, facing);
+                BlockHitResult context = new BlockHitResult(hitVec, facing, posFront, false);
 
-                EnumActionResult result = mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.MAIN_HAND);
+                ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN, context);
 
-                if (result != EnumActionResult.SUCCESS)
+                if (result != ActionResult.SUCCESS)
                 {
-                    mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.OFF_HAND);
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.OFF, context);
                 }
 
                 return true;
@@ -111,14 +113,14 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     @Override
     public boolean onMouseScroll(int mouseX, int mouseY, double amount)
     {
-        Minecraft mc = Minecraft.getInstance();
+        MinecraftClient mc = MinecraftClient.getInstance();
         int dWheel = (int) amount;
 
         // Not in a GUI
         if (mc.currentScreen == null && dWheel != 0)
         {
-            String preGreen = TextFormatting.GREEN.toString();
-            String rst = TextFormatting.RESET.toString();
+            String preGreen = TextFormat.GREEN.toString();
+            String rst = TextFormat.RESET.toString();
 
             if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() && Hotkeys.HOTBAR_SCROLL.getKeybind().isKeybindHeld())
             {
@@ -140,7 +142,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue()) + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_after_clicker_count_to", strValue));
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_after_clicker_count_to", strValue));
 
                 return true;
             }
@@ -151,7 +153,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.PLACEMENT_LIMIT.getIntegerValue()) + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_placement_limit_to", strValue));
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_placement_limit_to", strValue));
 
                 return true;
             }
@@ -162,7 +164,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue()) + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue));
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue));
 
                 return true;
             }
@@ -173,7 +175,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue()) + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_placement_grid_size_to", strValue));
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_placement_grid_size_to", strValue));
 
                 return true;
             }
@@ -192,59 +194,59 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         return this.lastForwardInput;
     }
 
-    private void storeLastMovementDirection(int eventKey, int scanCode, Minecraft mc)
+    private void storeLastMovementDirection(int eventKey, int scanCode, MinecraftClient mc)
     {
-        if (mc.gameSettings.keyBindForward.matchesKey(eventKey, scanCode))
+        if (mc.options.keyForward.matchesKey(eventKey, scanCode))
         {
             this.lastForwardInput = ForwardBack.FORWARD;
         }
-        else if (mc.gameSettings.keyBindBack.matchesKey(eventKey, scanCode))
+        else if (mc.options.keyBack.matchesKey(eventKey, scanCode))
         {
             this.lastForwardInput = ForwardBack.BACK;
         }
-        else if (mc.gameSettings.keyBindLeft.matchesKey(eventKey, scanCode))
+        else if (mc.options.keyLeft.matchesKey(eventKey, scanCode))
         {
             this.lastSidewaysInput = LeftRight.LEFT;
         }
-        else if (mc.gameSettings.keyBindRight.matchesKey(eventKey, scanCode))
+        else if (mc.options.keyRight.matchesKey(eventKey, scanCode))
         {
             this.lastSidewaysInput = LeftRight.RIGHT;
         }
     }
 
-    public void handleMovementKeys(MovementInput movement)
+    public void handleMovementKeys(Input movement)
     {
-        GameSettings settings = Minecraft.getInstance().gameSettings;
+        GameOptions settings = MinecraftClient.getInstance().options;
 
-        if (settings.keyBindLeft.isKeyDown() && settings.keyBindRight.isKeyDown())
+        if (settings.keyLeft.isPressed() && settings.keyRight.isPressed())
         {
             if (this.lastSidewaysInput == LeftRight.LEFT)
             {
-                movement.moveStrafe = 1;
-                movement.leftKeyDown = true;
-                movement.rightKeyDown = false;
+                movement.movementSideways = 1;
+                movement.pressingLeft = true;
+                movement.pressingRight = false;
             }
             else if (this.lastSidewaysInput == LeftRight.RIGHT)
             {
-                movement.moveStrafe = -1;
-                movement.leftKeyDown = false;
-                movement.rightKeyDown = true;
+                movement.movementSideways = -1;
+                movement.pressingLeft = false;
+                movement.pressingRight = true;
             }
         }
 
-        if (settings.keyBindBack.isKeyDown() && settings.keyBindForward.isKeyDown())
+        if (settings.keyBack.isPressed() && settings.keyForward.isPressed())
         {
             if (this.lastForwardInput == ForwardBack.FORWARD)
             {
-                movement.moveForward = 1;
-                movement.forwardKeyDown = true;
-                movement.backKeyDown = false;
+                movement.movementForward = 1;
+                movement.pressingForward = true;
+                movement.pressingBack = false;
             }
             else if (this.lastForwardInput == ForwardBack.BACK)
             {
-                movement.moveForward = -1;
-                movement.forwardKeyDown = false;
-                movement.backKeyDown = true;
+                movement.movementForward = -1;
+                movement.pressingForward = false;
+                movement.pressingBack = true;
             }
         }
     }

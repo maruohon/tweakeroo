@@ -7,33 +7,33 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.render.VisibleRegion;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 
-@Mixin(RenderManager.class)
-public abstract class MixinRenderManager
+@Mixin(EntityRenderDispatcher.class)
+public abstract class MixinEntityRenderDispatcher
 {
-    @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
-    private void onShouldRender(Entity entityIn, ICamera camera, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> ci)
+    @Inject(method = "method_3950", at = @At("HEAD"), cancellable = true) // MCP: shouldRender
+    private void onShouldRender(Entity entityIn, VisibleRegion region, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> ci)
     {
-        if (FeatureToggle.TWEAK_NO_ENTITY_RENDERING.getBooleanValue() && (entityIn instanceof EntityPlayer) == false)
+        if (FeatureToggle.TWEAK_NO_ENTITY_RENDERING.getBooleanValue() && (entityIn instanceof PlayerEntity) == false)
         {
             ci.setReturnValue(false);
             ci.cancel();
             return;
         }
 
-        if (entityIn instanceof EntityFallingBlock && FeatureToggle.TWEAK_NO_FALLING_BLOCK_RENDER.getBooleanValue())
+        if (entityIn instanceof FallingBlockEntity && FeatureToggle.TWEAK_NO_FALLING_BLOCK_RENDER.getBooleanValue())
         {
             ci.setReturnValue(false);
             ci.cancel();
         }
-        else if (entityIn instanceof EntityXPOrb)
+        else if (entityIn instanceof ExperienceOrbEntity)
         {
             if (FeatureToggle.TWEAK_RENDER_LIMIT_ENTITIES.getBooleanValue())
             {
@@ -47,7 +47,7 @@ public abstract class MixinRenderManager
                 }
             }
         }
-        else if (entityIn instanceof EntityItem)
+        else if (entityIn instanceof ItemEntity)
         {
             if (FeatureToggle.TWEAK_RENDER_LIMIT_ENTITIES.getBooleanValue())
             {

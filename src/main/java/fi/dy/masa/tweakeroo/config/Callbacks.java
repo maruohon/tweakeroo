@@ -10,16 +10,16 @@ import fi.dy.masa.tweakeroo.gui.GuiConfigs;
 import fi.dy.masa.tweakeroo.mixin.IMixinBlock;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.TextFormat;
 
 public class Callbacks
 {
     public static boolean skipWorldRendering;
 
-    public static void init(Minecraft mc)
+    public static void init(MinecraftClient mc)
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
         FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN));
@@ -54,23 +54,23 @@ public class Callbacks
 
     public static class FeatureCallbackGamma implements IValueChangeCallback
     {
-        private final Minecraft mc;
+        private final MinecraftClient mc;
         private final FeatureToggle feature;
 
-        public FeatureCallbackGamma(FeatureToggle feature, Minecraft mc)
+        public FeatureCallbackGamma(FeatureToggle feature, MinecraftClient mc)
         {
             this.mc = mc;
             this.feature = feature;
 
-            if (this.mc.gameSettings.gammaSetting <= 1.0F)
+            if (this.mc.options.gamma <= 1.0F)
             {
-                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.gameSettings.gammaSetting);
+                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.options.gamma);
             }
 
             // If the feature is enabled on game launch, apply it here
             if (feature.getBooleanValue())
             {
-                this.mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
+                this.mc.options.gamma = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
             }
         }
 
@@ -79,12 +79,12 @@ public class Callbacks
         {
             if (this.feature.getBooleanValue())
             {
-                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.gameSettings.gammaSetting);
-                this.mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
+                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.options.gamma);
+                this.mc.options.gamma = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
             }
             else
             {
-                this.mc.gameSettings.gammaSetting = (float) Configs.Internal.GAMMA_VALUE_ORIGINAL.getDoubleValue();
+                this.mc.options.gamma = (float) Configs.Internal.GAMMA_VALUE_ORIGINAL.getDoubleValue();
             }
         }
     }
@@ -96,12 +96,12 @@ public class Callbacks
         public FeatureCallbackSlime(FeatureToggle feature)
         {
             this.feature = feature;
-            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.getSlipperiness());
+            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.getFrictionCoefficient());
 
             // If the feature is enabled on game launch, apply the overridden value here
             if (feature.getBooleanValue())
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setSlipperiness(Blocks.STONE.getSlipperiness());
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getFrictionCoefficient());
             }
         }
 
@@ -110,11 +110,11 @@ public class Callbacks
         {
             if (this.feature.getBooleanValue())
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setSlipperiness(Blocks.STONE.getSlipperiness());
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getFrictionCoefficient());
             }
             else
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setSlipperiness((float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue());
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction((float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue());
             }
         }
     }
@@ -140,9 +140,9 @@ public class Callbacks
 
     public static class KeyCallbackHotkeyWithMessage implements IHotkeyCallback
     {
-        private final Minecraft mc;
+        private final MinecraftClient mc;
 
-        public KeyCallbackHotkeyWithMessage(Minecraft mc)
+        public KeyCallbackHotkeyWithMessage(MinecraftClient mc)
         {
             this.mc = mc;
         }
@@ -152,11 +152,11 @@ public class Callbacks
         {
             if (key == Hotkeys.SKIP_ALL_RENDERING.getKeybind())
             {
-                this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
+                this.mc.skipGameRender = ! this.mc.skipGameRender;
 
-                String pre = mc.skipRenderWorld ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
-                String status = I18n.format("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
-                String message = I18n.format("tweakeroo.message.toggled", "Skip All Rendering", pre + status + TextFormatting.RESET);
+                String pre = mc.skipGameRender ? TextFormat.GREEN.toString() : TextFormat.RED.toString();
+                String status = I18n.translate("tweakeroo.message.value." + (this.mc.skipGameRender ? "on" : "off"));
+                String message = I18n.translate("tweakeroo.message.toggled", "Skip All Rendering", pre + status + TextFormat.RESET);
                 StringUtils.printActionbarMessage(message);
             }
             else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
@@ -164,9 +164,9 @@ public class Callbacks
                 skipWorldRendering = ! skipWorldRendering;
 
                 boolean enabled = skipWorldRendering;
-                String pre = enabled ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
-                String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String message = I18n.format("tweakeroo.message.toggled", "Skip World Rendering", pre + status + TextFormatting.RESET);
+                String pre = enabled ? TextFormat.GREEN.toString() : TextFormat.RED.toString();
+                String status = I18n.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
+                String message = I18n.translate("tweakeroo.message.toggled", "Skip World Rendering", pre + status + TextFormat.RESET);
                 StringUtils.printActionbarMessage(message);
             }
 
@@ -176,9 +176,9 @@ public class Callbacks
 
     private static class KeyCallbackHotkeysGeneric implements IHotkeyCallback
     {
-        private final Minecraft mc;
+        private final MinecraftClient mc;
 
-        public KeyCallbackHotkeysGeneric(Minecraft mc)
+        public KeyCallbackHotkeysGeneric(MinecraftClient mc)
         {
             this.mc = mc;
         }
@@ -247,7 +247,7 @@ public class Callbacks
             }
             else if (key == Hotkeys.OPEN_CONFIG_GUI.getKeybind())
             {
-                this.mc.displayGuiScreen(new GuiConfigs());
+                this.mc.openScreen(new GuiConfigs());
                 return true;
             }
 
@@ -258,7 +258,7 @@ public class Callbacks
         {
             Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
 
-            String str = TextFormatting.GREEN + mode.name() + TextFormatting.RESET;
+            String str = TextFormat.GREEN + mode.name() + TextFormat.RESET;
             StringUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
         }
     }
@@ -278,10 +278,10 @@ public class Callbacks
             this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
 
             boolean enabled = this.feature.getBooleanValue();
-            String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-            String preGreen = TextFormatting.GREEN.toString();
-            String preRed = TextFormatting.RED.toString();
-            String rst = TextFormatting.RESET.toString();
+            String strStatus = I18n.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
+            String preGreen = TextFormat.GREEN.toString();
+            String preRed = TextFormat.RED.toString();
+            String rst = TextFormat.RESET.toString();
             strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
             if (enabled)
@@ -333,10 +333,10 @@ public class Callbacks
             this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
 
             boolean enabled = this.feature.getBooleanValue();
-            String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-            String preGreen = TextFormatting.GREEN.toString();
-            String preRed = TextFormatting.RED.toString();
-            String rst = TextFormatting.RESET.toString();
+            String strStatus = I18n.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
+            String preGreen = TextFormat.GREEN.toString();
+            String preRed = TextFormat.RED.toString();
+            String rst = TextFormat.RESET.toString();
             strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
             if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind())

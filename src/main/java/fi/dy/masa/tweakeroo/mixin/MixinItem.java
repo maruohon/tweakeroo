@@ -10,11 +10,11 @@ import net.minecraft.item.ItemStack;
 public abstract class MixinItem implements IItemStackLimit
 {
     @Shadow
-    public int getMaxStackSize() { return 0; }
+    public int getMaxAmount() { return 0; }
 
     @Override
     public int getMaxStackSize(ItemStack stack)
     {
-        return this.getMaxStackSize();
+        return this.getMaxAmount();
     }
 }

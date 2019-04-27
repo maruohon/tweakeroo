@@ -7,37 +7,37 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 
-@Mixin(EntityLivingBase.class)
-public abstract class MixinEntityLivingBase extends Entity
+@Mixin(LivingEntity.class)
+public abstract class MixinLivingEntity extends Entity
 {
-    public MixinEntityLivingBase(EntityType<?> type, World worldIn)
+    public MixinLivingEntity(EntityType<?> type, World worldIn)
     {
         super(type, worldIn);
     }
 
     @Redirect(method = "travel", at = @At(value = "FIELD", ordinal = 1,
-            target = "Lnet/minecraft/world/World;isRemote:Z"))
+            target = "Lnet/minecraft/world/World;isClient:Z"))
     private boolean fixElytraLanding(World world)
     {
-        return world.isRemote && (Configs.Fixes.ELYTRA_FIX.getBooleanValue() == false || ((Object) this instanceof EntityPlayerSP) == false);
+        return world.isClient && (Configs.Fixes.ELYTRA_FIX.getBooleanValue() == false || ((Object) this instanceof ClientPlayerEntity) == false);
     }
 
-    @Inject(method = "updatePotionEffects", at = @At(value = "INVOKE", ordinal = 0,
-            target = "Lnet/minecraft/network/datasync/EntityDataManager;get(Lnet/minecraft/network/datasync/DataParameter;)Ljava/lang/Object;"),
+    @Inject(method = "spawnPotionParticles", at = @At(value = "INVOKE", ordinal = 0,
+            target = "Lnet/minecraft/entity/data/DataTracker;get(Lnet/minecraft/entity/data/TrackedData;)Ljava/lang/Object;"),
             cancellable = true)
     private void removeOwnPotionEffects(CallbackInfo ci)
     {
-        Minecraft mc = Minecraft.getInstance();
+        MinecraftClient mc = MinecraftClient.getInstance();
 
         if (FeatureToggle.TWEAK_REMOVE_OWN_POTION_EFFECTS.getBooleanValue() &&
-            ((Object) this) == mc.player && mc.gameSettings.thirdPersonView == 0)
+            ((Object) this) == mc.player && mc.options.perspective == 0)
         {
             ci.cancel();
         }

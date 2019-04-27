@@ -9,20 +9,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.event.InputHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.MovementInputFromOptions;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.input.Input;
+import net.minecraft.client.input.KeyboardInput;
 
-@Mixin(MovementInputFromOptions.class)
-public abstract class MixinMovementInputFromOptions extends MovementInput
+@Mixin(KeyboardInput.class)
+public abstract class MixinKeyboardInput extends Input
 {
-    @Inject(method = "updatePlayerMoveState()V", at = @At(
+    @Inject(method = "tick(ZZ)V", at = @At(
             value = "FIELD",
-            target = "Lnet/minecraft/util/MovementInputFromOptions;sneak:Z",
+            target = "Lnet/minecraft/client/input/KeyboardInput;sneaking:Z",
             ordinal = 0,
             shift = Shift.AFTER,
             opcode = Opcodes.PUTFIELD))
-    private void customMovement(CallbackInfo ci)
+    private void customMovement(boolean val1, boolean val2, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_MOVEMENT_KEYS.getBooleanValue())
         {
@@ -30,9 +30,9 @@ public abstract class MixinMovementInputFromOptions extends MovementInput
         }
 
         if (FeatureToggle.TWEAK_PERMANENT_SNEAK.getBooleanValue() &&
-            (Configs.Generic.PERMANENT_SNEAK_ALLOW_IN_GUIS.getBooleanValue() || Minecraft.getInstance().currentScreen == null))
+            (Configs.Generic.PERMANENT_SNEAK_ALLOW_IN_GUIS.getBooleanValue() || MinecraftClient.getInstance().currentScreen == null))
         {
-            this.sneak = true;
+            this.sneaking = true;
         }
     }
 }

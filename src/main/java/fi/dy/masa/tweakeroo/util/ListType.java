@@ -1,7 +1,7 @@
 package fi.dy.masa.tweakeroo.util;
 
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resource.language.I18n;
 
 public enum ListType implements IConfigOptionListEntry
 {
@@ -27,7 +27,7 @@ public enum ListType implements IConfigOptionListEntry
     @Override
     public String getDisplayName()
     {
-        return I18n.format(this.translationKey);
+        return I18n.translate(this.translationKey);
     }
 
     @Override

@@ -2,10 +2,6 @@ package fi.dy.masa.tweakeroo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dimdev.rift.listener.client.ClientTickable;
-import org.dimdev.riftloader.listener.InitializationListener;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixins;
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.event.InputEventHandler;
@@ -18,9 +14,11 @@ import fi.dy.masa.tweakeroo.event.InputHandler;
 import fi.dy.masa.tweakeroo.event.RenderHandler;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
-import net.minecraft.client.Minecraft;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.client.ClientTickCallback;
+import net.minecraft.client.MinecraftClient;
 
-public class Tweakeroo implements ClientTickable, InitializationListener
+public class Tweakeroo implements ModInitializer, ClientTickCallback
 {
     public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
 
@@ -28,16 +26,14 @@ public class Tweakeroo implements ClientTickable, InitializationListener
     public static int renderCountXPOrbs;
 
     @Override
-    public void onInitialization()
+    public void onInitialize()
     {
-        MixinBootstrap.init();
-        Mixins.addConfiguration("mixins.tweakeroo.json");
-
         InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
+        ClientTickCallback.EVENT.register(this);
     }
 
     @Override
-    public void clientTick(Minecraft mc)
+    public void tick(MinecraftClient mc)
     {
         PlacementTweaks.onTick(mc);
         MiscTweaks.onTick(mc);
@@ -62,7 +58,7 @@ public class Tweakeroo implements ClientTickable, InitializationListener
             RenderEventHandler.getInstance().registerGameOverlayRenderer(renderer);
             RenderEventHandler.getInstance().registerWorldLastRenderer(renderer);
 
-            Callbacks.init(Minecraft.getInstance());
+            Callbacks.init(MinecraftClient.getInstance());
         }
     }
 }

@@ -6,27 +6,27 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBreakable;
-import net.minecraft.block.BlockSlime;
+import net.minecraft.block.SlimeBlock;
+import net.minecraft.block.TransparentBlock;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-@Mixin(BlockSlime.class)
-public abstract class MixinBlockSlime extends BlockBreakable
+@Mixin(SlimeBlock.class)
+public abstract class MixinSlimeBlock extends TransparentBlock
 {
-    public MixinBlockSlime(Block.Properties properties)
+    public MixinSlimeBlock(Block.Settings settings)
     {
-        super(properties);
+        super(settings);
     }
 
-    @Inject(method = "onEntityWalk", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "onSteppedOn", at = @At("HEAD"), cancellable = true)
     private void onEntityWalkOnSlime(World worldIn, BlockPos pos, Entity entityIn, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN.getBooleanValue() && entityIn instanceof EntityPlayer)
+        if (FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN.getBooleanValue() && entityIn instanceof PlayerEntity)
         {
-            super.onEntityWalk(worldIn, pos, entityIn);
+            super.onSteppedOn(worldIn, pos, entityIn);
             ci.cancel();
         }
     }

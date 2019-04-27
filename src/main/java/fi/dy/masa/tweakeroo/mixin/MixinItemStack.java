@@ -15,7 +15,7 @@ public abstract class MixinItemStack
     @Shadow
     public Item getItem() { return null; }
 
-    @Inject(method = "getMaxStackSize", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getMaxAmount", at = @At("HEAD"), cancellable = true)
     public void getMaxStackSizeStackSensitive(CallbackInfoReturnable<Integer> ci)
     {
         ci.setReturnValue(((IItemStackLimit) this.getItem()).getMaxStackSize((ItemStack) (Object) this));
