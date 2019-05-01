@@ -7,9 +7,9 @@ import fi.dy.masa.malilib.hotkeys.IKeybindManager;
 import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
 import fi.dy.masa.malilib.hotkeys.IKeyboardInputHandler;
 import fi.dy.masa.malilib.hotkeys.IMouseInputHandler;
+import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
-import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -135,7 +135,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 ConfigDouble config = Configs.getActiveFlySpeedConfig();
                 double newValue = config.getDoubleValue() + (dWheel > 0 ? 0.005 : -0.005);
                 config.setDoubleValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
                 String strIndex = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
                 String strValue = preGreen + String.format("%.3f", config.getDoubleValue()) + rst;
@@ -147,7 +147,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue()) + rst;
                 mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_after_clicker_count_to", strValue));
@@ -158,7 +158,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.PLACEMENT_LIMIT.setIntegerValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.PLACEMENT_LIMIT.getIntegerValue()) + rst;
                 mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_placement_limit_to", strValue));
@@ -169,7 +169,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.setIntegerValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue()) + rst;
                 mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue));
@@ -180,7 +180,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.PLACEMENT_GRID_SIZE.setIntegerValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue()) + rst;
                 mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_placement_grid_size_to", strValue));
@@ -191,7 +191,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             {
                 double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.ZOOM_FOV.setDoubleValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
                 mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_zoom_fov_to", strValue));

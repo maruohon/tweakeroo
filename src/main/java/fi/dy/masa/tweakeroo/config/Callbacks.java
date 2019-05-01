@@ -5,6 +5,7 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
+import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
@@ -58,12 +59,12 @@ public class Callbacks
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
 
-        FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_AFTER_CLICKER));
-        FeatureToggle.TWEAK_FLY_SPEED.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_FLY_SPEED));
-        FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE));
-        FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_GRID));
-        FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_PLACEMENT_LIMIT));
-        FeatureToggle.TWEAK_ZOOM.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_ZOOM));
+        FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_AFTER_CLICKER));
+        FeatureToggle.TWEAK_FLY_SPEED.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_FLY_SPEED));
+        FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE));
+        FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_PLACEMENT_GRID));
+        FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_PLACEMENT_LIMIT));
+        FeatureToggle.TWEAK_ZOOM.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_ZOOM));
     }
 
     public static class FeatureCallbackGamma implements IValueChangeCallback<IConfigBoolean>
@@ -343,7 +344,7 @@ public class Callbacks
         @Override
         public boolean onKeyAction(KeyAction action, IKeybind key)
         {
-            this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
+            this.feature.toggleBooleanValue();
 
             boolean enabled = this.feature.getBooleanValue();
             String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
@@ -366,45 +367,31 @@ public class Callbacks
         }
     }
 
-    public static class KeyCallbackToggleOnRelease implements IHotkeyCallback
+    private static class KeyCallbackAdjustableFeature implements IHotkeyCallback
     {
-        private final FeatureToggle feature;
-        private static boolean valueChanged;
+        private final IConfigBoolean config;
 
-        public static void setValueChanged()
+        private static IHotkeyCallback createCallback(IConfigBoolean config)
         {
-            valueChanged = true;
+            return new KeyCallbackAdjustable(config, new KeyCallbackAdjustableFeature(config));
         }
 
-        private KeyCallbackToggleOnRelease(FeatureToggle feature)
+        private KeyCallbackAdjustableFeature(IConfigBoolean config)
         {
-            this.feature = feature;
+            this.config = config;
         }
 
         @Override
         public boolean onKeyAction(KeyAction action, IKeybind key)
         {
-            // These keybinds activate on both edges to be able to cancel further processing
-            // of the press event.
-            if (action == KeyAction.PRESS)
-            {
-                return true;
-            }
+            this.config.toggleBooleanValue();
 
-            // Don't toggle the state if a value was adjusted
-            if (valueChanged)
-            {
-                valueChanged = false;
-                return true;
-            }
-
-            this.feature.setBooleanValue(this.feature.getBooleanValue() == false);
-
-            boolean enabled = this.feature.getBooleanValue();
+            boolean enabled = this.config.getBooleanValue();
             String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
             String preGreen = GuiBase.TXT_GREEN;
             String preRed = GuiBase.TXT_RED;
             String rst = GuiBase.TXT_RST;
+            String prettyName = this.config.getPrettyName();
             strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
             if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind())
@@ -416,7 +403,7 @@ public class Callbacks
                 }
                 else
                 {
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_FLY_SPEED.getKeybind())
@@ -436,7 +423,7 @@ public class Callbacks
                         player.capabilities.setFlySpeed(0.05f);
                     }
 
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind())
@@ -448,7 +435,7 @@ public class Callbacks
                 }
                 else
                 {
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind())
@@ -460,7 +447,7 @@ public class Callbacks
                 }
                 else
                 {
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind())
@@ -472,7 +459,7 @@ public class Callbacks
                 }
                 else
                 {
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
                 }
             }
             else if (key == FeatureToggle.TWEAK_ZOOM.getKeybind())
@@ -484,7 +471,7 @@ public class Callbacks
                 }
                 else
                 {
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", this.feature.getPrettyName(), strStatus);
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
                 }
             }
 
