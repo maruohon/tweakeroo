@@ -187,7 +187,8 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 return true;
             }
-            else if (FeatureToggle.TWEAK_ZOOM.getKeybind().isKeybindHeld())
+            else if (FeatureToggle.TWEAK_ZOOM.getKeybind().isKeybindHeld() ||
+                     (FeatureToggle.TWEAK_ZOOM.getBooleanValue() && Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld()))
             {
                 double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.ZOOM_FOV.setDoubleValue(newValue);
