@@ -198,7 +198,7 @@ public class Callbacks
         {
             if (key == Hotkeys.TOOL_PICK.getKeybind())
             {
-                if (this.mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
+                if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
                 {
                     InventoryUtils.trySwitchToEffectiveTool(this.mc.objectMouseOver.getBlockPos());
                     return true;

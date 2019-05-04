@@ -86,7 +86,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         if (mc.currentScreen == null && mc.player != null && mc.player.capabilities.isCreativeMode &&
             eventButtonState && eventButton == mc.gameSettings.keyBindUseItem.getKeyCode() + 100 &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
-            mc.objectMouseOver.typeOfHit == RayTraceResult.Type.MISS)
+            mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.MISS)
         {
             BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
 
