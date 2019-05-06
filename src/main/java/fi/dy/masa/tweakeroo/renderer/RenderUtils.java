@@ -13,6 +13,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.ChestBlockEntity;
+import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.gui.Screen;
@@ -258,20 +260,32 @@ public class RenderUtils
         if (trace.getType() == HitResult.Type.BLOCK)
         {
             BlockPos pos = ((BlockHitResult) trace).getBlockPos();
-            BlockEntity te = world.getWorldChunk(pos).getBlockEntity(pos);
+            BlockEntity te1 = world.getWorldChunk(pos).getBlockEntity(pos);
 
-            if (te instanceof Inventory)
+            if (te1 instanceof Inventory)
             {
-                inv = (Inventory) te;
+                inv = (Inventory) te1;
                 BlockState state = world.getBlockState(pos);
 
-                if (state.getBlock() instanceof ChestBlock)
+                if (state.getBlock() instanceof ChestBlock && te1 instanceof ChestBlockEntity)
                 {
-                    Inventory cont = ChestBlock.getInventory(state, world, pos, true);
+                    ChestType type = state.get(ChestBlock.CHEST_TYPE);
 
-                    if (cont instanceof DoubleInventory)
+                    if (type != ChestType.SINGLE)
                     {
-                        inv = cont;
+                        BlockPos posAdj = pos.offset(ChestBlock.getFacing(state));
+                        BlockState stateAdj = world.getBlockState(posAdj);
+                        BlockEntity te2 = world.getWorldChunk(posAdj).getBlockEntity(posAdj);
+
+                        if (stateAdj.getBlock() == state.getBlock() &&
+                            te2 instanceof ChestBlockEntity &&
+                            stateAdj.get(ChestBlock.CHEST_TYPE) != ChestType.SINGLE &&
+                            stateAdj.get(ChestBlock.FACING) == state.get(ChestBlock.FACING))
+                        {
+                            Inventory invRight = type == ChestType.RIGHT ?             inv : (Inventory) te2;
+                            Inventory invLeft  = type == ChestType.RIGHT ? (Inventory) te2 :             inv;
+                            inv = new DoubleInventory(invRight, invLeft);
+                        }
                     }
                 }
 

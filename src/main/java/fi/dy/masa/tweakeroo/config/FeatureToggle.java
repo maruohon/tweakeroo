@@ -45,8 +45,6 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable
     TWEAK_NO_ENTITY_RENDERING       ("tweakNoEntityRendering",              false, "",    "Disables ALL except player entity rendering.\nThis is mainly meant for situations where you need to be\nable to do stuff to fix excessive entity count related problems"),
     TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "",    "If enabled, then falling block entities won't be rendered at all"),
     TWEAK_NO_ITEM_SWITCH_COOLDOWN   ("tweakNoItemSwitchRenderCooldown",     false, "",    "If true, then there won't be any cooldown/equip animation\nwhen switching the held item or using the item."),
-    TWEAK_NO_LIGHT_UPDATES          ("tweakNoLightUpdates",                 false, "",    "If enabled, disables some client-side (rendering related) light updates"),
-    TWEAK_NO_LIGHT_UPDATES_ALL      ("tweakNoLightUpdatesAll",              false, "",    "If enabled, disables ALL client-side light updates.\nThis might look very bad unless you use the Gamma tweak."),
     TWEAK_NO_PORTAL_GUI_CLOSING     ("tweakNoPortalGuiClosing",             false, "",    "If enabled, then you can still open GUIs while in a Nether Portal"),
     TWEAK_NO_SLIME_BLOCK_SLOWDOWN   ("tweakNoSlimeBlockSlowdown",           false, "",    "Removes the slowdown from walking on Slime Blocks.\n(This is originally from usefulmod by nessie.)"),
     TWEAK_PERMANENT_SNEAK           ("tweakPermanentSneak",                 false, "",    "If enabled, the player will be sneaking the entire time"),

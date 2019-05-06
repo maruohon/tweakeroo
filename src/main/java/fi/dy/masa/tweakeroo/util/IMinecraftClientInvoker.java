@@ -1,8 +1,8 @@
 package fi.dy.masa.tweakeroo.util;
 
-public interface IMinecraftAccessor
+public interface IMinecraftClientInvoker
 {
-    void setRightClickDelayTimer(int value);
+    void setItemUseCooldown(int value);
 
     void leftClickMouseAccessor();
 

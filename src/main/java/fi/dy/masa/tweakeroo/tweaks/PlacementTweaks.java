@@ -5,7 +5,7 @@ import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
+import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.ItemRestriction;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
@@ -137,7 +137,7 @@ public class PlacementTweaks
             {
                 InventoryUtils.trySwapCurrentToolIfNearlyBroken();
                 isEmulatedClick = true;
-                ((IMinecraftAccessor) mc).leftClickMouseAccessor();
+                ((IMinecraftClientInvoker) mc).leftClickMouseAccessor();
                 isEmulatedClick = false;
             }
         }
@@ -225,7 +225,7 @@ public class PlacementTweaks
             }
 
             // Reset the timer to prevent the regular process method from re-firing
-            ((IMinecraftAccessor) mc).setRightClickDelayTimer(4);
+            ((IMinecraftClientInvoker) mc).setItemUseCooldown(4);
         }
         else if (FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue() &&
                 mc.options.keyUse.isPressed() &&
@@ -236,7 +236,7 @@ public class PlacementTweaks
             for (int i = 0; i < count; ++i)
             {
                 isEmulatedClick = true;
-                ((IMinecraftAccessor) mc).rightClickMouseAccessor();
+                ((IMinecraftClientInvoker) mc).rightClickMouseAccessor();
                 isEmulatedClick = false;
             }
         }
@@ -246,13 +246,14 @@ public class PlacementTweaks
             ClientPlayerInteractionManager controller,
             ClientPlayerEntity player,
             ClientWorld world,
-            BlockPos posIn,
-            Direction sideIn,
-            Vec3d hitVec,
-            Hand hand)
+            Hand hand,
+            BlockHitResult hitResult)
     {
         boolean restricted = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() || FeatureToggle.TWEAK_PLACEMENT_GRID.getBooleanValue();
         ItemStack stackPre = player.getStackInHand(hand).copy();
+        Direction sideIn = hitResult.getSide();
+        BlockPos posIn = hitResult.getBlockPos();
+        Vec3d hitVec = hitResult.getPos();
         Direction playerFacingH = player.getHorizontalFacing();
         HitPart hitPart = getHitPart(sideIn, playerFacingH, posIn, hitVec);
         Direction sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
@@ -284,8 +285,8 @@ public class PlacementTweaks
 
             firstWasRotation = (flexible && rotation) || (accurate && (accurateIn || accurateReverse));
             firstWasOffset = flexible && offset;
-            BlockHitResult hitResult = new BlockHitResult(hitVec, sideIn, posIn, false);
-            ItemPlacementContext ctx = new ItemPlacementContext(new ItemUsageContext(player, hand, hitResult));
+            BlockHitResult hitResultTmp = new BlockHitResult(hitVec, sideIn, posIn, false);
+            ItemPlacementContext ctx = new ItemPlacementContext(new ItemUsageContext(player, hand, hitResultTmp));
             posFirst = getPlacementPositionForTargetedPosition(world, posIn, sideIn, ctx);
             posLast = posFirst;
             hitPartFirst = hitPart;

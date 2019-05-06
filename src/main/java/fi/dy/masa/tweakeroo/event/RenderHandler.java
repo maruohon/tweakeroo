@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Vec3d;
 
 public class RenderHandler implements IRenderer
 {
@@ -54,13 +55,15 @@ public class RenderHandler implements IRenderer
 
     private void renderOverlays(MinecraftClient mc, float partialTicks)
     {
+        Entity entity = mc.getCameraEntity();
+
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
+            entity != null &&
             mc.hitResult != null &&
             mc.hitResult.getType() == HitResult.Type.BLOCK &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld()))
         {
-            Entity entity = mc.player;
             BlockHitResult hitResult = (BlockHitResult) mc.hitResult;
             GlStateManager.depthMask(false);
             GlStateManager.disableLighting();
@@ -68,16 +71,14 @@ public class RenderHandler implements IRenderer
             GlStateManager.enableBlend();
             //GlStateManager.pushMatrix();
             GlStateManager.disableTexture();
-            double dx = entity.prevRenderX + (entity.x - entity.prevRenderX) * partialTicks;
-            double dy = entity.prevRenderY + (entity.y - entity.prevRenderY) * partialTicks;
-            double dz = entity.prevRenderZ + (entity.z - entity.prevRenderZ) * partialTicks;
+            Vec3d cameraPos = mc.gameRenderer.getCamera().getPos();
 
             RenderUtils.renderBlockPlacementOverlay(
                     entity,
                     hitResult.getBlockPos(),
                     hitResult.getSide(),
                     hitResult.getPos(),
-                    dx, dy, dz);
+                    cameraPos.x, cameraPos.y, cameraPos.z);
 
             GlStateManager.enableTexture();
             //GlStateManager.popMatrix();
