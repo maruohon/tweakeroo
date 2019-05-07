@@ -3,6 +3,8 @@ package fi.dy.masa.tweakeroo.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockBaseLogic;
+import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.text.ITextComponent;
 
@@ -11,6 +13,11 @@ public class MiscUtils
     private static ITextComponent[] previousSignText;
     private static String previousChatText = "";
     private static final Date DATE = new Date();
+
+    public static boolean getUpdateExec(TileEntityCommandBlock te)
+    {
+        return ((IMixinCommandBlockBaseLogic) te.getCommandBlockLogic()).getUpdateLastExecution();
+    }
 
     public static String getChatTimestamp()
     {

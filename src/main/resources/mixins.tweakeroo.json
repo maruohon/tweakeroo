@@ -5,6 +5,7 @@
     "minVersion": "0.6",
     "client": [
         "IMixinAbstractHorse",
+        "IMixinCommandBlockBaseLogic",
         "IMixinSlot",
         "MixinBlockDispenser",
         "MixinBlockFurnace",
@@ -22,6 +23,7 @@
         "MixinExplosion",
         "MixinGlStateManager",
         "MixinGuiChat",
+        "MixinGuiCommandBlock",
         "MixinGuiEditSign",
         "MixinGuiIngame",
         "MixinGuiNewChat",

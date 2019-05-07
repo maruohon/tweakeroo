@@ -11,6 +11,11 @@ tweakeroo.gui.button.config_gui.tweak_hotkeys=Tweak Hotkeys
 tweakeroo.gui.button.config_gui.generic_hotkeys=Generic Hotkeys
 tweakeroo.gui.button.config_gui.placement=Placement stuff
 
+tweakeroo.gui.button.misc.command_block.set_name=Set name
+tweakeroo.gui.button.misc.command_block.update_execution=Loops: %s
+
+tweakeroo.gui.button.misc.command_block.hover.update_execution=Whether or not multiple triggers per game tick are allowed
+
 tweakeroo.gui.title.configs=Tweakeroo Configs
 
 tweakeroo.hotkeys.category.generic_hotkeys=Generic hotkeys
