@@ -86,10 +86,12 @@ public class Configs implements IConfigHandler
 
     public static class Fixes
     {
+        public static final ConfigBoolean CLIENT_CHUNK_ENTITY_DUPE  = new ConfigBoolean("clientChunkEntityDupeFix", false, "Fixes the client world chunks essentially duping their\nentities when chunk packets are received");
         public static final ConfigBoolean ELYTRA_FIX                = new ConfigBoolean("elytraFix", false, "Elytra deployment/landing fix by Earthcomputer and Nessie");
         public static final ConfigBoolean TILE_UNLOAD_OPTIMIZATION  = new ConfigBoolean("tileEntityUnloadOptimization", false, "Optimizes the removal of unloading TileEntities from the World lists.\nThis can greatly improve performance if there are lots of\nTileEntities loaded and/or unloading at once.");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                CLIENT_CHUNK_ENTITY_DUPE,
                 ELYTRA_FIX,
                 TILE_UNLOAD_OPTIMIZATION
         );
