@@ -24,7 +24,10 @@ public abstract class MixinGuiEditSign
     @Inject(method = "onGuiClosed", at = @At("HEAD"))
     private void storeText(CallbackInfo ci)
     {
-        MiscUtils.copyTextFromSign(this.tileSign);
+        if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue())
+        {
+            MiscUtils.copyTextFromSign(this.tileSign);
+        }
     }
 
     @Inject(method = "initGui", at = @At("HEAD"), cancellable = true)
