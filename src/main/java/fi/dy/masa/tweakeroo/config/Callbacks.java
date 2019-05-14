@@ -62,6 +62,7 @@ public class Callbacks
         FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_AFTER_CLICKER));
         FeatureToggle.TWEAK_FLY_SPEED.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_FLY_SPEED));
         FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE));
+        FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER));
         FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_PLACEMENT_GRID));
         FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_PLACEMENT_LIMIT));
         FeatureToggle.TWEAK_ZOOM.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_ZOOM));
@@ -444,6 +445,18 @@ public class Callbacks
                 {
                     String strValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getStringValue();
                     InfoUtils.printActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
+                }
+                else
+                {
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
+                }
+            }
+            else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeybind())
+            {
+                if (enabled)
+                {
+                    String strValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getStringValue();
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_slot_randomizer_on", strStatus, preGreen + strValue + rst);
                 }
                 else
                 {

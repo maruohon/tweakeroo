@@ -176,6 +176,17 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 return true;
             }
+            else if (FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeybind().isKeybindHeld())
+            {
+                int newValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + (dWheel > 0 ? 1 : -1);
+                Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.setIntegerValue(newValue);
+                KeyCallbackAdjustable.setValueChanged();
+
+                String strValue = preGreen + Integer.valueOf(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue()) + rst;
+                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_hotbar_slot_randomizer_max_to", strValue));
+
+                return true;
+            }
             else if (FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().isKeybindHeld())
             {
                 int newValue = Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + (dWheel > 0 ? 1 : -1);

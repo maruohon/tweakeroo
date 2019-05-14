@@ -548,7 +548,8 @@ public class PlacementTweaks
             (stackCurrent.isEmpty() || fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
         {
             // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
-            boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false;
+            boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
+                                  FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue() == false;
             InventoryUtils.restockNewStackToHand(player, hand, stackOriginal, allowHotbar);
         }
     }
@@ -571,7 +572,19 @@ public class PlacementTweaks
 
         // We need to grab the stack here if the cached stack is still empty,
         // because this code runs before the cached stack gets set on the first click/use.
-        ItemStack stackOriginal = stackBeforeUse[hand.ordinal()].isEmpty() == false && FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false ? stackBeforeUse[hand.ordinal()] : player.getHeldItem(hand).copy();
+        ItemStack stackOriginal;
+
+        if (stackBeforeUse[hand.ordinal()].isEmpty() == false &&
+            FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
+            FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue() == false)
+        {
+            stackOriginal = stackBeforeUse[hand.ordinal()];
+        }
+        else
+        {
+            stackOriginal = player.getHeldItem(hand).copy();
+        }
+
         BlockPos posPlacement = getPlacementPositionForTargetedPosition(posIn, sideIn, world);
         IBlockState stateBefore = world.getBlockState(posPlacement);
         IBlockState state = world.getBlockState(posIn);
@@ -687,6 +700,11 @@ public class PlacementTweaks
                     newSlot = 0;
                 }
 
+                player.inventory.currentItem = newSlot;
+            }
+            else if (FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue())
+            {
+                int newSlot = player.getRNG().nextInt(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue());
                 player.inventory.currentItem = newSlot;
             }
         }
