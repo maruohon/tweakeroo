@@ -12,6 +12,7 @@
         "MixinBlockObserver",
         "MixinBlockPistonBase",
         "MixinBlockSlime",
+        "MixinBossInfoClient",
         "MixinChatTabCompleter",
         "MixinChunk",
         "MixinCommandFillClone",
@@ -46,7 +47,8 @@
         "MixinTileEntityMobSpawnerRenderer",
         "MixinTileEntityRendererDispatcher",
         "MixinWorld",
-        "MixinWorldClient"
+        "MixinWorldClient",
+        "MixinWorldProviderHell"
     ],
     "injectors": {
         "defaultRequire": 1
