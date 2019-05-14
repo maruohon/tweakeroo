@@ -14,7 +14,7 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.MovementInputFromOptions;
 
 @Mixin(MovementInputFromOptions.class)
-public class MixinMovementInputFromOptions extends MovementInput
+public abstract class MixinMovementInputFromOptions extends MovementInput
 {
     @Inject(method = "updatePlayerMoveState()V", at = @At(
             value = "FIELD",

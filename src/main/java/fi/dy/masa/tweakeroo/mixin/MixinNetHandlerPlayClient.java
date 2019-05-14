@@ -19,7 +19,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 
 @Mixin(NetHandlerPlayClient.class)
-public class MixinNetHandlerPlayClient
+public abstract class MixinNetHandlerPlayClient
 {
     @Inject(method = "handleSetSlot", at = @At(
             value = "INVOKE",

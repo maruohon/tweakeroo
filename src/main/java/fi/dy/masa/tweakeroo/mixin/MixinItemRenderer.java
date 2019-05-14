@@ -9,7 +9,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.ItemRenderer;
 
 @Mixin(ItemRenderer.class)
-public class MixinItemRenderer
+public abstract class MixinItemRenderer
 {
     @Redirect(method = "updateEquippedItem()V", at = @At(
             value = "INVOKE",

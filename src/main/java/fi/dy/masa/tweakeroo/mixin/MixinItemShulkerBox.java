@@ -10,7 +10,7 @@ import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 
 @Mixin(ItemShulkerBox.class)
-public class MixinItemShulkerBox extends ItemBlock implements IItemStackLimit
+public abstract class MixinItemShulkerBox extends ItemBlock implements IItemStackLimit
 {
     public MixinItemShulkerBox(Block block)
     {

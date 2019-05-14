@@ -11,7 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
 @Mixin(Entity.class)
-public class MixinEntity
+public abstract class MixinEntity
 {
     @Shadow
     public World world;

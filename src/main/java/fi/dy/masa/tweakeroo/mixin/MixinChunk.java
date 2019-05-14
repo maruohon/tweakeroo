@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 @Mixin(Chunk.class)
-public class MixinChunk
+public abstract class MixinChunk
 {
     @Shadow
     @Final

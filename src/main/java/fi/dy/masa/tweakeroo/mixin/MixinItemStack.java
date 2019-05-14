@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 @Mixin(ItemStack.class)
-public class MixinItemStack
+public abstract class MixinItemStack
 {
     @Shadow
     public Item getItem() { return null; }

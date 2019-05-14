@@ -11,7 +11,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 @Mixin(Explosion.class)
-public class MixinExplosion
+public abstract class MixinExplosion
 {
     @Redirect(method = "doExplosionB",
               slice = @Slice(

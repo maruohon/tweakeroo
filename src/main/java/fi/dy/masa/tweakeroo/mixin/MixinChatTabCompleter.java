@@ -7,12 +7,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat.ChatTabCompleter;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.util.TabCompleter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
 @Mixin(ChatTabCompleter.class)
-public class MixinChatTabCompleter
+public abstract class MixinChatTabCompleter extends TabCompleter
 {
+    public MixinChatTabCompleter(GuiTextField textFieldIn, boolean hasTargetBlockIn)
+    {
+        super(textFieldIn, hasTargetBlockIn);
+    }
+
     @Inject(method = "getTargetBlockPos", at = @At("RETURN"), cancellable = true)
     private void onGetTargetPos(CallbackInfoReturnable<BlockPos> cir)
     {

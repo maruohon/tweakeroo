@@ -16,7 +16,7 @@ import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 
 @Mixin(RenderManager.class)
-public class MixinRenderManager
+public abstract class MixinRenderManager
 {
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     private void onShouldRender(Entity entityIn, ICamera camera, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> ci)

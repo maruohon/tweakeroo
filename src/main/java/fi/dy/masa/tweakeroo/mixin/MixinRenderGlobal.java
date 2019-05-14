@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.util.math.BlockPos;
 
 @Mixin(RenderGlobal.class)
-public class MixinRenderGlobal
+public abstract class MixinRenderGlobal
 {
     @Inject(method = "notifyLightSet", at = @At("HEAD"), cancellable = true)
     public void notifyLightSet(BlockPos pos, CallbackInfo ci)
