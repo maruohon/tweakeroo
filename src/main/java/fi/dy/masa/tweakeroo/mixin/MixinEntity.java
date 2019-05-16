@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
+import fi.dy.masa.tweakeroo.util.SnapAimMode;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
@@ -68,10 +69,20 @@ public abstract class MixinEntity
     {
         if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue() && (Object) this instanceof EntityPlayerSP)
         {
-            this.realYaw += (double) yawChange * 0.15D;
-
             int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
-            this.realPitch = MathHelper.clamp(this.realPitch - (double) pitchChange * 0.15D, -limit, limit);
+            SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+            boolean snapAimLock = FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue();
+
+            // Not locked, or not snapping the yaw (ie. not in Yaw or Both modes)
+            if (snapAimLock == false || mode == SnapAimMode.PITCH)
+            {
+                this.realYaw += (double) yawChange * 0.15D;
+            }
+
+            if (snapAimLock == false || mode == SnapAimMode.YAW)
+            {
+                this.realPitch = MathHelper.clamp(this.realPitch - (double) pitchChange * 0.15D, -limit, limit);
+            }
 
             this.rotationYaw = MiscUtils.getSnappedYaw(this.realYaw);
             this.rotationPitch = MiscUtils.getSnappedPitch(this.realPitch);
