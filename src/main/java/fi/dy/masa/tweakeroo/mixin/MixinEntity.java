@@ -67,25 +67,43 @@ public abstract class MixinEntity
                      target = "Lnet/minecraft/entity/Entity;prevRotationPitch:F", ordinal = 0))
     private void overrideYaw(float yawChange, float pitchChange, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue() && (Object) this instanceof EntityPlayerSP)
+        if ((Object) this instanceof EntityPlayerSP)
         {
-            int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
-            SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
-            boolean snapAimLock = FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue();
-
-            // Not locked, or not snapping the yaw (ie. not in Yaw or Both modes)
-            if (snapAimLock == false || mode == SnapAimMode.PITCH)
+            if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue())
             {
-                this.realYaw += (double) yawChange * 0.15D;
+                this.rotationYaw = (float) this.realYaw;
+                this.rotationPitch = (float) this.realPitch;
             }
-
-            if (snapAimLock == false || mode == SnapAimMode.YAW)
+            else
             {
-                this.realPitch = MathHelper.clamp(this.realPitch - (double) pitchChange * 0.15D, -limit, limit);
-            }
+                if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
+                {
+                    int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
+                    SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+                    boolean snapAimLock = FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue();
 
-            this.rotationYaw = MiscUtils.getSnappedYaw(this.realYaw);
-            this.rotationPitch = MiscUtils.getSnappedPitch(this.realPitch);
+                    // Not locked, or not snapping the yaw (ie. not in Yaw or Both modes)
+                    if (snapAimLock == false || mode == SnapAimMode.PITCH)
+                    {
+                        this.realYaw += (double) yawChange * 0.15D;
+                    }
+
+                    if (snapAimLock == false || mode == SnapAimMode.YAW)
+                    {
+                        this.realPitch = MathHelper.clamp(this.realPitch - (double) pitchChange * 0.15D, -limit, limit);
+                    }
+
+                    this.rotationYaw = MiscUtils.getSnappedYaw(this.realYaw);
+                    this.rotationPitch = MiscUtils.getSnappedPitch(this.realPitch);
+                }
+                // Update the internal rotations while Aim Lock is not active.
+                // They will then be used as the forced rotations if the Aim Lock is activated.
+                else
+                {
+                    this.realYaw = this.rotationYaw;
+                    this.realPitch = this.rotationPitch;
+                }
+            }
         }
     }
 }
