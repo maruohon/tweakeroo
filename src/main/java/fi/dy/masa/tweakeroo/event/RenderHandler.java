@@ -43,6 +43,12 @@ public class RenderHandler implements IRenderer
         {
             RenderUtils.renderPlayerInventoryOverlay(mc);
         }
+
+        if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue() &&
+            Configs.Generic.SNAP_AIM_INDICATOR.getBooleanValue())
+        {
+            RenderUtils.renderSnapAimAngleIndicator();
+        }
     }
 
     @Override

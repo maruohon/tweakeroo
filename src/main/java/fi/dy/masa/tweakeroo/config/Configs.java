@@ -23,6 +23,7 @@ import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
+import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 public class Configs implements IConfigHandler
 {
@@ -67,6 +68,12 @@ public class Configs implements IConfigHandler
         public static final ConfigBoolean       SHULKER_DISPLAY_BACKGROUND_COLOR    = new ConfigBoolean     ("shulkerDisplayBgColor", true, "Enables tinting/coloring the Shulker Box display\nbackground texture with the dye color of the box");
         public static final ConfigBoolean       SHULKER_DISPLAY_REQUIRE_SHIFT       = new ConfigBoolean     ("shulkerDisplayRequireShift", true, "Whether or not holding shift is required for the Shulker Box preview");
         public static final ConfigBoolean       SLOT_SYNC_WORKAROUND                = new ConfigBoolean     ("slotSyncWorkaround", true, "This prevents the server from overriding the durability or\nstack size on items that are being used quickly for example\nwith the fast right click tweak.");
+        public static final ConfigBoolean       SNAP_AIM_INDICATOR                  = new ConfigBoolean     ("snapAimIndicator", true, "Whether or not to render the snap aim angle indicator");
+        public static final ConfigColor         SNAP_AIM_INDICATOR_COLOR            = new ConfigColor       ("snapAimIndicatorColor", "#603030FF", "The color for the snap aim indicator background");
+        public static final ConfigOptionList    SNAP_AIM_MODE                       = new ConfigOptionList  ("snapAimMode", SnapAimMode.YAW, "Snap aim mode: yaw, or pitch, or both");
+        public static final ConfigBoolean       SNAP_AIM_PITCH_OVERSHOOT            = new ConfigBoolean     ("snapAimPitchOvershoot", false, "Whether or not to allow overshooting the pitch angle\nfrom the normal +/- 90 degrees up to +/- 180 degrees");
+        public static final ConfigDouble        SNAP_AIM_PITCH_STEP                 = new ConfigDouble      ("snapAimPitchStep", 12.5, 0, 90, "The pitch angle step of the snap aim tweak");
+        public static final ConfigDouble        SNAP_AIM_YAW_STEP                   = new ConfigDouble      ("snapAimYawStep", 45, 0, 360, "The yaw angle step of the snap aim tweak");
         public static final ConfigDouble        ZOOM_FOV                            = new ConfigDouble      ("zoomFov", 30, 0, 600, "The FOV value used for the zoom feature");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
@@ -78,13 +85,17 @@ public class Configs implements IConfigHandler
                 SHULKER_DISPLAY_BACKGROUND_COLOR,
                 SHULKER_DISPLAY_REQUIRE_SHIFT,
                 SLOT_SYNC_WORKAROUND,
+                SNAP_AIM_INDICATOR,
+                SNAP_AIM_PITCH_OVERSHOOT,
 
                 PLACEMENT_RESTRICTION_MODE,
                 HOTBAR_SWAP_OVERLAY_ALIGNMENT,
+                SNAP_AIM_MODE,
 
                 CHAT_TIME_FORMAT,
                 CHAT_BACKGROUND_COLOR,
                 FLEXIBLE_PLACEMENT_OVERLAY_COLOR,
+                SNAP_AIM_INDICATOR_COLOR,
 
                 AFTER_CLICKER_CLICK_COUNT,
                 BLOCK_REACH_DISTANCE,
@@ -110,6 +121,8 @@ public class Configs implements IConfigHandler
                 POTION_WARNING_THRESHOLD,
                 RENDER_LIMIT_ITEM,
                 RENDER_LIMIT_XP_ORB,
+                SNAP_AIM_PITCH_STEP,
+                SNAP_AIM_YAW_STEP,
                 ZOOM_FOV
         );
     }
@@ -166,12 +179,15 @@ public class Configs implements IConfigHandler
         public static final ConfigDouble        GAMMA_VALUE_ORIGINAL                = new ConfigDouble      ("gammaValueOriginal", 0, 0, 1, "The original gamma value, before the gamma override was enabled");
         public static final ConfigInteger       HOTBAR_SCROLL_CURRENT_ROW           = new ConfigInteger     ("hotbarScrollCurrentRow", 3, 0, 3, "This is just for the mod internally to track the\n\"current hotbar row\" for the hotbar scrolling feature");
         public static final ConfigDouble        SLIME_BLOCK_SLIPPERINESS_ORIGINAL   = new ConfigDouble      ("slimeBlockSlipperinessOriginal", 0.8, 0, 1, "The original slipperiness value of Slime Blocks");
+        public static final ConfigDouble        SNAP_AIM_LAST_PITCH                 = new ConfigDouble      ("snapAimLastPitch", 0, -135, 135, "The last snapped-to pitch value");
+        public static final ConfigDouble        SNAP_AIM_LAST_YAW                   = new ConfigDouble      ("snapAimLastYaw", 0, 0, 360, "The last snapped-to yaw value");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 FLY_SPEED_PRESET,
                 GAMMA_VALUE_ORIGINAL,
                 HOTBAR_SCROLL_CURRENT_ROW,
-                SLIME_BLOCK_SLIPPERINESS_ORIGINAL
+                SLIME_BLOCK_SLIPPERINESS_ORIGINAL,
+                SNAP_AIM_LAST_YAW
         );
     }
 
