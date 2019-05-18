@@ -109,10 +109,9 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     }
 
     @Override
-    public boolean onMouseScroll(int mouseX, int mouseY, double amount)
+    public boolean onMouseScroll(int mouseX, int mouseY, double dWheel)
     {
         Minecraft mc = Minecraft.getInstance();
-        int dWheel = (int) amount;
 
         // Not in a GUI
         if (mc.currentScreen == null && dWheel != 0)
