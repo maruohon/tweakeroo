@@ -1,10 +1,12 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.authlib.GameProfile;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -24,8 +26,8 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
         super(worldIn, playerProfile);
     }
 
-    @Shadow
-    public MovementInput movementInput;
+    @Shadow public MovementInput movementInput;
+    @Shadow protected int sprintToggleTimer;
 
     @Redirect(method = "onLivingUpdate()V",
               at = @At(value = "INVOKE",
@@ -74,5 +76,18 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
         }
 
         return player.collidedHorizontally;
+    }
+
+    @Inject(method = "onLivingUpdate",
+            slice = @Slice(from = @At(value = "INVOKE",
+                                      target = "Lnet/minecraft/client/entity/EntityPlayerSP;getFoodStats()Lnet/minecraft/util/FoodStats;")),
+            at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, ordinal = 0, shift = At.Shift.AFTER,
+                     target = "Lnet/minecraft/client/entity/EntityPlayerSP;sprintToggleTimer:I"))
+    private void disableDoubleTapSprint(CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_NO_DOUBLE_TAP_SPRINT.getBooleanValue())
+        {
+            this.sprintToggleTimer = 0;
+        }
     }
 }
