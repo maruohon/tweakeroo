@@ -28,6 +28,7 @@
         "MixinGuiEditSign",
         "MixinGuiIngame",
         "MixinGuiNewChat",
+        "MixinInventoryEffectRenderer",
         "MixinItem",
         "MixinItemBlock",
         "MixinItemRenderer",
