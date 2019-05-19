@@ -6,7 +6,6 @@
     "client": [
         "IMixinAbstractHorse",
         "IMixinCommandBlockBaseLogic",
-        "IMixinSlot",
         "MixinBlockDispenser",
         "MixinBlockFurnace",
         "MixinBlockObserver",

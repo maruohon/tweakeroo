@@ -8,12 +8,10 @@ import fi.dy.masa.malilib.util.Constants;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.mixin.IMixinSlot;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
@@ -377,8 +375,7 @@ public class InventoryUtils
 
     private static boolean isHotbarSlot(Slot slot)
     {
-        // This isn't correct for modded Forge IItemHandler-based inventories
-        return (slot.inventory instanceof InventoryPlayer) && ((IMixinSlot) slot).getSlotIndex() <= 8;
+        return slot.slotNumber >= 36 && slot.slotNumber <= 44;
     }
 
     private static void swapItemToHand(EntityPlayer player, EnumHand hand, int slotNumber)
@@ -463,7 +460,9 @@ public class InventoryUtils
         {
             ItemStack stackSlot = slot.getStack();
 
-            if (stackSlot.isItemEqualIgnoreDurability(stackReference) &&
+            // Only accept regular inventory slots (no crafting, armor slots, or offhand)
+            if (fi.dy.masa.malilib.util.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false) &&
+                stackSlot.isItemEqualIgnoreDurability(stackReference) &&
                 stackSlot.getMaxDamage() - stackSlot.getItemDamage() > minDurabilityLeft &&
                 hasSameIshEnchantments(stackReference, stackSlot))
             {
