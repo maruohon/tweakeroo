@@ -47,7 +47,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
             target = "Lnet/minecraft/client/network/NetHandlerPlayClient;sendPacket(Lnet/minecraft/network/Packet;)V"))
     private void fixElytraDeployment(CallbackInfo ci)
     {
-        if (Configs.Fixes.ELYTRA_FIX.getBooleanValue())
+        if (Configs.Fixes.ELYTRA_FIX.getBooleanValue() && this.isInWater() == false)
         {
             this.setFlag(7, true);
         }
