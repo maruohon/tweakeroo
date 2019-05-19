@@ -111,11 +111,8 @@ public class PlacementTweaks
 
     public static void onProcessRightClickPost(EntityPlayer player, EnumHand hand)
     {
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
-        {
-            //System.out.printf("onProcessRightClickPost -> tryRestockHand with: %s, current: %s\n", stackBeforeUse[hand.ordinal()], player.getHeldItem(hand));
-            tryRestockHand(player, hand, stackBeforeUse[hand.ordinal()]);
-        }
+        //System.out.printf("onProcessRightClickPost -> tryRestockHand with: %s, current: %s\n", stackBeforeUse[hand.ordinal()], player.getHeldItem(hand));
+        tryRestockHand(player, hand, stackBeforeUse[hand.ordinal()]);
     }
 
     public static void onLeftClickMousePre()
@@ -145,6 +142,8 @@ public class PlacementTweaks
         else
         {
             InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+            EnumHand hand = EnumHand.MAIN_HAND;
+            tryRestockHand(mc.player, hand, stackBeforeUse[hand.ordinal()]);
         }
     }
 
@@ -542,15 +541,18 @@ public class PlacementTweaks
 
     private static void tryRestockHand(EntityPlayer player, EnumHand hand, ItemStack stackOriginal)
     {
-        ItemStack stackCurrent = player.getHeldItem(hand);
-
-        if (stackOriginal.isEmpty() == false &&
-            (stackCurrent.isEmpty() || fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
         {
-            // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
-            boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
-                                  FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue() == false;
-            InventoryUtils.restockNewStackToHand(player, hand, stackOriginal, allowHotbar);
+            ItemStack stackCurrent = player.getHeldItem(hand);
+
+            if (stackOriginal.isEmpty() == false &&
+                (stackCurrent.isEmpty() || fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
+            {
+                // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
+                boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
+                                      FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue() == false;
+                InventoryUtils.restockNewStackToHand(player, hand, stackOriginal, allowHotbar);
+            }
         }
     }
 
@@ -670,13 +672,10 @@ public class PlacementTweaks
             placementCount++;
         }
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
-        {
-            // This restock needs to happen even with the pick-before-place tweak active,
-            // otherwise the fast placement mode's checks (getHandWithItem()) will fail...
-            //System.out.printf("processRightClickBlockWrapper -> tryRestockHand with: %s, current: %s\n", stackOriginal, player.getHeldItem(hand));
-            tryRestockHand(player, hand, stackOriginal);
-        }
+        // This restock needs to happen even with the pick-before-place tweak active,
+        // otherwise the fast placement mode's checks (getHandWithItem()) will fail...
+        //System.out.printf("processRightClickBlockWrapper -> tryRestockHand with: %s, current: %s\n", stackOriginal, player.getHeldItem(hand));
+        tryRestockHand(player, hand, stackOriginal);
 
         if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue() &&
             FeatureToggle.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() == false &&

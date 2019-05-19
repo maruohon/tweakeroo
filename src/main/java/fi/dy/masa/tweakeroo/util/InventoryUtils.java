@@ -156,7 +156,17 @@ public class InventoryUtils
 
     public static void restockNewStackToHand(EntityPlayer player, EnumHand hand, ItemStack stackReference, boolean allowHotbar)
     {
-        int slotWithItem = findSlotWithItem(player.inventoryContainer, stackReference, allowHotbar, true);
+        int slotWithItem = -1;
+
+        if (stackReference.getItem().isDamageable())
+        {
+            int minDurability = getMinDurability(stackReference);
+            slotWithItem = findSlotWithSuitableReplacementToolWithDurabilityLeft(player.inventoryContainer, stackReference, minDurability);
+        }
+        else
+        {
+            slotWithItem = findSlotWithItem(player.inventoryContainer, stackReference, allowHotbar, true);
+        }
 
         if (slotWithItem != -1)
         {
