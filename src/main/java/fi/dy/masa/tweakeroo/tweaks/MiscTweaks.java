@@ -1,15 +1,18 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
 import java.util.Collection;
+import javax.annotation.Nullable;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.mixin.IMixinFlatGeneratorInfo;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PotionRestriction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.world.gen.FlatLayerInfo;
 
 public class MiscTweaks
 {
@@ -99,5 +102,11 @@ public class MiscTweaks
                (effect.getPotion().isBeneficial() || Configs.Generic.POTION_WARNING_BENEFICIAL_ONLY.getBooleanValue() == false) &&
                effect.getDuration() <= Configs.Generic.POTION_WARNING_THRESHOLD.getIntegerValue() &&
                POTION_RESTRICTION.isAllowed(effect.getPotion());
+    }
+
+    @Nullable
+    public static FlatLayerInfo[] parseBlockString(String blockString)
+    {
+        return IMixinFlatGeneratorInfo.getLayersFromStringInvoker(3, blockString).toArray(new FlatLayerInfo[0]);
     }
 }
