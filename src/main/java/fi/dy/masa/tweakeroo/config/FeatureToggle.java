@@ -57,6 +57,8 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_NO_DOUBLE_TAP_SPRINT      ("tweakNoDoubleTapSprint",              false, "",    "Disables the double-tap-forward-key sprinting"),
     TWEAK_NO_BOSS_FOG               ("tweakNoBossFog",                      false, "",    "Removes the fog that boss mobs cause"),
     TWEAK_NO_CLIENT_ENTITY_UPDATES  ("tweakNoClientEntityUpdates",          false, "",    "Disables ALL except player entity updates on the client.\nThis is mainly meant for situations where you need to be\nable to do stuff to fix excessive entity count related problems"),
+    TWEAK_NO_DEAD_MOB_RENDERING     ("tweakNoDeadMobRendering",             false, "",    "Prevents rendering dead mobs (entities that are at 0 health)"),
+    TWEAK_NO_DEAD_MOB_TARGETING     ("tweakNoDeadMobTargeting",             false, "",    "Prevents targeting entities that are at 0 health.\nThis fixes for example hitting already dead mobs."),
     TWEAK_NO_ENTITY_RENDERING       ("tweakNoEntityRendering",              false, "",    "Disables ALL except player entity rendering.\nThis is mainly meant for situations where you need to be\nable to do stuff to fix excessive entity count related problems"),
     TWEAK_NO_ENTITY_TICKING         ("tweakNoEntityTicking",                false, "",    "Prevent everything except player entities from getting ticked"),
     TWEAK_NO_FALLING_BLOCK_RENDER   ("tweakNoFallingBlockEntityRendering",  false, "",    "If enabled, then falling block entities won't be rendered at all"),

@@ -21,6 +21,7 @@
         "MixinEntityLivingBase",
         "MixinEntityPlayerSP",
         "MixinEntityRenderer",
+        "MixinEntityRenderer_Predicate",
         "MixinExplosion",
         "MixinGlStateManager",
         "MixinGuiChat",
