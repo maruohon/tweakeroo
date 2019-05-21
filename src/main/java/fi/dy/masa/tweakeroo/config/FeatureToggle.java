@@ -6,6 +6,7 @@ import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.IConfigBoolean;
 import fi.dy.masa.malilib.config.IConfigNotifiable;
 import fi.dy.masa.malilib.config.IHotkeyTogglable;
+import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackToggleBooleanConfigWithMessage;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
@@ -13,10 +14,11 @@ import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
+import net.minecraft.client.resources.I18n;
 
 public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfigBoolean>
 {
-    CARPET_ACCURATE_PLACEMENT_PROTOCOL ("carpetAccuratePlacementProtocol",     false, "",    "If enabled, then the Flexible Block Placement and the\nAccurate Block Placement use the protocol implemented\nin the recent carpet mod versions", "Carpet protocol Accurate Placement"),
+    CARPET_ACCURATE_PLACEMENT_PROTOCOL ("carpetAccuratePlacementProtocol",  false, "",    "If enabled, then the Flexible Block Placement and the\nAccurate Block Placement use the protocol implemented\nin the recent carpet mod versions", "Carpet protocol Accurate Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "",     "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
     REMEMBER_FLEXIBLE               ("rememberFlexibleFromClick",           true, "",     "If enabled, then the flexible block placement status\nwill be remembered from the first placed block,\nas long as the use key is held down.", "Remember Flexible Orientation From First Click"),
     TWEAK_ACCURATE_BLOCK_PLACEMENT  ("tweakAccurateBlockPlacement",         false, "",    "Enables a simpler version of Flexible placement, similar to\nthe Carpet mod, so basically either facing into or out\nfrom the block face clicked on."),
@@ -29,15 +31,15 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_CHAT_TIMESTAMP            ("tweakChatTimestamp",                  false, "",    "Adds timestamps to chat messages"),
     TWEAK_COMMAND_BLOCK_EXTRA_FIELDS("tweakCommandBlockExtraFields",        false, "",    "Adds extra fields to the Command Block GUI, for settings\nthe name of the command block, and seeing the stats results"),
     TWEAK_CUSTOM_FLAT_PRESETS       ("tweakCustomFlatPresets",              false, "",    "Allows adding custom flat world presets to the list.\nThe presets are defined in Lists -> flatWorldPresets"),
-    TWEAK_SHULKERBOX_STACKING       ("tweakEmptyShulkerBoxesStack",         false, "",    "Enables empty Shulker Boxes stacking up to 64.\nNOTE: They will also stack inside inventories!\nOn servers this will cause desyncs/glitches\nunless the server has a mod that does the same.\nIn single player this changes shulker box based system behaviour."),
-    TWEAK_SHULKERBOX_STACK_GROUND   ("tweakEmptyShulkerBoxesStackOnGround", false, "",    "Enables empty Shulker Boxes stacking up to 64\nwhen as items on the ground"),
+    TWEAK_SHULKERBOX_STACKING       ("tweakEmptyShulkerBoxesStack",         false, true, "",    "Enables empty Shulker Boxes stacking up to 64.\nNOTE: They will also stack inside inventories!\nOn servers this will cause desyncs/glitches\nunless the server has a mod that does the same.\nIn single player this changes shulker box based system behaviour."),
+    TWEAK_SHULKERBOX_STACK_GROUND   ("tweakEmptyShulkerBoxesStackOnGround", false, true, "",    "Enables empty Shulker Boxes stacking up to 64\nwhen as items on the ground"),
     TWEAK_EXPLOSION_REDUCED_PARTICLES ("tweakExplosionReducedParticles",    false, "",    "If enabled, then all explosion particles will use the\nEXPLOSION_NORMAL particle instead of possibly\nthe EXPLOSION_LARGE or EXPLOSION_HUGE particles"),
     TWEAK_F3_CURSOR                 ("tweakF3Cursor",                       false, "",    "Enables always rendering the F3 screen cursor"),
     TWEAK_FAKE_SNEAKING             ("tweakFakeSneaking",                   false, "",    "Enables \"fake sneaking\" ie. prevents you from falling from edges\nwithout slowing down the movement speed"),
     TWEAK_FAST_BLOCK_PLACEMENT      ("tweakFastBlockPlacement",             false, "",    "Enables fast/convenient block placement when moving\nthe cursor over new blocks"),
     TWEAK_FAST_LEFT_CLICK           ("tweakFastLeftClick",                  false, "",    "Enables automatic fast left clicking while holding down\nthe attack button (left click).\nThe number of clicks per tick is set in the Generic configs."),
     TWEAK_FAST_RIGHT_CLICK          ("tweakFastRightClick",                 false, "",    "Enables automatic fast right clicking while holding down\nthe use button (right click).\nThe number of clicks per tick is set in the Generic configs."),
-    TWEAK_FILL_CLONE_LIMIT          ("tweakFillCloneLimit",                 false, "",    "Enables overriding the /fill and /clone command\nblock limits in single player.\nThe new limit can be set in the Generic configs,\nin the 'fillCloneLimit' config value"),
+    TWEAK_FILL_CLONE_LIMIT          ("tweakFillCloneLimit",                 false, true, "",    "Enables overriding the /fill and /clone command\nblock limits in single player.\nThe new limit can be set in the Generic configs,\nin the 'fillCloneLimit' config value"),
     TWEAK_FLY_SPEED                 ("tweakFlySpeed",                       false, "",    KeybindSettings.INGAME_BOTH, "Enables overriding the fly speed in creative or spectator mode\nand using some presets for it"),
     TWEAK_FLEXIBLE_BLOCK_PLACEMENT  ("tweakFlexibleBlockPlacement",         false, "",    "Enables placing blocks in different orientations\nor with an offset, while holding down the\nhotkeys for those modes."),
     TWEAK_GAMMA_OVERRIDE            ("tweakGammaOverride",                  false, "",    "Overrides the video settings gamma value with\nthe one set in the Generic configs"),
@@ -48,7 +50,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_HOTBAR_SLOT_CYCLE         ("tweakHotbarSlotCycle",                false, "",    KeybindSettings.INGAME_BOTH, "Enables cycling the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
     TWEAK_HOTBAR_SLOT_RANDOMIZER    ("tweakHotbarSlotRandomizer",           false, "",    KeybindSettings.INGAME_BOTH, "Enables randomizing the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
     TWEAK_HOTBAR_SWAP               ("tweakHotbarSwap",                     false, "",    "Enables the hotbar swapping via hotkeys feature"),
-    TWEAK_INVENTORY_PREVIEW         ("tweakInventoryPreview",               false, "",    "Enables an inventory preview while having the cursor over\na block or an entity with an inventory and holding down\nthe configured hotkey."),
+    TWEAK_INVENTORY_PREVIEW         ("tweakInventoryPreview",               false, true, "",    "Enables an inventory preview while having the cursor over\na block or an entity with an inventory and holding down\nthe configured hotkey."),
     TWEAK_ITEM_UNSTACKING_PROTECTION("tweakItemUnstackingProtection",       false, "",    "If enabled, then items configured in Lists -> unstackingItems\nwon't be allowed to spill out when using.\nThis is meant for example to prevent throwing buckets\ninto lava when filling them."),
     TWEAK_LAVA_VISIBILITY           ("tweakLavaVisibility",                 false, "",    "If enabled and the player has a Respiration helmet and/or\nWather Breathing active, the lava fog is greatly reduced."),
     TWEAK_MAP_PREVIEW               ("tweakMapPreview",                     false, "",    "If enabled, then holding shift over maps in an inventory\nwill render a preview of the map"),
@@ -75,10 +77,10 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_NO_SLIME_BLOCK_SLOWDOWN   ("tweakNoSlimeBlockSlowdown",           false, "",    "Removes the slowdown from walking on Slime Blocks.\n(This is originally from usefulmod by nessie.)"),
     TWEAK_NO_TILE_ENTITY_RENDERING  ("tweakNoTileEntityRendering",          false, "",    "Prevents all TileEntity renderers from rendering"),
     TWEAK_NO_TILE_ENTITY_TICKING    ("tweakNoTileEntityTicking",            false, "",    "Prevent all TileEntities from getting ticked"),
-    TWEAK_NO_VILLAGER_TRADE_LOCKING ("tweakNoVillagerTradeLocking",         false, "",    "Prevents villager trades from ever locking, by always incrementing\nthe max uses as well when the recipe uses is incremented"),
+    TWEAK_NO_VILLAGER_TRADE_LOCKING ("tweakNoVillagerTradeLocking",         false, true, "",    "Prevents villager trades from ever locking, by always incrementing\nthe max uses as well when the recipe uses is incremented"),
     TWEAK_NO_WALL_UNSPRINT          ("tweakNoWallUnsprint",                 false, "",    "Touching a wall doesn't drop you out from sprint mode"),
-    TWEAK_OBSERVER_DISABLE          ("tweakObserverDisable",                false, "",    "Disable Observers from triggering at all"),
-    TWEAK_OBSERVER_PLACE_NO_UPDATE  ("tweakObserverPlaceNoUpdate",          false, "",    "Prevent Observers from triggering when placed"),
+    TWEAK_OBSERVER_DISABLE          ("tweakObserverDisable",                false, true, "",    "Disable Observers from triggering at all"),
+    TWEAK_OBSERVER_PLACE_NO_UPDATE  ("tweakObserverPlaceNoUpdate",          false, true, "",    "Prevent Observers from triggering when placed"),
     TWEAK_PERIODIC_ATTACK           ("tweakPeriodicAttack",                 false, "",    "Enables periodic attacks (left clicks)\nConfigure the interval in Generic -> periodicAttackInterval"),
     TWEAK_PERIODIC_USE              ("tweakPeriodicUse",                    false, "",    "Enables periodic uses (right clicks)\nConfigure the interval in Generic -> periodicUseInterval"),
     TWEAK_PERMANENT_SNEAK           ("tweakPermanentSneak",                 false, "",    "If enabled, the player will be sneaking the entire time"),
@@ -112,29 +114,46 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     private final String prettyName;
     private final IKeybind keybind;
     private final boolean defaultValueBoolean;
+    private final boolean singlePlayer;
     private boolean valueBoolean;
     private IValueChangeCallback<IConfigBoolean> callback;
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
-        this(name, defaultValue, defaultHotkey, KeybindSettings.DEFAULT, comment);
+        this(name, defaultValue, false, defaultHotkey, KeybindSettings.DEFAULT, comment);
+    }
+
+    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment)
+    {
+        this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT, comment);
     }
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment)
     {
-        this(name, defaultValue, defaultHotkey, settings, comment, StringUtils.splitCamelCase(name.substring(5)));
+        this(name, defaultValue, false, defaultHotkey, settings, comment);
+    }
+
+    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment)
+    {
+        this(name, defaultValue, singlePlayer, defaultHotkey, settings, comment, StringUtils.splitCamelCase(name.substring(5)));
     }
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
     {
-        this(name, defaultValue, defaultHotkey, KeybindSettings.DEFAULT, comment, prettyName);
+        this(name, defaultValue, false, defaultHotkey, comment, prettyName);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment, String prettyName)
+    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName)
+    {
+        this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT, comment, prettyName);
+    }
+
+    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName)
     {
         this.name = name;
         this.valueBoolean = defaultValue;
         this.defaultValueBoolean = defaultValue;
+        this.singlePlayer = singlePlayer;
         this.comment = comment;
         this.prettyName = prettyName;
         this.keybind = KeybindMulti.fromStorageString(defaultHotkey, settings);
@@ -151,6 +170,17 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     public String getName()
     {
         return this.name;
+    }
+
+    @Override
+    public String getConfigGuiDisplayName()
+    {
+        if (this.singlePlayer)
+        {
+            return GuiBase.TXT_GOLD + this.getName() + GuiBase.TXT_RST;
+        }
+
+        return this.getName();
     }
 
     @Override
@@ -194,7 +224,19 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     @Override
     public String getComment()
     {
-        return comment != null ? comment : "";
+        if (this.comment == null)
+        {
+            return "";
+        }
+
+        if (this.singlePlayer)
+        {
+            return this.comment + "\n" + I18n.format("tweakeroo.label.config_comment.single_player_only");
+        }
+        else
+        {
+            return this.comment;
+        }
     }
 
     @Override

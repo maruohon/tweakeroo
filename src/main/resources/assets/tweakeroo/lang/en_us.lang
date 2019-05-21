@@ -28,6 +28,8 @@ tweakeroo.label.placement_restriction_mode.layer=Layer
 tweakeroo.label.placement_restriction_mode.line=Line
 tweakeroo.label.placement_restriction_mode.plane=Plane
 
+tweakeroo.label.config_comment.single_player_only=§6Note: This feature works either at all or§r\n§6at least fully only in single player§r
+
 tweakeroo.label.snap_aim_mode.both=Yaw & Pitch
 tweakeroo.label.snap_aim_mode.pitch=Pitch
 tweakeroo.label.snap_aim_mode.yaw=Yaw
