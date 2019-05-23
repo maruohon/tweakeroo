@@ -41,7 +41,7 @@ public class PlacementTweaks
     private static BlockPos posFirst = null;
     private static BlockPos posLast = null;
     private static HitPart hitPartFirst = null;
-    private static Hand handFirst = Hand.MAIN;
+    private static Hand handFirst = Hand.MAIN_HAND;
     private static Vec3d hitVecFirst = null;
     private static Direction sideFirst = null;
     private static Direction sideRotatedFirst = null;
@@ -119,12 +119,12 @@ public class PlacementTweaks
 
     public static void onLeftClickMousePre()
     {
-        onProcessRightClickPre(MinecraftClient.getInstance().player, Hand.MAIN);
+        onProcessRightClickPre(MinecraftClient.getInstance().player, Hand.MAIN_HAND);
     }
 
     public static void onLeftClickMousePost()
     {
-        onProcessRightClickPost(MinecraftClient.getInstance().player, Hand.MAIN);
+        onProcessRightClickPost(MinecraftClient.getInstance().player, Hand.MAIN_HAND);
     }
 
     private static void onAttackTick(MinecraftClient mc)

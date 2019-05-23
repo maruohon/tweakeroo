@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.config;
 
 import fi.dy.masa.malilib.config.IConfigBase;
+import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
@@ -13,7 +14,6 @@ import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.TextFormat;
 
 public class Callbacks
 {
@@ -96,12 +96,12 @@ public class Callbacks
         public FeatureCallbackSlime(FeatureToggle feature)
         {
             this.feature = feature;
-            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.getFrictionCoefficient());
+            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.getSlipperiness());
 
             // If the feature is enabled on game launch, apply the overridden value here
             if (feature.getBooleanValue())
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getFrictionCoefficient());
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getSlipperiness());
             }
         }
 
@@ -110,7 +110,7 @@ public class Callbacks
         {
             if (this.feature.getBooleanValue())
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getFrictionCoefficient());
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getSlipperiness());
             }
             else
             {
@@ -154,9 +154,9 @@ public class Callbacks
             {
                 this.mc.skipGameRender = ! this.mc.skipGameRender;
 
-                String pre = mc.skipGameRender ? TextFormat.GREEN.toString() : TextFormat.RED.toString();
+                String pre = mc.skipGameRender ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
                 String status = I18n.translate("tweakeroo.message.value." + (this.mc.skipGameRender ? "on" : "off"));
-                String message = I18n.translate("tweakeroo.message.toggled", "Skip All Rendering", pre + status + TextFormat.RESET);
+                String message = I18n.translate("tweakeroo.message.toggled", "Skip All Rendering", pre + status + GuiBase.TXT_RST);
                 StringUtils.printActionbarMessage(message);
             }
             else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
@@ -164,9 +164,9 @@ public class Callbacks
                 skipWorldRendering = ! skipWorldRendering;
 
                 boolean enabled = skipWorldRendering;
-                String pre = enabled ? TextFormat.GREEN.toString() : TextFormat.RED.toString();
+                String pre = enabled ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
                 String status = I18n.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String message = I18n.translate("tweakeroo.message.toggled", "Skip World Rendering", pre + status + TextFormat.RESET);
+                String message = I18n.translate("tweakeroo.message.toggled", "Skip World Rendering", pre + status + GuiBase.TXT_RST);
                 StringUtils.printActionbarMessage(message);
             }
 
@@ -258,7 +258,7 @@ public class Callbacks
         {
             Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
 
-            String str = TextFormat.GREEN + mode.name() + TextFormat.RESET;
+            String str = GuiBase.TXT_GREEN + mode.name() + GuiBase.TXT_RST;
             StringUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
         }
     }
@@ -279,9 +279,9 @@ public class Callbacks
 
             boolean enabled = this.feature.getBooleanValue();
             String strStatus = I18n.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
-            String preGreen = TextFormat.GREEN.toString();
-            String preRed = TextFormat.RED.toString();
-            String rst = TextFormat.RESET.toString();
+            String preGreen = GuiBase.TXT_GREEN;
+            String preRed = GuiBase.TXT_RED;
+            String rst = GuiBase.TXT_RST;
             strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
             if (enabled)
@@ -334,9 +334,9 @@ public class Callbacks
 
             boolean enabled = this.feature.getBooleanValue();
             String strStatus = I18n.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
-            String preGreen = TextFormat.GREEN.toString();
-            String preRed = TextFormat.RED.toString();
-            String rst = TextFormat.RESET.toString();
+            String preGreen = GuiBase.TXT_GREEN;
+            String preRed = GuiBase.TXT_RED;
+            String rst = GuiBase.TXT_RST;
             strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
             if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind())

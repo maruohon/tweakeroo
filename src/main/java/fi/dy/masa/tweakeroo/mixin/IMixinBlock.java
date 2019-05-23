@@ -7,6 +7,6 @@ import net.minecraft.block.Block;
 @Mixin(Block.class)
 public interface IMixinBlock
 {
-    @Accessor("friction")
+    @Accessor("slipperiness")
     void setFriction(float friction);
 }

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.authlib.GameProfile;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -23,7 +23,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
     @Redirect(method = "updateNausea()V",
               at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/client/gui/Screen;isPauseScreen()Z"))
+                       target = "Lnet/minecraft/client/gui/screen/Screen;isPauseScreen()Z"))
     private boolean onDoesGuiPauseGame(Screen gui)
     {
         // Spoof the return value to prevent entering the if block
@@ -35,7 +35,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         return gui.isPauseScreen();
     }
 
-    @Inject(method = "updateState", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
+    @Inject(method = "tickMovement", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V"))
     private void fixElytraDeployment(CallbackInfo ci)
     {

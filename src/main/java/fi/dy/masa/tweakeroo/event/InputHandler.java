@@ -12,12 +12,12 @@ import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import net.minecraft.ChatFormat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.options.GameOptions;
-import net.minecraft.text.ChatMessageType;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.ChatMessageType;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -86,7 +86,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         if (mc.currentScreen == null && mc.player != null && mc.player.abilities.creativeMode &&
             eventButtonState && mc.options.keyUse.matchesMouse(eventButton) &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
-            mc.hitResult.getType() == HitResult.Type.NONE)
+            mc.hitResult.getType() == HitResult.Type.MISS)
         {
             BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
 
@@ -96,11 +96,11 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Vec3d hitVec = PositionUtils.getHitVecCenter(posFront, facing);
                 BlockHitResult context = new BlockHitResult(hitVec, facing, posFront, false);
 
-                ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN, context);
+                ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND, context);
 
                 if (result != ActionResult.SUCCESS)
                 {
-                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.OFF, context);
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.OFF_HAND, context);
                 }
 
                 return true;
@@ -119,8 +119,8 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         // Not in a GUI
         if (mc.currentScreen == null && dWheel != 0)
         {
-            String preGreen = TextFormat.GREEN.toString();
-            String rst = TextFormat.RESET.toString();
+            String preGreen = ChatFormat.GREEN.toString();
+            String rst = ChatFormat.RESET.toString();
 
             if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() && Hotkeys.HOTBAR_SCROLL.getKeybind().isKeybindHeld())
             {
@@ -142,7 +142,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue()) + rst;
-                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_after_clicker_count_to", strValue));
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.set_after_clicker_count_to", strValue));
 
                 return true;
             }
@@ -153,7 +153,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.PLACEMENT_LIMIT.getIntegerValue()) + rst;
-                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_placement_limit_to", strValue));
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.set_placement_limit_to", strValue));
 
                 return true;
             }
@@ -164,7 +164,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue()) + rst;
-                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue));
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue));
 
                 return true;
             }
@@ -175,7 +175,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
 
                 String strValue = preGreen + Integer.valueOf(Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue()) + rst;
-                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_placement_grid_size_to", strValue));
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.set_placement_grid_size_to", strValue));
 
                 return true;
             }

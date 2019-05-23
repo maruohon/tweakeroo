@@ -22,8 +22,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.ChatMessageType;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.ChatMessageType;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -133,7 +133,7 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.swapped_low_durability_item_for_better_durability"));
+            mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.swapped_low_durability_item_for_better_durability"));
             return;
         }
 
@@ -142,7 +142,7 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.swapped_low_durability_item_off_players_hand"));
+            mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.swapped_low_durability_item_off_players_hand"));
             return;
         }
 
@@ -163,7 +163,7 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.swapped_low_durability_item_for_dummy_item"));
+            mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.swapped_low_durability_item_for_dummy_item"));
         }
     }
 
@@ -171,8 +171,8 @@ public class InventoryUtils
     {
         if (player.container instanceof PlayerContainer)
         {
-            repairModeHandleHand(player, Hand.MAIN);
-            repairModeHandleHand(player, Hand.OFF);
+            repairModeHandleHand(player, Hand.MAIN_HAND);
+            repairModeHandleHand(player, Hand.OFF_HAND);
         }
     }
 
@@ -261,12 +261,12 @@ public class InventoryUtils
             MinecraftClient mc = MinecraftClient.getInstance();
             Container container = player.playerContainer;
 
-            if (hand == Hand.MAIN)
+            if (hand == Hand.MAIN_HAND)
             {
                 int currentHotbarSlot = player.inventory.selectedSlot;
                 mc.interactionManager.method_2906(container.syncId, slotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
             }
-            else if (hand == Hand.OFF)
+            else if (hand == Hand.OFF_HAND)
             {
                 int currentHotbarSlot = player.inventory.selectedSlot;
                 // Swap the requested slot to the current hotbar slot
@@ -408,7 +408,7 @@ public class InventoryUtils
                 if (isCreative)
                 {
                     player.inventory.addPickBlock(stack);
-                    mc.interactionManager.clickCreativeStack(player.getStackInHand(Hand.MAIN), 36 + player.inventory.selectedSlot);
+                    mc.interactionManager.clickCreativeStack(player.getStackInHand(Hand.MAIN_HAND), 36 + player.inventory.selectedSlot);
                 }
                 else
                 {

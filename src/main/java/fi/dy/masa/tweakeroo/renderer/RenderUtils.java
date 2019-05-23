@@ -16,8 +16,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.ContainerScreen;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.client.render.Tessellator;
@@ -209,7 +209,7 @@ public class RenderUtils
             int y = startY;
 
             GlStateManager.color4f(1f, 1f, 1f, 1f);
-            mc.getTextureManager().bindTexture(ContainerScreen.BACKGROUND_TEXTURE);
+            mc.getTextureManager().bindTexture(AbstractContainerScreen.BACKGROUND_TEXTURE);
             mc.inGameHud.blit(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18);
 
             for (int row = 1; row <= 3; row++)
