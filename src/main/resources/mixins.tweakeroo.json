@@ -41,6 +41,7 @@
         "MixinMobSpawnerBaseLogic",
         "MixinMovementInputFromOptions",
         "MixinNetHandlerPlayClient",
+        "MixinNetHandlerPlayServer",
         "MixinParticleManager",
         "MixinPlayerCapabilities",
         "MixinPlayerControllerMP",
@@ -49,6 +50,7 @@
         "MixinRenderManager",
         "MixinTileEntityMobSpawnerRenderer",
         "MixinTileEntityRendererDispatcher",
+        "MixinTileEntityStructure",
         "MixinWorld",
         "MixinWorldClient",
         "MixinWorldProviderHell"
