@@ -1,12 +1,12 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import java.util.Arrays;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.malilib.gui.button.ButtonOnOff;
 import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -33,7 +33,7 @@ public abstract class MixinGuiCommandBlock extends GuiScreen
     @Shadow private GuiButton autoExecBtn;
 
     private GuiTextField textFieldName;
-    private ButtonOnOff buttonUpdateExec;
+    private GuiButton buttonUpdateExec;
     private boolean updateExecValue;
 
     @Inject(method = "initGui", at = @At("RETURN"))
@@ -65,10 +65,11 @@ public abstract class MixinGuiCommandBlock extends GuiScreen
             this.addButton(new GuiButton(101, x2, y, widthBtn, 20, str));
 
             this.updateExecValue = MiscUtils.getUpdateExec(this.commandBlock);
-            str = "tweakeroo.gui.button.misc.command_block.update_execution";
-            String hover = "tweakeroo.gui.button.misc.command_block.hover.update_execution";
-            this.buttonUpdateExec = ButtonOnOff.createOnOff(x2 + widthBtn + 4, y, -1, false, str, ! this.updateExecValue, hover);
-            this.buttonUpdateExec.id = 102;
+
+            str = this.getDisplayStringForCurrentStatus();
+            width = this.mc.fontRenderer.getStringWidth(str) + 10;
+            this.buttonUpdateExec = new GuiButton(102, x2 + widthBtn + 4, y, width, 20, str);
+
             this.addButton(this.buttonUpdateExec);
         }
     }
@@ -85,7 +86,8 @@ public abstract class MixinGuiCommandBlock extends GuiScreen
         if (this.buttonUpdateExec != null)
         {
             this.updateExecValue = MiscUtils.getUpdateExec(this.commandBlock);
-            this.buttonUpdateExec.updateDisplayString(! this.updateExecValue);
+            this.buttonUpdateExec.displayString = this.getDisplayStringForCurrentStatus();
+            this.buttonUpdateExec.setWidth(this.mc.fontRenderer.getStringWidth(this.buttonUpdateExec.displayString) + 10);
         }
     }
 
@@ -117,7 +119,8 @@ public abstract class MixinGuiCommandBlock extends GuiScreen
 
         if (this.buttonUpdateExec != null && this.buttonUpdateExec.isMouseOver())
         {
-            RenderUtils.drawHoverText(mouseX, mouseY, this.buttonUpdateExec.getHoverStrings());
+            String hover = "tweakeroo.gui.button.misc.command_block.hover.update_execution";
+            RenderUtils.drawHoverText(mouseX, mouseY, Arrays.asList(I18n.format(hover)));
         }
     }
 
@@ -142,7 +145,8 @@ public abstract class MixinGuiCommandBlock extends GuiScreen
                 else if (button.id == 102 && this.buttonUpdateExec != null)
                 {
                     this.updateExecValue = ! this.updateExecValue;
-                    this.buttonUpdateExec.updateDisplayString(! this.updateExecValue);
+                    this.buttonUpdateExec.displayString = this.getDisplayStringForCurrentStatus();
+                    this.buttonUpdateExec.setWidth(this.mc.fontRenderer.getStringWidth(this.buttonUpdateExec.displayString) + 10);
 
                     String cmd = String.format("/blockdata %d %d %d {\"UpdateLastExecution\":%s}",
                             pos.getX(), pos.getY(), pos.getZ(), this.updateExecValue ? "1b" : "0b");
@@ -150,5 +154,13 @@ public abstract class MixinGuiCommandBlock extends GuiScreen
                 }
             }
         }
+    }
+
+    private String getDisplayStringForCurrentStatus()
+    {
+        String translationKey = "tweakeroo.gui.button.misc.command_block.update_execution";
+        boolean isCurrentlyOn = ! this.updateExecValue;
+        String strStatus = "malilib.gui.label_colored." + (isCurrentlyOn ? "on" : "off");
+        return I18n.format(translationKey, I18n.format(strStatus));
     }
 }
