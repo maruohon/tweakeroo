@@ -319,13 +319,21 @@ public class PlacementTweaks
         boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
         boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
         boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld();
+        boolean adjacent = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeybind().isKeybindHeld();
         boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
         boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
         boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
 
         if (flexible)
         {
-            posNew = isFirstClick && (rotation || offset) ? getPlacementPositionForTargetedPosition(posIn, sideIn, world) : posIn;
+            posNew = isFirstClick && (rotation || offset || adjacent) ? getPlacementPositionForTargetedPosition(posIn, sideIn, world) : posIn;
+
+            // Place the block into the adjacent position
+            if (adjacent && hitPart != null && hitPart != HitPart.CENTER)
+            {
+                posNew = posNew.offset(sideRotatedIn.getOpposite()).offset(sideIn.getOpposite());
+                handleFlexible = true;
+            }
 
             // Place the block facing/against the adjacent block (= just rotated from normal)
             if (rotation)
