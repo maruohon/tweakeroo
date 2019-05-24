@@ -572,6 +572,12 @@ public class PlacementTweaks
             return EnumActionResult.PASS;
         }
 
+        // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
+        boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
+                              FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue() == false;
+
+        InventoryUtils.preRestockHand(player, hand, allowHotbar);
+
         // We need to grab the stack here if the cached stack is still empty,
         // because this code runs before the cached stack gets set on the first click/use.
         ItemStack stackOriginal;
