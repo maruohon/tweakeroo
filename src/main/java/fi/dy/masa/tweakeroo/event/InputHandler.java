@@ -188,6 +188,17 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 return true;
             }
+            else if (FeatureToggle.TWEAK_BREAKING_GRID.getKeybind().isKeybindHeld())
+            {
+                int newValue = Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + (dWheel > 0 ? 1 : -1);
+                Configs.Generic.BREAKING_GRID_SIZE.setIntegerValue(newValue);
+                KeyCallbackAdjustable.setValueChanged();
+
+                String strValue = preGreen + Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + rst;
+                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_breaking_grid_size_to", strValue));
+
+                return true;
+            }
             else if (FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind().isKeybindHeld())
             {
                 int newValue = Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + (dWheel > 0 ? 1 : -1);
