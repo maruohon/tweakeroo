@@ -39,6 +39,12 @@ public class Callbacks
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
 
+        Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.COPY_SIGN_TEXT.getKeybind().setCallback(callbackGeneric);
         Hotkeys.FLY_PRESET_1.getKeybind().setCallback(callbackGeneric);
         Hotkeys.FLY_PRESET_2.getKeybind().setCallback(callbackGeneric);
@@ -49,18 +55,19 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SCROLL.getKeybind().setCallback(callbackGeneric);
         Hotkeys.OPEN_CONFIG_GUI.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_LAYER.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
 
         FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_AFTER_CLICKER));
+        FeatureToggle.TWEAK_BREAKING_GRID.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_BREAKING_GRID));
         FeatureToggle.TWEAK_FLY_SPEED.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_FLY_SPEED));
         FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE));
         FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER));
@@ -277,32 +284,62 @@ public class Callbacks
                     return true;
                 }
             }
-            else if (key == Hotkeys.RESTRICTION_MODE_COLUMN.getKeybind())
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeybind())
+            {
+                this.setBreakingRestrictionMode(PlacementRestrictionMode.COLUMN);
+                return true;
+            }
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeybind())
+            {
+                this.setBreakingRestrictionMode(PlacementRestrictionMode.DIAGONAL);
+                return true;
+            }
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeybind())
+            {
+                this.setBreakingRestrictionMode(PlacementRestrictionMode.FACE);
+                return true;
+            }
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.getKeybind())
+            {
+                this.setBreakingRestrictionMode(PlacementRestrictionMode.LAYER);
+                return true;
+            }
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeybind())
+            {
+                this.setBreakingRestrictionMode(PlacementRestrictionMode.LINE);
+                return true;
+            }
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeybind())
+            {
+                this.setBreakingRestrictionMode(PlacementRestrictionMode.PLANE);
+                return true;
+            }
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeybind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
                 return true;
             }
-            else if (key == Hotkeys.RESTRICTION_MODE_DIAGONAL.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeybind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
                 return true;
             }
-            else if (key == Hotkeys.RESTRICTION_MODE_FACE.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeybind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
                 return true;
             }
-            else if (key == Hotkeys.RESTRICTION_MODE_LAYER.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeybind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.LAYER);
                 return true;
             }
-            else if (key == Hotkeys.RESTRICTION_MODE_LINE.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeybind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
                 return true;
             }
-            else if (key == Hotkeys.RESTRICTION_MODE_PLANE.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeybind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
                 return true;
@@ -324,6 +361,14 @@ public class Callbacks
             String strPreset = GuiBase.TXT_GREEN + (preset + 1) + GuiBase.TXT_RST;
             String strSpeed = String.format("%s%.3f%s", GuiBase.TXT_GREEN, speed, GuiBase.TXT_RST);
             InfoUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
+        }
+
+        private void setBreakingRestrictionMode(PlacementRestrictionMode mode)
+        {
+            Configs.Generic.BREAKING_RESTRICTION_MODE.setOptionListValue(mode);
+
+            String str = GuiBase.TXT_GREEN + mode.name() + GuiBase.TXT_RST;
+            InfoUtils.printActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", str);
         }
 
         private void setPlacementRestrictionMode(PlacementRestrictionMode mode)
@@ -471,6 +516,18 @@ public class Callbacks
                 {
                     String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
                     InfoUtils.printActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
+                }
+                else
+                {
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
+                }
+            }
+            else if (key == FeatureToggle.TWEAK_BREAKING_GRID.getKeybind())
+            {
+                if (enabled)
+                {
+                    String strValue = Configs.Generic.BREAKING_GRID_SIZE.getStringValue();
+                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_breaking_grid_on", strStatus, preGreen + strValue + rst);
                 }
                 else
                 {

@@ -37,6 +37,7 @@ tweakeroo.label.snap_aim_mode.yaw=Yaw
 tweakeroo.message.potion_effects_running_out=§6!! WARNING - %s potion effect(s) about to run out in %s seconds !!§r
 tweakeroo.message.repair_mode.swapped_repairable_item_to_slot=Swapped a repairable item to %s slot
 tweakeroo.message.set_after_clicker_count_to=Set After Clicker count to %s
+tweakeroo.message.set_breaking_restriction_mode_to=Set Breaking Restriction mode to %s
 tweakeroo.message.set_fly_speed_preset_to=Switched to fly speed preset %s (speed: %s)
 tweakeroo.message.set_fly_speed_to=Set fly speed of preset %s to %s
 tweakeroo.message.set_hotbar_slot_cycle_max_to=Set Hotbar Slot Cycle max slot to %s

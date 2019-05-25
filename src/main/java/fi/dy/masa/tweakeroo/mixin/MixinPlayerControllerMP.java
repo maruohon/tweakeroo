@@ -107,6 +107,24 @@ public abstract class MixinPlayerControllerMP
         }
     }
 
+    @Inject(method = "clickBlock", at = @At("HEAD"), cancellable = true)
+    private void handleBreakingRestriction1(BlockPos pos, EnumFacing side, CallbackInfoReturnable<Boolean> cir)
+    {
+        if (PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
+        {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "onPlayerDamageBlock", at = @At("HEAD"), cancellable = true)
+    private void handleBreakingRestriction2(BlockPos pos, EnumFacing side, CallbackInfoReturnable<Boolean> cir)
+    {
+        if (PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
+        {
+            cir.setReturnValue(true);
+        }
+    }
+
     @Inject(method = "getBlockReachDistance", at = @At("HEAD"), cancellable = true)
     private void overrideReachDistance(CallbackInfoReturnable<Float> cir)
     {
