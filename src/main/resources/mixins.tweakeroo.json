@@ -29,6 +29,7 @@
         "MixinLivingEntityRenderer",
         "MixinMinecraftClient",
         "MixinParticleManager",
+        "MixinRavagerEntity",
         "MixinScreen",
         "MixinSlimeBlock",
         "MixinWorld",
