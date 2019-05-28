@@ -101,7 +101,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
                 target = "Lnet/minecraft/client/entity/EntityPlayerSP;isCurrentViewEntity()Z"))
     private boolean preventVerticalMotion(EntityPlayerSP player)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
         {
             return false;
         }
@@ -114,7 +114,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
                 target = "Lnet/minecraft/entity/player/PlayerCapabilities;allowFlying:Z"))
     private boolean preventFlyStateToggle(PlayerCapabilities abilities)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
         {
             return false;
         }
@@ -125,7 +125,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     @Inject(method = "updateEntityActionState", at = @At("RETURN"))
     private void preventJumpingInCameraMode(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
         {
             this.isJumping = false;
         }
@@ -134,7 +134,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     @Inject(method = "isSneaking", at = @At("HEAD"), cancellable = true)
     private void preventSneakingInCameraMode(CallbackInfoReturnable<Boolean> cir)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
         {
             cir.setReturnValue(false);
         }

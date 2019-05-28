@@ -54,13 +54,12 @@ public abstract class MixinEntity
     {
         if ((Object) this instanceof EntityPlayerSP)
         {
-            if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+            if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
             {
                 CameraEntity camera = CameraEntity.getCamera();
 
                 if (camera != null)
                 {
-                    camera.handleMotion(strafe, 0f, forward);
                     this.motionY = 0;
                     ci.cancel();
                 }
@@ -86,7 +85,7 @@ public abstract class MixinEntity
     {
         if ((Object) this instanceof EntityPlayerSP)
         {
-            if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+            if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
             {
                 this.realYaw2 += (double) yawChange * 0.15D;
                 this.realPitch2 = MathHelper.clamp(this.realPitch2 - (double) pitchChange * 0.15D, -90, 90);
@@ -104,7 +103,8 @@ public abstract class MixinEntity
                 this.realPitch2 = this.rotationPitch;
             }
 
-            if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue() || FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+            if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue() ||
+                (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue()))
             {
                 this.rotationYaw = (float) this.realYaw;
                 this.rotationPitch = (float) this.realPitch;

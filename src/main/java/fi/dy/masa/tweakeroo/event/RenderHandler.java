@@ -92,7 +92,7 @@ public class RenderHandler implements IRenderer
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeybind().isKeybindHeld()))
         {
-            Entity entity = mc.player;
+            Entity entity = mc.getRenderViewEntity() != null ? mc.getRenderViewEntity() : mc.player;
             GlStateManager.depthMask(false);
             GlStateManager.disableLighting();
             GlStateManager.disableCull();
