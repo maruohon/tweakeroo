@@ -153,7 +153,7 @@ public class Callbacks
             if (config == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT &&
                 Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
             {
-                FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setBooleanValue(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue());
+                FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setBooleanValue(config.getBooleanValue());
             }
             else if (config == FeatureToggle.TWEAK_FREE_CAMERA)
             {
@@ -164,6 +164,11 @@ public class Callbacks
                 else
                 {
                     CameraEntity.removeCamera();
+                }
+
+                if (Configs.Generic.FREE_CAMERA_MOTION_TOGGLE.getBooleanValue())
+                {
+                    FeatureToggle.TWEAK_FREE_CAMERA_MOTION.setBooleanValue(config.getBooleanValue());
                 }
             }
         }
