@@ -49,6 +49,7 @@
         "MixinRenderGlobal",
         "MixinRenderLivingBase",
         "MixinRenderManager",
+        "MixinRenderPlayer",
         "MixinTileEntityMobSpawnerRenderer",
         "MixinTileEntityRendererDispatcher",
         "MixinTileEntityStructure",

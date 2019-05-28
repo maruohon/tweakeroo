@@ -12,12 +12,14 @@ import com.mumfrey.liteloader.modconfig.ConfigPanel;
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InputEventHandler;
 import fi.dy.masa.malilib.event.RenderEventHandler;
+import fi.dy.masa.malilib.event.WorldLoadHandler;
 import fi.dy.masa.malilib.interfaces.IRenderer;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.gui.TweakerooConfigPanel;
 import fi.dy.masa.tweakeroo.event.InputHandler;
 import fi.dy.masa.tweakeroo.event.RenderHandler;
+import fi.dy.masa.tweakeroo.event.WorldLoadListener;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.minecraft.client.Minecraft;
 
@@ -64,6 +66,9 @@ public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteList
         RenderEventHandler.getInstance().registerGameOverlayRenderer(renderer);
         RenderEventHandler.getInstance().registerTooltipLastRenderer(renderer);
         RenderEventHandler.getInstance().registerWorldLastRenderer(renderer);
+
+        WorldLoadListener listener = new WorldLoadListener();
+        WorldLoadHandler.getInstance().registerWorldLoadPreHandler(listener);
     }
 
     @Override

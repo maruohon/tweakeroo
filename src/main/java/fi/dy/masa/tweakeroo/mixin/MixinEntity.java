@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -30,6 +31,8 @@ public abstract class MixinEntity
 
     private double realPitch;
     private double realYaw;
+    private double realPitch2;
+    private double realYaw2;
 
     @Redirect(method = "move",
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/entity/Entity;onGround:Z", ordinal = 0)),
@@ -49,16 +52,30 @@ public abstract class MixinEntity
                      target = "Lnet/minecraft/util/math/MathHelper;sin(F)F"), cancellable = true)
     private void moreAccurateMoveRelative(float strafe, float up, float forward, float friction, CallbackInfo ci)
     {
-        if ((Object) this instanceof EntityPlayerSP && FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
+        if ((Object) this instanceof EntityPlayerSP)
         {
-            double xFactor = Math.sin(this.rotationYaw * Math.PI / 180D);
-            double zFactor = Math.cos(this.rotationYaw * Math.PI / 180D);
+            if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+            {
+                CameraEntity camera = CameraEntity.getCamera();
 
-            this.motionX += (double) (strafe * zFactor - forward * xFactor);
-            this.motionY += (double) up;
-            this.motionZ += (double) (forward * zFactor + strafe * xFactor);
+                if (camera != null)
+                {
+                    camera.handleMotion(strafe, 0f, forward);
+                    this.motionY = 0;
+                    ci.cancel();
+                }
+            }
+            else if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
+            {
+                double xFactor = Math.sin(this.rotationYaw * Math.PI / 180D);
+                double zFactor = Math.cos(this.rotationYaw * Math.PI / 180D);
 
-            ci.cancel();
+                this.motionX += (double) (strafe * zFactor - forward * xFactor);
+                this.motionY += (double) up;
+                this.motionZ += (double) (forward * zFactor + strafe * xFactor);
+
+                ci.cancel();
+            }
         }
     }
 
@@ -69,7 +86,25 @@ public abstract class MixinEntity
     {
         if ((Object) this instanceof EntityPlayerSP)
         {
-            if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue())
+            if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+            {
+                this.realYaw2 += (double) yawChange * 0.15D;
+                this.realPitch2 = MathHelper.clamp(this.realPitch2 - (double) pitchChange * 0.15D, -90, 90);
+
+                CameraEntity camera = CameraEntity.getCamera();
+
+                if (camera != null)
+                {
+                    camera.setRotations((float) this.realYaw2, (float) this.realPitch2);
+                }
+            }
+            else
+            {
+                this.realYaw2 = this.rotationYaw;
+                this.realPitch2 = this.rotationPitch;
+            }
+
+            if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue() || FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
             {
                 this.rotationYaw = (float) this.realYaw;
                 this.rotationPitch = (float) this.realPitch;

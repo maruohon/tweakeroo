@@ -9,6 +9,7 @@ import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
+import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
@@ -34,6 +35,7 @@ public class Callbacks
         FeatureCallbackSpecial featureCallback = new FeatureCallbackSpecial();
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback(featureCallback);
+        FeatureToggle.TWEAK_FREE_CAMERA.setValueChangeCallback(featureCallback);
         FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setValueChangeCallback(featureCallback);
 
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
@@ -148,11 +150,20 @@ public class Callbacks
         @Override
         public void onValueChanged(IConfigBoolean config)
         {
-            if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
+            if (config == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT &&
+                Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
             {
-                if (config == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT)
+                FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setBooleanValue(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue());
+            }
+            else if (config == FeatureToggle.TWEAK_FREE_CAMERA)
+            {
+                if (config.getBooleanValue())
                 {
-                    FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setBooleanValue(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue());
+                    CameraEntity.createCamera(Minecraft.getMinecraft());
+                }
+                else
+                {
+                    CameraEntity.removeCamera();
                 }
             }
         }

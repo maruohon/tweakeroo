@@ -1,9 +1,13 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import javax.annotation.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Callbacks;
@@ -11,12 +15,22 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
+import fi.dy.masa.tweakeroo.util.CameraEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.entity.Entity;
 
 @Mixin(EntityRenderer.class)
 public abstract class MixinEntityRenderer
 {
+    @Shadow
+    @Final
+    private Minecraft mc;
+
+    @Nullable
+    private Entity renderViewEntityOriginal;
+
     @Inject(method = "renderWorld(FJ)V", at = @At("HEAD"), cancellable = true)
     private void onRenderWorld(CallbackInfo ci)
     {
@@ -65,5 +79,49 @@ public abstract class MixinEntityRenderer
         {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "renderWorld(FJ)V", at = @At(
+                value = "INVOKE", shift = Shift.AFTER,
+                target = "Lnet/minecraft/client/renderer/EntityRenderer;getMouseOver(F)V"))
+    private void overrideRenderViewEntityPre(CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        {
+            Entity camera = CameraEntity.getCamera();
+
+            if (camera != null)
+            {
+                this.renderViewEntityOriginal = this.mc.getRenderViewEntity();
+                this.mc.setRenderViewEntity(camera);
+            }
+        }
+    }
+
+    @Inject(method = "renderWorld(FJ)V", at = @At("RETURN"))
+    private void overrideRenderViewEntityPost(CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && this.renderViewEntityOriginal != null)
+        {
+            this.mc.setRenderViewEntity(this.renderViewEntityOriginal);
+            this.renderViewEntityOriginal = null;
+        }
+    }
+
+    @Inject(method = "renderHand", at = @At("HEAD"), cancellable = true)
+    private void removeHandRendering(CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        {
+            ci.cancel();
+        }
+    }
+
+    @Redirect(method = "renderWorldPass", at = @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/client/entity/EntityPlayerSP;isSpectator()Z"))
+    private boolean overrideIsSpectator(EntityPlayerSP player)
+    {
+        return player.isSpectator() || FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue();
     }
 }

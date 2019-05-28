@@ -6,10 +6,12 @@ import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinFlatGeneratorInfo;
+import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PotionRestriction;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.gen.FlatLayerInfo;
@@ -24,7 +26,7 @@ public class MiscTweaks
 
     public static void onTick(Minecraft mc)
     {
-        EntityPlayer player = mc.player;
+        EntityPlayerSP player = mc.player;
 
         if (player == null)
         {
@@ -38,6 +40,8 @@ public class MiscTweaks
         {
             InventoryUtils.repairModeSwapItems(player);
         }
+
+        CameraEntity.movementTick(player.movementInput.sneak, player.movementInput.jump);
     }
 
     private static void doPeriodicClicks(Minecraft mc)
