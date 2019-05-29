@@ -15,6 +15,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
@@ -113,5 +114,25 @@ public abstract class MixinEntityRenderer
         {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "renderWorldPass", at = @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/client/renderer/RenderGlobal;setupTerrain(" +
+                         "Lnet/minecraft/entity/Entity;" +
+                         "DLnet/minecraft/client/renderer/culling/ICamera;IZ)V"))
+    private void preSetupTerrain(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci)
+    {
+        MiscUtils.setFreeCameraSpectator(true);
+    }
+
+    @Inject(method = "renderWorldPass", at = @At(
+                value = "INVOKE", shift = At.Shift.AFTER,
+                target = "Lnet/minecraft/client/renderer/RenderGlobal;setupTerrain(" +
+                         "Lnet/minecraft/entity/Entity;" +
+                         "DLnet/minecraft/client/renderer/culling/ICamera;IZ)V"))
+    private void postSetupTerrain(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci)
+    {
+        MiscUtils.setFreeCameraSpectator(false);
     }
 }

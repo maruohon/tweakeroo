@@ -20,6 +20,17 @@ public class MiscUtils
     private static final Date DATE = new Date();
     private static double lastRealPitch;
     private static double lastRealYaw;
+    private static boolean freeCameraSpectator;
+
+    public static void setFreeCameraSpectator(boolean isSpectator)
+    {
+        freeCameraSpectator = isSpectator;
+    }
+
+    public static boolean getFreeCameraSpectator()
+    {
+        return freeCameraSpectator;
+    }
 
     public static boolean getUpdateExec(TileEntityCommandBlock te)
     {

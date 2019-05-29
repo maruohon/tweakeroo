@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.mojang.authlib.GameProfile;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
@@ -143,6 +144,6 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     @Override
     public boolean isSpectator()
     {
-        return super.isSpectator() || FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue();
+        return super.isSpectator() || MiscUtils.getFreeCameraSpectator();
     }
 }
