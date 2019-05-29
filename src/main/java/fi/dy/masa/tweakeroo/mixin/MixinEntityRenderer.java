@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Callbacks;
@@ -17,7 +16,6 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
 
@@ -115,13 +113,5 @@ public abstract class MixinEntityRenderer
         {
             ci.cancel();
         }
-    }
-
-    @Redirect(method = "renderWorldPass", at = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/client/entity/EntityPlayerSP;isSpectator()Z"))
-    private boolean overrideIsSpectator(EntityPlayerSP player)
-    {
-        return player.isSpectator() || FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue();
     }
 }

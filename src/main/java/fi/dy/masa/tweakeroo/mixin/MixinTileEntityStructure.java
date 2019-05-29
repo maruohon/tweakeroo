@@ -17,7 +17,7 @@ import net.minecraft.tileentity.TileEntityStructure;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-@Mixin(TileEntityStructure.class)
+@Mixin(value = TileEntityStructure.class, priority = 999)
 public abstract class MixinTileEntityStructure extends TileEntity
 {
     @ModifyConstant(method = "readFromNBT",
@@ -25,7 +25,7 @@ public abstract class MixinTileEntityStructure extends TileEntity
                                               target = "Lnet/minecraft/tileentity/TileEntityStructure;position:Lnet/minecraft/util/math/BlockPos;"),
                                    to = @At(value = "FIELD",
                                             target = "Lnet/minecraft/tileentity/TileEntityStructure;size:Lnet/minecraft/util/math/BlockPos;")),
-                    constant = @Constant(intValue = 32))
+                    constant = @Constant(intValue = 32), require = 0)
     private int overrideMaxSize(int original)
     {
         if (FeatureToggle.TWEAK_STRUCTURE_BLOCK_LIMIT.getBooleanValue())

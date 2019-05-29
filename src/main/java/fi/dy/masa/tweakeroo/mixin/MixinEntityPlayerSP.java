@@ -139,4 +139,10 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
             cir.setReturnValue(false);
         }
     }
+
+    @Override
+    public boolean isSpectator()
+    {
+        return super.isSpectator() || FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue();
+    }
 }

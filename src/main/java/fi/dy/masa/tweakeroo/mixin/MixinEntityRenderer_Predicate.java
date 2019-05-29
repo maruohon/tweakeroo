@@ -11,7 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 @Mixin(targets = "net/minecraft/client/renderer/EntityRenderer$1")
 public abstract class MixinEntityRenderer_Predicate
 {
-    @Inject(method = "apply", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "apply(Lnet/minecraft/entity/Entity;)Z", at = @At("HEAD"), cancellable = true)
     private void ignoreDeadEntities(Entity entity, CallbackInfoReturnable<Boolean> cir)
     {
         if (FeatureToggle.TWEAK_NO_DEAD_MOB_TARGETING.getBooleanValue() &&
