@@ -58,7 +58,10 @@ public abstract class MixinEntityRenderer
         if (FeatureToggle.TWEAK_ZOOM.getBooleanValue() && Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld())
         {
             cir.setReturnValue((float) Configs.Generic.ZOOM_FOV.getDoubleValue());
-            cir.cancel();
+        }
+        else if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        {
+            cir.setReturnValue(this.mc.gameSettings.fovSetting);
         }
     }
 
