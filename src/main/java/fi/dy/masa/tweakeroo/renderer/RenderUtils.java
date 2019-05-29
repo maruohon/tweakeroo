@@ -10,6 +10,7 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
@@ -70,6 +71,7 @@ public class RenderUtils
 
             int x = startX;
             int y = startY;
+            FontRenderer textRenderer = mc.fontRenderer;
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             mc.getTextureManager().bindTexture(GuiInventory.INVENTORY_BACKGROUND);
@@ -77,7 +79,7 @@ public class RenderUtils
 
             for (int row = 1; row <= 3; row++)
             {
-                mc.fontRenderer.drawString(String.valueOf(row), x - 10, y + 4, 0xFFFFFF);
+                textRenderer.drawStringWithShadow(String.valueOf(row), x - 10, y + 4, 0xFFFFFF);
 
                 for (int column = 0; column < 9; column++)
                 {
@@ -359,6 +361,7 @@ public class RenderUtils
         int x = xCenter - width / 2;
         int y = yCenter + 10;
         int lineX = x + (int) ((MathHelper.wrapDegrees(realYaw - startYaw)) / step * width);
+        FontRenderer textRenderer = mc.fontRenderer;
 
         GlStateManager.color(1, 1, 1, 1);
 
@@ -368,13 +371,13 @@ public class RenderUtils
         fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF);
 
         String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
-        mc.fontRenderer.drawString(str, xCenter - mc.fontRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
+        textRenderer.drawString(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
         str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "°";
-        mc.fontRenderer.drawString(str, x - mc.fontRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
+        textRenderer.drawString(str, x - textRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
 
         str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "°  >";
-        mc.fontRenderer.drawString(str, x + width, y + height + 2, 0xFFFFFFFF);
+        textRenderer.drawString(str, x + width, y + height + 2, 0xFFFFFFFF);
     }
 
     private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height, Minecraft mc)
@@ -400,6 +403,7 @@ public class RenderUtils
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
         int lineY = y + (int) ((MathHelper.wrapDegrees(realPitch - startPitch)) / step * height);
+        FontRenderer textRenderer = mc.fontRenderer;
 
         GlStateManager.color(1, 1, 1, 1);
 
@@ -409,12 +413,12 @@ public class RenderUtils
         fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - width / 2, lineY, width, 2, 0xFFFFFFFF);
 
         String str = String.valueOf(MathHelper.wrapDegrees(snappedPitch)) + "°";
-        mc.fontRenderer.drawString(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
+        textRenderer.drawString(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
 
         str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedPitch - step)) + "°";
-        mc.fontRenderer.drawString(str, x - mc.fontRenderer.getStringWidth(str) - 4, y - 4, 0xFFFFFFFF);
+        textRenderer.drawString(str, x - textRenderer.getStringWidth(str) - 4, y - 4, 0xFFFFFFFF);
 
         str = String.valueOf(MathHelper.wrapDegrees(snappedPitch + step)) + "°  >";
-        mc.fontRenderer.drawString(str, x + width + 4, y + height - 4, 0xFFFFFFFF);
+        textRenderer.drawString(str, x + width + 4, y + height - 4, 0xFFFFFFFF);
     }
 }
