@@ -6,7 +6,6 @@
     "client": [
         "IMixinBlock",
         "IMixinHorseBaseEntity",
-        "IMixinKeyBinding",
         "IMixinSlot",
         "MixinBackgroundRenderer",
         "MixinBlockItem",
@@ -29,6 +28,7 @@
         "MixinLivingEntityRenderer",
         "MixinMinecraftClient",
         "MixinParticleManager",
+        "MixinRavagerEntity",
         "MixinScreen",
         "MixinSlimeBlock",
         "MixinWorld",

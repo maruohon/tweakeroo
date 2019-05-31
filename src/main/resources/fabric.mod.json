@@ -27,9 +27,8 @@
     "mixins.tweakeroo.json"
   ],
 
-  "requires": {
-    "fabricloader": ">=0.4.0",
-    "fabric": "*",
+  "depends": {
+    "fabric-events-lifecycle-v0": "*",
     "malilib": ">=0.9.5 <0.10.0"
   }
 }
