@@ -6,7 +6,6 @@
     "client": [
         "IMixinBlock",
         "IMixinHorseBaseEntity",
-        "IMixinKeyBinding",
         "IMixinSlot",
         "MixinBackgroundRenderer",
         "MixinBlockItem",

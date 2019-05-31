@@ -12,7 +12,9 @@ import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -21,6 +23,9 @@ import net.minecraft.util.hit.BlockHitResult;
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
 {
+    @Shadow
+    public GameOptions options;
+
     @Shadow
     private int itemUseCooldown;
 
@@ -96,12 +101,12 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
         {
             if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue())
             {
-                KeyBinding.setKeyPressed(((IMixinKeyBinding) ((MinecraftClient) (Object) this).options.keyAttack).getInput(), true);
+                KeyBinding.setKeyPressed(InputUtil.fromName(this.options.keyAttack.getName()), true);
             }
 
             if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue())
             {
-                KeyBinding.setKeyPressed(((IMixinKeyBinding) ((MinecraftClient) (Object) this).options.keyUse).getInput(), true);
+                KeyBinding.setKeyPressed(InputUtil.fromName(this.options.keyUse.getName()), true);
             }
         }
     }
