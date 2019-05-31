@@ -9,7 +9,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 public class WorldLoadListener implements IWorldLoadListener
 {
     @Override
-    public void onWorldLoadPre(@Nullable WorldClient world, Minecraft mc)
+    public void onWorldLoadPre(@Nullable WorldClient worldBefore, @Nullable WorldClient worldAfter, Minecraft mc)
     {
         // Always disable the Free Camera mode when leaving the world or switching dimensions
         FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
