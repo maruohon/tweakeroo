@@ -4,26 +4,15 @@ import java.io.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.mumfrey.liteloader.Configurable;
-import com.mumfrey.liteloader.InitCompleteListener;
 import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.Tickable;
-import com.mumfrey.liteloader.core.LiteLoader;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
-import fi.dy.masa.malilib.config.ConfigManager;
-import fi.dy.masa.malilib.event.InputEventHandler;
-import fi.dy.masa.malilib.event.RenderEventHandler;
-import fi.dy.masa.malilib.event.WorldLoadHandler;
-import fi.dy.masa.malilib.interfaces.IRenderer;
-import fi.dy.masa.tweakeroo.config.Callbacks;
-import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.tweakeroo.config.gui.TweakerooConfigPanel;
-import fi.dy.masa.tweakeroo.event.InputHandler;
-import fi.dy.masa.tweakeroo.event.RenderHandler;
-import fi.dy.masa.tweakeroo.event.WorldLoadListener;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.minecraft.client.Minecraft;
 
-public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteListener, Tickable
+public class LiteModTweakeroo implements LiteMod, Configurable, Tickable
 {
     public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
 
@@ -55,26 +44,7 @@ public class LiteModTweakeroo implements LiteMod, Configurable, InitCompleteList
     @Override
     public void init(File configPath)
     {
-        Configs.loadFromFile();
-        ConfigManager.getInstance().registerConfigHandler(Reference.MOD_ID, new Configs());
-
-        InputEventHandler.getKeybindManager().registerKeybindProvider(InputHandler.getInstance());
-        InputEventHandler.getInputManager().registerKeyboardInputHandler(InputHandler.getInstance());
-        InputEventHandler.getInputManager().registerMouseInputHandler(InputHandler.getInstance());
-
-        IRenderer renderer = new RenderHandler();
-        RenderEventHandler.getInstance().registerGameOverlayRenderer(renderer);
-        RenderEventHandler.getInstance().registerTooltipLastRenderer(renderer);
-        RenderEventHandler.getInstance().registerWorldLastRenderer(renderer);
-
-        WorldLoadListener listener = new WorldLoadListener();
-        WorldLoadHandler.getInstance().registerWorldLoadPreHandler(listener);
-    }
-
-    @Override
-    public void onInitCompleted(Minecraft mc, LiteLoader loader)
-    {
-        Callbacks.init(mc);
+        InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
     }
 
     @Override
