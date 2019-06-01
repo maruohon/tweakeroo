@@ -29,6 +29,7 @@
     "tweakeroo.message.set_placement_grid_size_to": "Set Placement Grid size to %s",
     "tweakeroo.message.set_placement_limit_to": "Set Placement Limit to %s",
     "tweakeroo.message.set_placement_restriction_mode_to": "Set Placement Restriction mode to %s",
+    "tweakeroo.message.set_zoom_fov_to": "Set zoom FOV to %s",
     "tweakeroo.message.swapped_low_durability_item_for_better_durability": "Swapped a low durability item for one with more durability",
     "tweakeroo.message.swapped_low_durability_item_for_dummy_item": "Swapped a low durability item for a dummy item",
     "tweakeroo.message.swapped_low_durability_item_off_players_hand": "Swapped a low durability item off the player's hand",
@@ -38,6 +39,7 @@
     "tweakeroo.message.toggled_placement_grid_on": "Toggled Placement Grid tweak %s, grid interval: %s",
     "tweakeroo.message.toggled_placement_limit_on": "Toggled Placement Limit tweak %s, limit: %s",
     "tweakeroo.message.toggled_fast_placement_mode_on": "Toggled Fast Placement mode %s, mode: %s",
+    "tweakeroo.message.toggled_zoom_on": "Toggled zoom %s, FOV: %s",
     "tweakeroo.message.value.off": "OFF",
     "tweakeroo.message.value.on": "ON"
 }
