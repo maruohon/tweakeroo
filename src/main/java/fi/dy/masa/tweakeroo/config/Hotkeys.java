@@ -26,6 +26,7 @@ public class Hotkeys
     public static final ConfigHotkey PLAYER_INVENTORY_PEEK              = new ConfigHotkey("playerInventoryPeek",               "Q",     KeybindSettings.PRESS_ALLOWEXTRA, "The key to activate the player inventory peek/preview feature");
     public static final ConfigHotkey SKIP_ALL_RENDERING                 = new ConfigHotkey("skipAllRendering",                  "",      "Toggles skipping _all_ rendering");
     public static final ConfigHotkey SKIP_WORLD_RENDERING               = new ConfigHotkey("skipWorldRendering",                "",      "Toggles skipping world rendering");
+    public static final ConfigHotkey ZOOM_ACTIVATE                      = new ConfigHotkey("zoomActivate",                      "",      "Zoom activation hotkey");
 
     public static final List<ConfigHotkey> HOTKEY_LIST = ImmutableList.of(
             ACCURATE_BLOCK_PLACEMENT_IN,
@@ -46,6 +47,7 @@ public class Hotkeys
             OPEN_CONFIG_GUI,
             PLAYER_INVENTORY_PEEK,
             SKIP_ALL_RENDERING,
-            SKIP_WORLD_RENDERING
+            SKIP_WORLD_RENDERING,
+            ZOOM_ACTIVATE
     );
 }
