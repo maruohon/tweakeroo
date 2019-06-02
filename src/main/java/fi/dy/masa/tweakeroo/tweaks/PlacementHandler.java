@@ -53,9 +53,9 @@ public class PlacementHandler
             }
         }
 
-        if (block instanceof BlockRedstoneRepeater)
+        if (x >= 10)
         {
-            if (x > 10)
+            if (block instanceof BlockRedstoneRepeater)
             {
                 Integer delay = (x / 10) + 1;
 
@@ -64,24 +64,15 @@ public class PlacementHandler
                     state = state.withProperty(BlockRedstoneRepeater.DELAY, delay);
                 }
             }
-        }
-        else if (block instanceof BlockRedstoneComparator)
-        {
-            if (x >= 10)
+            else if (block instanceof BlockRedstoneComparator)
             {
                 state = state.withProperty(BlockRedstoneComparator.MODE, BlockRedstoneComparator.Mode.SUBTRACT);
             }
-        }
-        else if (block instanceof BlockTrapDoor)
-        {
-            if (x >= 10)
+            else if (block instanceof BlockTrapDoor)
             {
                 state = state.withProperty(BlockTrapDoor.HALF, BlockTrapDoor.DoorHalf.TOP);
             }
-        }
-        else if (block instanceof BlockStairs && state.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.TOP)
-        {
-            if (x >= 10)
+            else if (block instanceof BlockStairs && state.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.TOP)
             {
                 state = state.withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP);
             }
