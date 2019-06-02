@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
@@ -14,6 +15,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -48,6 +50,12 @@ public abstract class MixinMinecraft implements IMinecraftAccessor
     public void rightClickMouseAccessor()
     {
         this.rightClickMouse();
+    }
+
+    @Inject(method = "runGameLoop", at = @At("RETURN"))
+    private void onGameLoop(boolean renderWorld, CallbackInfo ci)
+    {
+        Tweakeroo.onGameLoop((Minecraft) (Object) this);
     }
 
     @Inject(method = "clickMouse", at = {
@@ -98,16 +106,16 @@ public abstract class MixinMinecraft implements IMinecraftAccessor
     @Inject(method = "processKeyBinds", at = @At("HEAD"))
     private void onProcessKeybindsPre(CallbackInfo ci)
     {
-        Minecraft mc = Minecraft.getInstance();
+        Minecraft mc = (Minecraft) (Object) this;
 
         if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue() && mc.currentScreen == null)
         {
-            KeyBinding.setKeyBindState(((IMixinKeyBinding) mc.gameSettings.keyBindAttack).getInput(), true);
+            KeyBinding.setKeyBindState(InputMappings.getInputByName(mc.gameSettings.keyBindAttack.getTranslationKey()), true);
         }
 
         if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue() && mc.currentScreen == null)
         {
-            KeyBinding.setKeyBindState(((IMixinKeyBinding) mc.gameSettings.keyBindUseItem).getInput(), true);
+            KeyBinding.setKeyBindState(InputMappings.getInputByName(mc.gameSettings.keyBindUseItem.getTranslationKey()), true);
         }
     }
 }

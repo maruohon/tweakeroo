@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
 @Mixin(GlStateManager.class)
-public class MixinGlStateManager
+public abstract class MixinGlStateManager
 {
     @ModifyVariable(method = "fogDensity", at = @At("HEAD"), argsOnly = true)
     private static float adjustFogDensity(float fogDensity)

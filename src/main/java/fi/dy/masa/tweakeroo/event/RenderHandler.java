@@ -1,12 +1,17 @@
 package fi.dy.masa.tweakeroo.event;
 
 import fi.dy.masa.malilib.interfaces.IRenderer;
+import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemMap;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 
 public class RenderHandler implements IRenderer
@@ -38,6 +43,33 @@ public class RenderHandler implements IRenderer
         {
             RenderUtils.renderPlayerInventoryOverlay(mc);
         }
+
+        if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue() &&
+            Configs.Generic.SNAP_AIM_INDICATOR.getBooleanValue())
+        {
+            RenderUtils.renderSnapAimAngleIndicator();
+        }
+    }
+
+    @Override
+    public void onRenderTooltipLast(ItemStack stack, int x, int y)
+    {
+        if (stack.getItem() instanceof ItemMap)
+        {
+            if (FeatureToggle.TWEAK_MAP_PREVIEW.getBooleanValue())
+            {
+                fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue());
+            }
+        }
+        else if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
+        {
+            boolean render = Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || GuiScreen.isShiftKeyDown();
+
+            if (render)
+            {
+                fi.dy.masa.malilib.render.RenderUtils.renderShulkerBoxPreview(stack, x, y, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue());
+            }
+        }
     }
 
     @Override
@@ -57,27 +89,29 @@ public class RenderHandler implements IRenderer
             mc.objectMouseOver != null &&
             mc.objectMouseOver.type == RayTraceResult.Type.BLOCK &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
-             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld()))
+             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld() ||
+             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeybind().isKeybindHeld()))
         {
-            Entity entity = mc.player;
+            Entity entity = mc.getRenderViewEntity() != null ? mc.getRenderViewEntity() : mc.player;
             GlStateManager.depthMask(false);
             GlStateManager.disableLighting();
             GlStateManager.disableCull();
             GlStateManager.enableBlend();
             //GlStateManager.pushMatrix();
+            GlStateManager.disableDepthTest();
             GlStateManager.disableTexture2D();
-            double dx = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * partialTicks;
-            double dy = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks;
-            double dz = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * partialTicks;
 
-            RenderUtils.renderBlockPlacementOverlay(
+            Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
+
+            fi.dy.masa.malilib.render.RenderUtils.renderBlockTargetingOverlay(
                     entity,
                     mc.objectMouseOver.getBlockPos(),
                     mc.objectMouseOver.sideHit,
                     mc.objectMouseOver.hitVec,
-                    dx, dy, dz);
+                    color, partialTicks);
 
             GlStateManager.enableTexture2D();
+            GlStateManager.enableDepthTest();
             //GlStateManager.popMatrix();
             GlStateManager.disableBlend();
             GlStateManager.enableCull();
