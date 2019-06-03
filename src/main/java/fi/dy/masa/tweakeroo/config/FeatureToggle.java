@@ -75,6 +75,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_NO_MOB_SPAWNER_MOB_RENDER ("tweakNoMobSpawnerMobRendering",       false, "",    "Removes the entity rendering from mob spawners"),
     TWEAK_NO_NETHER_FOG             ("tweakNoNetherFog",                    false, "",    "Removes the fog in the Nether"),
     TWEAK_NO_OFFHAND_RENDERING      ("tweakNoOffhandRendering",             false, "",    "Disables the offhand item from getting rendered"),
+    TWEAK_NO_PARTICLES              ("tweakNoParticles",                    false, "",    "Disables all particles"),
     TWEAK_NO_PORTAL_GUI_CLOSING     ("tweakNoPortalGuiClosing",             false, "",    "If enabled, then you can still open GUIs while in a Nether Portal"),
     TWEAK_NO_RAIN_EFFECTS           ("tweakNoRainEffects",                  false, "",    "Disables rain rendering and sounds"),
     TWEAK_NO_SIGN_GUI               ("tweakNoSignGui",                      false, "",    "Prevent the Sign edit GUI from opening"),

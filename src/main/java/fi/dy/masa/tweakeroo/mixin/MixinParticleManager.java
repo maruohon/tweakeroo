@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.util.math.BlockPos;
 
@@ -16,6 +17,15 @@ public abstract class MixinParticleManager
     private void onAddBlockDestroyEffects(BlockPos pos, IBlockState state, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_NO_BLOCK_BREAK_PARTICLES.getBooleanValue())
+        {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "addEffect", at = @At("HEAD"), cancellable = true)
+    private void disableAllParticles(Particle effect, CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_NO_PARTICLES.getBooleanValue())
         {
             ci.cancel();
         }
