@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.config;
 
 import fi.dy.masa.malilib.config.IConfigBoolean;
+import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
@@ -31,7 +32,7 @@ public class Callbacks
     public static void init(Minecraft mc)
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
-        FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN));
+        Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN));
 
         FeatureCallbackSpecial featureCallback = new FeatureCallbackSpecial();
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
@@ -115,9 +116,9 @@ public class Callbacks
         }
     }
 
-    public static class FeatureCallbackSlime implements IValueChangeCallback<IConfigBoolean>
+    public static class FeatureCallbackSlime implements IValueChangeCallback<ConfigBoolean>
     {
-        public FeatureCallbackSlime(FeatureToggle feature)
+        public FeatureCallbackSlime(ConfigBoolean feature)
         {
             Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.getSlipperiness());
 
@@ -129,7 +130,7 @@ public class Callbacks
         }
 
         @Override
-        public void onValueChanged(IConfigBoolean config)
+        public void onValueChanged(ConfigBoolean config)
         {
             if (config.getBooleanValue())
             {

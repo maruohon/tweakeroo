@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -37,7 +36,7 @@ public abstract class MixinWorld
     @Inject(method = "tickEntity(Lnet/minecraft/entity/Entity;Z)V", at = @At("HEAD"), cancellable = true)
     private void preventEntityTicking(Entity entityIn, boolean forceUpdate, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_ENTITY_TICKING.getBooleanValue() && (entityIn instanceof EntityPlayer) == false)
+        if (Configs.Disable.DISABLE_ENTITY_TICKING.getBooleanValue() && (entityIn instanceof EntityPlayer) == false)
         {
             ci.cancel();
         }
@@ -49,7 +48,7 @@ public abstract class MixinWorld
             at = @At(value = "INVOKE", target = "Lnet/minecraft/tileentity/TileEntity;isRemoved()Z", ordinal = 0))
     private boolean preventTileEntityTicking(TileEntity te)
     {
-        if (FeatureToggle.TWEAK_NO_TILE_ENTITY_TICKING.getBooleanValue())
+        if (Configs.Disable.DISABLE_TILE_ENTITY_TICKING.getBooleanValue())
         {
             return true;
         }

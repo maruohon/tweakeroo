@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.BlockObserver;
@@ -22,7 +22,7 @@ public abstract class MixinBlockObserver extends BlockDirectional
     @Inject(method = "startSignal", at = @At("HEAD"), cancellable = true)
     private void preventTrigger(IWorld worldIn, BlockPos pos, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_OBSERVER_DISABLE.getBooleanValue())
+        if (Configs.Disable.DISABLE_OBSERVER.getBooleanValue())
         {
             ci.cancel();
         }

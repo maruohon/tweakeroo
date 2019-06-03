@@ -41,7 +41,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     private boolean onDoesGuiPauseGame(GuiScreen gui)
     {
         // Spoof the return value to prevent entering the if block
-        if (FeatureToggle.TWEAK_NO_PORTAL_GUI_CLOSING.getBooleanValue())
+        if (Configs.Disable.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue())
         {
             return true;
         }
@@ -76,7 +76,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
                 target = "Lnet/minecraft/client/entity/EntityPlayerSP;collidedHorizontally:Z"))
     private boolean overrideCollidedHorizontally(EntityPlayerSP player)
     {
-        if (FeatureToggle.TWEAK_NO_WALL_UNSPRINT.getBooleanValue())
+        if (Configs.Disable.DISABLE_WALL_UNSPRINT.getBooleanValue())
         {
             return false;
         }
@@ -91,7 +91,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
                      target = "Lnet/minecraft/client/entity/EntityPlayerSP;sprintToggleTimer:I"))
     private void disableDoubleTapSprint(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_DOUBLE_TAP_SPRINT.getBooleanValue())
+        if (Configs.Disable.DISABLE_DOUBLE_TAP_SPRINT.getBooleanValue())
         {
             this.sprintToggleTimer = 0;
         }

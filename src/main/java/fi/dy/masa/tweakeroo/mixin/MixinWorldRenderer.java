@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.renderer.ViewFrustum;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -16,7 +17,7 @@ public abstract class MixinWorldRenderer
     @Inject(method = "notifyLightSet", at = @At("HEAD"), cancellable = true)
     public void notifyLightSet(BlockPos pos, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_LIGHT_UPDATES.getBooleanValue())
+        if (Configs.Disable.DISABLE_LIGHT_UPDATES.getBooleanValue())
         {
             ci.cancel();
         }

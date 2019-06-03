@@ -57,7 +57,7 @@ public abstract class MixinGameRenderer
     @Inject(method = "renderRainSnow", at = @At("HEAD"), cancellable = true)
     private void cancelRainRender(float partialTicks, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_RAIN_EFFECTS.getBooleanValue())
+        if (Configs.Disable.DISABLE_RAIN_EFFECTS.getBooleanValue())
         {
             ci.cancel();
         }
@@ -66,7 +66,7 @@ public abstract class MixinGameRenderer
     @Inject(method = "addRainParticles", at = @At("HEAD"), cancellable = true)
     private void cancelRainRender(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_RAIN_EFFECTS.getBooleanValue())
+        if (Configs.Disable.DISABLE_RAIN_EFFECTS.getBooleanValue())
         {
             ci.cancel();
         }
@@ -81,7 +81,7 @@ public abstract class MixinGameRenderer
     {
         Predicate<Entity> combined = owner.and(arg);
 
-        if (FeatureToggle.TWEAK_NO_DEAD_MOB_TARGETING.getBooleanValue())
+        if (Configs.Disable.DISABLE_DEAD_MOB_TARGETING.getBooleanValue())
         {
             combined = combined.and(new Predicate<Entity>()
             {

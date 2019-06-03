@@ -22,11 +22,11 @@ public abstract class MixinRenderManager
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     private void onShouldRender(Entity entity, ICamera camera, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir)
     {
-        if (FeatureToggle.TWEAK_NO_ENTITY_RENDERING.getBooleanValue() && (entity instanceof EntityPlayer) == false)
+        if (Configs.Disable.DISABLE_ENTITY_RENDERING.getBooleanValue() && (entity instanceof EntityPlayer) == false)
         {
             cir.setReturnValue(false);
         }
-        else if (entity instanceof EntityFallingBlock && FeatureToggle.TWEAK_NO_FALLING_BLOCK_RENDER.getBooleanValue())
+        else if (entity instanceof EntityFallingBlock && Configs.Disable.DISABLE_FALLING_BLOCK_RENDER.getBooleanValue())
         {
             cir.setReturnValue(false);
         }
@@ -54,7 +54,7 @@ public abstract class MixinRenderManager
                 }
             }
         }
-        else if (FeatureToggle.TWEAK_NO_DEAD_MOB_RENDERING.getBooleanValue() &&
+        else if (Configs.Disable.DISABLE_DEAD_MOB_RENDERING.getBooleanValue() &&
                  entity instanceof EntityLivingBase && ((EntityLivingBase) entity).getHealth() <= 0f)
         {
             cir.setReturnValue(false);

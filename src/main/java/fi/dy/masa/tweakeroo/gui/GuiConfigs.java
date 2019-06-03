@@ -56,9 +56,13 @@ public class GuiConfigs extends GuiConfigsBase
     {
         ConfigGuiTab tab = GuiConfigs.tab;
 
-        if (tab == ConfigGuiTab.GENERIC || tab == ConfigGuiTab.FIXES || tab == ConfigGuiTab.TWEAK_TOGGLES)
+        if (tab == ConfigGuiTab.GENERIC)
         {
             return 120;
+        }
+        else if (tab == ConfigGuiTab.FIXES || tab == ConfigGuiTab.TWEAK_TOGGLES || tab == ConfigGuiTab.DISABLE_TOGGLES)
+        {
+            return 80;
         }
         else if (tab == ConfigGuiTab.LISTS)
         {
@@ -71,7 +75,9 @@ public class GuiConfigs extends GuiConfigsBase
     @Override
     protected boolean useKeybindSearch()
     {
-        return GuiConfigs.tab == ConfigGuiTab.TWEAK_HOTKEYS || GuiConfigs.tab == ConfigGuiTab.GENERIC_HOTKEYS;
+        return GuiConfigs.tab == ConfigGuiTab.TWEAK_HOTKEYS ||
+               GuiConfigs.tab == ConfigGuiTab.GENERIC_HOTKEYS ||
+               GuiConfigs.tab == ConfigGuiTab.DISABLE_HOTKEYS;
     }
 
     @Override
@@ -91,6 +97,14 @@ public class GuiConfigs extends GuiConfigsBase
         else if (tab == ConfigGuiTab.LISTS)
         {
             configs = Configs.Lists.OPTIONS;
+        }
+        else if (tab == ConfigGuiTab.DISABLE_TOGGLES)
+        {
+            configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS));
+        }
+        else if (tab == ConfigGuiTab.DISABLE_HOTKEYS)
+        {
+            configs = ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(Configs.Disable.OPTIONS));
         }
         else if (tab == ConfigGuiTab.TWEAK_TOGGLES)
         {
@@ -146,6 +160,8 @@ public class GuiConfigs extends GuiConfigsBase
         GENERIC         ("tweakeroo.gui.button.config_gui.generic"),
         FIXES           ("tweakeroo.gui.button.config_gui.fixes"),
         LISTS           ("tweakeroo.gui.button.config_gui.lists"),
+        DISABLE_TOGGLES ("tweakeroo.gui.button.config_gui.disable_toggle"),
+        DISABLE_HOTKEYS ("tweakeroo.gui.button.config_gui.disable_hotkeys"),
         TWEAK_TOGGLES   ("tweakeroo.gui.button.config_gui.tweak_toggle"),
         TWEAK_HOTKEYS   ("tweakeroo.gui.button.config_gui.tweak_hotkeys"),
         GENERIC_HOTKEYS ("tweakeroo.gui.button.config_gui.generic_hotkeys"),

@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.inventory.Container;
@@ -23,7 +23,7 @@ public abstract class MixinInventoryEffectRenderer extends GuiContainer
     @Inject(method = "updateActivePotionEffects", at = @At("HEAD"), cancellable = true)
     private void disableEffectRendering(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_INVENTORY_EFFECTS.getBooleanValue())
+        if (Configs.Disable.DISABLE_INVENTORY_EFFECTS.getBooleanValue())
         {
             this.guiLeft = (this.width - this.xSize) / 2;
             this.hasActivePotionEffects = false;

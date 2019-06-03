@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.FirstPersonRenderer;
 
@@ -16,7 +16,7 @@ public abstract class MixinFirstPersonRenderer
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;getCooledAttackStrength(F)F"))
     public float redirectedGetCooledAttackStrength(EntityPlayerSP player, float adjustTicks)
     {
-        return FeatureToggle.TWEAK_NO_ITEM_SWITCH_COOLDOWN.getBooleanValue() ? 1.0F : player.getCooledAttackStrength(adjustTicks);
+        return Configs.Disable.DISABLE_ITEM_SWITCH_COOLDOWN.getBooleanValue() ? 1.0F : player.getCooledAttackStrength(adjustTicks);
     }
 
     @ModifyVariable(method = "renderItemInFirstPerson(F)V", ordinal = 1,
@@ -24,7 +24,7 @@ public abstract class MixinFirstPersonRenderer
                      target = "Lnet/minecraft/client/entity/AbstractClientPlayer;isHandActive()Z"))
     private boolean preventOffhandRendering(boolean original)
     {
-        if (FeatureToggle.TWEAK_NO_OFFHAND_RENDERING.getBooleanValue())
+        if (Configs.Disable.DISABLE_OFFHAND_RENDERING.getBooleanValue())
         {
             return false;
         }

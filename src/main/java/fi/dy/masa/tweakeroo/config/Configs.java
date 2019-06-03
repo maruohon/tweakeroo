@@ -8,7 +8,9 @@ import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
+import fi.dy.masa.malilib.config.IHotkeyTogglable;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
+import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigInteger;
@@ -187,6 +189,65 @@ public class Configs implements IConfigHandler
         );
     }
 
+    public static class Disable
+    {
+        public static final ConfigBooleanHotkeyed       DISABLE_BLOCK_BREAK_PARTICLES   = new ConfigBooleanHotkeyed("disableBlockBreakingParticles",        false, "", "Removes the block breaking particles.\n(This is originally from usefulmod by nessie.)");
+        public static final ConfigBooleanHotkeyed       DISABLE_DOUBLE_TAP_SPRINT       = new ConfigBooleanHotkeyed("disableDoubleTapSprint",               false, "", "Disables the double-tap-forward-key sprinting");
+        public static final ConfigBooleanHotkeyed       DISABLE_BOSS_FOG                = new ConfigBooleanHotkeyed("disableBossFog",                       false, "", "Removes the fog that boss mobs cause");
+        public static final ConfigBooleanHotkeyed       DISABLE_CLIENT_ENTITY_UPDATES   = new ConfigBooleanHotkeyed("disableClientEntityUpdates",           false, "", "Disables ALL except player entity updates on the client.\nThis is mainly meant for situations where you need to be\nable to do stuff to fix excessive entity count related problems");
+        public static final ConfigBooleanHotkeyed       DISABLE_DEAD_MOB_RENDERING      = new ConfigBooleanHotkeyed("disableDeadMobRendering",              false, "", "Prevents rendering dead mobs (entities that are at 0 health)");
+        public static final ConfigBooleanHotkeyed       DISABLE_DEAD_MOB_TARGETING      = new ConfigBooleanHotkeyed("disableDeadMobTargeting",              false, "", "Prevents targeting entities that are at 0 health.\nThis fixes for example hitting already dead mobs.");
+        public static final ConfigBooleanHotkeyed       DISABLE_ENTITY_RENDERING        = new ConfigBooleanHotkeyed("disableEntityRendering",               false, "", "Disables ALL except player entity rendering.\nThis is mainly meant for situations where you need to be\nable to do stuff to fix excessive entity count related problems");
+        public static final ConfigBooleanHotkeyed       DISABLE_ENTITY_TICKING          = new ConfigBooleanClient  ("disableEntityTicking",                 false, "", "Prevent everything except player entities from getting ticked");
+        public static final ConfigBooleanHotkeyed       DISABLE_FALLING_BLOCK_RENDER    = new ConfigBooleanHotkeyed("disableFallingBlockEntityRendering",   false, "", "If enabled, then falling block entities won't be rendered at all");
+        public static final ConfigBooleanHotkeyed       DISABLE_INVENTORY_EFFECTS       = new ConfigBooleanHotkeyed("disableInventoryEffectRendering",      false, "", "Removes the potion effect rendering from the inventory GUIs");
+        public static final ConfigBooleanHotkeyed       DISABLE_ITEM_SWITCH_COOLDOWN    = new ConfigBooleanHotkeyed("disableItemSwitchRenderCooldown",      false, "", "If true, then there won't be any cooldown/equip animation\nwhen switching the held item or using the item.");
+        public static final ConfigBooleanHotkeyed       DISABLE_LIGHT_UPDATES           = new ConfigBooleanHotkeyed("disableLightUpdates",                  false, "", "If enabled, disables some client-side (rendering related) light updates");
+        public static final ConfigBooleanHotkeyed       DISABLE_LIGHT_UPDATES_ALL       = new ConfigBooleanHotkeyed("disableLightUpdatesAll",               false, "", "If enabled, disables ALL client-side light updates.\nThis might look very bad unless you use the Gamma tweak.");
+        public static final ConfigBooleanHotkeyed       DISABLE_MOB_SPAWNER_MOB_RENDER  = new ConfigBooleanHotkeyed("disableMobSpawnerMobRendering",        false, "", "Removes the entity rendering from mob spawners");
+        public static final ConfigBooleanHotkeyed       DISABLE_NETHER_FOG              = new ConfigBooleanHotkeyed("disableNetherFog",                     false, "", "Removes the fog in the Nether");
+        public static final ConfigBooleanHotkeyed       DISABLE_OBSERVER                = new ConfigBooleanClient  ("disableObserver",                      false, "", "Disable Observers from triggering at all");
+        public static final ConfigBooleanHotkeyed       DISABLE_OFFHAND_RENDERING       = new ConfigBooleanHotkeyed("disableOffhandRendering",              false, "", "Disables the offhand item from getting rendered");
+        public static final ConfigBooleanHotkeyed       DISABLE_PARTICLES               = new ConfigBooleanHotkeyed("disableParticles",                     false, "", "Disables all particles");
+        public static final ConfigBooleanHotkeyed       DISABLE_PORTAL_GUI_CLOSING      = new ConfigBooleanHotkeyed("disablePortalGuiClosing",              false, "", "If enabled, then you can still open GUIs while in a Nether Portal");
+        public static final ConfigBooleanHotkeyed       DISABLE_RAIN_EFFECTS            = new ConfigBooleanHotkeyed("disableRainEffects",                   false, "", "Disables rain rendering and sounds");
+        public static final ConfigBooleanHotkeyed       DISABLE_SIGN_GUI                = new ConfigBooleanHotkeyed("disableSignGui",                       false, "", "Prevent the Sign edit GUI from opening");
+        public static final ConfigBooleanHotkeyed       DISABLE_SLIME_BLOCK_SLOWDOWN    = new ConfigBooleanHotkeyed("disableSlimeBlockSlowdown",            false, "", "Removes the slowdown from walking on Slime Blocks.\n(This is originally from usefulmod by nessie.)");
+        public static final ConfigBooleanHotkeyed       DISABLE_TILE_ENTITY_RENDERING   = new ConfigBooleanHotkeyed("disableTileEntityRendering",           false, "", "Prevents all TileEntity renderers from rendering");
+        public static final ConfigBooleanHotkeyed       DISABLE_TILE_ENTITY_TICKING     = new ConfigBooleanClient  ("disableTileEntityTicking",             false, "", "Prevent all TileEntities from getting ticked");
+        public static final ConfigBooleanHotkeyed       DISABLE_VILLAGER_TRADE_LOCKING  = new ConfigBooleanClient  ("disableVillagerTradeLocking",          false, "", "Prevents villager trades from ever locking, by always incrementing\nthe max uses as well when the recipe uses is incremented");
+        public static final ConfigBooleanHotkeyed       DISABLE_WALL_UNSPRINT           = new ConfigBooleanHotkeyed("disableWallUnsprint",                  false, "", "Touching a wall doesn't drop you out from sprint mode");
+
+        public static final ImmutableList<IHotkeyTogglable> OPTIONS = ImmutableList.of(
+                DISABLE_BLOCK_BREAK_PARTICLES,
+                DISABLE_DOUBLE_TAP_SPRINT,
+                DISABLE_BOSS_FOG,
+                DISABLE_CLIENT_ENTITY_UPDATES,
+                DISABLE_DEAD_MOB_RENDERING,
+                DISABLE_DEAD_MOB_TARGETING,
+                DISABLE_ENTITY_RENDERING,
+                DISABLE_ENTITY_TICKING,
+                DISABLE_FALLING_BLOCK_RENDER,
+                DISABLE_INVENTORY_EFFECTS,
+                DISABLE_ITEM_SWITCH_COOLDOWN,
+                DISABLE_LIGHT_UPDATES,
+                DISABLE_LIGHT_UPDATES_ALL,
+                DISABLE_MOB_SPAWNER_MOB_RENDER,
+                DISABLE_NETHER_FOG,
+                DISABLE_OBSERVER,
+                DISABLE_OFFHAND_RENDERING,
+                DISABLE_PARTICLES,
+                DISABLE_PORTAL_GUI_CLOSING,
+                DISABLE_RAIN_EFFECTS,
+                DISABLE_SIGN_GUI,
+                DISABLE_SLIME_BLOCK_SLOWDOWN,
+                DISABLE_TILE_ENTITY_RENDERING,
+                DISABLE_TILE_ENTITY_TICKING,
+                DISABLE_VILLAGER_TRADE_LOCKING,
+                DISABLE_WALL_UNSPRINT
+        );
+    }
+
     public static class Internal
     {
         public static final ConfigInteger       FLY_SPEED_PRESET                    = new ConfigInteger     ("flySpeedPreset", 0, 0, 3, "This is just for the mod internally to track the\ncurrently selected fly speed preset");
@@ -234,6 +295,7 @@ public class Configs implements IConfigHandler
                 ConfigUtils.readConfigBase(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
                 ConfigUtils.readConfigBase(root, "Internal", Configs.Internal.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Lists", Configs.Lists.OPTIONS);
+                ConfigUtils.readHotkeyToggleOptions(root, "DisableHotkeys", "DisableToggles", ImmutableList.copyOf(Disable.OPTIONS));
                 ConfigUtils.readHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));
             }
         }
@@ -275,6 +337,7 @@ public class Configs implements IConfigHandler
             ConfigUtils.writeConfigBase(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
             ConfigUtils.writeConfigBase(root, "Internal", Configs.Internal.OPTIONS);
             ConfigUtils.writeConfigBase(root, "Lists", Configs.Lists.OPTIONS);
+            ConfigUtils.writeHotkeyToggleOptions(root, "DisableHotkeys", "DisableToggles", ImmutableList.copyOf(Disable.OPTIONS));
             ConfigUtils.writeHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));
 
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));

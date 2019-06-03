@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -30,7 +29,7 @@ public abstract class MixinChunk
     @Inject(method = "propagateSkylightOcclusion", at = @At("HEAD"), cancellable = true)
     private void onPropagateSkylightOcclusion(int x, int z, CallbackInfo ci)
     {
-        if (this.world.isRemote && FeatureToggle.TWEAK_NO_LIGHT_UPDATES_ALL.getBooleanValue())
+        if (this.world.isRemote && Configs.Disable.DISABLE_LIGHT_UPDATES_ALL.getBooleanValue())
         {
             ci.cancel();
         }
@@ -39,7 +38,7 @@ public abstract class MixinChunk
     @Inject(method = "relightBlock", at = @At("HEAD"), cancellable = true)
     private void onRelightBlock(int x, int y, int z, IBlockState state, CallbackInfo ci)
     {
-        if (this.world.isRemote && FeatureToggle.TWEAK_NO_LIGHT_UPDATES_ALL.getBooleanValue())
+        if (this.world.isRemote && Configs.Disable.DISABLE_LIGHT_UPDATES_ALL.getBooleanValue())
         {
             ci.cancel();
         }
@@ -48,7 +47,7 @@ public abstract class MixinChunk
     @Inject(method = "generateSkylightMap", at = @At("HEAD"), cancellable = true)
     private void onGenerateSkylightMap(CallbackInfo ci)
     {
-        if (this.world.isRemote && FeatureToggle.TWEAK_NO_LIGHT_UPDATES_ALL.getBooleanValue())
+        if (this.world.isRemote && Configs.Disable.DISABLE_LIGHT_UPDATES_ALL.getBooleanValue())
         {
             ci.cancel();
         }

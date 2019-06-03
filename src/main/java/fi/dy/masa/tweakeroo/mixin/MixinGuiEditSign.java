@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IGuiEditSign;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -48,7 +49,7 @@ public abstract class MixinGuiEditSign extends GuiScreen implements IGuiEditSign
             MiscUtils.applyPreviousTextToSign(this.tileSign);
         }
 
-        if (FeatureToggle.TWEAK_NO_SIGN_GUI.getBooleanValue())
+        if (Configs.Disable.DISABLE_SIGN_GUI.getBooleanValue())
         {
             this.close();
 

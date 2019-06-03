@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.world.World;
 
@@ -18,7 +18,7 @@ public abstract class MixinMobSpawnerBaseLogic
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void cancelParticleRendering(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_MOB_SPAWNER_MOB_RENDER.getBooleanValue() && this.getWorld().isRemote)
+        if (Configs.Disable.DISABLE_MOB_SPAWNER_MOB_RENDER.getBooleanValue() && this.getWorld().isRemote)
         {
             ci.cancel();
         }

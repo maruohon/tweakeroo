@@ -1,7 +1,7 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public abstract class MixinWorldClient extends World
     @Override
     public boolean checkLight(BlockPos pos)
     {
-        if (FeatureToggle.TWEAK_NO_LIGHT_UPDATES_ALL.getBooleanValue() == false)
+        if (Configs.Disable.DISABLE_LIGHT_UPDATES_ALL.getBooleanValue() == false)
         {
             return super.checkLight(pos);
         }
@@ -37,7 +37,7 @@ public abstract class MixinWorldClient extends World
     @Override
     public void setLightFor(EnumLightType type, BlockPos pos, int lightValue)
     {
-        if (FeatureToggle.TWEAK_NO_LIGHT_UPDATES_ALL.getBooleanValue() == false)
+        if (Configs.Disable.DISABLE_LIGHT_UPDATES_ALL.getBooleanValue() == false)
         {
             super.setLightFor(type, pos, lightValue);
         }
@@ -46,7 +46,7 @@ public abstract class MixinWorldClient extends World
     @Override
     public void tickEntity(Entity entity)
     {
-        if (FeatureToggle.TWEAK_NO_CLIENT_ENTITY_UPDATES.getBooleanValue() == false || entity instanceof EntityPlayer)
+        if (Configs.Disable.DISABLE_CLIENT_ENTITY_UPDATES.getBooleanValue() == false || entity instanceof EntityPlayer)
         {
             super.tickEntity(entity);
         }
