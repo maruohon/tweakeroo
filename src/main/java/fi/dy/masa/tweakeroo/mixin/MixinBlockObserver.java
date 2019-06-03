@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.BlockObserver;
@@ -29,7 +29,7 @@ public abstract class MixinBlockObserver extends BlockDirectional
             "Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;)V"), cancellable = true)
     private void preventTrigger(World worldIn, BlockPos pos, IBlockState state, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_OBSERVER_DISABLE.getBooleanValue())
+        if (Configs.Disable.DISABLE_OBSERVER.getBooleanValue())
         {
             ci.cancel();
         }
@@ -38,7 +38,7 @@ public abstract class MixinBlockObserver extends BlockDirectional
     @Inject(method = "observedNeighborChanged", at = @At("HEAD"), cancellable = true)
     private void preventTrigger(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_OBSERVER_DISABLE.getBooleanValue())
+        if (Configs.Disable.DISABLE_OBSERVER.getBooleanValue())
         {
             ci.cancel();
         }
@@ -48,7 +48,7 @@ public abstract class MixinBlockObserver extends BlockDirectional
     private void preventPlacementTrigger(World worldIn, BlockPos pos, EnumFacing facing,
             float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, CallbackInfoReturnable<IBlockState> cir)
     {
-        if (FeatureToggle.TWEAK_OBSERVER_PLACE_NO_UPDATE.getBooleanValue() && worldIn.isRemote == false)
+        if (Configs.Disable.DISABLE_OBSERVER_PLACE_UPDATE.getBooleanValue() && worldIn.isRemote == false)
         {
             // Setting powered to true here causes the updateTick() method to immediately set it to false again,
             // called via the onBlockAdded() method from Chunk#setBlockState(), before the World#setBlockState()

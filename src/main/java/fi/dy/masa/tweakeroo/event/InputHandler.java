@@ -56,11 +56,17 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         {
             manager.addKeybindToMap(hotkey.getKeybind());
         }
+
+        for (IHotkey hotkey : Configs.Disable.OPTIONS)
+        {
+            manager.addKeybindToMap(hotkey.getKeybind());
+        }
     }
 
     @Override
     public void addHotkeys(IKeybindManager manager)
     {
+        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.disable_toggle_hotkeys", Configs.Disable.OPTIONS);
         manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.HOTKEY_LIST);
         manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", ImmutableList.copyOf(FeatureToggle.values()));
     }

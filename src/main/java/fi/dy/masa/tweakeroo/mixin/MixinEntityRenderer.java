@@ -68,7 +68,7 @@ public abstract class MixinEntityRenderer
     @Inject(method = "renderRainSnow", at = @At("HEAD"), cancellable = true)
     private void cancelRainRender(float partialTicks, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_RAIN_EFFECTS.getBooleanValue())
+        if (Configs.Disable.DISABLE_RAIN_EFFECTS.getBooleanValue())
         {
             ci.cancel();
         }
@@ -77,7 +77,7 @@ public abstract class MixinEntityRenderer
     @Inject(method = "addRainParticles", at = @At("HEAD"), cancellable = true)
     private void cancelRainRender(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_RAIN_EFFECTS.getBooleanValue())
+        if (Configs.Disable.DISABLE_RAIN_EFFECTS.getBooleanValue())
         {
             ci.cancel();
         }

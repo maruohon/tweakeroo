@@ -6,6 +6,8 @@ language.code=en_US
 tweakeroo.gui.button.config_gui.generic=Generic
 tweakeroo.gui.button.config_gui.fixes=Fixes
 tweakeroo.gui.button.config_gui.lists=Lists
+tweakeroo.gui.button.config_gui.disable_toggle=Disable Toggles
+tweakeroo.gui.button.config_gui.disable_hotkeys=Disable Hotkeys
 tweakeroo.gui.button.config_gui.tweak_toggle=Tweak Toggles
 tweakeroo.gui.button.config_gui.tweak_hotkeys=Tweak Hotkeys
 tweakeroo.gui.button.config_gui.generic_hotkeys=Generic Hotkeys
@@ -18,6 +20,7 @@ tweakeroo.gui.button.misc.command_block.hover.update_execution=Whether or not mu
 
 tweakeroo.gui.title.configs=Tweakeroo Configs
 
+tweakeroo.hotkeys.category.disable_toggle_hotkeys=Disable Toggle Hotkeys
 tweakeroo.hotkeys.category.generic_hotkeys=Generic hotkeys
 tweakeroo.hotkeys.category.tweak_toggle_hotkeys=Tweak toggle hotkeys
 

@@ -40,5 +40,12 @@ public class TweakerooConfigPanel extends ConfigPanelBase
         configs = ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(FeatureToggle.values()));
         provider = new ConfigInfoProviderSimple("Hotkey to toggle the '", "' tweak");
         this.addSubPanel(new GuiModConfigs(modId, "Tweak Hotkeys", configs).setHoverInfoProvider(provider));
+
+        configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS));
+        this.addSubPanel((new GuiModConfigs(modId, "Disable Options", configs)).setConfigWidth(100));
+
+        configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS));
+        provider = new ConfigInfoProviderSimple("Hotkey to toggle the '", "' disable option");
+        this.addSubPanel(new GuiModConfigs(modId, "Disable Option Hotkeys", configs).setHoverInfoProvider(provider));
     }
 }
