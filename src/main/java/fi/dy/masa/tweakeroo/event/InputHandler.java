@@ -231,7 +231,12 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             {
                 double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.ZOOM_FOV.setDoubleValue(newValue);
-                KeyCallbackAdjustable.setValueChanged();
+
+                // Only prevent the next trigger when adjusting the value with the actual toggle key held
+                if (FeatureToggle.TWEAK_ZOOM.getKeybind().isKeybindHeld())
+                {
+                    KeyCallbackAdjustable.setValueChanged();
+                }
 
                 String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
                 mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_zoom_fov_to", strValue));
