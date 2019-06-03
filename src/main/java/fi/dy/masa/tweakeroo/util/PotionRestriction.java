@@ -15,19 +15,23 @@ public class PotionRestriction extends UsageRestriction<Potion>
     {
         for (String name : names)
         {
+            ResourceLocation rl = null;
+
             try
             {
-                if (name.isEmpty() == false)
-                {
-                    Potion effect = IRegistry.MOB_EFFECT.get(new ResourceLocation(name));
-
-                    if (effect != null)
-                    {
-                        set.add(effect);
-                    }
-                }
+                rl = new ResourceLocation(name);
             }
             catch (Exception e)
+            {
+            }
+
+            Potion effect = rl != null ? IRegistry.MOB_EFFECT.get(rl) : null;
+
+            if (effect != null)
+            {
+                set.add(effect);
+            }
+            else
             {
                 Tweakeroo.logger.warn("Invalid potion effect name '{}'", name);
             }
