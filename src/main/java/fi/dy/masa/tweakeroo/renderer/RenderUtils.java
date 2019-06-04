@@ -450,7 +450,7 @@ public class RenderUtils
 
         fi.dy.masa.malilib.render.RenderUtils.drawRect(x - 1, lineY - 1, width + 2, 2, 0xFFFFFFFF);
 
-        String str = String.format("%6.1f°", MathHelper.wrapDegrees(centerPitch));
+        String str = String.format("%6.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
         textRenderer.drawString(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
 
         //textRenderer.drawString(strUp, x - textRenderer.getStringWidth(strUp) - 4, y - 4, 0xFFFFFFFF);
