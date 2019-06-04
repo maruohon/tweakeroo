@@ -399,26 +399,62 @@ public class RenderUtils
 
         snappedPitch = MathHelper.clamp(MathHelper.wrapDegrees(snappedPitch), -limit, limit);
 
-        double startPitch = snappedPitch - (step / 2.0);
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
-        int lineY = y + (int) ((MathHelper.wrapDegrees(realPitch - startPitch)) / step * height);
-        FontRenderer textRenderer = mc.fontRenderer;
+
+        renderPitchIndicator(x, y, width, height, realPitch, snappedPitch, step, true, mc);
+    }
+
+    public static void renderPitchLockIndicator(Minecraft mc)
+    {
+        MainWindow window = mc.mainWindow;
+        final int xCenter = window.getScaledWidth() / 2;
+        final int yCenter = window.getScaledHeight() / 2;
+        int width = 10;
+        int height = 50;
+        int x = xCenter - width / 2;
+        int y = yCenter - height - 10;
+        double currentPitch = mc.player.rotationPitch;
+        double centerPitch = 0;
+        double indicatorRange = 180;
+
+        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange, false, mc);
+    }
+
+    private static void renderPitchIndicator(int x, int y, int width, int height,
+            double currentPitch, double centerPitch, double indicatorRange, boolean isSnapRange, Minecraft mc)
+    {
+        double startPitch = centerPitch - (indicatorRange / 2.0);
+        double printedRange = isSnapRange ? indicatorRange : indicatorRange / 2;
+        int lineY = y + (int) ((MathHelper.wrapDegrees(currentPitch) - startPitch) / indicatorRange * height);
+        double angleUp = centerPitch - printedRange;
+        double angleDown = centerPitch + printedRange;
+        String strUp, strDown;
+
+        if (isSnapRange)
+        {
+            strUp   = String.format("%6.1f° ^", MathHelper.wrapDegrees(angleUp));
+            strDown = String.format("%6.1f° v", MathHelper.wrapDegrees(angleDown));
+        }
+        else
+        {
+            strUp   = String.format("%6.1f°", angleUp);
+            strDown = String.format("%6.1f°", angleDown);
+        }
 
         GlStateManager.color4f(1f, 1f, 1f, 1f);
+        FontRenderer textRenderer = mc.fontRenderer;
 
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
         fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF);
 
-        fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - width / 2, lineY, width, 2, 0xFFFFFFFF);
+        fi.dy.masa.malilib.render.RenderUtils.drawRect(x - 1, lineY - 1, width + 2, 2, 0xFFFFFFFF);
 
-        String str = String.valueOf(MathHelper.wrapDegrees(snappedPitch)) + "°";
+        String str = String.format("%6.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
         textRenderer.drawString(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
 
-        str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedPitch - step)) + "°";
-        textRenderer.drawString(str, x - textRenderer.getStringWidth(str) - 4, y - 4, 0xFFFFFFFF);
-
-        str = String.valueOf(MathHelper.wrapDegrees(snappedPitch + step)) + "°  >";
-        textRenderer.drawString(str, x + width + 4, y + height - 4, 0xFFFFFFFF);
+        //textRenderer.drawString(strUp, x - textRenderer.getStringWidth(strUp) - 4, y - 4, 0xFFFFFFFF);
+        textRenderer.drawString(strUp, x + width + 4, y - 4, 0xFFFFFFFF);
+        textRenderer.drawString(strDown, x + width + 4, y + height - 4, 0xFFFFFFFF);
     }
 }
