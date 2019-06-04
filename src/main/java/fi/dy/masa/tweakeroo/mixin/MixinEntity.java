@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
@@ -25,14 +26,14 @@ public abstract class MixinEntity
 
     @Shadow public float rotationPitch;
     @Shadow public float rotationYaw;
+    @Shadow public float prevRotationYaw;
+    @Shadow public float prevRotationPitch;
     @Shadow public double motionX;
     @Shadow public double motionY;
     @Shadow public double motionZ;
 
-    private double realPitch;
-    private double realYaw;
-    private double realPitch2;
-    private double realYaw2;
+    private double forcedPitch;
+    private double forcedYaw;
 
     @Redirect(method = "move",
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/entity/Entity;onGround:Z", ordinal = 0)),
@@ -87,58 +88,79 @@ public abstract class MixinEntity
         {
             if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
             {
-                this.realYaw2 += (double) yawChange * 0.15D;
-                this.realPitch2 = MathHelper.clamp(this.realPitch2 - (double) pitchChange * 0.15D, -90, 90);
+                this.rotationYaw = this.prevRotationYaw;
+                this.rotationPitch = this.prevRotationPitch;
+
+                this.updateCustomRotations(yawChange, pitchChange, true, true, 90);
 
                 CameraEntity camera = CameraEntity.getCamera();
 
                 if (camera != null)
                 {
-                    camera.setRotations((float) this.realYaw2, (float) this.realPitch2);
+                    camera.setRotations((float) this.forcedYaw, (float) this.forcedPitch);
                 }
-            }
-            else
-            {
-                this.realYaw2 = this.rotationYaw;
-                this.realPitch2 = this.rotationPitch;
+
+                return;
             }
 
             if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue() ||
                 (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue()))
             {
-                this.rotationYaw = (float) this.realYaw;
-                this.rotationPitch = (float) this.realPitch;
+                this.rotationYaw = (float) this.forcedYaw;
+                this.rotationPitch = (float) this.forcedPitch;
+                return;
             }
-            else
+
+            if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
             {
-                if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
-                {
-                    int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
-                    SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
-                    boolean snapAimLock = FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue();
+                int pitchLimit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
+                SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+                boolean snapAimLock = FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue();
 
-                    // Not locked, or not snapping the yaw (ie. not in Yaw or Both modes)
-                    if (snapAimLock == false || mode == SnapAimMode.PITCH)
-                    {
-                        this.realYaw += (double) yawChange * 0.15D;
-                    }
+                // Not locked, or not snapping the yaw (ie. not in Yaw or Both modes)
+                boolean updateYaw = snapAimLock == false || mode == SnapAimMode.PITCH;
+                // Not locked, or not snapping the pitch (ie. not in Pitch or Both modes)
+                boolean updatePitch = snapAimLock == false || mode == SnapAimMode.YAW;
 
-                    if (snapAimLock == false || mode == SnapAimMode.YAW)
-                    {
-                        this.realPitch = MathHelper.clamp(this.realPitch - (double) pitchChange * 0.15D, -limit, limit);
-                    }
+                this.updateCustomRotations(yawChange, pitchChange, updateYaw, updatePitch, pitchLimit);
 
-                    this.rotationYaw = MiscUtils.getSnappedYaw(this.realYaw);
-                    this.rotationPitch = MiscUtils.getSnappedPitch(this.realPitch);
-                }
-                // Update the internal rotations while Aim Lock is not active.
-                // They will then be used as the forced rotations if the Aim Lock is activated.
-                else
-                {
-                    this.realYaw = this.rotationYaw;
-                    this.realPitch = this.rotationPitch;
-                }
+                this.rotationYaw = MiscUtils.getSnappedYaw(this.forcedYaw);
+                this.rotationPitch = MiscUtils.getSnappedPitch(this.forcedPitch);
+                return;
             }
+
+            if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
+            {
+                int pitchLimit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
+
+                this.updateCustomRotations(yawChange, pitchChange, true, true, pitchLimit);
+
+                MiscUtils.setCameraYaw((float) this.forcedYaw);
+                MiscUtils.setCameraPitch((float) this.forcedPitch);
+
+                this.rotationYaw = this.prevRotationYaw;
+                this.rotationPitch = this.prevRotationPitch;
+
+                return;
+            }
+
+            // Update the internal rotations while no locking features are enabled
+            // They will then be used as the forced rotations when some of the locking features are activated.
+            this.forcedYaw = this.rotationYaw;
+            this.forcedPitch = this.rotationPitch;
+        }
+    }
+
+    private void updateCustomRotations(float yawChange, float pitchChange, boolean updateYaw, boolean updatePitch, float pitchLimit)
+    {
+        if (updateYaw)
+        {
+            this.forcedYaw += (double) yawChange * 0.15D;
+        }
+
+        if (updatePitch)
+        {
+            this.forcedPitch = MathHelper.clamp(this.forcedPitch - (double) pitchChange * 0.15D, -pitchLimit, pitchLimit);
         }
     }
 }

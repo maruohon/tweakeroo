@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.event;
 
 import fi.dy.masa.malilib.interfaces.IRenderer;
+import fi.dy.masa.malilib.util.ActiveMode;
 import fi.dy.masa.malilib.util.Color4f;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -48,6 +49,16 @@ public class RenderHandler implements IRenderer
             Configs.Generic.SNAP_AIM_INDICATOR.getBooleanValue())
         {
             RenderUtils.renderSnapAimAngleIndicator();
+        }
+
+        if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue())
+        {
+            ActiveMode mode = (ActiveMode) Configs.Generic.ELYTRA_CAMERA_INDICATOR.getOptionListValue();
+
+            if (mode == ActiveMode.ALWAYS || (mode == ActiveMode.WITH_KEY && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld()))
+            {
+                RenderUtils.renderPitchLockIndicator(mc);
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockBaseLogic;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.MathHelper;
@@ -20,6 +21,8 @@ public class MiscUtils
     private static final Date DATE = new Date();
     private static double lastRealPitch;
     private static double lastRealYaw;
+    private static float cameraYaw;
+    private static float cameraPitch;
     private static boolean freeCameraSpectator;
 
     public static void setFreeCameraSpectator(boolean isSpectator)
@@ -92,6 +95,34 @@ public class MiscUtils
     public static double getLastRealYaw()
     {
         return lastRealYaw;
+    }
+
+    public static float getCameraYaw()
+    {
+        return cameraYaw;
+    }
+
+    public static float getCameraPitch()
+    {
+        return cameraPitch;
+    }
+
+    public static void setCameraYaw(float yaw)
+    {
+        cameraYaw = yaw;
+    }
+
+    public static void setCameraPitch(float pitch)
+    {
+        cameraPitch = pitch;
+    }
+
+    public static void setEntityRotations(Entity entity, float yaw, float pitch)
+    {
+        entity.rotationYaw = yaw;
+        entity.rotationPitch = pitch;
+        entity.prevRotationYaw = yaw;
+        entity.prevRotationPitch = pitch;
     }
 
     public static float getSnappedPitch(double realPitch)

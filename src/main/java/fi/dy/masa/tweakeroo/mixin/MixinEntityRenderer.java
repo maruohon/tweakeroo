@@ -29,6 +29,8 @@ public abstract class MixinEntityRenderer
 
     @Nullable
     private Entity renderViewEntityOriginal;
+    private float realYaw;
+    private float realPitch;
 
     @Inject(method = "renderWorld(FJ)V", at = @At("HEAD"), cancellable = true)
     private void onRenderWorld(CallbackInfo ci)
@@ -98,6 +100,17 @@ public abstract class MixinEntityRenderer
                 this.mc.setRenderViewEntity(camera);
             }
         }
+        else if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
+        {
+            Entity entity = this.mc.getRenderViewEntity();
+
+            if (entity != null)
+            {
+                this.realYaw = entity.rotationYaw;
+                this.realPitch = entity.rotationPitch;
+                MiscUtils.setEntityRotations(entity, MiscUtils.getCameraYaw(), MiscUtils.getCameraPitch());
+            }
+        }
     }
 
     @Inject(method = "renderWorld(FJ)V", at = @At("RETURN"))
@@ -107,6 +120,15 @@ public abstract class MixinEntityRenderer
         {
             this.mc.setRenderViewEntity(this.renderViewEntityOriginal);
             this.renderViewEntityOriginal = null;
+        }
+        else if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
+        {
+            Entity entity = this.mc.getRenderViewEntity();
+
+            if (entity != null)
+            {
+                MiscUtils.setEntityRotations(entity, this.realYaw, this.realPitch);
+            }
         }
     }
 
