@@ -12,11 +12,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
 
 public class MiscUtils
 {
-    private static ITextComponent[] previousSignText;
+    private static net.minecraft.util.text.ITextComponent[] previousSignText;
     private static String previousChatText = "";
     private static final Date DATE = new Date();
     private static double lastRealPitch;
@@ -66,7 +65,7 @@ public class MiscUtils
     public static void copyTextFromSign(TileEntitySign te)
     {
         int size = te.signText.length;
-        previousSignText = new ITextComponent[size];
+        previousSignText = new net.minecraft.util.text.ITextComponent[size];
 
         for (int i = 0; i < size; ++i)
         {

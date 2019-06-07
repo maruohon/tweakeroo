@@ -10,11 +10,11 @@ import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import net.minecraft.client.resources.I18n;
 
 public class GuiConfigs extends GuiConfigsBase
 {
@@ -22,9 +22,7 @@ public class GuiConfigs extends GuiConfigsBase
 
     public GuiConfigs()
     {
-        super(10, 50, Reference.MOD_ID, null);
-
-        this.title = I18n.format("tweakeroo.gui.title.configs");
+        super(10, 50, Reference.MOD_ID, null, "tweakeroo.gui.title.configs");
     }
 
     @Override
@@ -150,7 +148,7 @@ public class GuiConfigs extends GuiConfigsBase
             }
             else
             {
-                //Minecraft.getMinecraft().displayGuiScreen(new GuiPlacementSettings());
+                //GuiBase.openGui(new GuiPlacementSettings());
             }
         }
     }
@@ -176,7 +174,7 @@ public class GuiConfigs extends GuiConfigsBase
 
         public String getDisplayName()
         {
-            return I18n.format(this.translationKey);
+            return StringUtils.translate(this.translationKey);
         }
     }
 }

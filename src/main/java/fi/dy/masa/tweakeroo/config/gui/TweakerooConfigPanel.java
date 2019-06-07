@@ -28,24 +28,24 @@ public class TweakerooConfigPanel extends ConfigPanelBase
         List<? extends IConfigValue> configs;
         ConfigInfoProviderSimple provider;
 
-        this.addSubPanel((new GuiModConfigs(modId, "Generic", Configs.Generic.OPTIONS)).setConfigWidth(120));
-        this.addSubPanel((new GuiModConfigs(modId, "Fixes", Configs.Fixes.OPTIONS)).setConfigWidth(100));
-        this.addSubPanel((new GuiModConfigs(modId, "Lists", Configs.Lists.OPTIONS)).setConfigWidth(200));
+        this.addSubPanel((new GuiModConfigs(modId, Configs.Generic.OPTIONS, "tweakeroo.gui.button.config_gui.generic")).setConfigWidth(120));
+        this.addSubPanel((new GuiModConfigs(modId, Configs.Fixes.OPTIONS, "tweakeroo.gui.button.config_gui.fixes")).setConfigWidth(100));
+        this.addSubPanel((new GuiModConfigs(modId, Configs.Lists.OPTIONS, "tweakeroo.gui.button.config_gui.lists")).setConfigWidth(200));
 
-        this.addSubPanel(new GuiModConfigs(modId, "Generic Hotkeys", Hotkeys.HOTKEY_LIST));
+        this.addSubPanel(new GuiModConfigs(modId, Hotkeys.HOTKEY_LIST, "tweakeroo.gui.button.config_gui.generic_hotkeys"));
 
         configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(FeatureToggle.values()));
-        this.addSubPanel((new GuiModConfigs(modId, "Tweak Toggles", configs)).setConfigWidth(100));
+        this.addSubPanel((new GuiModConfigs(modId, configs, "tweakeroo.gui.button.config_gui.tweak_toggles")).setConfigWidth(100));
 
         configs = ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(FeatureToggle.values()));
         provider = new ConfigInfoProviderSimple("Hotkey to toggle the '", "' tweak");
-        this.addSubPanel(new GuiModConfigs(modId, "Tweak Hotkeys", configs).setHoverInfoProvider(provider));
+        this.addSubPanel(new GuiModConfigs(modId, configs, "tweakeroo.gui.button.config_gui.tweak_hotkeys").setHoverInfoProvider(provider));
 
         configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS));
-        this.addSubPanel((new GuiModConfigs(modId, "Disable Options", configs)).setConfigWidth(100));
+        this.addSubPanel((new GuiModConfigs(modId, configs, "tweakeroo.gui.button.config_gui.disable_toggle")).setConfigWidth(100));
 
         configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS));
         provider = new ConfigInfoProviderSimple("Hotkey to toggle the '", "' disable option");
-        this.addSubPanel(new GuiModConfigs(modId, "Disable Option Hotkeys", configs).setHoverInfoProvider(provider));
+        this.addSubPanel(new GuiModConfigs(modId, configs, "tweakeroo.gui.button.config_gui.disable_hotkeys").setHoverInfoProvider(provider));
     }
 }

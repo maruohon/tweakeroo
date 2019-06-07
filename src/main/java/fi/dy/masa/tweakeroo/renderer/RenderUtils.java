@@ -73,9 +73,9 @@ public class RenderUtils
             int y = startY;
             FontRenderer textRenderer = mc.fontRenderer;
 
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            mc.getTextureManager().bindTexture(GuiInventory.INVENTORY_BACKGROUND);
-            mc.ingameGUI.drawTexturedModalRect(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18);
+            fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
+            fi.dy.masa.malilib.render.RenderUtils.bindTexture(GuiInventory.INVENTORY_BACKGROUND);
+            fi.dy.masa.malilib.render.RenderUtils.drawTexturedRect(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18);
 
             for (int row = 1; row <= 3; row++)
             {
@@ -222,7 +222,7 @@ public class RenderUtils
 
         if (entityLivingBase != null)
         {
-            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(mc, x, y, entityLivingBase);
+            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(x, y, entityLivingBase);
             fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, mc);
         }
     }
@@ -236,7 +236,7 @@ public class RenderUtils
         int slotOffsetY = 8;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
-        GlStateManager.color(1, 1, 1, 1);
+        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, 9, 27, mc);
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
@@ -252,7 +252,7 @@ public class RenderUtils
         final int y = yCenter + 6;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
-        GlStateManager.color(1, 1, 1, 1);
+        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y     , 9, 27, mc);
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y + 70, 9,  9, mc);
@@ -363,7 +363,7 @@ public class RenderUtils
         int lineX = x + (int) ((MathHelper.wrapDegrees(realYaw - startYaw)) / step * width);
         FontRenderer textRenderer = mc.fontRenderer;
 
-        GlStateManager.color(1, 1, 1, 1);
+        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
         fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF);
@@ -442,7 +442,7 @@ public class RenderUtils
             strDown = String.format("%6.1f°", angleDown);
         }
 
-        GlStateManager.color(1f, 1f, 1f, 1f);
+        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
         FontRenderer textRenderer = mc.fontRenderer;
 
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();

@@ -2,12 +2,14 @@ package fi.dy.masa.tweakeroo.event;
 
 import com.google.common.collect.ImmutableList;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
+import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybindManager;
 import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
 import fi.dy.masa.malilib.hotkeys.IKeyboardInputHandler;
 import fi.dy.masa.malilib.hotkeys.IMouseInputHandler;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
+import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -24,9 +26,6 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 
 public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IMouseInputHandler
 {
@@ -121,8 +120,8 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         // Not in a GUI
         else if (mc.currentScreen == null && dWheel != 0)
         {
-            String preGreen = TextFormatting.GREEN.toString();
-            String rst = TextFormatting.RESET.toString();
+            String preGreen = GuiBase.TXT_GREEN;
+            String rst = GuiBase.TXT_RST;
 
             if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() && Hotkeys.HOTBAR_SCROLL.getKeybind().isKeybindHeld())
             {
@@ -146,7 +145,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 String strIndex = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
                 String strValue = preGreen + String.format("%.3f", config.getDoubleValue()) + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_fly_speed_to", strIndex, strValue));
+                InfoUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_to", strIndex, strValue);
 
                 return true;
             }
@@ -157,7 +156,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_after_clicker_count_to", strValue));
+                InfoUtils.printActionbarMessage("tweakeroo.message.set_after_clicker_count_to", strValue);
 
                 return true;
             }
@@ -168,7 +167,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_placement_limit_to", strValue));
+                InfoUtils.printActionbarMessage("tweakeroo.message.set_placement_limit_to", strValue);
 
                 return true;
             }
@@ -179,7 +178,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue));
+                InfoUtils.printActionbarMessage("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue);
 
                 return true;
             }
@@ -190,7 +189,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_hotbar_slot_randomizer_max_to", strValue));
+                InfoUtils.printActionbarMessage("tweakeroo.message.set_hotbar_slot_randomizer_max_to", strValue);
 
                 return true;
             }
@@ -201,7 +200,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_breaking_grid_size_to", strValue));
+                InfoUtils.printActionbarMessage("tweakeroo.message.set_breaking_grid_size_to", strValue);
 
                 return true;
             }
@@ -212,7 +211,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 KeyCallbackAdjustable.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + rst;
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_placement_grid_size_to", strValue));
+                InfoUtils.printActionbarMessage("tweakeroo.message.set_placement_grid_size_to", strValue);
 
                 return true;
             }
@@ -228,7 +227,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 String val = preGreen + String.valueOf(config.getDoubleValue()) + rst;
                 String key = mode == SnapAimMode.PITCH ? "tweakeroo.message.set_snap_aim_pitch_step_to" : "tweakeroo.message.set_snap_aim_yaw_step_to";
 
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation(key, val));
+                InfoUtils.printActionbarMessage(key, val);
 
                 return true;
             }
@@ -245,7 +244,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 }
 
                 String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
-                mc.ingameGUI.addChatMessage(ChatType.GAME_INFO, new TextComponentTranslation("tweakeroo.message.set_zoom_fov_to", strValue));
+                InfoUtils.printActionbarMessage("tweakeroo.message.set_zoom_fov_to", strValue);
 
                 return true;
             }
