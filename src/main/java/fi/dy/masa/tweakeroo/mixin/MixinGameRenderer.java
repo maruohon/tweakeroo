@@ -78,7 +78,7 @@ public abstract class MixinGameRenderer
                 value = "INVOKE",
                 target = "Ljava/util/function/Predicate;and(" +
                          "Ljava/util/function/Predicate;)" +
-                         "Ljava/util/function/Predicate;"))
+                         "Ljava/util/function/Predicate;", remap = false))
     private Predicate<Entity> ignoreDeadEntities(Predicate<Entity> owner, Predicate<Entity> arg)
     {
         Predicate<Entity> combined = owner.and(arg);
