@@ -3,14 +3,11 @@ package fi.dy.masa.tweakeroo.mixin;
 import java.util.UUID;
 import org.spongepowered.asm.mixin.Mixin;
 import fi.dy.masa.tweakeroo.config.Configs;
-import net.minecraft.client.gui.BossInfoClient;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.BossInfo;
 
-@Mixin(BossInfoClient.class)
-public abstract class MixinBossInfoClient extends BossInfo
+@Mixin(net.minecraft.client.gui.BossInfoClient.class)
+public abstract class MixinBossInfoClient extends net.minecraft.world.BossInfo
 {
-    public MixinBossInfoClient(UUID uniqueIdIn, ITextComponent nameIn, Color colorIn, Overlay overlayIn)
+    public MixinBossInfoClient(UUID uniqueIdIn, net.minecraft.util.text.ITextComponent nameIn, Color colorIn, Overlay overlayIn)
     {
         super(uniqueIdIn, nameIn, colorIn, overlayIn);
     }

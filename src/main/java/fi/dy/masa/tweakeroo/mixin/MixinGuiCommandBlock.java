@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.malilib.render.RenderUtils;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.ICommandBlockGui;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -17,7 +18,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiCommandBlock;
 import net.minecraft.client.gui.GuiCommandBlockBase;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.util.math.BlockPos;
 
@@ -67,7 +67,7 @@ public abstract class MixinGuiCommandBlock extends GuiCommandBlockBase implement
             this.doneButton.y = y;
             this.cancelButton.y = y;
 
-            String str = I18n.format("tweakeroo.gui.button.misc.command_block.set_name");
+            String str = StringUtils.translate("tweakeroo.gui.button.misc.command_block.set_name");
             int widthBtn = this.fontRenderer.getStringWidth(str) + 10;
 
             y = 181;
@@ -145,7 +145,7 @@ public abstract class MixinGuiCommandBlock extends GuiCommandBlockBase implement
         if (this.buttonUpdateExec != null && this.buttonUpdateExec.isMouseOver())
         {
             String hover = "tweakeroo.gui.button.misc.command_block.hover.update_execution";
-            RenderUtils.drawHoverText(mouseX, mouseY, Arrays.asList(I18n.format(hover)));
+            RenderUtils.drawHoverText(mouseX, mouseY, Arrays.asList(StringUtils.translate(hover)));
         }
     }
 
@@ -154,6 +154,6 @@ public abstract class MixinGuiCommandBlock extends GuiCommandBlockBase implement
         String translationKey = "tweakeroo.gui.button.misc.command_block.update_execution";
         boolean isCurrentlyOn = ! updateExecValue;
         String strStatus = "malilib.gui.label_colored." + (isCurrentlyOn ? "on" : "off");
-        return I18n.format(translationKey, I18n.format(strStatus));
+        return StringUtils.translate(translationKey, StringUtils.translate(strStatus));
     }
 }

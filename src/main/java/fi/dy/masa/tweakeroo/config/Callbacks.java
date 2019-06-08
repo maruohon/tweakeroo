@@ -9,6 +9,7 @@ import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
 import fi.dy.masa.tweakeroo.mixin.IMixinBlock;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
@@ -17,7 +18,6 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -193,8 +193,8 @@ public class Callbacks
                 this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
 
                 String pre = mc.skipRenderWorld ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
-                String status = I18n.format("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
-                String message = I18n.format("tweakeroo.message.toggled", "Skip All Rendering", pre + status + GuiBase.TXT_RST);
+                String status = StringUtils.translate("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
+                String message = StringUtils.translate("tweakeroo.message.toggled", "Skip All Rendering", pre + status + GuiBase.TXT_RST);
                 InfoUtils.printActionbarMessage(message);
             }
             else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
@@ -203,8 +203,8 @@ public class Callbacks
 
                 boolean enabled = skipWorldRendering;
                 String pre = enabled ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
-                String status = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String message = I18n.format("tweakeroo.message.toggled", "Skip World Rendering", pre + status + GuiBase.TXT_RST);
+                String status = StringUtils.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
+                String message = StringUtils.translate("tweakeroo.message.toggled", "Skip World Rendering", pre + status + GuiBase.TXT_RST);
                 InfoUtils.printActionbarMessage(message);
             }
 
@@ -364,7 +364,7 @@ public class Callbacks
             }
             else if (key == Hotkeys.OPEN_CONFIG_GUI.getKeybind())
             {
-                this.mc.displayGuiScreen(new GuiConfigs());
+                GuiBase.openGui(new GuiConfigs());
                 return true;
             }
 
@@ -413,7 +413,7 @@ public class Callbacks
             this.feature.toggleBooleanValue();
 
             boolean enabled = this.feature.getBooleanValue();
-            String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
+            String strStatus = StringUtils.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
             String preGreen = GuiBase.TXT_GREEN;
             String preRed = GuiBase.TXT_RED;
             String rst = GuiBase.TXT_RST;
@@ -453,7 +453,7 @@ public class Callbacks
             this.config.toggleBooleanValue();
 
             boolean enabled = this.config.getBooleanValue();
-            String strStatus = I18n.format("tweakeroo.message.value." + (enabled ? "on" : "off"));
+            String strStatus = StringUtils.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
             String preGreen = GuiBase.TXT_GREEN;
             String preRed = GuiBase.TXT_RED;
             String rst = GuiBase.TXT_RST;

@@ -14,7 +14,6 @@ import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.Tweakeroo;
-import net.minecraft.client.resources.I18n;
 
 public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfigBoolean>
 {
@@ -211,7 +210,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
 
         if (this.singlePlayer)
         {
-            return this.comment + "\n" + I18n.format("tweakeroo.label.config_comment.single_player_only");
+            return this.comment + "\n" + StringUtils.translate("tweakeroo.label.config_comment.single_player_only");
         }
         else
         {

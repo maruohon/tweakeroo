@@ -2,7 +2,7 @@ package fi.dy.masa.tweakeroo.config;
 
 import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.gui.GuiBase;
-import net.minecraft.client.resources.I18n;
+import fi.dy.masa.malilib.util.StringUtils;
 
 public class ConfigBooleanClient extends ConfigBooleanHotkeyed
 {
@@ -26,7 +26,7 @@ public class ConfigBooleanClient extends ConfigBooleanHotkeyed
             return "";
         }
 
-        return comment + "\n" + I18n.format("tweakeroo.label.config_comment.single_player_only");
+        return comment + "\n" + StringUtils.translate("tweakeroo.label.config_comment.single_player_only");
     }
 
     @Override

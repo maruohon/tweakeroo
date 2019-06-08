@@ -14,8 +14,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.play.server.SPacketCombatEvent;
 import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 
 @Mixin(NetHandlerPlayClient.class)
@@ -42,7 +40,7 @@ public abstract class MixinNetHandlerPlayClient
         {
             BlockPos pos = entity.getPosition();
             String str = String.format("You died @ %d, %d, %d", pos.getX(), pos.getY(), pos.getZ());
-            ITextComponent message = new TextComponentString(str);
+            net.minecraft.util.text.TextComponentString message = new net.minecraft.util.text.TextComponentString(str);
             message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, pos.getX() + " " + pos.getY() + " " + pos.getZ()));
             Minecraft.getInstance().ingameGUI.getChatGUI().printChatMessage(message);
             Tweakeroo.logger.info(str);
