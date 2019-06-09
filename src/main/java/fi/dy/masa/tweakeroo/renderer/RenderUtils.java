@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.renderer;
 
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -11,7 +12,6 @@ import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -42,7 +42,8 @@ public class RenderUtils
 
         if (player != null)
         {
-            ScaledResolution res = new ScaledResolution(mc);
+            final int scaledWidth = GuiUtils.getScaledWindowWidth();
+            final int scaledHeight = GuiUtils.getScaledWindowHeight();
             final int offX = Configs.Generic.HOTBAR_SWAP_OVERLAY_OFFSET_X.getIntegerValue();
             final int offY = Configs.Generic.HOTBAR_SWAP_OVERLAY_OFFSET_Y.getIntegerValue();
             int startX = offX;
@@ -53,18 +54,18 @@ public class RenderUtils
             switch (align)
             {
                 case TOP_RIGHT:
-                    startX = (int) res.getScaledWidth() - offX - 9 * 18;
+                    startX = (int) scaledWidth - offX - 9 * 18;
                     break;
                 case BOTTOM_LEFT:
-                    startY = (int) res.getScaledHeight() - offY - 3 * 18;
+                    startY = (int) scaledHeight - offY - 3 * 18;
                     break;
                 case BOTTOM_RIGHT:
-                    startX = (int) res.getScaledWidth() - offX - 9 * 18;
-                    startY = (int) res.getScaledHeight() - offY - 3 * 18;
+                    startX = (int) scaledWidth - offX - 9 * 18;
+                    startY = (int) scaledHeight - offY - 3 * 18;
                     break;
                 case CENTER:
-                    startX = (int) res.getScaledWidth() / 2 - offX - 9 * 18 / 2;
-                    startY = (int) res.getScaledHeight() / 2 - offY - 3 * 18 / 2;
+                    startX = (int) scaledWidth / 2 - offX - 9 * 18 / 2;
+                    startY = (int) scaledHeight / 2 - offY - 3 * 18 / 2;
                     break;
                 default:
             }
@@ -173,9 +174,8 @@ public class RenderUtils
             }
         }
 
-        ScaledResolution res = new ScaledResolution(mc);
-        final int xCenter = res.getScaledWidth() / 2;
-        final int yCenter = res.getScaledHeight() / 2;
+        final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
+        final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
         int x = xCenter - 52 / 2;
         int y = yCenter - 92;
 
@@ -229,9 +229,8 @@ public class RenderUtils
 
     public static void renderPlayerInventoryOverlay(Minecraft mc)
     {
-        ScaledResolution res = new ScaledResolution(mc);
-        int x = res.getScaledWidth() / 2 - 176 / 2;
-        int y = res.getScaledHeight() / 2 + 10;
+        int x = GuiUtils.getScaledWindowWidth() / 2 - 176 / 2;
+        int y = GuiUtils.getScaledWindowHeight() / 2 + 10;
         int slotOffsetX = 8;
         int slotOffsetY = 8;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
@@ -245,9 +244,8 @@ public class RenderUtils
     public static void renderHotbarScrollOverlay(Minecraft mc)
     {
         IInventory inv = mc.player.inventory;
-        ScaledResolution res = new ScaledResolution(mc);
-        final int xCenter = res.getScaledWidth() / 2;
-        final int yCenter = res.getScaledHeight() / 2;
+        final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
+        final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
         final int x = xCenter - 176 / 2;
         final int y = yCenter + 6;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
@@ -305,14 +303,14 @@ public class RenderUtils
         }
     }
 
-    public static void renderDirectionsCursor(ScaledResolution sr, float zLevel, float partialTicks)
+    public static void renderDirectionsCursor(float zLevel, float partialTicks)
     {
         Minecraft mc = Minecraft.getMinecraft();
 
         GlStateManager.pushMatrix();
 
-        int width = sr.getScaledWidth();
-        int height = sr.getScaledHeight();
+        int width = GuiUtils.getScaledWindowWidth();
+        int height = GuiUtils.getScaledWindowHeight();
         GlStateManager.translate(width / 2, height / 2, zLevel);
         Entity entity = mc.getRenderViewEntity();
         GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
@@ -335,9 +333,8 @@ public class RenderUtils
         if (current - lastRotationChangeTime < 750)
         {
             Minecraft mc = Minecraft.getMinecraft();
-            ScaledResolution res = new ScaledResolution(mc);
-            final int xCenter = res.getScaledWidth() / 2;
-            final int yCenter = res.getScaledHeight() / 2;
+            final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
+            final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
             SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
 
             if (mode != SnapAimMode.PITCH)
@@ -407,9 +404,8 @@ public class RenderUtils
 
     public static void renderPitchLockIndicator(Minecraft mc)
     {
-        ScaledResolution res = new ScaledResolution(mc);
-        final int xCenter = res.getScaledWidth() / 2;
-        final int yCenter = res.getScaledHeight() / 2;
+        final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
+        final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
         int width = 10;
         int height = 50;
         int x = xCenter - width / 2;

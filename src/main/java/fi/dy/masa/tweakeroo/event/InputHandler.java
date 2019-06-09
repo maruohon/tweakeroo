@@ -9,6 +9,7 @@ import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
 import fi.dy.masa.malilib.hotkeys.IKeyboardInputHandler;
 import fi.dy.masa.malilib.hotkeys.IMouseInputHandler;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
@@ -76,7 +77,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         Minecraft mc = Minecraft.getMinecraft();
 
         // Not in a GUI
-        if (mc.currentScreen == null && eventKeyState)
+        if (GuiUtils.getCurrentScreen() == null && eventKeyState)
         {
             this.storeLastMovementDirection(eventKey, mc);
         }
@@ -89,7 +90,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (mc.currentScreen == null && mc.player != null && mc.player.capabilities.isCreativeMode &&
+        if (GuiUtils.getCurrentScreen() == null && mc.player != null && mc.player.capabilities.isCreativeMode &&
             eventButtonState && eventButton == mc.gameSettings.keyBindUseItem.getKeyCode() + 100 &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
             mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.MISS)
@@ -118,7 +119,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             }
         }
         // Not in a GUI
-        else if (mc.currentScreen == null && dWheel != 0)
+        else if (GuiUtils.getCurrentScreen() == null && dWheel != 0)
         {
             String preGreen = GuiBase.TXT_GREEN;
             String rst = GuiBase.TXT_RST;
