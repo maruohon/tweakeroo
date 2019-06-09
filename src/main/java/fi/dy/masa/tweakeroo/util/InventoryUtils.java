@@ -246,7 +246,7 @@ public class InventoryUtils
                 Container container = player.inventoryContainer;
                 int slotNumber = findSlotWithEffectiveItemWithDurabilityLeft(container, state);
 
-                if (slotNumber != -1)
+                if (slotNumber != -1 && (slotNumber - 36) != player.inventory.currentItem)
                 {
                     swapItemToHand(player, EnumHand.MAIN_HAND, slotNumber);
                 }

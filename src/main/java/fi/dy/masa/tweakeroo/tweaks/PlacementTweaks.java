@@ -106,13 +106,12 @@ public class PlacementTweaks
 
         ItemStack stackOriginal = player.getHeldItem(hand);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
-            stackOriginal.isEmpty() == false)
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
         {
             if (isEmulatedClick == false)
             {
                 //System.out.printf("onProcessRightClickPre storing stack: %s\n", stackOriginal);
-                stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
+                cacheStackInHand(hand);
             }
 
             // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
@@ -149,6 +148,17 @@ public class PlacementTweaks
     public static void onLeftClickMousePost()
     {
         onProcessRightClickPost(Minecraft.getMinecraft().player, EnumHand.MAIN_HAND);
+    }
+
+    public static void cacheStackInHand(EnumHand hand)
+    {
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        ItemStack stackOriginal = player.getHeldItem(hand);
+
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
+        {
+            stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
+        }
     }
 
     private static void onAttackTick(Minecraft mc)
@@ -278,11 +288,7 @@ public class PlacementTweaks
         HitPart hitPart = PositionUtils.getHitPart(sideIn, playerFacingH, posIn, hitVecIn);
         EnumFacing sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackPre.isEmpty() == false)
-        {
-            //System.out.printf("onProcessRightClickBlock storing stack: %s\n", stackPre);
-            stackBeforeUse[hand.ordinal()] = stackPre.copy();
-        }
+        cacheStackInHand(hand);
 
         if (FeatureToggle.TWEAK_PLACEMENT_REST_FIRST.getBooleanValue() && stateClickedOn == null)
         {

@@ -72,6 +72,7 @@ public abstract class MixinPlayerControllerMP
     private void onClickBlockPre(BlockPos pos, EnumFacing face, CallbackInfoReturnable<Boolean> cir)
     {
         InventoryUtils.trySwitchToEffectiveTool(pos);
+        PlacementTweaks.cacheStackInHand(EnumHand.MAIN_HAND);
     }
 
     @Inject(method = "interactWithEntity(" +
