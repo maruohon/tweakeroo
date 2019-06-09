@@ -5,10 +5,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IGuiEditSign;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntitySign;
@@ -26,9 +26,7 @@ public abstract class MixinTileEntitySign
         // Restore the copied/pasted text after the TileEntity sync overrides it with empty lines
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue())
         {
-            Minecraft mc = Minecraft.getInstance();
-
-            if ((mc.currentScreen instanceof GuiEditSign) && ((IGuiEditSign) mc.currentScreen).getTile() == (Object) this)
+            if ((GuiUtils.getCurrentScreen() instanceof GuiEditSign) && ((IGuiEditSign) GuiUtils.getCurrentScreen()).getTile() == (Object) this)
             {
                 MiscUtils.applyPreviousTextToSign((TileEntitySign) (Object) this);
             }

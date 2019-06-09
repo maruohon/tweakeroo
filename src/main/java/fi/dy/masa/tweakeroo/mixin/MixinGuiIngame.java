@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,7 @@ public abstract class MixinGuiIngame extends Gui
     {
         if (FeatureToggle.TWEAK_F3_CURSOR.getBooleanValue())
         {
-            RenderUtils.renderDirectionsCursor(this.mc.mainWindow, this.zLevel, partialTicks);
+            RenderUtils.renderDirectionsCursor(this.zLevel, partialTicks);
             ci.cancel();
         }
     }
@@ -47,9 +48,10 @@ public abstract class MixinGuiIngame extends Gui
         {
             Scoreboard scoreboard = this.mc.world.getScoreboard();
             ScoreObjective objective = scoreboard.getObjectiveInDisplaySlot(0);
+            int width = GuiUtils.getScaledWindowWidth();
 
             this.overlayPlayerList.setVisible(true);
-            this.overlayPlayerList.render(this.mc.mainWindow.getScaledWidth(), scoreboard, objective);
+            this.overlayPlayerList.render(width, scoreboard, objective);
         }
     }
 }

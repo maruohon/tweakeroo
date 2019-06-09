@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
@@ -108,12 +109,12 @@ public abstract class MixinMinecraft implements IMinecraftAccessor
     {
         Minecraft mc = (Minecraft) (Object) this;
 
-        if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue() && mc.currentScreen == null)
+        if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue() && GuiUtils.getCurrentScreen() == null)
         {
             KeyBinding.setKeyBindState(InputMappings.getInputByName(mc.gameSettings.keyBindAttack.getTranslationKey()), true);
         }
 
-        if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue() && mc.currentScreen == null)
+        if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue() && GuiUtils.getCurrentScreen() == null)
         {
             KeyBinding.setKeyBindState(InputMappings.getInputByName(mc.gameSettings.keyBindUseItem.getTranslationKey()), true);
         }

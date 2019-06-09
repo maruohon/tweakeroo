@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.tweaks;
 
 import javax.annotation.Nullable;
 import fi.dy.masa.malilib.util.BlockUtils;
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
 import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
@@ -65,7 +66,7 @@ public class PlacementTweaks
 
     public static void onTick(Minecraft mc)
     {
-        if (mc.currentScreen == null)
+        if (GuiUtils.getCurrentScreen() == null)
         {
             if (mc.gameSettings.keyBindUseItem.isKeyDown())
             {

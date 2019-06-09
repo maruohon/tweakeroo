@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.tweaks;
 
 import java.util.Collection;
 import javax.annotation.Nullable;
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -46,7 +47,7 @@ public class MiscTweaks
 
     private static void doPeriodicClicks(Minecraft mc)
     {
-        if (mc.currentScreen == null)
+        if (GuiUtils.getCurrentScreen() == null)
         {
             if (FeatureToggle.TWEAK_PERIODIC_ATTACK.getBooleanValue() &&
                 ++periodicAttackCounter >= Configs.Generic.PERIODIC_ATTACK_INTERVAL.getIntegerValue())
