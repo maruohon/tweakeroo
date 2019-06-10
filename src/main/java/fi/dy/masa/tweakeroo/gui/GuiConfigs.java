@@ -158,11 +158,11 @@ public class GuiConfigs extends GuiConfigsBase
         GENERIC         ("tweakeroo.gui.button.config_gui.generic"),
         FIXES           ("tweakeroo.gui.button.config_gui.fixes"),
         LISTS           ("tweakeroo.gui.button.config_gui.lists"),
-        DISABLE_TOGGLES ("tweakeroo.gui.button.config_gui.disable_toggle"),
-        DISABLE_HOTKEYS ("tweakeroo.gui.button.config_gui.disable_hotkeys"),
         TWEAK_TOGGLES   ("tweakeroo.gui.button.config_gui.tweak_toggle"),
         TWEAK_HOTKEYS   ("tweakeroo.gui.button.config_gui.tweak_hotkeys"),
         GENERIC_HOTKEYS ("tweakeroo.gui.button.config_gui.generic_hotkeys"),
+        DISABLE_TOGGLES ("tweakeroo.gui.button.config_gui.disable_toggle"),
+        DISABLE_HOTKEYS ("tweakeroo.gui.button.config_gui.disable_hotkeys"),
         PLACEMENT       ("tweakeroo.gui.button.config_gui.placement");
 
         private final String translationKey;
