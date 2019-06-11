@@ -16,6 +16,7 @@
         "MixinCommandClone",
         "MixinCommandFill",
         "MixinCPacketUpdateStructureBlock",
+        "MixinDebugRendererChunkBorder",
         "MixinEntity",
         "MixinEntityItem",
         "MixinEntityLivingBase",

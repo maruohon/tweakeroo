@@ -1,27 +1,29 @@
 package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
-import com.mojang.authlib.GameProfile;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.util.RecipeBookClient;
 import net.minecraft.entity.MoverType;
+import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class CameraEntity extends EntityOtherPlayerMP
+public class CameraEntity extends EntityPlayerSP
 {
     @Nullable private static CameraEntity camera;
     private static float forwardRamped;
     private static float strafeRamped;
     private static float verticalRamped;
 
-    public CameraEntity(World worldIn, GameProfile gameProfileIn)
+    public CameraEntity(Minecraft mc, World world, NetHandlerPlayClient nethandler,
+            StatisticsManager stats, RecipeBookClient recipeBook)
     {
-        super(worldIn, gameProfileIn);
+        super(mc, world, nethandler, stats, recipeBook);
     }
 
     @Override
@@ -123,6 +125,10 @@ public class CameraEntity extends EntityOtherPlayerMP
         this.motionZ = (double) (forward * zFactor + strafe * xFactor) * scale;
 
         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+
+        this.chunkCoordX = (int) Math.floor(this.posX) >> 4;
+        this.chunkCoordY = (int) Math.floor(this.posY) >> 4;
+        this.chunkCoordZ = (int) Math.floor(this.posZ) >> 4;
     }
 
     private void updateLastTickPosition()
@@ -157,7 +163,7 @@ public class CameraEntity extends EntityOtherPlayerMP
 
     private static CameraEntity create(Minecraft mc)
     {
-        CameraEntity camera = new CameraEntity(mc.world, mc.player.getGameProfile());
+        CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.connection, mc.player.getStats(), mc.player.getRecipeBook());
         camera.noClip = true;
 
         EntityPlayerSP player = mc.player;
