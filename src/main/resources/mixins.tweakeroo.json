@@ -31,7 +31,8 @@
         "MixinRavagerEntity",
         "MixinScreen",
         "MixinSlimeBlock",
-        "MixinWorld",
+        "MixinTeleportSpectatorMenu",
+        "MixinWorld"
     ],
     "injectors": {
         "defaultRequire": 1

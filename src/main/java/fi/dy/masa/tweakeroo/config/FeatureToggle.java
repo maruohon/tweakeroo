@@ -63,6 +63,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_RENDER_LIMIT_ENTITIES     ("tweakRenderLimitEntities",            false, "",    "Enables limiting the number of certain types of entities\nto render per frame. Currently XP Orbs and Item entities\nare supported, see Generic configs for the limits."),
     TWEAK_REPAIR_MODE               ("tweakRepairMode",                     false, "",    "If enabled, then fully repaired items held in hand will\nbe swapped to damaged items that have Mending on them."),
     TWEAK_SHULKERBOX_DISPLAY        ("tweakShulkerBoxDisplay",              false, "",    "Enables the Shulker Box contents display when hovering\nover them in an inventory and holding shift"),
+    TWEAK_SPECTATOR_TELEPORT        ("tweakSpectatorTeleport",              false, "",    "Allows spectators to teleport to other spectators.\nThis is originally from usefulmod by nessie."),
     TWEAK_SWAP_ALMOST_BROKEN_TOOLS  ("tweakSwapAlmostBrokenTools",          false, "",    "If enabled, then any damageable items held in the hand that\nare about to break will be swapped to fresh ones"),
     TWEAK_TAB_COMPLETE_COORDINATE   ("tweakTabCompleteCoordinate",          false, "",    "If enabled, then tab-completing coordinates while not\nlooking at a block, will use the player's position\ninstead of adding the ~ character."),
     TWEAK_ZOOM                      ("tweakZoom",                           false, "",    KeybindSettings.INGAME_BOTH, "Enables using the zoom hotkey to, well, zoom in");
