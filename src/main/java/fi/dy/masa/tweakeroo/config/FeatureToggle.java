@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
+import fi.dy.masa.malilib.config.IConfigBoolean;
 import fi.dy.masa.malilib.config.IConfigNotifiable;
 import fi.dy.masa.malilib.config.IHotkeyTogglable;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
@@ -13,7 +14,7 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 
-public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable
+public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfigBoolean>
 {
     CARPET_ACCURATE_BLOCK_PLACEMENT ("carpetAccuratePlacementProtocol",     false, "",    "If enabled, then the Flexible Block Placement and the\nAccurate Block Plamenet use the protocol implemented\nin the recent carpet mod versions", "Carpet protocol Accurate Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "",     "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
@@ -72,7 +73,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable
     private final IKeybind keybind;
     private final boolean defaultValueBoolean;
     private boolean valueBoolean;
-    private IValueChangeCallback callback;
+    private IValueChangeCallback<IConfigBoolean> callback;
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
@@ -145,7 +146,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable
     }
 
     @Override
-    public void setValueChangeCallback(IValueChangeCallback callback)
+    public void setValueChangeCallback(IValueChangeCallback<IConfigBoolean> callback)
     {
         this.callback = callback;
     }

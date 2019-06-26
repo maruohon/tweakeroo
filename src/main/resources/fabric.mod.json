@@ -28,7 +28,6 @@
   ],
 
   "depends": {
-    "fabric-events-lifecycle-v0": "*",
     "malilib": ">=0.10.0-dev.19"
   }
 }

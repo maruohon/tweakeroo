@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.gui;
 import java.util.Collections;
 import java.util.List;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.resource.language.I18n;
 import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
@@ -14,12 +15,10 @@ import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import net.minecraft.client.resource.language.I18n;
 
 public class GuiConfigs extends GuiConfigsBase
 {
     private static ConfigGuiTab tab = ConfigGuiTab.TWEAK_TOGGLES;
-    private int id;
 
     public GuiConfigs()
     {
@@ -32,7 +31,6 @@ public class GuiConfigs extends GuiConfigsBase
         super.init();
         this.clearOptions();
 
-        this.id = 0;
         int x = 10;
         int y = 26;
 

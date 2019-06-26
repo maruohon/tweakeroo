@@ -6,9 +6,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
-import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -19,6 +16,10 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import fi.dy.masa.tweakeroo.Tweakeroo;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
+import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
@@ -51,6 +52,12 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
     public void rightClickMouseAccessor()
     {
         this.doItemUse();
+    }
+
+    @Inject(method = "render", at = @At("RETURN"))
+    private void onGameLoop(boolean renderWorld, CallbackInfo ci)
+    {
+        Tweakeroo.onGameLoop((MinecraftClient) (Object) this);
     }
 
     @Inject(method = "doAttack", at = {

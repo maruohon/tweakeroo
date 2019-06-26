@@ -1,20 +1,19 @@
 package fi.dy.masa.tweakeroo.config;
 
-import fi.dy.masa.malilib.config.IConfigBase;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.resource.language.I18n;
+import fi.dy.masa.malilib.config.IConfigBoolean;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.InfoUtils;
-import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
 import fi.dy.masa.tweakeroo.mixin.IMixinBlock;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
 
 public class Callbacks
 {
@@ -54,7 +53,7 @@ public class Callbacks
         FeatureToggle.TWEAK_ZOOM.getKeybind().setCallback(new KeyCallbackToggleOnRelease(FeatureToggle.TWEAK_ZOOM));
     }
 
-    public static class FeatureCallbackGamma implements IValueChangeCallback
+    public static class FeatureCallbackGamma implements IValueChangeCallback<IConfigBoolean>
     {
         private final MinecraftClient mc;
         private final FeatureToggle feature;
@@ -77,7 +76,7 @@ public class Callbacks
         }
 
         @Override
-        public void onValueChanged(IConfigBase config)
+        public void onValueChanged(IConfigBoolean config)
         {
             if (this.feature.getBooleanValue())
             {
@@ -91,7 +90,7 @@ public class Callbacks
         }
     }
 
-    public static class FeatureCallbackSlime implements IValueChangeCallback
+    public static class FeatureCallbackSlime implements IValueChangeCallback<IConfigBoolean>
     {
         private final FeatureToggle feature;
 
@@ -108,7 +107,7 @@ public class Callbacks
         }
 
         @Override
-        public void onValueChanged(IConfigBase config)
+        public void onValueChanged(IConfigBoolean config)
         {
             if (this.feature.getBooleanValue())
             {
@@ -121,14 +120,14 @@ public class Callbacks
         }
     }
 
-    public static class FeatureCallbackSpecial implements IValueChangeCallback
+    public static class FeatureCallbackSpecial implements IValueChangeCallback<IConfigBoolean>
     {
         public FeatureCallbackSpecial()
         {
         }
 
         @Override
-        public void onValueChanged(IConfigBase config)
+        public void onValueChanged(IConfigBoolean config)
         {
             if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
             {

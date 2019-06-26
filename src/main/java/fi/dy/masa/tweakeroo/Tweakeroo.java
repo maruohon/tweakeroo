@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import net.minecraft.client.MinecraftClient;
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.event.InputEventHandler;
@@ -15,10 +16,8 @@ import fi.dy.masa.tweakeroo.event.RenderHandler;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.client.ClientTickCallback;
-import net.minecraft.client.MinecraftClient;
 
-public class Tweakeroo implements ModInitializer, ClientTickCallback
+public class Tweakeroo implements ModInitializer
 {
     public static final Logger logger = LogManager.getLogger(Reference.MOD_ID);
 
@@ -29,11 +28,9 @@ public class Tweakeroo implements ModInitializer, ClientTickCallback
     public void onInitialize()
     {
         InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
-        ClientTickCallback.EVENT.register(this);
     }
 
-    @Override
-    public void tick(MinecraftClient mc)
+    public static void onGameLoop(MinecraftClient mc)
     {
         PlacementTweaks.onTick(mc);
         MiscTweaks.onTick(mc);
