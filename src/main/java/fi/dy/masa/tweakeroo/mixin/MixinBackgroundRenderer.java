@@ -15,7 +15,7 @@ import net.minecraft.client.render.Camera;
 @Mixin(BackgroundRenderer.class)
 public abstract class MixinBackgroundRenderer
 {
-    @Inject(method = "applyFog(Lnet/minecraft/client/render/Camera;I)V",
+    @Inject(method = "applyFog(Lnet/minecraft/client/render/Camera;I)V", require = 0,
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/tag/FluidTags;LAVA:Lnet/minecraft/tag/Tag;")),
             at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;fogDensity(F)V",
                      ordinal = 0, shift = At.Shift.AFTER))

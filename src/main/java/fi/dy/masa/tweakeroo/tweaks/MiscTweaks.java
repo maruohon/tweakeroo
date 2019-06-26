@@ -1,31 +1,75 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
 import java.util.Collection;
-import fi.dy.masa.malilib.util.StringUtils;
+import javax.annotation.Nullable;
+import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.mixin.IMixinFlatChunkGeneratorConfig;
+import fi.dy.masa.tweakeroo.util.CameraEntity;
+import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.PotionRestriction;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 
 public class MiscTweaks
 {
+    public static final PotionRestriction POTION_RESTRICTION = new PotionRestriction();
+
     private static long lastPotionWarning;
+    private static int periodicAttackCounter;
+    private static int periodicUseCounter;
 
     public static void onTick(MinecraftClient mc)
     {
-        PlayerEntity player = mc.player;
+        ClientPlayerEntity player = mc.player;
 
         if (player == null)
         {
             return;
         }
 
+        doPeriodicClicks(mc);
+        doPotionWarnings(player);
+
+        if (FeatureToggle.TWEAK_REPAIR_MODE.getBooleanValue())
+        {
+            InventoryUtils.repairModeSwapItems(player);
+        }
+
+        CameraEntity.movementTick(player.input.sneaking, player.input.jumping);
+    }
+
+    private static void doPeriodicClicks(MinecraftClient mc)
+    {
+        if (mc.currentScreen == null)
+        {
+            if (FeatureToggle.TWEAK_PERIODIC_ATTACK.getBooleanValue() &&
+                ++periodicAttackCounter >= Configs.Generic.PERIODIC_ATTACK_INTERVAL.getIntegerValue())
+            {
+                ((IMinecraftClientInvoker) mc).leftClickMouseAccessor();
+                periodicAttackCounter = 0;
+            }
+
+            if (FeatureToggle.TWEAK_PERIODIC_USE.getBooleanValue() &&
+                ++periodicUseCounter >= Configs.Generic.PERIODIC_USE_INTERVAL.getIntegerValue())
+            {
+                ((IMinecraftClientInvoker) mc).rightClickMouseAccessor();
+                periodicUseCounter = 0;
+            }
+        }
+    }
+
+    private static void doPotionWarnings(PlayerEntity player)
+    {
         if (FeatureToggle.TWEAK_POTION_WARNING.getBooleanValue() &&
             player.getEntityWorld().getTime() - lastPotionWarning >= 100)
         {
-            lastPotionWarning = mc.player.getEntityWorld().getTime();
+            lastPotionWarning = player.getEntityWorld().getTime();
 
             Collection<StatusEffectInstance> effects = player.getStatusEffects();
 
@@ -36,8 +80,7 @@ public class MiscTweaks
 
                 for (StatusEffectInstance effectInstance : effects)
                 {
-                    if (effectInstance.isAmbient() == false &&
-                        effectInstance.getDuration() <= Configs.Generic.POTION_WARNING_THRESHOLD.getIntegerValue())
+                    if (potionWarningShouldInclude(effectInstance))
                     {
                         ++count;
 
@@ -50,15 +93,25 @@ public class MiscTweaks
 
                 if (count > 0)
                 {
-                    StringUtils.printActionbarMessage("tweakeroo.message.potion_effects_running_out",
+                    InfoUtils.printActionbarMessage("tweakeroo.message.potion_effects_running_out",
                             Integer.valueOf(count), Integer.valueOf(minDuration / 20));
                 }
             }
         }
+    }
 
-        if (FeatureToggle.TWEAK_REPAIR_MODE.getBooleanValue())
-        {
-            InventoryUtils.repairModeSwapItems(player);
-        }
+    private static boolean potionWarningShouldInclude(StatusEffectInstance effect)
+    {
+        return effect.isAmbient() == false &&
+               (effect.getEffectType().method_5573() || // isBeneficial()
+               Configs.Generic.POTION_WARNING_BENEFICIAL_ONLY.getBooleanValue() == false) &&
+               effect.getDuration() <= Configs.Generic.POTION_WARNING_THRESHOLD.getIntegerValue() &&
+               POTION_RESTRICTION.isAllowed(effect.getEffectType());
+    }
+
+    @Nullable
+    public static FlatChunkGeneratorLayer[] parseBlockString(String blockString)
+    {
+        return IMixinFlatChunkGeneratorConfig.getLayersFromStringInvoker(blockString).toArray(new FlatChunkGeneratorLayer[0]);
     }
 }

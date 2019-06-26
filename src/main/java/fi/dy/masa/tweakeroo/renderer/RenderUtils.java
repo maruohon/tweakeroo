@@ -1,27 +1,17 @@
 package fi.dy.masa.tweakeroo.renderer;
 
-import javax.annotation.Nullable;
-import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.mixin.IMixinHorseBaseEntity;
-import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
-import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks.HitPart;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.RayTraceUtils;
+import fi.dy.masa.tweakeroo.util.SnapAimMode;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
 import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.ContainerScreen;
-import net.minecraft.client.gui.Screen;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GuiLighting;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.Window;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -30,147 +20,18 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.HorseBaseEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.DoubleInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.map.MapState;
-import net.minecraft.util.DefaultedList;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class RenderUtils
 {
-    public static void renderBlockPlacementOverlay(Entity entity, BlockPos pos, Direction side, Vec3d hitVec, double dx, double dy, double dz)
-    {
-        Direction playerFacing = entity.getHorizontalFacing();
-        HitPart part = PlacementTweaks.getHitPart(side, playerFacing, pos, hitVec);
-
-        double x = pos.getX() + 0.5d - dx;
-        double y = pos.getY() + 0.5d - dy;
-        double z = pos.getZ() + 0.5d - dz;
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translated(x, y, z);
-
-        switch (side)
-        {
-            case DOWN:
-                GlStateManager.rotatef(180f - playerFacing.asRotation(), 0, 1f, 0);
-                GlStateManager.rotatef( 90f, 1f, 0, 0);
-                break;
-            case UP:
-                GlStateManager.rotatef(180f - playerFacing.asRotation(), 0, 1f, 0);
-                GlStateManager.rotatef(-90f, 1f, 0, 0);
-                break;
-            case NORTH:
-                GlStateManager.rotatef(180f, 0, 1f, 0);
-                break;
-            case SOUTH:
-                GlStateManager.rotatef(   0, 0, 1f, 0);
-                break;
-            case WEST:
-                GlStateManager.rotatef(-90f, 0, 1f, 0);
-                break;
-            case EAST:
-                GlStateManager.rotatef( 90f, 0, 1f, 0);
-                break;
-        }
-
-        GlStateManager.translated(-x, -y, -z + 0.501);
-
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBufferBuilder();
-        float quadAlpha = 0.18f;
-        int color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getIntegerValue();
-        float ha = ((color >>> 24) & 0xFF) / 255f;
-        float hr = ((color >>> 16) & 0xFF) / 255f;
-        float hg = ((color >>>  8) & 0xFF) / 255f;
-        float hb = ((color       ) & 0xFF) / 255f;
-
-        buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR);
-
-        // White full block background
-        buffer.vertex(x - 0.5, y - 0.5, z).color(1f, 1f, 1f, quadAlpha).next();
-        buffer.vertex(x + 0.5, y - 0.5, z).color(1f, 1f, 1f, quadAlpha).next();
-        buffer.vertex(x + 0.5, y + 0.5, z).color(1f, 1f, 1f, quadAlpha).next();
-        buffer.vertex(x - 0.5, y + 0.5, z).color(1f, 1f, 1f, quadAlpha).next();
-
-        switch (part)
-        {
-            case CENTER:
-                buffer.vertex(x - 0.25, y - 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x + 0.25, y - 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x + 0.25, y + 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x - 0.25, y + 0.25, z).color(hr, hg, hb, ha).next();
-                break;
-            case LEFT:
-                buffer.vertex(x - 0.50, y - 0.50, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x - 0.25, y - 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x - 0.25, y + 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x - 0.50, y + 0.50, z).color(hr, hg, hb, ha).next();
-                break;
-            case RIGHT:
-                buffer.vertex(x + 0.50, y - 0.50, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x + 0.25, y - 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x + 0.25, y + 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x + 0.50, y + 0.50, z).color(hr, hg, hb, ha).next();
-                break;
-            case TOP:
-                buffer.vertex(x - 0.50, y + 0.50, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x - 0.25, y + 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x + 0.25, y + 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x + 0.50, y + 0.50, z).color(hr, hg, hb, ha).next();
-                break;
-            case BOTTOM:
-                buffer.vertex(x - 0.50, y - 0.50, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x - 0.25, y - 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x + 0.25, y - 0.25, z).color(hr, hg, hb, ha).next();
-                buffer.vertex(x + 0.50, y - 0.50, z).color(hr, hg, hb, ha).next();
-                break;
-            default:
-        }
-
-        tessellator.draw();
-
-        GlStateManager.lineWidth(1.6f);
-
-        buffer.begin(GL11.GL_LINE_LOOP, VertexFormats.POSITION_COLOR);
-
-        // Middle small rectangle
-        buffer.vertex(x - 0.25, y - 0.25, z).color(1f, 1f, 1f, 1f).next();
-        buffer.vertex(x + 0.25, y - 0.25, z).color(1f, 1f, 1f, 1f).next();
-        buffer.vertex(x + 0.25, y + 0.25, z).color(1f, 1f, 1f, 1f).next();
-        buffer.vertex(x - 0.25, y + 0.25, z).color(1f, 1f, 1f, 1f).next();
-        tessellator.draw();
-
-        buffer.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
-        // Bottom left
-        buffer.vertex(x - 0.50, y - 0.50, z).color(1f, 1f, 1f, 1f).next();
-        buffer.vertex(x - 0.25, y - 0.25, z).color(1f, 1f, 1f, 1f).next();
-
-        // Top left
-        buffer.vertex(x - 0.50, y + 0.50, z).color(1f, 1f, 1f, 1f).next();
-        buffer.vertex(x - 0.25, y + 0.25, z).color(1f, 1f, 1f, 1f).next();
-
-        // Bottom right
-        buffer.vertex(x + 0.50, y - 0.50, z).color(1f, 1f, 1f, 1f).next();
-        buffer.vertex(x + 0.25, y - 0.25, z).color(1f, 1f, 1f, 1f).next();
-
-        // Top right
-        buffer.vertex(x + 0.50, y + 0.50, z).color(1f, 1f, 1f, 1f).next();
-        buffer.vertex(x + 0.25, y + 0.25, z).color(1f, 1f, 1f, 1f).next();
-        tessellator.draw();
-
-        GlStateManager.popMatrix();
-    }
+    private static long lastRotationChangeTime;
 
     public static void renderHotbarSwapOverlay(MinecraftClient mc)
     {
@@ -207,14 +68,15 @@ public class RenderUtils
 
             int x = startX;
             int y = startY;
+            TextRenderer textRenderer = mc.textRenderer;
 
-            GlStateManager.color4f(1f, 1f, 1f, 1f);
+            fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
             mc.getTextureManager().bindTexture(ContainerScreen.BACKGROUND_TEXTURE);
             mc.inGameHud.blit(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18);
 
             for (int row = 1; row <= 3; row++)
             {
-                mc.textRenderer.draw(String.valueOf(row), x - 10, y + 4, 0xFFFFFF);
+                textRenderer.drawWithShadow(String.valueOf(row), x - 10, y + 4, 0xFFFFFF);
 
                 for (int column = 0; column < 9; column++)
                 {
@@ -260,42 +122,14 @@ public class RenderUtils
         if (trace.getType() == HitResult.Type.BLOCK)
         {
             BlockPos pos = ((BlockHitResult) trace).getBlockPos();
-            BlockEntity te1 = world.getWorldChunk(pos).getBlockEntity(pos);
+            Block blockTmp = world.getBlockState(pos).getBlock();
 
-            if (te1 instanceof Inventory)
+            if (blockTmp instanceof ShulkerBoxBlock)
             {
-                inv = (Inventory) te1;
-                BlockState state = world.getBlockState(pos);
-
-                if (state.getBlock() instanceof ChestBlock && te1 instanceof ChestBlockEntity)
-                {
-                    ChestType type = state.get(ChestBlock.CHEST_TYPE);
-
-                    if (type != ChestType.SINGLE)
-                    {
-                        BlockPos posAdj = pos.offset(ChestBlock.getFacing(state));
-                        BlockState stateAdj = world.getBlockState(posAdj);
-                        BlockEntity te2 = world.getWorldChunk(posAdj).getBlockEntity(posAdj);
-
-                        if (stateAdj.getBlock() == state.getBlock() &&
-                            te2 instanceof ChestBlockEntity &&
-                            stateAdj.get(ChestBlock.CHEST_TYPE) != ChestType.SINGLE &&
-                            stateAdj.get(ChestBlock.FACING) == state.get(ChestBlock.FACING))
-                        {
-                            Inventory invRight = type == ChestType.RIGHT ?             inv : (Inventory) te2;
-                            Inventory invLeft  = type == ChestType.RIGHT ? (Inventory) te2 :             inv;
-                            inv = new DoubleInventory(invRight, invLeft);
-                        }
-                    }
-                }
-
-                Block blockTmp = world.getBlockState(pos).getBlock();
-
-                if (blockTmp instanceof ShulkerBoxBlock)
-                {
-                    block = (ShulkerBoxBlock) blockTmp;
-                }
+                block = (ShulkerBoxBlock) blockTmp;
             }
+
+            inv = fi.dy.masa.malilib.util.InventoryUtils.getInventory(world, pos);
         }
         else if (trace.getType() == HitResult.Type.ENTITY)
         {
@@ -351,7 +185,7 @@ public class RenderUtils
                 yInv = Math.min(yInv, yCenter - 92);
             }
 
-            setShulkerboxBackgroundTintColor(block);
+            fi.dy.masa.malilib.render.RenderUtils.setShulkerboxBackgroundTintColor(block, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue());
 
             if (isHorse)
             {
@@ -369,7 +203,7 @@ public class RenderUtils
 
         if (entityLivingBase != null)
         {
-            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(mc, x, y, entityLivingBase);
+            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(x, y, entityLivingBase);
             fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, mc);
         }
     }
@@ -383,7 +217,7 @@ public class RenderUtils
         int slotOffsetY = 8;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
-        GlStateManager.color4f(1f, 1f, 1f, 1f);
+        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, 9, 27, mc);
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
@@ -399,7 +233,7 @@ public class RenderUtils
         final int y = yCenter + 6;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
-        GlStateManager.color4f(1f, 1f, 1f, 1f);
+        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y     , 9, 27, mc);
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y + 70, 9,  9, mc);
@@ -452,107 +286,156 @@ public class RenderUtils
         }
     }
 
-    public static void renderMapPreview(ItemStack stack, int x, int y)
+    public static void renderDirectionsCursor(Window window, float zLevel, float partialTicks)
     {
-        if (stack.getItem() instanceof FilledMapItem && Screen.hasShiftDown())
+        MinecraftClient mc = MinecraftClient.getInstance();
+
+        GlStateManager.pushMatrix();
+
+        int width = window.getScaledWidth();
+        int height = window.getScaledHeight();
+        GlStateManager.translated(width / 2, height / 2, zLevel);
+        Entity entity = mc.getCameraEntity();
+        GlStateManager.rotatef(entity.prevPitch + (entity.pitch - entity.prevPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
+        GlStateManager.rotatef(entity.prevYaw + (entity.yaw - entity.prevYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
+        GlStateManager.scalef(-1.0F, -1.0F, -1.0F);
+        GLX.renderCrosshair(10);
+
+        GlStateManager.popMatrix();
+    }
+
+    public static void notifyRotationChanged()
+    {
+        lastRotationChangeTime = System.currentTimeMillis();
+    }
+
+    public static void renderSnapAimAngleIndicator()
+    {
+        long current = System.currentTimeMillis();
+
+        if (current - lastRotationChangeTime < 750)
         {
             MinecraftClient mc = MinecraftClient.getInstance();
+            Window window = mc.window;
+            final int xCenter = window.getScaledWidth() / 2;
+            final int yCenter = window.getScaledHeight() / 2;
+            SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
 
-            GlStateManager.pushMatrix();
-            GlStateManager.disableLighting();
-            GlStateManager.color4f(1f, 1f, 1f, 1f);
-            mc.getTextureManager().bindTexture(fi.dy.masa.malilib.render.RenderUtils.TEXTURE_MAP_BACKGROUND);
-
-            int size = Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue();
-            int y1 = y - size - 20;
-            int y2 = y1 + size;
-            int x1 = x + 8;
-            int x2 = x1 + size;
-            int z = 300;
-
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder buffer = tessellator.getBufferBuilder();
-            buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
-            buffer.vertex(x1, y2, z).texture(0.0D, 1.0D).next();
-            buffer.vertex(x2, y2, z).texture(1.0D, 1.0D).next();
-            buffer.vertex(x2, y1, z).texture(1.0D, 0.0D).next();
-            buffer.vertex(x1, y1, z).texture(0.0D, 0.0D).next();
-            tessellator.draw();
-
-            MapState mapdata = FilledMapItem.getMapState(stack, mc.world);
-
-            if (mapdata != null)
+            if (mode != SnapAimMode.PITCH)
             {
-                x1 += 8;
-                y1 += 8;
-                z = 310;
-                double scale = (double) (size - 16) / 128.0D;
-                GlStateManager.translated(x1, y1, z);
-                GlStateManager.scaled(scale, scale, 0);
-                mc.gameRenderer.getMapRenderer().draw(mapdata, false);
+                renderSnapAimAngleIndicatorYaw(xCenter, yCenter, 80, 10, mc);
             }
 
-            GlStateManager.enableLighting();
-            GlStateManager.popMatrix();
+            if (mode != SnapAimMode.YAW)
+            {
+                renderSnapAimAngleIndicatorPitch(xCenter, yCenter, 10, 50, mc);
+            }
         }
     }
 
-    public static void renderShulkerBoxPreview(ItemStack stack, int x, int y)
+    private static void renderSnapAimAngleIndicatorYaw(int xCenter, int yCenter, int width, int height, MinecraftClient mc)
     {
-        if (Screen.hasShiftDown() && stack.hasTag())
-        {
-            DefaultedList<ItemStack> items = fi.dy.masa.malilib.util.InventoryUtils.getStoredItems(stack, -1);
+        double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
+        double realYaw = MathHelper.floorMod(MiscUtils.getLastRealYaw(), 360.0D);
+        double snappedYaw = MiscUtils.calculateSnappedAngle(realYaw, step);
+        double startYaw = snappedYaw - (step / 2.0);
+        int x = xCenter - width / 2;
+        int y = yCenter + 10;
+        int lineX = x + (int) ((MathHelper.wrapDegrees(realYaw - startYaw)) / step * width);
+        TextRenderer textRenderer = mc.textRenderer;
 
-            if (items.size() == 0)
-            {
-                return;
-            }
+        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
-            GlStateManager.pushMatrix();
-            GuiLighting.disable();
-            GlStateManager.translatef(0F, 0F, 700F);
+        int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
+        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF);
 
-            fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryType(stack);
-            fi.dy.masa.malilib.render.InventoryOverlay.InventoryProperties props = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryPropsTemp(type, items.size());
+        fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF);
 
-            x += 8;
-            y -= (props.height + 18);
+        String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
+        textRenderer.draw(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
-            if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof ShulkerBoxBlock)
-            {
-                setShulkerboxBackgroundTintColor((ShulkerBoxBlock) ((BlockItem) stack.getItem()).getBlock());
-            }
-            else
-            {
-                GlStateManager.color4f(1f, 1f, 1f, 1f);
-            }
+        str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "°";
+        textRenderer.draw(str, x - textRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
 
-            MinecraftClient mc = MinecraftClient.getInstance();
-            fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, props.slotsPerRow, items.size(), mc);
-
-            GuiLighting.enable();
-            GlStateManager.enableDepthTest();
-            GlStateManager.enableRescaleNormal();
-
-            Inventory inv = fi.dy.masa.malilib.util.InventoryUtils.getAsInventory(items);
-            fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + props.slotOffsetX, y + props.slotOffsetY, props.slotsPerRow, 0, -1, mc);
-
-            GlStateManager.disableDepthTest();
-            GlStateManager.popMatrix();
-        }
+        str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "°  >";
+        textRenderer.draw(str, x + width, y + height + 2, 0xFFFFFFFF);
     }
 
-    private static void setShulkerboxBackgroundTintColor(@Nullable ShulkerBoxBlock block)
+    private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height, MinecraftClient mc)
     {
-        if (block != null && Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue())
+        double step = Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue();
+        int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
+        //double realPitch = MathHelper.clamp(MathHelper.wrapDegrees(MiscUtils.getLastRealPitch()), -limit, limit);
+        double realPitch = MathHelper.wrapDegrees(MiscUtils.getLastRealPitch());
+        double snappedPitch;
+
+        if (realPitch < 0)
         {
-            final DyeColor dye = block.getColor() != null ? block.getColor() : DyeColor.PURPLE;
-            final float[] colors = dye.getColorComponents();
-            GlStateManager.color3f(colors[0], colors[1], colors[2]);
+            snappedPitch = -MiscUtils.calculateSnappedAngle(-realPitch, step);
         }
         else
         {
-            GlStateManager.color4f(1f, 1f, 1f, 1f);
+            snappedPitch = MiscUtils.calculateSnappedAngle(realPitch, step);
         }
+
+        snappedPitch = MathHelper.clamp(MathHelper.wrapDegrees(snappedPitch), -limit, limit);
+
+        int x = xCenter - width / 2;
+        int y = yCenter - height - 10;
+
+        renderPitchIndicator(x, y, width, height, realPitch, snappedPitch, step, true, mc);
+    }
+
+    public static void renderPitchLockIndicator(MinecraftClient mc)
+    {
+        Window window = mc.window;
+        final int xCenter = window.getScaledWidth() / 2;
+        final int yCenter = window.getScaledHeight() / 2;
+        int width = 10;
+        int height = 50;
+        int x = xCenter - width / 2;
+        int y = yCenter - height - 10;
+        double currentPitch = mc.player.pitch;
+        double centerPitch = 0;
+        double indicatorRange = 180;
+
+        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange, false, mc);
+    }
+
+    private static void renderPitchIndicator(int x, int y, int width, int height,
+            double currentPitch, double centerPitch, double indicatorRange, boolean isSnapRange, MinecraftClient mc)
+    {
+        double startPitch = centerPitch - (indicatorRange / 2.0);
+        double printedRange = isSnapRange ? indicatorRange : indicatorRange / 2;
+        int lineY = y + (int) ((MathHelper.wrapDegrees(currentPitch) - startPitch) / indicatorRange * height);
+        double angleUp = centerPitch - printedRange;
+        double angleDown = centerPitch + printedRange;
+        String strUp, strDown;
+
+        if (isSnapRange)
+        {
+            strUp   = String.format("%6.1f° ^", MathHelper.wrapDegrees(angleUp));
+            strDown = String.format("%6.1f° v", MathHelper.wrapDegrees(angleDown));
+        }
+        else
+        {
+            strUp   = String.format("%6.1f°", angleUp);
+            strDown = String.format("%6.1f°", angleDown);
+        }
+
+        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
+        TextRenderer textRenderer = mc.textRenderer;
+
+        int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
+        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF);
+
+        fi.dy.masa.malilib.render.RenderUtils.drawRect(x - 1, lineY - 1, width + 2, 2, 0xFFFFFFFF);
+
+        String str = String.format("%6.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
+        textRenderer.draw(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
+
+        //textRenderer.drawString(strUp, x - textRenderer.getStringWidth(strUp) - 4, y - 4, 0xFFFFFFFF);
+        textRenderer.draw(strUp, x + width + 4, y - 4, 0xFFFFFFFF);
+        textRenderer.draw(strDown, x + width + 4, y + height - 4, 0xFFFFFFFF);
     }
 }

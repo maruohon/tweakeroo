@@ -3,16 +3,16 @@ package fi.dy.masa.tweakeroo.util;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import net.minecraft.client.resource.language.I18n;
 
-public enum ListType implements IConfigOptionListEntry
+public enum SnapAimMode implements IConfigOptionListEntry
 {
-    NONE        ("none",        "tweakeroo.label.list_type.none"),
-    BLACKLIST   ("blacklist",   "tweakeroo.label.list_type.blacklist"),
-    WHITELIST   ("whitelist",   "tweakeroo.label.list_type.whitelist");
+    YAW     ("yaw",     "tweakeroo.label.snap_aim_mode.yaw"),
+    PITCH   ("pitch",   "tweakeroo.label.snap_aim_mode.pitch"),
+    BOTH    ("both",    "tweakeroo.label.snap_aim_mode.both");
 
     private final String configString;
     private final String translationKey;
 
-    private ListType(String configString, String translationKey)
+    private SnapAimMode(String configString, String translationKey)
     {
         this.configString = configString;
         this.translationKey = translationKey;
@@ -54,14 +54,14 @@ public enum ListType implements IConfigOptionListEntry
     }
 
     @Override
-    public ListType fromString(String name)
+    public SnapAimMode fromString(String name)
     {
         return fromStringStatic(name);
     }
 
-    public static ListType fromStringStatic(String name)
+    public static SnapAimMode fromStringStatic(String name)
     {
-        for (ListType mode : ListType.values())
+        for (SnapAimMode mode : SnapAimMode.values())
         {
             if (mode.configString.equalsIgnoreCase(name))
             {
@@ -69,6 +69,6 @@ public enum ListType implements IConfigOptionListEntry
             }
         }
 
-        return ListType.NONE;
+        return SnapAimMode.YAW;
     }
 }

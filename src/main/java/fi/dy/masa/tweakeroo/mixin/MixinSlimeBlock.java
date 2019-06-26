@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.block.Block;
 import net.minecraft.block.SlimeBlock;
 import net.minecraft.block.TransparentBlock;
@@ -24,7 +24,7 @@ public abstract class MixinSlimeBlock extends TransparentBlock
     @Inject(method = "onSteppedOn", at = @At("HEAD"), cancellable = true)
     private void onEntityWalkOnSlime(World worldIn, BlockPos pos, Entity entityIn, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_NO_SLIME_BLOCK_SLOWDOWN.getBooleanValue() && entityIn instanceof PlayerEntity)
+        if (Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN.getBooleanValue() && entityIn instanceof PlayerEntity)
         {
             super.onSteppedOn(worldIn, pos, entityIn);
             ci.cancel();

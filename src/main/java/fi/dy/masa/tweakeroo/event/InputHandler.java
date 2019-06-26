@@ -1,24 +1,27 @@
 package fi.dy.masa.tweakeroo.event;
 
 import com.google.common.collect.ImmutableList;
+import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybindManager;
 import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
 import fi.dy.masa.malilib.hotkeys.IKeyboardInputHandler;
 import fi.dy.masa.malilib.hotkeys.IMouseInputHandler;
+import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
-import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.util.SnapAimMode;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.options.GameOptions;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.ChatMessageType;
 import net.minecraft.text.TextFormat;
 import net.minecraft.text.TranslatableTextComponent;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -54,25 +57,30 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         {
             manager.addKeybindToMap(hotkey.getKeybind());
         }
+
+        for (IHotkey hotkey : Configs.Disable.OPTIONS)
+        {
+            manager.addKeybindToMap(hotkey.getKeybind());
+        }
     }
 
     @Override
     public void addHotkeys(IKeybindManager manager)
     {
+        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.disable_toggle_hotkeys", Configs.Disable.OPTIONS);
         manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.HOTKEY_LIST);
         manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", ImmutableList.copyOf(FeatureToggle.values()));
     }
 
     @Override
-    public boolean onKeyInput(int eventKey, boolean eventKeyState)
+    public boolean onKeyInput(int keyCode, int scanCode, int modifiers, boolean eventKeyState)
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         // Not in a GUI
         if (mc.currentScreen == null && eventKeyState)
         {
-            int scanCode = 0; // FIXME
-            this.storeLastMovementDirection(eventKey, scanCode, mc);
+            this.storeLastMovementDirection(keyCode, scanCode, mc);
         }
 
         return false;
@@ -86,7 +94,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         if (mc.currentScreen == null && mc.player != null && mc.player.abilities.creativeMode &&
             eventButtonState && mc.options.keyUse.matchesMouse(eventButton) &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
-            mc.hitResult.getType() == HitResult.Type.NONE)
+            mc.hitResult != null && mc.hitResult.getType() == HitResult.Type.NONE)
         {
             BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
 
@@ -95,15 +103,21 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 Direction facing = PositionUtils.getClosestLookingDirection(mc.player).getOpposite();
                 Vec3d hitVec = PositionUtils.getHitVecCenter(posFront, facing);
                 BlockHitResult context = new BlockHitResult(hitVec, facing, posFront, false);
+                ItemStack stack = mc.player.getMainHandStack();
 
-                ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN, context);
-
-                if (result != ActionResult.SUCCESS)
+                if (stack.isEmpty() == false && stack.getItem() instanceof BlockItem)
                 {
-                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.OFF, context);
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN, context);
+                    return true;
                 }
 
-                return true;
+                stack = mc.player.getOffHandStack();
+
+                if (stack.isEmpty() == false && stack.getItem() instanceof BlockItem)
+                {
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.OFF, context);
+                    return true;
+                }
             }
         }
 
@@ -111,10 +125,9 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     }
 
     @Override
-    public boolean onMouseScroll(int mouseX, int mouseY, double amount)
+    public boolean onMouseScroll(int mouseX, int mouseY, double dWheel)
     {
         MinecraftClient mc = MinecraftClient.getInstance();
-        int dWheel = (int) amount;
 
         // Not in a GUI
         if (mc.currentScreen == null && dWheel != 0)
@@ -135,13 +148,26 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 return true;
             }
+            else if (FeatureToggle.TWEAK_FLY_SPEED.getKeybind().isKeybindHeld())
+            {
+                ConfigDouble config = Configs.getActiveFlySpeedConfig();
+                double newValue = config.getDoubleValue() + (dWheel > 0 ? 0.005 : -0.005);
+                config.setDoubleValue(newValue);
+                KeyCallbackAdjustable.setValueChanged();
+
+                String strIndex = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
+                String strValue = preGreen + String.format("%.3f", config.getDoubleValue()) + rst;
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_fly_speed_to", strIndex, strValue));
+
+                return true;
+            }
             else if (FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld())
             {
                 int newValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
-                String strValue = preGreen + Integer.valueOf(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue()) + rst;
+                String strValue = preGreen + Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + rst;
                 mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_after_clicker_count_to", strValue));
 
                 return true;
@@ -150,9 +176,9 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.PLACEMENT_LIMIT.setIntegerValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
-                String strValue = preGreen + Integer.valueOf(Configs.Generic.PLACEMENT_LIMIT.getIntegerValue()) + rst;
+                String strValue = preGreen + Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + rst;
                 mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_placement_limit_to", strValue));
 
                 return true;
@@ -161,10 +187,32 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.setIntegerValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
-                String strValue = preGreen + Integer.valueOf(Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue()) + rst;
+                String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + rst;
                 mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue));
+
+                return true;
+            }
+            else if (FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeybind().isKeybindHeld())
+            {
+                int newValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + (dWheel > 0 ? 1 : -1);
+                Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.setIntegerValue(newValue);
+                KeyCallbackAdjustable.setValueChanged();
+
+                String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + rst;
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_hotbar_slot_randomizer_max_to", strValue));
+
+                return true;
+            }
+            else if (FeatureToggle.TWEAK_BREAKING_GRID.getKeybind().isKeybindHeld())
+            {
+                int newValue = Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + (dWheel > 0 ? 1 : -1);
+                Configs.Generic.BREAKING_GRID_SIZE.setIntegerValue(newValue);
+                KeyCallbackAdjustable.setValueChanged();
+
+                String strValue = preGreen + Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + rst;
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_breaking_grid_size_to", strValue));
 
                 return true;
             }
@@ -172,18 +220,40 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.PLACEMENT_GRID_SIZE.setIntegerValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+                KeyCallbackAdjustable.setValueChanged();
 
-                String strValue = preGreen + Integer.valueOf(Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue()) + rst;
+                String strValue = preGreen + Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + rst;
                 mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_placement_grid_size_to", strValue));
 
                 return true;
             }
-            else if (FeatureToggle.TWEAK_ZOOM.getKeybind().isKeybindHeld())
+            else if (FeatureToggle.TWEAK_SNAP_AIM.getKeybind().isKeybindHeld())
+            {
+                SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+                ConfigDouble config = mode == SnapAimMode.PITCH ? Configs.Generic.SNAP_AIM_PITCH_STEP : Configs.Generic.SNAP_AIM_YAW_STEP;
+
+                double newValue = config.getDoubleValue() * (dWheel > 0 ? 2 : 0.5);
+                config.setDoubleValue(newValue);
+                KeyCallbackAdjustable.setValueChanged();
+
+                String val = preGreen + String.valueOf(config.getDoubleValue()) + rst;
+                String key = mode == SnapAimMode.PITCH ? "tweakeroo.message.set_snap_aim_pitch_step_to" : "tweakeroo.message.set_snap_aim_yaw_step_to";
+
+                mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent(key, val));
+
+                return true;
+            }
+            else if (FeatureToggle.TWEAK_ZOOM.getKeybind().isKeybindHeld() ||
+                     (FeatureToggle.TWEAK_ZOOM.getBooleanValue() && Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld()))
             {
                 double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (dWheel > 0 ? 1 : -1);
                 Configs.Generic.ZOOM_FOV.setDoubleValue(newValue);
-                Callbacks.KeyCallbackToggleOnRelease.setValueChanged();
+
+                // Only prevent the next trigger when adjusting the value with the actual toggle key held
+                if (FeatureToggle.TWEAK_ZOOM.getKeybind().isKeybindHeld())
+                {
+                    KeyCallbackAdjustable.setValueChanged();
+                }
 
                 String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
                 mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableTextComponent("tweakeroo.message.set_zoom_fov_to", strValue));

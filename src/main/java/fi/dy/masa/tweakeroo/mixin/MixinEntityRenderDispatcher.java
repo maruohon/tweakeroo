@@ -13,25 +13,23 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
 @Mixin(EntityRenderDispatcher.class)
 public abstract class MixinEntityRenderDispatcher
 {
-    @Inject(method = "method_3950", at = @At("HEAD"), cancellable = true) // MCP: shouldRender
-    private void onShouldRender(Entity entityIn, VisibleRegion region, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> ci)
+    @Inject(method = "method_3950", at = @At("HEAD"), cancellable = true) // shouldRender
+    private void onShouldRender(Entity entityIn, VisibleRegion region, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir)
     {
-        if (FeatureToggle.TWEAK_NO_ENTITY_RENDERING.getBooleanValue() && (entityIn instanceof PlayerEntity) == false)
+        if (Configs.Disable.DISABLE_ENTITY_RENDERING.getBooleanValue() && (entityIn instanceof PlayerEntity) == false)
         {
-            ci.setReturnValue(false);
-            ci.cancel();
-            return;
+            cir.setReturnValue(false);
         }
 
-        if (entityIn instanceof FallingBlockEntity && FeatureToggle.TWEAK_NO_FALLING_BLOCK_RENDER.getBooleanValue())
+        if (entityIn instanceof FallingBlockEntity && Configs.Disable.DISABLE_FALLING_BLOCK_RENDER.getBooleanValue())
         {
-            ci.setReturnValue(false);
-            ci.cancel();
+            cir.setReturnValue(false);
         }
         else if (entityIn instanceof ExperienceOrbEntity)
         {
@@ -41,9 +39,7 @@ public abstract class MixinEntityRenderDispatcher
 
                 if (max >= 0 && ++Tweakeroo.renderCountXPOrbs > max)
                 {
-                    ci.setReturnValue(false);
-                    ci.cancel();
-                    return;
+                    cir.setReturnValue(false);
                 }
             }
         }
@@ -55,11 +51,14 @@ public abstract class MixinEntityRenderDispatcher
 
                 if (max >= 0 && ++Tweakeroo.renderCountItems > max)
                 {
-                    ci.setReturnValue(false);
-                    ci.cancel();
-                    return;
+                    cir.setReturnValue(false);
                 }
             }
+        }
+        else if (Configs.Disable.DISABLE_DEAD_MOB_RENDERING.getBooleanValue() &&
+                 entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getHealth() <= 0f)
+        {
+            cir.setReturnValue(false);
         }
     }
 }
