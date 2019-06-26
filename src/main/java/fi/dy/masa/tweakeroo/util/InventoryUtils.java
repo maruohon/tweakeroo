@@ -3,6 +3,8 @@ package fi.dy.masa.tweakeroo.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -190,7 +192,7 @@ public class InventoryUtils
             if (slotNumber != -1)
             {
                 swapItemToHand(player, hand, slotNumber);
-                StringUtils.printActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_hand");
+                InfoUtils.printActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_hand");
             }
         }
     }

@@ -64,15 +64,14 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     }
 
     @Override
-    public boolean onKeyInput(int eventKey, boolean eventKeyState)
+    public boolean onKeyInput(int keyCode, int scanCode, int modifiers, boolean eventKeyState)
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         // Not in a GUI
         if (mc.currentScreen == null && eventKeyState)
         {
-            int scanCode = 0; // FIXME
-            this.storeLastMovementDirection(eventKey, scanCode, mc);
+            this.storeLastMovementDirection(keyCode, scanCode, mc);
         }
 
         return false;

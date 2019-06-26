@@ -7,6 +7,7 @@ import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
+import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.tweakeroo.Reference;
@@ -22,9 +23,7 @@ public class GuiConfigs extends GuiConfigsBase
 
     public GuiConfigs()
     {
-        super(10, 50, Reference.MOD_ID, null);
-
-        this.title = I18n.translate("tweakeroo.gui.title.configs");
+        super(10, 50, Reference.MOD_ID, null, "tweakeroo.gui.title.configs");
     }
 
     @Override
@@ -54,8 +53,8 @@ public class GuiConfigs extends GuiConfigsBase
             width = this.textRenderer.getStringWidth(label) + 10;
         }
 
-        ButtonGeneric button = new ButtonGeneric(this.id++, x, y, width, 20, label);
-        button.active = enabled;
+        ButtonGeneric button = new ButtonGeneric(x, y, width, 20, label);
+        button.setEnabled(enabled);
         this.addButton(button, listener);
 
         return width;
@@ -116,7 +115,7 @@ public class GuiConfigs extends GuiConfigsBase
         return ConfigOptionWrapper.createFor(configs);
     }
 
-    private static class ButtonListener implements IButtonActionListener<ButtonGeneric>
+    private static class ButtonListener implements IButtonActionListener
     {
         private final GuiConfigs parent;
         private final ConfigGuiTab tab;
@@ -128,12 +127,7 @@ public class GuiConfigs extends GuiConfigsBase
         }
 
         @Override
-        public void actionPerformed(ButtonGeneric control)
-        {
-        }
-
-        @Override
-        public void actionPerformedWithButton(ButtonGeneric control, int mouseButton)
+        public void actionPerformedWithButton(ButtonBase control, int mouseButton)
         {
             GuiConfigs.tab = this.tab;
 
