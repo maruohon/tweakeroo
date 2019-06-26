@@ -17,8 +17,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.chat.ChatMessageType;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -108,7 +106,7 @@ public class InventoryUtils
 
     private static boolean isItemAtLowDurability(ItemStack stack, int minDurability)
     {
-        return stack.hasDurability() && stack.getDamage() >= stack.getDurability() - minDurability;
+        return stack.isDamageable() && stack.getDamage() >= stack.getMaxDamage() - minDurability;
     }
 
     private static int getMinDurability(ItemStack stack)
@@ -117,9 +115,9 @@ public class InventoryUtils
 
         // For items with low maximum durability, use 5% as the threshold,
         // if the configured durability threshold is over that.
-        if ((double) minDurability / (double) stack.getDurability() >= 0.05D)
+        if ((double) minDurability / (double) stack.getMaxDamage() >= 0.05D)
         {
-            minDurability = (int) (stack.getDurability() * 0.05);
+            minDurability = (int) (stack.getMaxDamage() * 0.05);
         }
 
         return minDurability;
@@ -127,13 +125,12 @@ public class InventoryUtils
 
     private static void swapItemWithHigherDurabilityToHand(PlayerEntity player, Hand hand, ItemStack stackReference, int minDurabilityLeft)
     {
-        MinecraftClient mc = MinecraftClient.getInstance();
         int slotWithItem = findSlotWithIdenticalItemWithDurabilityLeft(player.playerContainer, stackReference, minDurabilityLeft);
 
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.swapped_low_durability_item_for_better_durability"));
+            InfoUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_better_durability");
             return;
         }
 
@@ -142,7 +139,7 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.swapped_low_durability_item_off_players_hand"));
+            InfoUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_off_players_hand");
             return;
         }
 
@@ -152,7 +149,7 @@ public class InventoryUtils
         {
             ItemStack stack = slot.getStack();
             {
-                if (slot.id > 8 && stack.isEmpty() == false && stack.hasDurability() == false)
+                if (slot.id > 8 && stack.isEmpty() == false && stack.isDamageable() == false)
                 {
                     slotWithItem = slot.id;
                     break;
@@ -163,7 +160,7 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            mc.inGameHud.addChatMessage(ChatMessageType.GAME_INFO, new TranslatableComponent("tweakeroo.message.swapped_low_durability_item_for_dummy_item"));
+            InfoUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_dummy_item");
         }
     }
 
@@ -181,7 +178,7 @@ public class InventoryUtils
         ItemStack stackHand = player.getStackInHand(hand);
 
         if (stackHand.isEmpty() == false &&
-            (stackHand.hasDurability() == false ||
+            (stackHand.isDamageable() == false ||
              stackHand.isDamaged() == false ||
              EnchantmentHelper.getLevel(Enchantments.MENDING, stackHand) <= 0))
         {
@@ -206,7 +203,7 @@ public class InventoryUtils
             {
                 ItemStack stack = slot.getStack();
 
-                if (stack.hasDurability() && stack.isDamaged() &&
+                if (stack.isDamageable() && stack.isDamaged() &&
                     EnchantmentHelper.getLevel(Enchantments.MENDING, stack) > 0)
                 {
                     return slot.id;
@@ -287,8 +284,8 @@ public class InventoryUtils
         {
             ItemStack stackSlot = slot.getStack();
 
-            if (stackSlot.isEqualIgnoreDurability(stackReference) &&
-                stackReference.getDurability() - stackSlot.getDamage() > minDurabilityLeft &&
+            if (stackSlot.isItemEqualIgnoreDamage(stackReference) &&
+                stackReference.getMaxDamage() - stackSlot.getDamage() > minDurabilityLeft &&
                 ItemStack.areTagsEqual(stackSlot, stackReference))
             {
                 return slot.id;
@@ -314,7 +311,7 @@ public class InventoryUtils
 
             ItemStack stack = slot.getStack();
 
-            if (stack.getAmount() < stack.getMaxAmount() && fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackReference, stack))
+            if (stack.getCount() < stack.getMaxCount() && fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackReference, stack))
             {
                 slots.add(slot);
             }
@@ -329,7 +326,7 @@ public class InventoryUtils
                 Slot slot2 = slots.get(j);
                 ItemStack stack = slot1.getStack();
 
-                if (stack.getAmount() < stack.getMaxAmount())
+                if (stack.getCount() < stack.getMaxCount())
                 {
                     // Pick up the item from slot1 and try to put it in slot2
                     mc.interactionManager.method_2906(container.syncId, slot1.id, 0, SlotActionType.PICKUP, player);
@@ -341,7 +338,7 @@ public class InventoryUtils
                         mc.interactionManager.method_2906(container.syncId, slot1.id, 0, SlotActionType.PICKUP, player);
                     }
 
-                    if (slot2.getStack().getAmount() >= slot2.getStack().getMaxAmount())
+                    if (slot2.getStack().getCount() >= slot2.getStack().getMaxCount())
                     {
                         slots.remove(j);
                         --j;
@@ -359,7 +356,7 @@ public class InventoryUtils
     public static boolean canUnstackingItemNotFitInInventory(ItemStack stack, PlayerEntity player)
     {
         if (FeatureToggle.TWEAK_ITEM_UNSTACKING_PROTECTION.getBooleanValue() &&
-            stack.getAmount() > 1 &&
+            stack.getCount() > 1 &&
             UNSTACKING_ITEMS.contains(stack.getItem()))
         {
             if (fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.playerContainer, false, false) == -1)

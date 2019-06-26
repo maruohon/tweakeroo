@@ -29,6 +29,6 @@ public abstract class MixinBlockItem extends Item implements IItemStackLimit
         }
 
         // FIXME How to call the stack-sensitive version on the super class?
-        return super.getMaxAmount();
+        return super.getMaxCount();
     }
 }
