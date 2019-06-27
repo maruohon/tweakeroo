@@ -586,8 +586,7 @@ public class PlacementTweaks
             ItemStack stackCurrent = player.getHeldItem(hand);
 
             if (stackOriginal.isEmpty() == false &&
-                (stackCurrent.isEmpty() ||
-                 fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
+                (stackCurrent.isEmpty() || stackCurrent.isItemEqualIgnoreDurability(stackOriginal) == false))
             {
                 // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
                 boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
