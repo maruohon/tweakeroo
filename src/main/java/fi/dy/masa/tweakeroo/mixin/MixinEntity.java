@@ -6,17 +6,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity
@@ -34,6 +36,16 @@ public abstract class MixinEntity
 
     @Shadow public abstract Vec3d getVelocity();
     @Shadow public abstract void setVelocity(Vec3d velocity);
+
+    // This method should be called isInvisibleToPlayer
+    @Inject(method = "canSeePlayer", at = @At("HEAD"), cancellable = true)
+    private void overrideIsInvisibleToPlayer(PlayerEntity player, CallbackInfoReturnable<Boolean> cir)
+    {
+        if (FeatureToggle.TWEAK_RENDER_INVISIBLE_ENTITIES.getBooleanValue())
+        {
+            cir.setReturnValue(false);
+        }
+    }
 
     @Redirect(method = "clipSneakingMovement", at = @At(value = "INVOKE",
                 target = "Lnet/minecraft/entity/Entity;isSneaking()Z", ordinal = 0))

@@ -36,7 +36,6 @@
         "MixinItemStack",
         "MixinKeyboardInput",
         "MixinLivingEntity",
-        "MixinLivingEntityRenderer",
         "MixinMinecraftClient",
         "MixinMobSpawnerBlockEntityRenderer",
         "MixinMobSpawnerLogic",
