@@ -70,6 +70,7 @@ public class Configs implements IConfigHandler
         public static final ConfigInteger       PLACEMENT_LIMIT                     = new ConfigInteger     ("placementLimit", 3, 1, 10000, "The number of blocks you are able to place at maximum per\nright click, if tweakPlacementLimit is enabled.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind.");
         public static final ConfigOptionList    PLACEMENT_RESTRICTION_MODE          = new ConfigOptionList  ("placementRestrictionMode", PlacementRestrictionMode.FACE, "The Placement Restriction mode to use (hotkey-selectable)");
         public static final ConfigBoolean       PLACEMENT_RESTRICTION_TIED_TO_FAST  = new ConfigBoolean     ("placementRestrictionTiedToFast", true, "When enabled, the Placement Restriction mode will toggle\nits state of/off when you toggle the Fast Placement mode.");
+        public static final ConfigDouble        PLAYER_ON_FIRE_SCALE                = new ConfigDouble      ("playerOnFireScale", 1, 0, 10, "A scaling factor for the player's on-fire effect.\nAccepted range: 0.0 - 10.0");
         public static final ConfigBoolean       POTION_WARNING_BENEFICIAL_ONLY      = new ConfigBoolean     ("potionWarningBeneficialOnly", true, "Only warn about potion effects running out that are marked as \"beneficial\"");
         public static final ConfigInteger       POTION_WARNING_THRESHOLD            = new ConfigInteger     ("potionWarningThreshold", 600, 1, 1000000, "The remaining duration of potion effects (in ticks)\nafter which the warning will start showing");
         public static final ConfigInteger       RENDER_LIMIT_ITEM                   = new ConfigInteger     ("renderLimitItem", -1, -1, 10000, "Maximum number of item entities rendered per frame.\nUse -1 for normal behaviour, ie. to disable this limit.");
@@ -134,6 +135,7 @@ public class Configs implements IConfigHandler
                 PERIODIC_USE_INTERVAL,
                 PLACEMENT_GRID_SIZE,
                 PLACEMENT_LIMIT,
+                PLAYER_ON_FIRE_SCALE,
                 POTION_WARNING_THRESHOLD,
                 RENDER_LIMIT_ITEM,
                 RENDER_LIMIT_XP_ORB,

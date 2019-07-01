@@ -8,6 +8,7 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockBaseLogic;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
@@ -60,6 +61,18 @@ public class MiscUtils
     {
         int newColor = Configs.Generic.CHAT_BACKGROUND_COLOR.getIntegerValue();
         return (newColor & 0x00FFFFFF) | ((int) (((newColor >>> 24) / 255.0) * ((colorOrig >>> 24) / 255.0) / 0.5 * 255) << 24);
+    }
+
+    public static void doPlayerOnFireRenderModifications()
+    {
+        float scale = Configs.Generic.PLAYER_ON_FIRE_SCALE.getFloatValue();
+
+        if (scale > 1)
+        {
+            GlStateManager.translate(0, scale / 8, 0);
+        }
+
+        GlStateManager.scale(scale, scale, 1);
     }
 
     public static void copyTextFromSign(TileEntitySign te)
