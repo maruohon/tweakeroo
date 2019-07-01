@@ -57,6 +57,7 @@
         "MixinTileEntityStructure",
         "MixinWorld",
         "MixinWorldClient",
+        "MixinWorldProvider",
         "MixinWorldProviderHell"
     ],
     "injectors": {

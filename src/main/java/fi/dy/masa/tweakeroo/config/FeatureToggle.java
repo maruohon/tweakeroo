@@ -30,6 +30,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_CHAT_BACKGROUND_COLOR     ("tweakChatBackgroundColor",            false, "",    "Overrides the default chat background color\nwith the one from Generics -> 'chatBackgroundColor'"),
     TWEAK_CHAT_PERSISTENT_TEXT      ("tweakChatPersistentText",             false, "",    "Stores the text from the chat input text field\nand restores it when the chat is opened again"),
     TWEAK_CHAT_TIMESTAMP            ("tweakChatTimestamp",                  false, "",    "Adds timestamps to chat messages"),
+    TWEAK_CLOUD_HEIGHT_OVERRIDE     ("tweakCloudHeightOverride",            false, "",    "Overrides the normal cloud height with the one set in Generic -> 'cloudHeightOverride'"),
     TWEAK_COMMAND_BLOCK_EXTRA_FIELDS("tweakCommandBlockExtraFields",        false, "",    "Adds extra fields to the Command Block GUI, for settings\nthe name of the command block, and seeing the stats results"),
     TWEAK_CUSTOM_FLAT_PRESETS       ("tweakCustomFlatPresets",              false, "",    "Allows adding custom flat world presets to the list.\nThe presets are defined in Lists -> flatWorldPresets"),
     TWEAK_ELYTRA_CAMERA             ("tweakElytraCamera",                   false, "",    "Allows locking the real player rotations while holding the 'elytraCamera' activation key.\nThe controls will then only affect the separate 'camera rotations' for the rendering/camera.\nMeant for things like looking down/around while elytra flying nice and straight."),

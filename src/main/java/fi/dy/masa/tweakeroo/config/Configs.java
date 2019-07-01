@@ -41,6 +41,7 @@ public class Configs implements IConfigHandler
         public static final ConfigColor         CHAT_BACKGROUND_COLOR               = new ConfigColor       ("chatBackgroundColor", "#80000000", "The background color for the chat messages,\nif 'tweakChatBackgroundColor' is enabled");
         public static final ConfigString        CHAT_TIME_FORMAT                    = new ConfigString      ("chatTimeFormat", "[HH:mm:ss]", "The time format for chat messages, if tweakChatTimestamp is enabled\nUses the Java SimpleDateFormat format specifiers.");
         public static final ConfigBoolean       CLIENT_PLACEMENT_ROTATION           = new ConfigBoolean     ("clientPlacementRotation", true, "Enable single player and client side placement rotations,\nsuch as Accurate Placement working in single player without Carpet mod");
+        public static final ConfigDouble        CLOUD_HEIGHT_OVERRIDE               = new ConfigDouble      ("cloudHeightOverride", 128, -1024, 1024, "The new cloud height, when tweakCloudHeightOverride is enabled");
         public static final ConfigOptionList    ELYTRA_CAMERA_INDICATOR             = new ConfigOptionList  ("elytraCameraIndicator", ActiveMode.WITH_KEY, "Whether or not to render the real pitch angle\nindicator when the elytra camera mode is active");
         public static final ConfigInteger       FAST_BLOCK_PLACEMENT_COUNT          = new ConfigInteger     ("fastBlockPlacementCount", 2, 1, 16, "The maximum number of blocks to place per game tick\nwith the Fast Block Placement tweak");
         public static final ConfigInteger       FAST_LEFT_CLICK_COUNT               = new ConfigInteger     ("fastLeftClickCount",  10, 1, 64, "The number of left clicks to do per game tick when\ntweakFastLeftClick is enabled and the attack button is held down");
@@ -113,6 +114,7 @@ public class Configs implements IConfigHandler
                 AFTER_CLICKER_CLICK_COUNT,
                 BLOCK_REACH_DISTANCE,
                 BREAKING_GRID_SIZE,
+                CLOUD_HEIGHT_OVERRIDE,
                 FAST_BLOCK_PLACEMENT_COUNT,
                 FAST_LEFT_CLICK_COUNT,
                 FAST_RIGHT_CLICK_COUNT,
