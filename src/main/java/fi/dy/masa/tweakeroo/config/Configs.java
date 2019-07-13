@@ -1,14 +1,12 @@
 package fi.dy.masa.tweakeroo.config;
 
-import java.io.File;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.ConfigUtils;
-import fi.dy.masa.malilib.config.HudAlignment;
-import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
-import fi.dy.masa.malilib.config.IHotkeyTogglable;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.config.options.ConfigColor;
@@ -17,9 +15,9 @@ import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.config.options.ConfigStringList;
+import fi.dy.masa.malilib.config.options.IConfigBase;
 import fi.dy.masa.malilib.util.ActiveMode;
-import fi.dy.masa.malilib.util.FileUtils;
-import fi.dy.masa.malilib.util.JsonUtils;
+import fi.dy.masa.malilib.util.HudAlignment;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
@@ -30,8 +28,6 @@ import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 public class Configs implements IConfigHandler
 {
-    private static final String CONFIG_FILE_NAME = Reference.MOD_ID + ".json";
-
     public static class Generic
     {
         public static final ConfigInteger       AFTER_CLICKER_CLICK_COUNT           = new ConfigInteger     ("afterClickerClickCount",  1, 1, 32, "The number of right clicks to do per placed block when\ntweakAfterClicker is enabled");
@@ -224,7 +220,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_VILLAGER_TRADE_LOCKING  = new ConfigBooleanClient  ("disableVillagerTradeLocking",          false, "", "Prevents villager trades from ever locking, by always incrementing\nthe max uses as well when the recipe uses is incremented");
         public static final ConfigBooleanHotkeyed       DISABLE_WALL_UNSPRINT           = new ConfigBooleanHotkeyed("disableWallUnsprint",                  false, "", "Touching a wall doesn't drop you out from sprint mode");
 
-        public static final ImmutableList<IHotkeyTogglable> OPTIONS = ImmutableList.of(
+        public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
                 DISABLE_BLOCK_BREAK_PARTICLES,
                 DISABLE_DOUBLE_TAP_SPRINT,
                 DISABLE_BOSS_FOG,
@@ -273,40 +269,39 @@ public class Configs implements IConfigHandler
         );
     }
 
-    public static ConfigDouble getActiveFlySpeedConfig()
+    @Override
+    public String getConfigFileName()
     {
-        switch (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue())
-        {
-            case 0:  return Configs.Generic.FLY_SPEED_PRESET_1;
-            case 1:  return Configs.Generic.FLY_SPEED_PRESET_2;
-            case 2:  return Configs.Generic.FLY_SPEED_PRESET_3;
-            case 3:  return Configs.Generic.FLY_SPEED_PRESET_4;
-            default: return Configs.Generic.FLY_SPEED_PRESET_1;
-        }
+        return Reference.MOD_ID + ".json";
     }
 
-    public static void loadFromFile()
+    @Override
+    public Map<String, List<? extends IConfigBase>> getConfigsPerCategories()
     {
-        File configFile = new File(FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
+        Map<String, List<? extends IConfigBase>> map = new LinkedHashMap<>();
 
-        if (configFile.exists() && configFile.isFile() && configFile.canRead())
-        {
-            JsonElement element = JsonUtils.parseJsonFile(configFile);
+        map.put("Generic",          Generic.OPTIONS);
+        map.put("Fixes",            Fixes.OPTIONS);
+        map.put("Lists",            Lists.OPTIONS);
+        map.put("TweakToggles",     ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(FeatureToggle.values())));
+        map.put("TweakHotkeys",     ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(FeatureToggle.values())));
+        map.put("GenericHotkeys",   Hotkeys.HOTKEY_LIST);
+        map.put("DisableToggles",   ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, Disable.OPTIONS));
+        map.put("DisableHotkeys",   ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, Disable.OPTIONS));
+        map.put("Internal",         Internal.OPTIONS);
 
-            if (element != null && element.isJsonObject())
-            {
-                JsonObject root = element.getAsJsonObject();
+        return map;
+    }
 
-                ConfigUtils.readConfigBase(root, "Fixes", Configs.Fixes.OPTIONS);
-                ConfigUtils.readConfigBase(root, "Generic", Configs.Generic.OPTIONS);
-                ConfigUtils.readConfigBase(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
-                ConfigUtils.readConfigBase(root, "Internal", Configs.Internal.OPTIONS);
-                ConfigUtils.readConfigBase(root, "Lists", Configs.Lists.OPTIONS);
-                ConfigUtils.readHotkeyToggleOptions(root, "DisableHotkeys", "DisableToggles", ImmutableList.copyOf(Disable.OPTIONS));
-                ConfigUtils.readHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));
-            }
-        }
+    @Override
+    public boolean shouldShowCategoryOnConfigGuis(String category)
+    {
+        return category.equals("Internal") == false;
+    }
 
+    @Override
+    public void onPostLoad()
+    {
         InventoryUtils.setRepairModeSlots(Lists.REPAIR_MODE_SLOTS.getStrings());
         InventoryUtils.setUnstackingItems(Lists.UNSTACKING_ITEMS.getStrings());
 
@@ -331,35 +326,15 @@ public class Configs implements IConfigHandler
                 Lists.POTION_WARNING_WHITELIST.getStrings());
     }
 
-    public static void saveToFile()
+    public static ConfigDouble getActiveFlySpeedConfig()
     {
-        File dir = FileUtils.getConfigDirectory();
-
-        if (dir.exists() && dir.isDirectory())
+        switch (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue())
         {
-            JsonObject root = new JsonObject();
-
-            ConfigUtils.writeConfigBase(root, "Fixes", Configs.Fixes.OPTIONS);
-            ConfigUtils.writeConfigBase(root, "Generic", Configs.Generic.OPTIONS);
-            ConfigUtils.writeConfigBase(root, "GenericHotkeys", Hotkeys.HOTKEY_LIST);
-            ConfigUtils.writeConfigBase(root, "Internal", Configs.Internal.OPTIONS);
-            ConfigUtils.writeConfigBase(root, "Lists", Configs.Lists.OPTIONS);
-            ConfigUtils.writeHotkeyToggleOptions(root, "DisableHotkeys", "DisableToggles", ImmutableList.copyOf(Disable.OPTIONS));
-            ConfigUtils.writeHotkeyToggleOptions(root, "TweakHotkeys", "TweakToggles", ImmutableList.copyOf(FeatureToggle.values()));
-
-            JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
+            case 0:  return Configs.Generic.FLY_SPEED_PRESET_1;
+            case 1:  return Configs.Generic.FLY_SPEED_PRESET_2;
+            case 2:  return Configs.Generic.FLY_SPEED_PRESET_3;
+            case 3:  return Configs.Generic.FLY_SPEED_PRESET_4;
+            default: return Configs.Generic.FLY_SPEED_PRESET_1;
         }
-    }
-
-    @Override
-    public void load()
-    {
-        loadFromFile();
-    }
-
-    @Override
-    public void save()
-    {
-        saveToFile();
     }
 }

@@ -49,7 +49,7 @@ public class RenderUtils
             int startX = offX;
             int startY = offY;
 
-            fi.dy.masa.malilib.config.HudAlignment align = (fi.dy.masa.malilib.config.HudAlignment) Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
+            fi.dy.masa.malilib.util.HudAlignment align = (fi.dy.masa.malilib.util.HudAlignment) Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
 
             switch (align)
             {

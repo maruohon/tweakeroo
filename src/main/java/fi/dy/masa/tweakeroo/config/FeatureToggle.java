@@ -3,10 +3,10 @@ package fi.dy.masa.tweakeroo.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
-import fi.dy.masa.malilib.config.IConfigBoolean;
-import fi.dy.masa.malilib.config.IConfigNotifiable;
-import fi.dy.masa.malilib.config.IHotkeyTogglable;
+import fi.dy.masa.malilib.config.options.IConfigBoolean;
+import fi.dy.masa.malilib.config.options.IConfigNotifiable;
 import fi.dy.masa.malilib.gui.GuiBase;
+import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackToggleBooleanConfigWithMessage;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
@@ -15,7 +15,7 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
-public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfigBoolean>
+public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<IConfigBoolean>
 {
     CARPET_ACCURATE_PLACEMENT_PROTOCOL ("carpetAccuratePlacementProtocol",  false, "",    "If enabled, then the Flexible Block Placement and the\nAccurate Block Placement use the protocol implemented\nin the recent carpet mod versions", "Carpet protocol Accurate Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "",     "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
@@ -49,8 +49,8 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_FREE_CAMERA_MOTION        ("tweakFreeCameraMotion",               false, "",    "When the Free Camera mode is enabled, if this feature is also enabled,\nthe movement inputs will affect the camera entity instead of the actual player.\nThis option is provided so that it's also possible to control\nthe actual player while in Free Camera mode, by disabling this option.\nNormally, if you just want to control the camera entity while in Free camera mode,\nthen just set the same hotkey for both features."),
     TWEAK_GAMMA_OVERRIDE            ("tweakGammaOverride",                  false, "",    "Overrides the video settings gamma value with\nthe one set in the Generic configs"),
     TWEAK_HAND_RESTOCK              ("tweakHandRestock",                    false, "",    "Enables swapping a new stack to the main or the offhand\nwhen the previous stack runs out"),
-    TWEAK_HOLD_ATTACK               ("tweakHoldAttack",                     false, "",    "Emulates holding down the attack button"),
-    TWEAK_HOLD_USE                  ("tweakHoldUse",                        false, "",    "Emulates holding down the use button"),
+    TWEAK_HOLD_ATTACK               ("tweakHoldAttack",                     false, "",    "Emulates holding down the attack button\n§6NOTE: You should ONLY toggle this via the toggle hotkey!\n§6You should also make the toggle hotkey have the attack\n§6key as part of the keybind, so that it properly activates/deactivates\n§6 the vanilla keybind when you toggle the tweak on/off"),
+    TWEAK_HOLD_USE                  ("tweakHoldUse",                        false, "",    "Emulates holding down the use button\n§6NOTE: You should ONLY toggle this via the toggle hotkey!\n§6You should also make the toggle hotkey have the use\n§6key as part of the keybind, so that it properly activates/deactivates\n§6 the vanilla keybind when you toggle the tweak on/off"),
     TWEAK_HOTBAR_SCROLL             ("tweakHotbarScroll",                   false, "",    "Enables the hotbar swapping via scrolling feature"),
     TWEAK_HOTBAR_SLOT_CYCLE         ("tweakHotbarSlotCycle",                false, "",    KeybindSettings.INGAME_BOTH, "Enables cycling the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
     TWEAK_HOTBAR_SLOT_RANDOMIZER    ("tweakHotbarSlotRandomizer",           false, "",    KeybindSettings.INGAME_BOTH, "Enables randomizing the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
@@ -99,6 +99,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     private final boolean defaultValueBoolean;
     private final boolean singlePlayer;
     private boolean valueBoolean;
+    private boolean lastSavedValueBoolean;
     private IValueChangeCallback<IConfigBoolean> callback;
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
@@ -136,6 +137,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
         this.name = name;
         this.valueBoolean = defaultValue;
         this.defaultValueBoolean = defaultValue;
+        this.lastSavedValueBoolean = defaultValue;
         this.singlePlayer = singlePlayer;
         this.comment = comment;
         this.prettyName = prettyName;
@@ -265,34 +267,42 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     }
 
     @Override
+    public boolean isDirty()
+    {
+        return this.lastSavedValueBoolean != this.valueBoolean || this.keybind.isDirty();
+    }
+
+    @Override
     public void resetToDefault()
     {
         this.valueBoolean = this.defaultValueBoolean;
     }
 
     @Override
-    public JsonElement getAsJsonElement()
-    {
-        return new JsonPrimitive(this.valueBoolean);
-    }
-
-    @Override
-    public void setValueFromJsonElement(JsonElement element)
+    public void setValueFromJsonElement(JsonElement element, String configName)
     {
         try
         {
             if (element.isJsonPrimitive())
             {
                 this.valueBoolean = element.getAsBoolean();
+                this.lastSavedValueBoolean = this.valueBoolean;
             }
             else
             {
-                LiteModTweakeroo.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", this.getName(), element);
+                LiteModTweakeroo.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", configName, element);
             }
         }
         catch (Exception e)
         {
-            LiteModTweakeroo.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", this.getName(), element, e);
+            LiteModTweakeroo.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", configName, element, e);
         }
+    }
+
+    @Override
+    public JsonElement getAsJsonElement()
+    {
+        this.lastSavedValueBoolean = this.valueBoolean;
+        return new JsonPrimitive(this.valueBoolean);
     }
 }
