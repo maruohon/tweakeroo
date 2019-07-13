@@ -21,7 +21,7 @@ public class GuiConfigs extends GuiConfigsBase
     private static final ConfigGuiTabBase GENERIC_HOTKEYS = new ConfigGuiTabBase("tweakeroo.gui.button.config_gui.generic_hotkeys", 204, true,  Hotkeys.HOTKEY_LIST);
     private static final ConfigGuiTabBase DISABLE_TOGGLES = new ConfigGuiTabBase("tweakeroo.gui.button.config_gui.disable_toggle",   80, false, ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS)));
     private static final ConfigGuiTabBase DISABLE_HOTKEYS = new ConfigGuiTabBase("tweakeroo.gui.button.config_gui.disable_hotkeys", 204, true,  ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(Configs.Disable.OPTIONS)));
-    private static final ConfigGuiTabBase PLACEMENT       = new ConfigGuiTabBase("placement", "tweakeroo.gui.button.config_gui.placement", 204, false, ImmutableList.of(),
+    private static final ConfigGuiTabBase PLACEMENT       = new ConfigGuiTabBase("tweakeroo.gui.button.config_gui.placement",       204, false, ImmutableList.of(),
             (tab, gui) -> (button, mouseButton) -> { });
 
     private static final ImmutableList<IConfigGuiTab> TABS = ImmutableList.of(
