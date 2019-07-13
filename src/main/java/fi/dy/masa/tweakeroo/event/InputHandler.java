@@ -1,14 +1,17 @@
 package fi.dy.masa.tweakeroo.event;
 
+import java.util.List;
 import com.google.common.collect.ImmutableList;
+import fi.dy.masa.malilib.config.ConfigType;
+import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
-import fi.dy.masa.malilib.hotkeys.IKeybindManager;
 import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
 import fi.dy.masa.malilib.hotkeys.IKeyboardInputHandler;
 import fi.dy.masa.malilib.hotkeys.IMouseInputHandler;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
+import fi.dy.masa.malilib.hotkeys.KeybindCategory;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
@@ -45,30 +48,25 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     }
 
     @Override
-    public void addKeysToMap(IKeybindManager manager)
+    public List<? extends IHotkey> getAllHotkeys()
     {
-        for (FeatureToggle toggle : FeatureToggle.values())
-        {
-            manager.addKeybindToMap(toggle.getKeybind());
-        }
+        ImmutableList.Builder<IHotkey> builder = ImmutableList.builder();
 
-        for (IHotkey hotkey : Hotkeys.HOTKEY_LIST)
-        {
-            manager.addKeybindToMap(hotkey.getKeybind());
-        }
+        builder.add(FeatureToggle.values());
+        builder.addAll(Configs.Disable.OPTIONS);
+        builder.addAll(Hotkeys.HOTKEY_LIST);
 
-        for (IHotkey hotkey : Configs.Disable.OPTIONS)
-        {
-            manager.addKeybindToMap(hotkey.getKeybind());
-        }
+        return builder.build();
     }
 
     @Override
-    public void addHotkeys(IKeybindManager manager)
+    public List<KeybindCategory> getHotkeyCategoriesForCombinedView()
     {
-        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.disable_toggle_hotkeys", Configs.Disable.OPTIONS);
-        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.HOTKEY_LIST);
-        manager.addHotkeysForCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", ImmutableList.copyOf(FeatureToggle.values()));
+        return ImmutableList.of(
+                new KeybindCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.disable_toggle_hotkeys", ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, Configs.Disable.OPTIONS)),
+                new KeybindCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.HOTKEY_LIST),
+                new KeybindCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", ImmutableList.copyOf(FeatureToggle.values()))
+        );
     }
 
     @Override
