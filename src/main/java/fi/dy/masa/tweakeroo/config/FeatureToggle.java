@@ -137,12 +137,13 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
         this.name = name;
         this.valueBoolean = defaultValue;
         this.defaultValueBoolean = defaultValue;
-        this.lastSavedValueBoolean = defaultValue;
         this.singlePlayer = singlePlayer;
         this.comment = comment;
         this.prettyName = prettyName;
         this.keybind = KeybindMulti.fromStorageString(defaultHotkey, settings);
         this.keybind.setCallback(new KeyCallbackToggleBooleanConfigWithMessage(this));
+
+        this.cacheSavedValue();
     }
 
     @Override
@@ -273,6 +274,13 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     }
 
     @Override
+    public void cacheSavedValue()
+    {
+        this.lastSavedValueBoolean = this.valueBoolean;
+        this.keybind.cacheSavedValue();
+    }
+
+    @Override
     public void resetToDefault()
     {
         this.valueBoolean = this.defaultValueBoolean;
@@ -286,7 +294,6 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
             if (element.isJsonPrimitive())
             {
                 this.valueBoolean = element.getAsBoolean();
-                this.lastSavedValueBoolean = this.valueBoolean;
             }
             else
             {
@@ -297,12 +304,13 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
         {
             LiteModTweakeroo.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", configName, element, e);
         }
+
+        this.cacheSavedValue();
     }
 
     @Override
     public JsonElement getAsJsonElement()
     {
-        this.lastSavedValueBoolean = this.valueBoolean;
         return new JsonPrimitive(this.valueBoolean);
     }
 }
