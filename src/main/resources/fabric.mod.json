@@ -28,6 +28,6 @@
   ],
 
   "depends": {
-    "malilib": ">=0.10.0-dev.19"
+    "malilib": ">=0.10.0-dev.20"
   }
 }
