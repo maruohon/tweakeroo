@@ -13,7 +13,7 @@ import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.tweakeroo.LiteModTweakeroo;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 
 public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<IConfigBoolean>
 {
@@ -49,8 +49,8 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     TWEAK_FREE_CAMERA_MOTION        ("tweakFreeCameraMotion",               false, "",    "When the Free Camera mode is enabled, if this feature is also enabled,\nthe movement inputs will affect the camera entity instead of the actual player.\nThis option is provided so that it's also possible to control\nthe actual player while in Free Camera mode, by disabling this option.\nNormally, if you just want to control the camera entity while in Free camera mode,\nthen just set the same hotkey for both features."),
     TWEAK_GAMMA_OVERRIDE            ("tweakGammaOverride",                  false, "",    "Overrides the video settings gamma value with\nthe one set in the Generic configs"),
     TWEAK_HAND_RESTOCK              ("tweakHandRestock",                    false, "",    "Enables swapping a new stack to the main or the offhand\nwhen the previous stack runs out"),
-    TWEAK_HOLD_ATTACK               ("tweakHoldAttack",                     false, "",    "Emulates holding down the attack button\n§6NOTE: You should ONLY toggle this via the toggle hotkey!\n§6You should also make the toggle hotkey have the attack\n§6key as part of the keybind, so that it properly activates/deactivates\n§6 the vanilla keybind when you toggle the tweak on/off"),
-    TWEAK_HOLD_USE                  ("tweakHoldUse",                        false, "",    "Emulates holding down the use button\n§6NOTE: You should ONLY toggle this via the toggle hotkey!\n§6You should also make the toggle hotkey have the use\n§6key as part of the keybind, so that it properly activates/deactivates\n§6 the vanilla keybind when you toggle the tweak on/off"),
+    TWEAK_HOLD_ATTACK               ("tweakHoldAttack",                     false, "",    "Emulates holding down the attack button\nï¿½6NOTE: You should ONLY toggle this via the toggle hotkey!\nï¿½6You should also make the toggle hotkey have the attack\nï¿½6key as part of the keybind, so that it properly activates/deactivates\nï¿½6 the vanilla keybind when you toggle the tweak on/off"),
+    TWEAK_HOLD_USE                  ("tweakHoldUse",                        false, "",    "Emulates holding down the use button\nï¿½6NOTE: You should ONLY toggle this via the toggle hotkey!\nï¿½6You should also make the toggle hotkey have the use\nï¿½6key as part of the keybind, so that it properly activates/deactivates\nï¿½6 the vanilla keybind when you toggle the tweak on/off"),
     TWEAK_HOTBAR_SCROLL             ("tweakHotbarScroll",                   false, "",    "Enables the hotbar swapping via scrolling feature"),
     TWEAK_HOTBAR_SLOT_CYCLE         ("tweakHotbarSlotCycle",                false, "",    KeybindSettings.INGAME_BOTH, "Enables cycling the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
     TWEAK_HOTBAR_SLOT_RANDOMIZER    ("tweakHotbarSlotRandomizer",           false, "",    KeybindSettings.INGAME_BOTH, "Enables randomizing the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
@@ -297,12 +297,12 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
             }
             else
             {
-                LiteModTweakeroo.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", configName, element);
+                Tweakeroo.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", configName, element);
             }
         }
         catch (Exception e)
         {
-            LiteModTweakeroo.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", configName, element, e);
+            Tweakeroo.logger.warn("Failed to set config value for '{}' from the JSON element '{}'", configName, element, e);
         }
 
         this.cacheSavedValue();

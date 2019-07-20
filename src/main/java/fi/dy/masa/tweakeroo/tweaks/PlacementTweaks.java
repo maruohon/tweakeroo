@@ -1,18 +1,6 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
 import javax.annotation.Nullable;
-import fi.dy.masa.malilib.util.BlockUtils;
-import fi.dy.masa.malilib.util.GuiUtils;
-import fi.dy.masa.malilib.util.PositionUtils;
-import fi.dy.masa.malilib.util.PositionUtils.HitPart;
-import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
-import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
-import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -36,6 +24,18 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.BlockUtils;
+import fi.dy.masa.malilib.util.GuiUtils;
+import fi.dy.masa.malilib.util.PositionUtils;
+import fi.dy.masa.malilib.util.PositionUtils.HitPart;
+import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
+import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
+import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 
 public class PlacementTweaks
 {
@@ -293,7 +293,7 @@ public class PlacementTweaks
         if (FeatureToggle.TWEAK_PLACEMENT_REST_FIRST.getBooleanValue() && stateClickedOn == null)
         {
             IBlockState state = world.getBlockState(posIn);
-            stackClickedOn = state.getBlock().getItem(world, posIn, state);
+            stackClickedOn = state.getBlock().getPickBlock(state, Minecraft.getMinecraft().objectMouseOver, world, posIn, player);
             stateClickedOn = state;
         }
 
@@ -433,7 +433,7 @@ public class PlacementTweaks
                     int meta = item.getMetadata(stack.getMetadata());
                     BlockPos posPlacement = getPlacementPositionForTargetedPosition(posNew, sideIn, world);
                     IBlockState state = item.getBlock().getStateForPlacement(world, posPlacement, sideIn,
-                            (float) hitVec.x, (float) hitVec.y, (float) hitVec.z, meta, player);
+                            (float) hitVec.x, (float) hitVec.y, (float) hitVec.z, meta, player, hand);
                     EnumFacing facingTmp = BlockUtils.getFirstPropertyFacingValue(state);
                     //System.out.printf("accurate - sideIn: %s, state: %s, hit: %s, f: %s, posNew: %s\n", sideIn, state, hitVec, EnumFacing.getDirectionFromEntityLiving(posIn, player), posNew);
 
@@ -510,7 +510,7 @@ public class PlacementTweaks
 
             if (stackClickedOn.isEmpty() == false)
             {
-                ItemStack stack = state.getBlock().getItem(world, pos, state);
+                ItemStack stack = state.getBlock().getPickBlock(state, Minecraft.getMinecraft().objectMouseOver, world, pos, player);
 
                 if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackClickedOn, stack) == false)
                 {
@@ -529,7 +529,7 @@ public class PlacementTweaks
         if (FeatureToggle.TWEAK_PLACEMENT_REST_HAND.getBooleanValue())
         {
             IBlockState state = world.getBlockState(pos);
-            ItemStack stackClicked = state.getBlock().getItem(world, pos, state);
+            ItemStack stackClicked = state.getBlock().getPickBlock(state, Minecraft.getMinecraft().objectMouseOver, world, pos, player);
             ItemStack stackHand = player.getHeldItem(hand);
 
             if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackClicked, stackHand) == false)

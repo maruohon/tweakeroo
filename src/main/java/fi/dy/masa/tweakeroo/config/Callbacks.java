@@ -1,5 +1,12 @@
 package fi.dy.masa.tweakeroo.config;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.IConfigBoolean;
 import fi.dy.masa.malilib.gui.GuiBase;
@@ -16,13 +23,6 @@ import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 
 public class Callbacks
 {
@@ -117,6 +117,7 @@ public class Callbacks
 
     public static class FeatureCallbackSlime implements IValueChangeCallback<ConfigBoolean>
     {
+        @SuppressWarnings("deprecation")
         public FeatureCallbackSlime(ConfigBoolean feature)
         {
             Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.slipperiness);
@@ -128,6 +129,7 @@ public class Callbacks
             }
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void onValueChanged(ConfigBoolean config)
         {

@@ -36,6 +36,7 @@ public abstract class MixinItemRenderer
         return original;
     }
 
+    /*
     @Inject(method = "renderFireInFirstPerson", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/renderer/GlStateManager;rotate(FFF)V", shift = At.Shift.AFTER))
     private void modifyPlayerOnFireRendering(CallbackInfo ci)
@@ -45,4 +46,5 @@ public abstract class MixinItemRenderer
             MiscUtils.doPlayerOnFireRenderModifications();
         }
     }
+    */
 }

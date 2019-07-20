@@ -7,11 +7,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.malilib.util.GuiUtils;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
-import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
-import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
@@ -22,6 +17,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import fi.dy.masa.malilib.util.GuiUtils;
+import fi.dy.masa.tweakeroo.Tweakeroo;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
+import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 
 @Mixin(Minecraft.class)
 public abstract class MixinMinecraft implements IMinecraftAccessor
@@ -121,5 +122,11 @@ public abstract class MixinMinecraft implements IMinecraftAccessor
     private void onRunTick(CallbackInfo ci)
     {
         MiscTweaks.onTick((Minecraft) (Object) this);
+    }
+
+    @Inject(method = "runGameLoop", at = @At("RETURN"))
+    private void onGameLoop(CallbackInfo ci)
+    {
+        Tweakeroo.onGameLoop((Minecraft) (Object) this);
     }
 }

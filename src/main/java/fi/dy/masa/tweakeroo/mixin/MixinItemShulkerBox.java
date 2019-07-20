@@ -1,16 +1,15 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import fi.dy.masa.malilib.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
+import fi.dy.masa.malilib.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(ItemShulkerBox.class)
-public abstract class MixinItemShulkerBox extends ItemBlock implements IItemStackLimit
+public abstract class MixinItemShulkerBox extends ItemBlock
 {
     public MixinItemShulkerBox(Block block)
     {
@@ -25,7 +24,6 @@ public abstract class MixinItemShulkerBox extends ItemBlock implements IItemStac
             return 64;
         }
 
-        // FIXME How to call the stack-sensitive version on the super class?
-        return super.getItemStackLimit();
+        return super.getItemStackLimit(stack);
     }
 }

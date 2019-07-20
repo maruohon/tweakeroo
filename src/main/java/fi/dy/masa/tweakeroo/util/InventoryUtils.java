@@ -659,7 +659,7 @@ public class InventoryUtils
         {
             BlockPos pos = trace.getBlockPos();
             IBlockState stateTargeted = world.getBlockState(pos);
-            ItemStack stack = stateTargeted.getBlock().getItem(world, pos, stateTargeted);
+            ItemStack stack = stateTargeted.getBlock().getPickBlock(stateTargeted, trace, world, pos, player);
 
             if (stack.isEmpty() == false)
             {

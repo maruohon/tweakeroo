@@ -27,12 +27,13 @@ public abstract class MixinItemBlock
                                                     "Lnet/minecraft/util/math/BlockPos;" +
                                                     "Lnet/minecraft/util/EnumFacing;" +
                                                     "FFFI" +
-                                                    "Lnet/minecraft/entity/EntityLivingBase;)" +
+                                                    "Lnet/minecraft/entity/EntityLivingBase;" +
+                                                    "Lnet/minecraft/util/EnumHand;)" +
                                                     "Lnet/minecraft/block/state/IBlockState;"), require = 0)
-    private IBlockState modifyPlacementState(Block block, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer,
+    private IBlockState modifyPlacementState(Block block, World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand,
             EntityPlayer playerIn, World worldIn, BlockPos posIn, EnumHand handIn, EnumFacing facingIn, float hitXIn, float hitYIn, float hitZIn)
     {
-        IBlockState stateOriginal = block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer);
+        IBlockState stateOriginal = block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
 
         if (Configs.Generic.CLIENT_PLACEMENT_ROTATION.getBooleanValue())
         {

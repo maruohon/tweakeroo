@@ -367,13 +367,13 @@ public class RenderUtils
 
         fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF);
 
-        String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
+        String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "Â°";
         textRenderer.drawString(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
-        str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "°";
+        str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "Â°";
         textRenderer.drawString(str, x - textRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
 
-        str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "°  >";
+        str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "Â°  >";
         textRenderer.drawString(str, x + width, y + height + 2, 0xFFFFFFFF);
     }
 
@@ -429,13 +429,13 @@ public class RenderUtils
 
         if (isSnapRange)
         {
-            strUp   = String.format("%6.1f° ^", MathHelper.wrapDegrees(angleUp));
-            strDown = String.format("%6.1f° v", MathHelper.wrapDegrees(angleDown));
+            strUp   = String.format("%6.1fÂ° ^", MathHelper.wrapDegrees(angleUp));
+            strDown = String.format("%6.1fÂ° v", MathHelper.wrapDegrees(angleDown));
         }
         else
         {
-            strUp   = String.format("%6.1f°", angleUp);
-            strDown = String.format("%6.1f°", angleDown);
+            strUp   = String.format("%6.1fÂ°", angleUp);
+            strDown = String.format("%6.1fÂ°", angleDown);
         }
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
@@ -446,7 +446,7 @@ public class RenderUtils
 
         fi.dy.masa.malilib.render.RenderUtils.drawRect(x - 1, lineY - 1, width + 2, 2, 0xFFFFFFFF);
 
-        String str = String.format("%6.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
+        String str = String.format("%6.1fÂ°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
         textRenderer.drawString(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
 
         //textRenderer.drawString(strUp, x - textRenderer.getStringWidth(strUp) - 4, y - 4, 0xFFFFFFFF);
