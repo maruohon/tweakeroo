@@ -6,11 +6,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.ItemRenderer;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.ItemRenderer;
 
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer
@@ -36,9 +36,8 @@ public abstract class MixinItemRenderer
         return original;
     }
 
-    /*
     @Inject(method = "renderFireInFirstPerson", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/GlStateManager;rotate(FFF)V", shift = At.Shift.AFTER))
+            target = "Lnet/minecraft/client/renderer/GlStateManager;rotate(FFFF)V", shift = At.Shift.AFTER))
     private void modifyPlayerOnFireRendering(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_PLAYER_ON_FIRE_SCALE.getBooleanValue())
@@ -46,5 +45,4 @@ public abstract class MixinItemRenderer
             MiscUtils.doPlayerOnFireRenderModifications();
         }
     }
-    */
 }
