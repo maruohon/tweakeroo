@@ -37,7 +37,7 @@ public abstract class MixinItemRenderer
     }
 
     @Inject(method = "renderFireInFirstPerson", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/GlStateManager;rotate(FFF)V", shift = At.Shift.AFTER))
+            target = "Lnet/minecraft/client/renderer/GlStateManager;rotate(FFFF)V", shift = At.Shift.AFTER))
     private void modifyPlayerOnFireRendering(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_PLAYER_ON_FIRE_SCALE.getBooleanValue())
