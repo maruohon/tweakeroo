@@ -18,7 +18,7 @@ public abstract class MixinBackgroundRenderer
     @Inject(method = "applyFog(Lnet/minecraft/client/render/Camera;I)V",
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/tag/FluidTags;LAVA:Lnet/minecraft/tag/Tag;")),
             at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;fogDensity(F)V",
-                     ordinal = 0, shift = At.Shift.AFTER))
+                     ordinal = 0, shift = At.Shift.AFTER), require = 0)
     private void onSetupLavaFog(Camera camera, int startCoords, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() &&
