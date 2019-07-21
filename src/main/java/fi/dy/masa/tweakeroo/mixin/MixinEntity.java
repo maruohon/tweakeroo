@@ -7,16 +7,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity
@@ -46,37 +46,6 @@ public abstract class MixinEntity
         }
 
         return ((Entity) (Object) this).isSneaking();
-    }
-
-    @Inject(method = "moveRelative",
-            at = @At(value = "INVOKE",
-                     target = "Lnet/minecraft/util/math/MathHelper;sin(F)F"), cancellable = true)
-    private void moreAccurateMoveRelative(float strafe, float up, float forward, float friction, CallbackInfo ci)
-    {
-        if ((Object) this instanceof EntityPlayerSP)
-        {
-            if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
-            {
-                CameraEntity camera = CameraEntity.getCamera();
-
-                if (camera != null)
-                {
-                    this.motionY = 0;
-                    ci.cancel();
-                }
-            }
-            else if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
-            {
-                double xFactor = Math.sin(this.rotationYaw * Math.PI / 180D);
-                double zFactor = Math.cos(this.rotationYaw * Math.PI / 180D);
-
-                this.motionX += (double) (strafe * zFactor - forward * xFactor);
-                this.motionY += (double) up;
-                this.motionZ += (double) (forward * zFactor + strafe * xFactor);
-
-                ci.cancel();
-            }
-        }
     }
 
     @Inject(method = "turn",
