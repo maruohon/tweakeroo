@@ -10,16 +10,18 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.mojang.authlib.GameProfile;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.CameraEntity;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(EntityPlayerSP.class)
 public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
@@ -145,5 +147,63 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     public boolean isSpectator()
     {
         return super.isSpectator() || MiscUtils.getFreeCameraSpectator();
+    }
+
+    @Override
+    public void moveRelative(float strafe, float up, float forward, float friction)
+    {
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
+        {
+            CameraEntity camera = CameraEntity.getCamera();
+
+            if (camera != null)
+            {
+                this.motionY = 0;
+                return;
+            }
+        }
+
+        float f = strafe * strafe + up * up + forward * forward;
+
+        if (f >= 1.0E-4F)
+        {
+            f = MathHelper.sqrt(f);
+
+            if (f < 1.0F)
+            {
+                f = 1.0F;
+            }
+
+            f = friction / f;
+            strafe = strafe * f;
+            up = up * f;
+            forward = forward * f;
+
+            if (this.isInWater() || this.isInLava())
+            {
+                strafe = strafe * (float) this.getEntityAttribute(SWIM_SPEED).getAttributeValue();
+                up = up * (float) this.getEntityAttribute(SWIM_SPEED).getAttributeValue();
+                forward = forward * (float) this.getEntityAttribute(SWIM_SPEED).getAttributeValue();
+            }
+
+            if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
+            {
+                double xFactor = Math.sin(this.rotationYaw * Math.PI / 180D);
+                double zFactor = Math.cos(this.rotationYaw * Math.PI / 180D);
+
+                this.motionX += (double) (strafe * zFactor - forward * xFactor);
+                this.motionY += (double) up;
+                this.motionZ += (double) (forward * zFactor + strafe * xFactor);
+
+                return;
+            }
+
+            float f1 = MathHelper.sin(this.rotationYaw * 0.017453292F);
+            float f2 = MathHelper.cos(this.rotationYaw * 0.017453292F);
+
+            this.motionX += (double)(strafe * f2 - forward * f1);
+            this.motionY += (double)up;
+            this.motionZ += (double)(forward * f2 + strafe * f1);
+        }
     }
 }
