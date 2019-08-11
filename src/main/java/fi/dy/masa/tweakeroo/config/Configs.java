@@ -16,8 +16,8 @@ import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.config.options.ConfigStringList;
 import fi.dy.masa.malilib.config.options.IConfigBase;
-import fi.dy.masa.malilib.util.ActiveMode;
-import fi.dy.masa.malilib.util.HudAlignment;
+import fi.dy.masa.malilib.config.values.ActiveMode;
+import fi.dy.masa.malilib.config.values.HudAlignment;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
@@ -267,6 +267,12 @@ public class Configs implements IConfigHandler
                 SLIME_BLOCK_SLIPPERINESS_ORIGINAL,
                 SNAP_AIM_LAST_YAW
         );
+    }
+
+    @Override
+    public String getModName()
+    {
+        return Reference.MOD_NAME;
     }
 
     @Override

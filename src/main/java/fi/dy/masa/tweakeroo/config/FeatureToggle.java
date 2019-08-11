@@ -98,6 +98,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     private final IKeybind keybind;
     private final boolean defaultValueBoolean;
     private final boolean singlePlayer;
+    private String modName;
     private boolean valueBoolean;
     private boolean lastSavedValueBoolean;
     private IValueChangeCallback<IConfigBoolean> callback;
@@ -140,7 +141,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
         this.singlePlayer = singlePlayer;
         this.comment = comment;
         this.prettyName = prettyName;
-        this.keybind = KeybindMulti.fromStorageString(defaultHotkey, settings);
+        this.keybind = KeybindMulti.fromStorageString(name, defaultHotkey, settings);
         this.keybind.setCallback(new KeyCallbackToggleBooleanConfigWithMessage(this));
 
         this.cacheSavedValue();
@@ -173,6 +174,18 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     public String getPrettyName()
     {
         return this.prettyName;
+    }
+
+    @Override
+    public String getModName()
+    {
+        return this.modName;
+    }
+
+    @Override
+    public void setModName(String modName)
+    {
+        this.modName = modName;
     }
 
     @Override
