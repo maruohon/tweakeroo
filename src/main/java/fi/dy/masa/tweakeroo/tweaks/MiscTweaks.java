@@ -2,8 +2,14 @@ package fi.dy.masa.tweakeroo.tweaks;
 
 import java.util.Collection;
 import javax.annotation.Nullable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.world.gen.FlatLayerInfo;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinFlatGeneratorInfo;
@@ -11,11 +17,6 @@ import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PotionRestriction;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.world.gen.FlatLayerInfo;
 
 public class MiscTweaks
 {
@@ -113,5 +114,12 @@ public class MiscTweaks
     public static FlatLayerInfo[] parseBlockString(String blockString)
     {
         return IMixinFlatGeneratorInfo.getLayersFromStringInvoker(3, blockString).toArray(new FlatLayerInfo[0]);
+    }
+
+    public static void updatePotionRestrictionLists()
+    {
+        POTION_RESTRICTION.setListType((ListType) Configs.Lists.POTION_WARNING_LIST_TYPE.getOptionListValue());
+        POTION_RESTRICTION.setListContents(Configs.Lists.POTION_WARNING_BLACKLIST.getStrings(),
+                Configs.Lists.POTION_WARNING_WHITELIST.getStrings());
     }
 }

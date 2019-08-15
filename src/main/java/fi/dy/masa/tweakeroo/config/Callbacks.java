@@ -1,5 +1,12 @@
 package fi.dy.masa.tweakeroo.config;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.IConfigBoolean;
 import fi.dy.masa.malilib.gui.GuiBase;
@@ -11,18 +18,13 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
+import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 
 public class Callbacks
 {
@@ -32,6 +34,24 @@ public class Callbacks
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
         Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN));
+        Configs.Lists.REPAIR_MODE_SLOTS.setValueChangeCallback((config) -> { InventoryUtils.setRepairModeSlots(config.getStrings()); });
+        Configs.Lists.UNSTACKING_ITEMS.setValueChangeCallback((config) -> { InventoryUtils.setUnstackingItems(config.getStrings()); });
+
+        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.setValueChangeCallback((config) -> { PlacementTweaks.updateFastRightClickBlockRestriction(); });
+        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.setValueChangeCallback((config) -> { PlacementTweaks.updateFastRightClickBlockRestriction(); });
+        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.setValueChangeCallback((config) -> { PlacementTweaks.updateFastRightClickBlockRestriction(); });
+
+        Configs.Lists.FAST_RIGHT_CLICK_ITEM_LIST_TYPE.setValueChangeCallback((config) -> { PlacementTweaks.updateFastRightClickItemRestriction(); });
+        Configs.Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.setValueChangeCallback((config) -> { PlacementTweaks.updateFastRightClickItemRestriction(); });
+        Configs.Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.setValueChangeCallback((config) -> { PlacementTweaks.updateFastRightClickItemRestriction(); });
+
+        Configs.Lists.FAST_PLACEMENT_ITEM_LIST_TYPE.setValueChangeCallback((config) -> { PlacementTweaks.updateFastPlacementItemRestriction(); });
+        Configs.Lists.FAST_PLACEMENT_ITEM_BLACKLIST.setValueChangeCallback((config) -> { PlacementTweaks.updateFastPlacementItemRestriction(); });
+        Configs.Lists.FAST_PLACEMENT_ITEM_WHITELIST.setValueChangeCallback((config) -> { PlacementTweaks.updateFastPlacementItemRestriction(); });
+
+        Configs.Lists.POTION_WARNING_LIST_TYPE.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });
+        Configs.Lists.POTION_WARNING_BLACKLIST.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });
+        Configs.Lists.POTION_WARNING_WHITELIST.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });
 
         FeatureCallbackSpecial featureCallback = new FeatureCallbackSpecial();
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
