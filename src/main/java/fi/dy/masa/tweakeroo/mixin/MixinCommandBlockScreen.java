@@ -109,9 +109,11 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
     }
 
     // This is needed because otherwise the name updating is delayed by "one GUI opening" >_>
-    @Inject(method = "tick", at = @At("RETURN"))
-    public void onUpdateGui(CallbackInfo ci)
+    @Override
+    public void tick()
     {
+        super.tick();
+
         if (this.textFieldName != null)
         {
             this.textFieldName.setText(this.blockEntity.getCommandExecutor().getCustomName().getString());

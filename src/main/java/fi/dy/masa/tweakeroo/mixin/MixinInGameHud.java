@@ -28,16 +28,16 @@ public abstract class MixinInGameHud extends DrawableHelper
 
     @Inject(method = "renderCrosshair", at = @At(value = "FIELD",
                 target = "Lnet/minecraft/client/options/GameOptions;debugEnabled", ordinal = 0), cancellable = true)
-    private void overrideCursorRender(float partialTicks, CallbackInfo ci)
+    private void overrideCursorRender(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_F3_CURSOR.getBooleanValue())
         {
-            RenderUtils.renderDirectionsCursor(this.client.window, this.blitOffset, partialTicks);
+            RenderUtils.renderDirectionsCursor(this.blitOffset, this.client.getTickDelta());
             ci.cancel();
         }
     }
 
-    @Inject(method = "renderGameOverlay",
+    @Inject(method = "draw",
             at = @At(value = "INVOKE",
                      target = "Lnet/minecraft/client/gui/hud/PlayerListHud;tick(Z)V",
                      ordinal = 0, shift = At.Shift.AFTER))

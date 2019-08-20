@@ -1,28 +1,31 @@
 package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
-import com.mojang.authlib.GameProfile;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.recipe.book.ClientRecipeBook;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.MovementType;
+import net.minecraft.stat.StatHandler;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public class CameraEntity extends OtherClientPlayerEntity
+public class CameraEntity extends ClientPlayerEntity
 {
     @Nullable private static CameraEntity camera;
     private static float forwardRamped;
     private static float strafeRamped;
     private static float verticalRamped;
 
-    public CameraEntity(ClientWorld worldIn, GameProfile gameProfileIn)
+    public CameraEntity(MinecraftClient mc, ClientWorld world,
+            ClientPlayNetworkHandler nethandler, StatHandler stats,
+            ClientRecipeBook recipeBook)
     {
-        super(worldIn, gameProfileIn);
+        super(mc, world, nethandler, stats, recipeBook);
     }
 
     @Override
@@ -125,6 +128,10 @@ public class CameraEntity extends OtherClientPlayerEntity
         this.setVelocity(new Vec3d(x, y, z));
 
         this.move(MovementType.SELF, this.getVelocity());
+
+        this.chunkX = (int) Math.floor(this.x) >> 4;
+        this.chunkY = (int) Math.floor(this.y) >> 4;
+        this.chunkZ = (int) Math.floor(this.z) >> 4;
     }
 
     private void updateLastTickPosition()
@@ -159,7 +166,7 @@ public class CameraEntity extends OtherClientPlayerEntity
 
     private static CameraEntity create(MinecraftClient mc)
     {
-        CameraEntity camera = new CameraEntity(mc.world, mc.player.getGameProfile());
+        CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.networkHandler, mc.player.getStats(), mc.player.getRecipeBook());
         camera.noClip = true;
 
         ClientPlayerEntity player = mc.player;

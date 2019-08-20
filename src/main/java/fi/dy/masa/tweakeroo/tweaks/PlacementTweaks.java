@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.tweaks;
 
 import javax.annotation.Nullable;
 import fi.dy.masa.malilib.util.BlockUtils;
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
 import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
@@ -65,7 +66,7 @@ public class PlacementTweaks
 
     public static void onTick(MinecraftClient mc)
     {
-        if (mc.currentScreen == null)
+        if (GuiUtils.getCurrentScreen() == null)
         {
             if (mc.options.keyUse.isPressed())
             {
@@ -108,13 +109,12 @@ public class PlacementTweaks
 
         ItemStack stackOriginal = player.getStackInHand(hand);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
-            stackOriginal.isEmpty() == false)
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
         {
             if (isEmulatedClick == false)
             {
                 //System.out.printf("onProcessRightClickPre storing stack: %s\n", stackOriginal);
-                stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
+                cacheStackInHand(hand);
             }
 
             // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
@@ -151,6 +151,17 @@ public class PlacementTweaks
     public static void onLeftClickMousePost()
     {
         onProcessRightClickPost(MinecraftClient.getInstance().player, Hand.MAIN);
+    }
+
+    public static void cacheStackInHand(Hand hand)
+    {
+        PlayerEntity player = MinecraftClient.getInstance().player;
+        ItemStack stackOriginal = player.getStackInHand(hand);
+
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
+        {
+            stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
+        }
     }
 
     private static void onAttackTick(MinecraftClient mc)
@@ -287,11 +298,7 @@ public class PlacementTweaks
         HitPart hitPart = PositionUtils.getHitPart(sideIn, playerFacingH, posIn, hitVec);
         Direction sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackPre.isEmpty() == false)
-        {
-            //System.out.printf("onProcessRightClickBlock storing stack: %s\n", stackPre);
-            stackBeforeUse[hand.ordinal()] = stackPre.copy();
-        }
+        cacheStackInHand(hand);
 
         if (FeatureToggle.TWEAK_PLACEMENT_REST_FIRST.getBooleanValue() && stateClickedOn == null)
         {
@@ -610,8 +617,7 @@ public class PlacementTweaks
             ItemStack stackCurrent = player.getStackInHand(hand);
 
             if (stackOriginal.isEmpty() == false &&
-                (stackCurrent.isEmpty() ||
-                 fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(stackOriginal, stackCurrent) == false))
+                (stackCurrent.isEmpty() || stackCurrent.isEqualIgnoreDurability(stackOriginal) == false))
             {
                 // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
                 boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&

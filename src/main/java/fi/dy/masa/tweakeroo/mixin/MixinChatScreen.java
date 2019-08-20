@@ -51,7 +51,7 @@ public abstract class MixinChatScreen
         }
     }
 
-    @Inject(method = "keyPressed(III)V",
+    @Inject(method = "keyPressed(III)Z",
             slice = @Slice(
                     from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ingame/ChatScreen;sendMessage(Ljava/lang/String;)V")),
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/Screen;)V", shift = Shift.AFTER))

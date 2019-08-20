@@ -10,11 +10,11 @@ import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import net.minecraft.client.resource.language.I18n;
 
 public class GuiConfigs extends GuiConfigsBase
 {
@@ -22,9 +22,7 @@ public class GuiConfigs extends GuiConfigsBase
 
     public GuiConfigs()
     {
-        super(10, 50, Reference.MOD_ID, null);
-
-        this.title = I18n.translate("tweakeroo.gui.title.configs");
+        super(10, 50, Reference.MOD_ID, null, "tweakeroo.gui.title.configs");
     }
 
     @Override
@@ -150,7 +148,7 @@ public class GuiConfigs extends GuiConfigsBase
             }
             else
             {
-                //MinecraftClient.getInstance().displayScreen(new GuiPlacementSettings());
+                //GuiBase.openGui(new GuiPlacementSettings());
             }
         }
     }
@@ -160,11 +158,11 @@ public class GuiConfigs extends GuiConfigsBase
         GENERIC         ("tweakeroo.gui.button.config_gui.generic"),
         FIXES           ("tweakeroo.gui.button.config_gui.fixes"),
         LISTS           ("tweakeroo.gui.button.config_gui.lists"),
-        DISABLE_TOGGLES ("tweakeroo.gui.button.config_gui.disable_toggle"),
-        DISABLE_HOTKEYS ("tweakeroo.gui.button.config_gui.disable_hotkeys"),
-        TWEAK_TOGGLES   ("tweakeroo.gui.button.config_gui.tweak_toggle"),
+        TWEAK_TOGGLES   ("tweakeroo.gui.button.config_gui.tweak_toggles"),
         TWEAK_HOTKEYS   ("tweakeroo.gui.button.config_gui.tweak_hotkeys"),
         GENERIC_HOTKEYS ("tweakeroo.gui.button.config_gui.generic_hotkeys"),
+        DISABLE_TOGGLES ("tweakeroo.gui.button.config_gui.disable_toggle"),
+        DISABLE_HOTKEYS ("tweakeroo.gui.button.config_gui.disable_hotkeys"),
         PLACEMENT       ("tweakeroo.gui.button.config_gui.placement");
 
         private final String translationKey;
@@ -176,7 +174,7 @@ public class GuiConfigs extends GuiConfigsBase
 
         public String getDisplayName()
         {
-            return I18n.translate(this.translationKey);
+            return StringUtils.translate(this.translationKey);
         }
     }
 }

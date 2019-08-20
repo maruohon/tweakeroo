@@ -28,7 +28,6 @@
   ],
 
   "depends": {
-    "fabric": "*",
-    "malilib": ">=0.9.5 <0.10.0"
+    "malilib": ">=0.10.0-dev.19"
   }
 }

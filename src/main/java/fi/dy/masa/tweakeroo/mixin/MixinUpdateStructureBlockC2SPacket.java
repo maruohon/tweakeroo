@@ -13,12 +13,12 @@ import net.minecraft.server.network.packet.UpdateStructureBlockC2SPacket;
 @Mixin(value = UpdateStructureBlockC2SPacket.class, priority = 999)
 public abstract class MixinUpdateStructureBlockC2SPacket
 {
-    @ModifyConstant(method = "readPacketData",
+    @ModifyConstant(method = "read",
             slice = @Slice(from = @At(value = "FIELD", opcode = Opcodes.PUTFIELD,
                                       target = "Lnet/minecraft/server/network/packet/UpdateStructureBlockC2SPacket;offset:Lnet/minecraft/util/math/BlockPos;"),
                            to   = @At(value = "FIELD", opcode = Opcodes.PUTFIELD,
                                       target = "Lnet/minecraft/server/network/packet/UpdateStructureBlockC2SPacket;mirror:Lnet/minecraft/util/BlockMirror;")),
-            constant = @Constant(intValue = 32))
+            constant = @Constant(intValue = 32), require = 0)
     private int overrideStructureBlockSizeLimit(int original)
     {
         if (FeatureToggle.TWEAK_STRUCTURE_BLOCK_LIMIT.getBooleanValue())

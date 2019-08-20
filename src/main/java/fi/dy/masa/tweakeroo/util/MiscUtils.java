@@ -11,12 +11,11 @@ import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.text.TextComponent;
 import net.minecraft.util.math.MathHelper;
 
 public class MiscUtils
 {
-    private static TextComponent[] previousSignText;
+    private static net.minecraft.text.TextComponent[] previousSignText;
     private static String previousChatText = "";
     private static final Date DATE = new Date();
     private static double lastRealPitch;
@@ -66,7 +65,7 @@ public class MiscUtils
     public static void copyTextFromSign(SignBlockEntity te)
     {
         int size = te.text.length;
-        previousSignText = new TextComponent[size];
+        previousSignText = new net.minecraft.text.TextComponent[size];
 
         for (int i = 0; i < size; ++i)
         {

@@ -104,7 +104,7 @@ public abstract class MixinGameRenderer
 
     @Inject(method = "renderWorld(FJ)V", at = @At(
                 value = "INVOKE", shift = Shift.AFTER,
-                target = "Lnet/minecraft/client/renderer/GameRenderer;updateTargetedEntity(F)V"))
+                target = "Lnet/minecraft/client/render/GameRenderer;updateTargetedEntity(F)V"))
     private void overrideRenderViewEntityPre(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
@@ -160,7 +160,7 @@ public abstract class MixinGameRenderer
 
     @Inject(method = "renderCenter(FJ)V", at = @At(
                 value = "INVOKE",
-                target = "Lnet/minecraft/client/render/WorldRenderer;setupTerrain(" +
+                target = "Lnet/minecraft/client/render/WorldRenderer;setUpTerrain(" +
                          "Lnet/minecraft/client/render/Camera;" +
                          "Lnet/minecraft/client/render/VisibleRegion;IZ)V"))
     private void preSetupTerrain(float partialTicks, long finishTimeNano, CallbackInfo ci)
@@ -170,8 +170,8 @@ public abstract class MixinGameRenderer
 
     @Inject(method = "renderCenter(FJ)V", at = @At(
                 value = "INVOKE", shift = At.Shift.AFTER,
-                target = "Lnet/minecraft/client/render/WorldRenderer;setupTerrain(" +
-                         "Lnet/minecraft/client.render/Camera;" +
+                target = "Lnet/minecraft/client/render/WorldRenderer;setUpTerrain(" +
+                         "Lnet/minecraft/client/render/Camera;" +
                          "Lnet/minecraft/client/render/VisibleRegion;IZ)V"))
     private void postSetupTerrain(float partialTicks, long finishTimeNano, CallbackInfo ci)
     {

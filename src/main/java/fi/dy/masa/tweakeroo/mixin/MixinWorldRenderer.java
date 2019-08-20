@@ -10,7 +10,7 @@ import net.minecraft.client.render.WorldRenderer;
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer
 {
-    @Redirect(method = "setupTerrain", at = @At(
+    @Redirect(method = "setUpTerrain", at = @At(
                 value = "INVOKE",
                 target = "Lnet/minecraft/client/render/ChunkRenderDispatcher;updateCameraPosition(DD)V"))
     private void preventRenderChunkPositionUpdates(ChunkRenderDispatcher dispatcher, double viewEntityX, double viewEntityZ)

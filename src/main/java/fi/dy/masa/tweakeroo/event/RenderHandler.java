@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.event;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.interfaces.IRenderer;
 import fi.dy.masa.malilib.util.ActiveMode;
 import fi.dy.masa.malilib.util.Color4f;
@@ -9,7 +10,6 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Screen;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
@@ -75,7 +75,7 @@ public class RenderHandler implements IRenderer
         }
         else if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
         {
-            boolean render = Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || Screen.hasShiftDown();
+            boolean render = Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown();
 
             if (render)
             {
@@ -111,10 +111,10 @@ public class RenderHandler implements IRenderer
             GlStateManager.depthMask(false);
             GlStateManager.disableLighting();
             GlStateManager.disableCull();
-            GlStateManager.enableBlend();
-            //GlStateManager.pushMatrix();
             GlStateManager.disableTexture();
             GlStateManager.disableDepthTest();
+
+            fi.dy.masa.malilib.render.RenderUtils.setupBlend();
 
             Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
 
@@ -128,7 +128,6 @@ public class RenderHandler implements IRenderer
 
             GlStateManager.enableTexture();
             GlStateManager.enableDepthTest();
-            //GlStateManager.popMatrix();
             GlStateManager.disableBlend();
             GlStateManager.enableCull();
             GlStateManager.depthMask(true);

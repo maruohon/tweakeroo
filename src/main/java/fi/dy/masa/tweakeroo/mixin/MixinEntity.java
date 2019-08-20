@@ -6,7 +6,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -34,6 +33,7 @@ public abstract class MixinEntity
     private double forcedYaw;
 
     @Shadow public abstract Vec3d getVelocity();
+    @Shadow public abstract void setVelocity(Vec3d velocity);
 
     @Redirect(method = "clipSneakingMovement", at = @At(value = "INVOKE",
                 target = "Lnet/minecraft/entity/Entity;isSneaking()Z", ordinal = 0))
@@ -47,8 +47,8 @@ public abstract class MixinEntity
         return ((Entity) (Object) this).isSneaking();
     }
 
-    @Inject(method = "movementInputToVelocity", at = @At("HEAD"), cancellable = true)
-    private void moreAccurateMoveRelative(Vec3d motion, float float_1, float yaw, CallbackInfoReturnable<Vec3d> cir)
+    @Inject(method = "updateVelocity", at = @At("HEAD"), cancellable = true)
+    private void moreAccurateMoveRelative(float float_1, Vec3d motion, CallbackInfo ci)
     {
         if ((Object) this instanceof ClientPlayerEntity)
         {
@@ -58,25 +58,23 @@ public abstract class MixinEntity
 
                 if (camera != null)
                 {
-                    cir.setReturnValue(this.getVelocity().multiply(1D, 0D, 1D));
+                    this.setVelocity(this.getVelocity().multiply(1D, 0D, 1D));
                 }
             }
             else if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
             {
                 double speed = motion.lengthSquared();
 
-                if (speed < 1.0E-7D)
-                {
-                   cir.setReturnValue(Vec3d.ZERO);
-                }
-                else
+                if (speed >= 1.0E-7D)
                 {
                    motion = (speed > 1.0D ? motion.normalize() : motion).multiply((double) float_1);
                    double xFactor = Math.sin(yaw * Math.PI / 180D);
                    double zFactor = Math.cos(yaw * Math.PI / 180D);
 
-                   cir.setReturnValue(new Vec3d(motion.x * zFactor - motion.z * xFactor, motion.y, motion.z * zFactor + motion.x * xFactor));
+                   this.setVelocity(new Vec3d(motion.x * zFactor - motion.z * xFactor, motion.y, motion.z * zFactor + motion.x * xFactor));
                 }
+
+                ci.cancel();
             }
         }
     }

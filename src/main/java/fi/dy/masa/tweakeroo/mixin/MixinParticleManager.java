@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 @Mixin(ParticleManager.class)
 public abstract class MixinParticleManager
 {
-    @Inject(method = "addBlockBreakingParticles", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "addBlockBreakParticles", at = @At("HEAD"), cancellable = true)
     private void onAddBlockDestroyEffects(BlockPos pos, BlockState state, CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_BLOCK_BREAK_PARTICLES.getBooleanValue())

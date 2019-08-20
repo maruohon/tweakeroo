@@ -1,7 +1,7 @@
 package fi.dy.masa.tweakeroo.util;
 
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
-import net.minecraft.client.resource.language.I18n;
+import fi.dy.masa.malilib.util.StringUtils;
 
 public enum SnapAimMode implements IConfigOptionListEntry
 {
@@ -27,7 +27,7 @@ public enum SnapAimMode implements IConfigOptionListEntry
     @Override
     public String getDisplayName()
     {
-        return I18n.translate(this.translationKey);
+        return StringUtils.translate(this.translationKey);
     }
 
     @Override
