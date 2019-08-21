@@ -49,6 +49,10 @@ public class Callbacks
         Configs.Lists.FAST_PLACEMENT_ITEM_BLACKLIST.setValueChangeCallback((config) -> { PlacementTweaks.updateFastPlacementItemRestriction(); });
         Configs.Lists.FAST_PLACEMENT_ITEM_WHITELIST.setValueChangeCallback((config) -> { PlacementTweaks.updateFastPlacementItemRestriction(); });
 
+        Configs.Lists.ITEM_GLINT_LIST_TYPE.setValueChangeCallback((config) -> { MiscTweaks.updateItemGlintRestriction(); });
+        Configs.Lists.ITEM_GLINT_BLACKLIST.setValueChangeCallback((config) -> { MiscTweaks.updateItemGlintRestriction(); });
+        Configs.Lists.ITEM_GLINT_WHITELIST.setValueChangeCallback((config) -> { MiscTweaks.updateItemGlintRestriction(); });
+
         Configs.Lists.POTION_WARNING_LIST_TYPE.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });
         Configs.Lists.POTION_WARNING_BLACKLIST.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });
         Configs.Lists.POTION_WARNING_WHITELIST.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });

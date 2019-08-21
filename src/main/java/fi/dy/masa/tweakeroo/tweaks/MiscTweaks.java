@@ -5,10 +5,12 @@ import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.gen.FlatLayerInfo;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -20,7 +22,8 @@ import fi.dy.masa.tweakeroo.util.PotionRestriction;
 
 public class MiscTweaks
 {
-    public static final PotionRestriction POTION_RESTRICTION = new PotionRestriction();
+    private static final ItemRestriction ITEM_GLINT_RESTRICTION = new ItemRestriction();
+    private static final PotionRestriction POTION_RESTRICTION = new PotionRestriction();
 
     private static long lastPotionWarning;
     private static int periodicAttackCounter;
@@ -110,10 +113,22 @@ public class MiscTweaks
                POTION_RESTRICTION.isAllowed(effect.getPotion());
     }
 
+    public static boolean shouldPreventItemGlintFor(ItemStack stack)
+    {
+        return Configs.Disable.DISABLE_ITEM_GLINT.getBooleanValue() && ITEM_GLINT_RESTRICTION.isAllowed(stack.getItem()) == false;
+    }
+
     @Nullable
     public static FlatLayerInfo[] parseBlockString(String blockString)
     {
         return IMixinFlatGeneratorInfo.getLayersFromStringInvoker(3, blockString).toArray(new FlatLayerInfo[0]);
+    }
+
+    public static void updateItemGlintRestriction()
+    {
+        ITEM_GLINT_RESTRICTION.setListType((ListType) Configs.Lists.ITEM_GLINT_LIST_TYPE.getOptionListValue());
+        ITEM_GLINT_RESTRICTION.setListContents(Configs.Lists.ITEM_GLINT_BLACKLIST.getStrings(),
+                Configs.Lists.ITEM_GLINT_WHITELIST.getStrings());
     }
 
     public static void updatePotionRestrictionLists()

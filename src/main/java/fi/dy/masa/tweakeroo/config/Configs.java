@@ -165,6 +165,9 @@ public class Configs implements IConfigHandler
         public static final ConfigStringList FAST_RIGHT_CLICK_ITEM_BLACKLIST    = new ConfigStringList("fastRightClickItemBlackList", ImmutableList.of("minecraft:fireworks"), "The items that are NOT allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to Black List");
         public static final ConfigStringList FAST_RIGHT_CLICK_ITEM_WHITELIST    = new ConfigStringList("fastRightClickItemWhiteList", ImmutableList.of("minecraft:bucket", "minecraft:water_bucket", "minecraft:lava_bucket", "minecraft:glass_bottle"), "The items that are allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to White List");
         public static final ConfigStringList FLAT_WORLD_PRESETS                 = new ConfigStringList("flatWorldPresets", ImmutableList.of("White Glass;1*minecraft:stained_glass;minecraft:plains;;minecraft:stained_glass", "Glass;1*minecraft:glass;minecraft:plains;;minecraft:glass"), "Custom flat world preset strings.\nThese are in the format: name;blocks_string;biome;generation_features;icon_item\nThe blocks string format is the vanilla format, such as: 62*minecraft:dirt,minecraft:grass\nThe biome can be the registry name, or the int ID\nThe icon item name format can be either minecraft:iron_nugget or minecraft:stained_glass@6");
+        public static final ConfigOptionList ITEM_GLINT_LIST_TYPE               = new ConfigOptionList("itemGlintListType", ListType.BLACKLIST, "The item restriction type for the Disable Item Glint feature");
+        public static final ConfigStringList ITEM_GLINT_BLACKLIST               = new ConfigStringList("itemGlintBlackList", ImmutableList.of("minecraft:potion"), "The items that will not have the glint effect,\nif itemGlintListType = blacklist");
+        public static final ConfigStringList ITEM_GLINT_WHITELIST               = new ConfigStringList("itemGlintWhiteList", ImmutableList.of(), "The only items that will have the glint effect,\nif itemGlintListType = whitelist");
         public static final ConfigOptionList POTION_WARNING_LIST_TYPE           = new ConfigOptionList("potionWarningListType", ListType.NONE, "The list type for potion warning effects");
         public static final ConfigStringList POTION_WARNING_BLACKLIST           = new ConfigStringList("potionWarningBlackList", ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), "The potion effects that will not be warned about");
         public static final ConfigStringList POTION_WARNING_WHITELIST           = new ConfigStringList("potionWarningWhiteList", ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing"), "The only potion effects that will be warned about");
@@ -182,6 +185,9 @@ public class Configs implements IConfigHandler
                 FAST_RIGHT_CLICK_ITEM_BLACKLIST,
                 FAST_RIGHT_CLICK_ITEM_WHITELIST,
                 FLAT_WORLD_PRESETS,
+                ITEM_GLINT_LIST_TYPE,
+                ITEM_GLINT_BLACKLIST,
+                ITEM_GLINT_WHITELIST,
                 POTION_WARNING_LIST_TYPE,
                 POTION_WARNING_BLACKLIST,
                 POTION_WARNING_WHITELIST,
@@ -202,6 +208,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_ENTITY_TICKING          = new ConfigBooleanClient  ("disableEntityTicking",                 false, "", "Prevent everything except player entities from getting ticked");
         public static final ConfigBooleanHotkeyed       DISABLE_FALLING_BLOCK_RENDER    = new ConfigBooleanHotkeyed("disableFallingBlockEntityRendering",   false, "", "If enabled, then falling block entities won't be rendered at all");
         public static final ConfigBooleanHotkeyed       DISABLE_INVENTORY_EFFECTS       = new ConfigBooleanHotkeyed("disableInventoryEffectRendering",      false, "", "Removes the potion effect rendering from the inventory GUIs");
+        public static final ConfigBooleanHotkeyed       DISABLE_ITEM_GLINT              = new ConfigBooleanHotkeyed("disableItemGlint",                     false, "", "Disables the glint effect from the items.\nThe items to remove it from, or allow it on, can be configured\nin Lists -> itemGlint*");
         public static final ConfigBooleanHotkeyed       DISABLE_ITEM_SWITCH_COOLDOWN    = new ConfigBooleanHotkeyed("disableItemSwitchRenderCooldown",      false, "", "If true, then there won't be any cooldown/equip animation\nwhen switching the held item or using the item.");
         public static final ConfigBooleanHotkeyed       DISABLE_LIGHT_UPDATES           = new ConfigBooleanHotkeyed("disableLightUpdates",                  false, "", "If enabled, disables some client-side (rendering related) light updates");
         public static final ConfigBooleanHotkeyed       DISABLE_LIGHT_UPDATES_ALL       = new ConfigBooleanHotkeyed("disableLightUpdatesAll",               false, "", "If enabled, disables ALL client-side light updates.\nThis might look very bad unless you use the Gamma tweak.");
@@ -231,6 +238,7 @@ public class Configs implements IConfigHandler
                 DISABLE_ENTITY_TICKING,
                 DISABLE_FALLING_BLOCK_RENDER,
                 DISABLE_INVENTORY_EFFECTS,
+                DISABLE_ITEM_GLINT,
                 DISABLE_ITEM_SWITCH_COOLDOWN,
                 DISABLE_LIGHT_UPDATES,
                 DISABLE_LIGHT_UPDATES_ALL,
@@ -315,6 +323,7 @@ public class Configs implements IConfigHandler
         PlacementTweaks.updateFastRightClickItemRestriction();
         PlacementTweaks.updateFastPlacementItemRestriction();
 
+        MiscTweaks.updateItemGlintRestriction();
         MiscTweaks.updatePotionRestrictionLists();
     }
 
