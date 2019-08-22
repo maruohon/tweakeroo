@@ -3,11 +3,13 @@ package fi.dy.masa.tweakeroo;
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InputEventHandler;
 import fi.dy.masa.malilib.event.RenderEventHandler;
+import fi.dy.masa.malilib.event.TickHandler;
 import fi.dy.masa.malilib.event.WorldLoadHandler;
 import fi.dy.masa.malilib.interfaces.IInitializationHandler;
 import fi.dy.masa.malilib.interfaces.IRenderer;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.event.ClientTickHandler;
 import fi.dy.masa.tweakeroo.event.InputHandler;
 import fi.dy.masa.tweakeroo.event.RenderHandler;
 import fi.dy.masa.tweakeroo.event.WorldLoadListener;
@@ -29,6 +31,7 @@ public class InitHandler implements IInitializationHandler
         RenderEventHandler.getInstance().registerTooltipLastRenderer(renderer);
         RenderEventHandler.getInstance().registerWorldLastRenderer(renderer);
 
+        TickHandler.getInstance().registerClientTickHandler(new ClientTickHandler());
         WorldLoadHandler.getInstance().registerWorldLoadPreHandler(new WorldLoadListener());
 
         Callbacks.init(MinecraftClient.getInstance());

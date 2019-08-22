@@ -64,8 +64,10 @@ public class PlacementTweaks
     public static final ItemRestriction FAST_RIGHT_CLICK_ITEM_RESTRICTION = new ItemRestriction();
     public static final ItemRestriction FAST_PLACEMENT_ITEM_RESTRICTION = new ItemRestriction();
 
-    public static void onTick(MinecraftClient mc)
+    public static void onTick()
     {
+        MinecraftClient mc = MinecraftClient.getInstance();
+
         if (GuiUtils.getCurrentScreen() == null)
         {
             if (mc.options.keyUse.isPressed())

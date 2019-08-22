@@ -4,6 +4,7 @@ import java.util.Collection;
 import javax.annotation.Nullable;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinFlatChunkGeneratorConfig;
@@ -43,6 +44,15 @@ public class MiscTweaks
         }
 
         CameraEntity.movementTick(player.input.sneaking, player.input.jumping);
+    }
+
+    public static void onGameLoop()
+    {
+        PlacementTweaks.onTick();
+
+        // Reset the counters after rendering each frame
+        Tweakeroo.renderCountItems = 0;
+        Tweakeroo.renderCountXPOrbs = 0;
     }
 
     private static void doPeriodicClicks(MinecraftClient mc)

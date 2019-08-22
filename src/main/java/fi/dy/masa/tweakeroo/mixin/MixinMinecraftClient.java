@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 import net.minecraft.client.MinecraftClient;
@@ -51,6 +52,12 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
     public void rightClickMouseAccessor()
     {
         this.doItemUse();
+    }
+
+    @Inject(method = "render", at = @At("RETURN"))
+    private void onGameLoop(boolean renderWorld, CallbackInfo ci)
+    {
+        MiscTweaks.onGameLoop();
     }
 
     @Inject(method = "doAttack", at = {
