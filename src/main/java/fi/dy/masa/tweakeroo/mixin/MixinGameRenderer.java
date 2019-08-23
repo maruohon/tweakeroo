@@ -11,12 +11,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import fi.dy.masa.tweakeroo.config.Callbacks;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.util.CameraEntity;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
@@ -26,6 +20,12 @@ import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Vec3d;
+import fi.dy.masa.tweakeroo.config.Callbacks;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.util.CameraEntity;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer
@@ -95,7 +95,7 @@ public abstract class MixinGameRenderer
         {
             predicate = predicate.and((entityIn) ->
             {
-                return (entity instanceof LivingEntity) == false || ((LivingEntity) entity).getHealth() > 0f;
+                return (entityIn instanceof LivingEntity) == false || ((LivingEntity) entityIn).getHealth() > 0f;
             });
         }
 

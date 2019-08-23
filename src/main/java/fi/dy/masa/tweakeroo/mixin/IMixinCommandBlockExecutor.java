@@ -9,4 +9,7 @@ public interface IMixinCommandBlockExecutor
 {
     @Accessor("updateLastExecution")
     boolean getUpdateLastExecution();
+
+    @Accessor("updateLastExecution")
+    void setUpdateLastExecution(boolean value);
 }

@@ -2,16 +2,16 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import net.minecraft.block.entity.CommandBlockBlockEntity;
+import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockExecutor;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
-import net.minecraft.block.entity.CommandBlockBlockEntity;
-import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
 
 public class MiscUtils
 {
@@ -37,6 +37,11 @@ public class MiscUtils
     public static boolean getUpdateExec(CommandBlockBlockEntity te)
     {
         return ((IMixinCommandBlockExecutor) te.getCommandExecutor()).getUpdateLastExecution();
+    }
+
+    public static void setUpdateExec(CommandBlockBlockEntity te, boolean value)
+    {
+        ((IMixinCommandBlockExecutor) te.getCommandExecutor()).setUpdateLastExecution(value);
     }
 
     public static String getChatTimestamp()

@@ -7,22 +7,19 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.malilib.render.RenderUtils;
-import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.ICommandBlockGui;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.AbstractCommandBlockScreen;
 import net.minecraft.client.gui.CommandBlockScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import fi.dy.masa.malilib.render.RenderUtils;
+import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(CommandBlockScreen.class)
-public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen implements ICommandBlockGui
+public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
 {
     @Shadow
     @Final
@@ -35,18 +32,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
     private TextFieldWidget textFieldName;
     private ButtonWidget buttonUpdateExec;
     private boolean updateExecValue;
-
-    @Override
-    public boolean getUpdateExec()
-    {
-        return this.updateExecValue;
-    }
-
-    @Override
-    public void setUpdateExec(boolean update)
-    {
-        this.updateExecValue = update;
-    }
+    private String lastName = "";
 
     @Inject(method = "init", at = @At("RETURN"))
     private void addExtraFields(CallbackInfo ci)
@@ -76,15 +62,12 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             this.children.add(this.textFieldName);
             final TextFieldWidget tf = this.textFieldName;
             final BlockPos pos = this.blockEntity.getPos();
-            final MinecraftClient mc = this.minecraft;
-            final ICommandBlockGui gui = this;
-            ClientPlayerEntity player = mc.player;
 
             this.addButton(new ButtonWidget(x2, y, widthBtn, 20, str, (button) ->
             {
                 String name = tf.getText();
                 name = String.format("{\"CustomName\":\"{\\\"text\\\":\\\"%s\\\"}\"}", name);
-                player.sendChatMessage(String.format("/data merge block %d %d %d %s", pos.getX(), pos.getY(), pos.getZ(), name));
+                this.minecraft.player.sendChatMessage(String.format("/data merge block %d %d %d %s", pos.getX(), pos.getY(), pos.getZ(), name));
             }));
 
             this.updateExecValue = MiscUtils.getUpdateExec(this.blockEntity);
@@ -94,14 +77,16 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
 
             this.buttonUpdateExec = new ButtonWidget(x2 + widthBtn + 4, y, width, 20, str, (button) ->
             {
-                gui.setUpdateExec(! gui.getUpdateExec());
-                String strBtn = getDisplayStringForCurrentStatus(gui.getUpdateExec());
+                this.updateExecValue = ! this.updateExecValue;
+                MiscUtils.setUpdateExec(this.blockEntity, this.updateExecValue);
+
+                String strBtn = getDisplayStringForCurrentStatus(this.updateExecValue);
                 button.setMessage(strBtn);
                 button.setWidth(this.font.getStringWidth(strBtn) + 10);
 
                 String cmd = String.format("/data merge block %d %d %d {\"UpdateLastExecution\":%s}",
-                        pos.getX(), pos.getY(), pos.getZ(), gui.getUpdateExec() ? "1b" : "0b");
-                player.sendChatMessage(cmd);
+                        pos.getX(), pos.getY(), pos.getZ(), this.updateExecValue ? "1b" : "0b");
+                this.minecraft.player.sendChatMessage(cmd);
             });
 
             this.addButton(this.buttonUpdateExec);
@@ -116,15 +101,26 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
 
         if (this.textFieldName != null)
         {
-            this.textFieldName.setText(this.blockEntity.getCommandExecutor().getCustomName().getString());
+            String currentName = this.blockEntity.getCommandExecutor().getCustomName().getString();
+
+            if (currentName.equals(this.lastName) == false)
+            {
+                this.textFieldName.setText(currentName);
+                this.lastName = currentName;
+            }
         }
 
         if (this.buttonUpdateExec != null)
         {
-            this.updateExecValue = MiscUtils.getUpdateExec(this.blockEntity);
-            String str = getDisplayStringForCurrentStatus(this.updateExecValue);
-            this.buttonUpdateExec.setMessage(str);
-            this.buttonUpdateExec.setWidth(this.font.getStringWidth(str) + 10);
+            boolean updateExec = MiscUtils.getUpdateExec(this.blockEntity);
+
+            if (this.updateExecValue != updateExec)
+            {
+                this.updateExecValue = updateExec;
+                String str = getDisplayStringForCurrentStatus(this.updateExecValue);
+                this.buttonUpdateExec.setMessage(str);
+                this.buttonUpdateExec.setWidth(this.font.getStringWidth(str) + 10);
+            }
         }
     }
 
