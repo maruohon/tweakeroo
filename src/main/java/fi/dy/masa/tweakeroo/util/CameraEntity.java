@@ -73,9 +73,8 @@ public class CameraEntity extends ClientPlayerEntity
 
             forward = player.isSprinting() ? forwardRamped * 2 : forwardRamped;
 
-            camera.handleMotion(forward, verticalRamped, strafeRamped);
-
             camera.updateLastTickPosition();
+            camera.handleMotion(forward, verticalRamped, strafeRamped);
         }
     }
 

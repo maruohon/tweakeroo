@@ -59,6 +59,7 @@ public abstract class MixinEntity
                 if (camera != null)
                 {
                     this.setVelocity(this.getVelocity().multiply(1D, 0D, 1D));
+                    ci.cancel();
                 }
             }
             else if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
@@ -68,10 +69,11 @@ public abstract class MixinEntity
                 if (speed >= 1.0E-7D)
                 {
                    motion = (speed > 1.0D ? motion.normalize() : motion).multiply((double) float_1);
-                   double xFactor = Math.sin(yaw * Math.PI / 180D);
-                   double zFactor = Math.cos(yaw * Math.PI / 180D);
+                   double xFactor = Math.sin(this.yaw * Math.PI / 180D);
+                   double zFactor = Math.cos(this.yaw * Math.PI / 180D);
+                   Vec3d change = new Vec3d(motion.x * zFactor - motion.z * xFactor, motion.y, motion.z * zFactor + motion.x * xFactor);
 
-                   this.setVelocity(new Vec3d(motion.x * zFactor - motion.z * xFactor, motion.y, motion.z * zFactor + motion.x * xFactor));
+                   this.setVelocity(this.getVelocity().add(change));
                 }
 
                 ci.cancel();
