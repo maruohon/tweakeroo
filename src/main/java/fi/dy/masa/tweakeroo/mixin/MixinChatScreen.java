@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.gui.ingame.ChatScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
-import net.minecraft.client.gui.ingame.ChatScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 
 @Mixin(ChatScreen.class)
 public abstract class MixinChatScreen
@@ -30,15 +30,6 @@ public abstract class MixinChatScreen
         if (FeatureToggle.TWEAK_CHAT_PERSISTENT_TEXT.getBooleanValue())
         {
             MiscUtils.setLastChatText(this.chatField.getText());
-        }
-    }
-
-    @Inject(method = "<init>()V", at = @At("RETURN"))
-    private void restoreText(CallbackInfo ci)
-    {
-        if (FeatureToggle.TWEAK_CHAT_PERSISTENT_TEXT.getBooleanValue())
-        {
-            this.field_18973 = MiscUtils.getLastChatText();
         }
     }
 

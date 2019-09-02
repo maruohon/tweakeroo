@@ -83,7 +83,7 @@ public abstract class MixinClientPlayerInteractionManager
 
     @Inject(method = "attackBlock",
             slice = @Slice(from = @At(value = "FIELD", ordinal = 0,
-                                      target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;breakingBlock")),
+                                      target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;breakingBlock:Z")),
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;getBlockState(" +
                                                 "Lnet/minecraft/util/math/BlockPos;" +
                                                 ")Lnet/minecraft/block/BlockState;", ordinal = 0))

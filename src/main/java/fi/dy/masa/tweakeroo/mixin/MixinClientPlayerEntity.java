@@ -90,7 +90,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
                                       target = "Lnet/minecraft/client/network/ClientPlayerEntity;getHungerManager()" +
                                                "Lnet/minecraft/entity/player/HungerManager;")),
             at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, ordinal = 0, shift = At.Shift.AFTER,
-                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;field_3935")) // spintToggleTimer
+                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;field_3935:I")) // spintToggleTimer
     private void disableDoubleTapSprint(CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_DOUBLE_TAP_SPRINT.getBooleanValue())
