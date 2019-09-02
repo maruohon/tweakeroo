@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -21,6 +22,8 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
 {
     @Shadow private int age;
     @Shadow private int pickupDelay;
+
+    @Shadow public abstract ItemStack getStack();
 
     public MixinItemEntity(EntityType<?> entityTypeIn, World worldIn)
     {
@@ -48,10 +51,28 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
         }
     }
 
-    /*
-    @Inject(method = "combineItems", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;", ordinal = 0), cancellable = true)
-    private void tryStackShulkerBoxes(ItemEntity other, CallbackInfoReturnable<Boolean> cir)
+    @Inject(method = "method_20397", at = @At("HEAD"), cancellable = true) // canMerge
+    private void allowStackingEmptyShulkerBoxes(CallbackInfoReturnable<Boolean> cir)
+    {
+        if (FeatureToggle.TWEAK_SHULKERBOX_STACK_GROUND.getBooleanValue())
+        {
+            ItemStack stack = this.getStack();
+
+            if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof ShulkerBoxBlock)
+            {
+                boolean canMerge = this.isAlive()
+                                    && this.pickupDelay != 32767
+                                    && this.age != -32768
+                                    && this.age < 6000
+                                    && stack.getAmount() < 64;
+
+                cir.setReturnValue(canMerge);
+            }
+        }
+    }
+
+    @Inject(method = "tryMerge(Lnet/minecraft/entity/ItemEntity;)V", at = @At("HEAD"), cancellable = true)
+    private void stackEmptyShulkerBoxes(ItemEntity other, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_SHULKERBOX_STACK_GROUND.getBooleanValue())
         {
@@ -67,6 +88,7 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
                 ItemStack.areTagsEqual(stackSelf, stackOther))
             {
                 int amount = Math.min(stackOther.getAmount(), 64 - stackSelf.getAmount());
+
                 stackSelf.addAmount(amount);
                 self.setStack(stackSelf);
                 this.pickupDelay = Math.max(((IEntityItem) other).getPickupDelay(), this.pickupDelay);
@@ -82,10 +104,8 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
                     other.setStack(stackOther);
                 }
 
-                cir.setReturnValue(true);
-                cir.cancel();
+                ci.cancel();
             }
         }
     }
-    */
 }
