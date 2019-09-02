@@ -492,13 +492,19 @@ public class PlacementTweaks
 
             if ((handleAccurate || afterClicker) && FeatureToggle.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue())
             {
-                // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
-                double x = handleAccurate && isFacingValidFor(facing, stack) ? facing.getId() + 2 + posNew.getX() : hitVec.x;
+                // Carpet-Extra mod accurate block placement protocol support
+                double relX = hitVec.x - posNew.getX();
+                double x = hitVec.x;
                 int afterClickerClickCount = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
+
+                if (handleAccurate && isFacingValidFor(facing, stack))
+                {
+                    x = posNew.getX() + relX + 2 + (facing.getId() * 2);
+                }
 
                 if (afterClicker)
                 {
-                    x += afterClickerClickCount * 10;
+                    x += afterClickerClickCount * 16;
                 }
 
                 //System.out.printf("accurate - pre hitVec: %s\n", hitVec);
@@ -698,17 +704,19 @@ public class PlacementTweaks
         boolean keys = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld() || Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld();
         accurate = accurate && keys;
 
-        // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
+        // Carpet-Extra mod accurate block placement protocol support
         if (flexible && rotation && accurate == false &&
             FeatureToggle.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() &&
             isFacingValidFor(facing, stackOriginal))
         {
             facing = facing.getOpposite(); // go from block face to click on to the requested facing
-            double x = facing.getId() + 2 + posIn.getX();
+            //double relX = hitVecIn.x - posIn.getX();
+            //double x = posIn.getX() + relX + 2 + (facing.getId() * 2);
+            double x = posIn.getX() + 2 + (facing.getId() * 2);
 
             if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue())
             {
-                x += afterClickerClickCount * 10;
+                x += afterClickerClickCount * 16;
             }
 
             //System.out.printf("processRightClickBlockWrapper req facing: %s, x: %.3f, pos: %s, sideIn: %s\n", facing, x, posIn, sideIn);

@@ -20,19 +20,17 @@ import net.minecraft.world.World;
 
 public class PlacementHandler
 {
-    public static BlockState getStateForPlacement(BlockState stateIn, UseContext context)
+    public static BlockState getStateForPlacement(BlockState state, UseContext context)
     {
-        BlockState state = stateIn;
         Vec3d hitVec = context.getHitVec();
-        Block block = stateIn.getBlock();
-        @Nullable DirectionProperty property = fi.dy.masa.malilib.util.BlockUtils.getFirstDirectionProperty(stateIn);
-        int x = (int) hitVec.x;
+        @Nullable DirectionProperty property = fi.dy.masa.malilib.util.BlockUtils.getFirstDirectionProperty(state);
+        int x = (int) (hitVec.x - (double) context.getPos().getX());
 
         if (x >= 2 && property != null)
         {
-            Direction facingOrig = stateIn.get(property);
+            Direction facingOrig = state.get(property);
             Direction facing = facingOrig;
-            int facingIndex = (x % 10) - 2;
+            int facingIndex = ((x - 2) / 2) % 16;
 
             if (facingIndex == 6) // the opposite of the normal facing requested
             {
@@ -56,11 +54,13 @@ public class PlacementHandler
             }
         }
 
-        if (x >= 10)
+        if (x >= 16)
         {
+            Block block = state.getBlock();
+
             if (block instanceof RepeaterBlock)
             {
-                Integer delay = (x / 10) + 1;
+                Integer delay = (x / 16) + 1;
 
                 if (RepeaterBlock.DELAY.getValues().contains(delay))
                 {
