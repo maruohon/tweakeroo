@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.3-SNAPSHOT'
+    id 'fabric-loom' version '0.2.4-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -27,7 +27,7 @@ dependencies {
     compile "com.google.code.findbugs:jsr305:3.0.2"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modCompile "net.fabricmc:fabric:" + config.fabric_version
+    //modCompile "net.fabricmc.fabric-api:fabric-api:" + config.fabric_version
 
     modCompile "fi.dy.masa.malilib:malilib-fabric-" + config.minecraft_version_out + ":" + config.malilib_version
 }
@@ -52,6 +52,10 @@ version = project.minecraft.mod_version
 
 processResources
 {
+    // Exclude the GIMP image files
+    exclude '**/*.xcf'
+    exclude '**/xcf'
+
     // this will ensure that this task is redone when the versions change.
     //inputs.property "mod_version", project.minecraft.mod_version
     //inputs.property "minecraft_version", project.config.minecraft_version

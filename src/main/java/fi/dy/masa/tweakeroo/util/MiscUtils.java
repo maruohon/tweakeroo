@@ -15,7 +15,7 @@ import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
 public class MiscUtils
 {
-    private static net.minecraft.text.TextComponent[] previousSignText;
+    private static net.minecraft.text.Text[] previousSignText;
     private static String previousChatText = "";
     private static final Date DATE = new Date();
     private static double lastRealPitch;
@@ -70,7 +70,7 @@ public class MiscUtils
     public static void copyTextFromSign(SignBlockEntity te)
     {
         int size = te.text.length;
-        previousSignText = new net.minecraft.text.TextComponent[size];
+        previousSignText = new net.minecraft.text.Text[size];
 
         for (int i = 0; i < size; ++i)
         {

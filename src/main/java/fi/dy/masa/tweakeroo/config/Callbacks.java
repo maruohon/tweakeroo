@@ -121,12 +121,12 @@ public class Callbacks
     {
         public FeatureCallbackSlime(ConfigBoolean feature)
         {
-            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.getFrictionCoefficient());
+            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.getSlipperiness());
 
             // If the feature is enabled on game launch, apply the overridden value here
             if (feature.getBooleanValue())
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getFrictionCoefficient());
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getSlipperiness());
             }
         }
 
@@ -135,7 +135,7 @@ public class Callbacks
         {
             if (config.getBooleanValue())
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getFrictionCoefficient());
+                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getSlipperiness());
             }
             else
             {

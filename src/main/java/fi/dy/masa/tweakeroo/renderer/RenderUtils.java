@@ -2,17 +2,11 @@ package fi.dy.masa.tweakeroo.renderer;
 
 import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
-import fi.dy.masa.malilib.util.GuiUtils;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.mixin.IMixinHorseBaseEntity;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
-import fi.dy.masa.tweakeroo.util.RayTraceUtils;
-import fi.dy.masa.tweakeroo.util.SnapAimMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,6 +22,12 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.GuiUtils;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.mixin.IMixinHorseBaseEntity;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
+import fi.dy.masa.tweakeroo.util.RayTraceUtils;
+import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 public class RenderUtils
 {
@@ -72,7 +72,7 @@ public class RenderUtils
             TextRenderer textRenderer = mc.textRenderer;
 
             fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
-            fi.dy.masa.malilib.render.RenderUtils.bindTexture(ContainerScreen.BACKGROUND_TEXTURE);
+            fi.dy.masa.malilib.render.RenderUtils.bindTexture(AbstractContainerScreen.BACKGROUND_TEXTURE);
             fi.dy.masa.malilib.render.RenderUtils.drawTexturedRect(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18);
 
             for (int row = 1; row <= 3; row++)

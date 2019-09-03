@@ -110,8 +110,8 @@ public class PlacementHandler
 
         public static UseContext from(ItemPlacementContext ctx, Hand hand)
         {
-            Vec3d pos = ctx.getPos();
-            return new UseContext(ctx.getWorld(), ctx.getBlockPos(), ctx.getFacing(), new Vec3d(pos.x, pos.y, pos.z), ctx.getPlayer(), hand);
+            Vec3d pos = ctx.getHitPos();
+            return new UseContext(ctx.getWorld(), ctx.getBlockPos(), ctx.getSide(), new Vec3d(pos.x, pos.y, pos.z), ctx.getPlayer(), hand);
         }
 
         public World getWorld()

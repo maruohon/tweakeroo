@@ -94,7 +94,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         if (GuiUtils.getCurrentScreen() == null && mc.player != null && mc.player.abilities.creativeMode &&
             eventButtonState && mc.options.keyUse.matchesMouse(eventButton) &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
-            mc.hitResult != null && mc.hitResult.getType() == HitResult.Type.NONE)
+            mc.hitResult != null && mc.hitResult.getType() == HitResult.Type.MISS)
         {
             BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
 
@@ -107,7 +107,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 if (stack.isEmpty() == false && stack.getItem() instanceof BlockItem)
                 {
-                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN, context);
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.MAIN_HAND, context);
                     return true;
                 }
 
@@ -115,7 +115,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 if (stack.isEmpty() == false && stack.getItem() instanceof BlockItem)
                 {
-                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.OFF, context);
+                    mc.interactionManager.interactBlock(mc.player, mc.world, Hand.OFF_HAND, context);
                     return true;
                 }
             }

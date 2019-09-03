@@ -1,18 +1,6 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
 import javax.annotation.Nullable;
-import fi.dy.masa.malilib.util.BlockUtils;
-import fi.dy.masa.malilib.util.GuiUtils;
-import fi.dy.masa.malilib.util.PositionUtils;
-import fi.dy.masa.malilib.util.PositionUtils.HitPart;
-import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
-import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
-import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -39,6 +27,18 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.BlockUtils;
+import fi.dy.masa.malilib.util.GuiUtils;
+import fi.dy.masa.malilib.util.PositionUtils;
+import fi.dy.masa.malilib.util.PositionUtils.HitPart;
+import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
+import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
+import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 
 public class PlacementTweaks
 {
@@ -46,7 +46,7 @@ public class PlacementTweaks
     private static BlockPos posFirstBreaking = null;
     private static BlockPos posLast = null;
     private static HitPart hitPartFirst = null;
-    private static Hand handFirst = Hand.MAIN;
+    private static Hand handFirst = Hand.MAIN_HAND;
     private static Vec3d hitVecFirst = null;
     private static Direction sideFirst = null;
     private static Direction sideFirstBreaking = null;
@@ -147,12 +147,12 @@ public class PlacementTweaks
             sideFirstBreaking = ((BlockHitResult) trace).getSide();
         }
 
-        onProcessRightClickPre(mc.player, Hand.MAIN);
+        onProcessRightClickPre(mc.player, Hand.MAIN_HAND);
     }
 
     public static void onLeftClickMousePost()
     {
-        onProcessRightClickPost(MinecraftClient.getInstance().player, Hand.MAIN);
+        onProcessRightClickPost(MinecraftClient.getInstance().player, Hand.MAIN_HAND);
     }
 
     public static void cacheStackInHand(Hand hand)
@@ -183,7 +183,7 @@ public class PlacementTweaks
         else
         {
             InventoryUtils.trySwapCurrentToolIfNearlyBroken();
-            Hand hand = Hand.MAIN;
+            Hand hand = Hand.MAIN_HAND;
             tryRestockHand(mc.player, hand, stackBeforeUse[hand.ordinal()]);
         }
     }
@@ -625,7 +625,7 @@ public class PlacementTweaks
             ItemStack stackCurrent = player.getStackInHand(hand);
 
             if (stackOriginal.isEmpty() == false &&
-                (stackCurrent.isEmpty() || stackCurrent.isEqualIgnoreDurability(stackOriginal) == false))
+                (stackCurrent.isEmpty() || stackCurrent.isItemEqualIgnoreDamage(stackOriginal) == false))
             {
                 // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
                 boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
