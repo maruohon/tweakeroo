@@ -13,11 +13,10 @@ public abstract class MixinFirstPersonRenderer
 {
     @Redirect(method = "updateHeldItems()V", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/network/ClientPlayerEntity;method_7261(F)F"))
+            target = "Lnet/minecraft/client/network/ClientPlayerEntity;getAttackCooldownProgress(F)F"))
     public float redirectedGetCooledAttackStrength(ClientPlayerEntity player, float adjustTicks)
     {
-        // getAttackCooldownProgress()
-        return Configs.Disable.DISABLE_ITEM_SWITCH_COOLDOWN.getBooleanValue() ? 1.0F : player.method_7261(adjustTicks);
+        return Configs.Disable.DISABLE_ITEM_SWITCH_COOLDOWN.getBooleanValue() ? 1.0F : player.getAttackCooldownProgress(adjustTicks);
     }
 
     @ModifyVariable(method = "renderFirstPersonItem(F)V", ordinal = 1,

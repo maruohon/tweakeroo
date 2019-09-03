@@ -10,16 +10,16 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.mojang.authlib.GameProfile;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
@@ -37,7 +37,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
     @Redirect(method = "updateNausea()V",
               at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/client/gui/Screen;isPauseScreen()Z"))
+                       target = "Lnet/minecraft/client/gui/screen/Screen;isPauseScreen()Z"))
     private boolean onDoesGuiPauseGame(Screen gui)
     {
         // Spoof the return value to prevent entering the if block
@@ -49,8 +49,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         return gui.isPauseScreen();
     }
 
-     // tickMovement
-    @Inject(method = "updateState", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
+    @Inject(method = "tickMovement", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V"))
     private void fixElytraDeployment(CallbackInfo ci)
     {
@@ -60,7 +59,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         }
     }
 
-    @Inject(method = "updateState", at = @At(value = "FIELD",
+    @Inject(method = "tickMovement", at = @At(value = "FIELD",
                 target = "Lnet/minecraft/entity/player/PlayerAbilities;allowFlying:Z", ordinal = 1))
     private void overrideSprint(CallbackInfo ci)
     {
@@ -73,7 +72,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         }
     }
 
-    @Redirect(method = "updateState", at = @At(value = "FIELD",
+    @Redirect(method = "tickMovement", at = @At(value = "FIELD",
                 target = "Lnet/minecraft/client/network/ClientPlayerEntity;horizontalCollision:Z"))
     private boolean overrideCollidedHorizontally(ClientPlayerEntity player)
     {
@@ -85,7 +84,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         return player.horizontalCollision;
     }
 
-    @Inject(method = "updateState",
+    @Inject(method = "tickMovement",
             slice = @Slice(from = @At(value = "INVOKE",
                                       target = "Lnet/minecraft/client/network/ClientPlayerEntity;getHungerManager()" +
                                                "Lnet/minecraft/entity/player/HungerManager;")),
@@ -99,7 +98,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         }
     }
 
-    @Redirect(method = "updateState", at = @At(
+    @Redirect(method = "tickMovement", at = @At(
                 value = "INVOKE",
                 target = "Lnet/minecraft/client/network/ClientPlayerEntity;isCamera()Z"))
     private boolean preventVerticalMotion(ClientPlayerEntity player)
@@ -112,7 +111,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         return this.isCamera();
     }
 
-    @Redirect(method = "updateState", at = @At(
+    @Redirect(method = "tickMovement", at = @At(
                 value = "FIELD", ordinal = 1,
                 target = "Lnet/minecraft/entity/player/PlayerAbilities;allowFlying:Z"))
     private boolean preventFlyStateToggle(PlayerAbilities abilities)

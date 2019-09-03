@@ -33,7 +33,7 @@ public abstract class MixinInGameHud extends DrawableHelper
         }
     }
 
-    @Inject(method = "draw",
+    @Inject(method = "render",
             at = @At(value = "INVOKE",
                      target = "Lnet/minecraft/client/gui/hud/PlayerListHud;tick(Z)V",
                      ordinal = 1, shift = At.Shift.AFTER))
@@ -45,7 +45,7 @@ public abstract class MixinInGameHud extends DrawableHelper
             ScoreboardObjective objective = scoreboard.getObjectiveForSlot(0);
 
             this.playerListHud.tick(true);
-            this.playerListHud.draw(this.scaledWidth, scoreboard, objective);
+            this.playerListHud.render(this.scaledWidth, scoreboard, objective);
         }
     }
 }

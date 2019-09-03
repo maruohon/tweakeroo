@@ -9,7 +9,7 @@ import fi.dy.masa.tweakeroo.util.IGuiEditSign;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.ingame.EditSignScreen;
+import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.nbt.CompoundTag;
 
 @Mixin(SignBlockEntity.class)
@@ -23,7 +23,7 @@ public abstract class MixinSignBlockEntity
         {
             MinecraftClient mc = MinecraftClient.getInstance();
 
-            if ((mc.currentScreen instanceof EditSignScreen) && ((IGuiEditSign) mc.currentScreen).getTile() == (Object) this)
+            if ((mc.currentScreen instanceof SignEditScreen) && ((IGuiEditSign) mc.currentScreen).getTile() == (Object) this)
             {
                 MiscUtils.applyPreviousTextToSign((SignBlockEntity) (Object) this);
             }

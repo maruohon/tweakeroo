@@ -64,7 +64,7 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
                                     && this.pickupDelay != 32767
                                     && this.age != -32768
                                     && this.age < 6000
-                                    && stack.getAmount() < 64;
+                                    && stack.getCount() < 64;
 
                 cir.setReturnValue(canMerge);
             }
@@ -84,23 +84,23 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
                 stackSelf.getItem() == stackOther.getItem() &&
                 fi.dy.masa.malilib.util.InventoryUtils.shulkerBoxHasItems(stackSelf) == false &&
                 // Only stack up to 64, and don't steal from other stacks that are larger
-                stackSelf.getAmount() < 64 && stackSelf.getAmount() >= stackOther.getAmount() &&
+                stackSelf.getCount() < 64 && stackSelf.getCount() >= stackOther.getCount() &&
                 ItemStack.areTagsEqual(stackSelf, stackOther))
             {
-                int amount = Math.min(stackOther.getAmount(), 64 - stackSelf.getAmount());
+                int amount = Math.min(stackOther.getCount(), 64 - stackSelf.getCount());
 
-                stackSelf.addAmount(amount);
+                stackSelf.increment(amount);
                 self.setStack(stackSelf);
                 this.pickupDelay = Math.max(((IEntityItem) other).getPickupDelay(), this.pickupDelay);
                 this.age = Math.min(other.getAge(), this.age);
 
-                if (amount >= stackOther.getAmount())
+                if (amount >= stackOther.getCount())
                 {
                     other.remove();
                 }
                 else
                 {
-                    stackOther.subtractAmount(amount);
+                    stackOther.decrement(amount);
                     other.setStack(stackOther);
                 }
 

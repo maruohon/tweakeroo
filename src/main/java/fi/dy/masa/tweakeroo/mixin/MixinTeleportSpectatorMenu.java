@@ -18,7 +18,7 @@ import net.minecraft.client.network.PlayerListEntry;
 @Mixin(TeleportSpectatorMenu.class)
 public abstract class MixinTeleportSpectatorMenu
 {
-    @Shadow @Final private static Ordering<PlayerListEntry> field_3267; // ORDERING
+    @Shadow @Final private static Ordering<PlayerListEntry> ORDERING;
     @Shadow @Final private List<SpectatorMenuCommand> elements;
 
     @Inject(method = "<init>(Ljava/util/Collection;)V", at = @At("RETURN"))
@@ -28,7 +28,7 @@ public abstract class MixinTeleportSpectatorMenu
         {
             this.elements.clear();
 
-            for (PlayerListEntry info : field_3267.sortedCopy(profiles))
+            for (PlayerListEntry info : ORDERING.sortedCopy(profiles))
             {
                 this.elements.add(new TeleportToSpecificPlayerSpectatorCommand(info.getProfile()));
             }

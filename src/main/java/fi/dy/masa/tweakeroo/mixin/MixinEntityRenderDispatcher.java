@@ -19,7 +19,7 @@ import net.minecraft.entity.player.PlayerEntity;
 @Mixin(EntityRenderDispatcher.class)
 public abstract class MixinEntityRenderDispatcher
 {
-    @Inject(method = "method_3950", at = @At("HEAD"), cancellable = true) // shouldRender
+    @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     private void onShouldRender(Entity entityIn, VisibleRegion region, double camX, double camY, double camZ, CallbackInfoReturnable<Boolean> cir)
     {
         if (Configs.Disable.DISABLE_ENTITY_RENDERING.getBooleanValue() && (entityIn instanceof PlayerEntity) == false)

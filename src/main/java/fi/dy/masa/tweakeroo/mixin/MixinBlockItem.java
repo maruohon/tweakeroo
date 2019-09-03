@@ -27,11 +27,11 @@ public abstract class MixinBlockItem extends Item implements IItemStackLimit
         super(builder);
     }
 
-    @Shadow protected abstract BlockState getBlockState(ItemPlacementContext context);
+    @Shadow protected abstract BlockState getPlacementState(ItemPlacementContext context);
     @Shadow protected abstract boolean canPlace(ItemPlacementContext context, BlockState state);
     @Shadow public abstract Block getBlock();
 
-    @Inject(method = "getBlockState", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getPlacementState", at = @At("HEAD"), cancellable = true)
     private void modifyPlacementState(ItemPlacementContext ctx, CallbackInfoReturnable<BlockState> cir)
     {
         if (Configs.Generic.CLIENT_PLACEMENT_ROTATION.getBooleanValue())
@@ -82,6 +82,6 @@ public abstract class MixinBlockItem extends Item implements IItemStackLimit
         }
 
         // FIXME How to call the stack-sensitive version on the super class?
-        return super.getMaxAmount();
+        return super.getMaxCount();
     }
 }

@@ -6,18 +6,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
-import net.minecraft.client.gui.ContainerScreen;
-import net.minecraft.client.gui.ingame.AbstractPlayerInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.TextComponent;
+import net.minecraft.text.Text;
 
-@Mixin(AbstractPlayerInventoryScreen.class)
-public abstract class MixinAbstractPlayerInventoryScreen<T extends Container> extends ContainerScreen<T>
+@Mixin(AbstractInventoryScreen.class)
+public abstract class MixinAbstractPlayerInventoryScreen<T extends Container> extends AbstractContainerScreen<T>
 {
     @Shadow protected boolean offsetGuiForEffects;
 
-    public MixinAbstractPlayerInventoryScreen(T container, PlayerInventory playerInventory, TextComponent textComponent)
+    public MixinAbstractPlayerInventoryScreen(T container, PlayerInventory playerInventory, Text textComponent)
     {
         super(container, playerInventory, textComponent);
     }

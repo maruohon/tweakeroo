@@ -14,17 +14,17 @@ import fi.dy.masa.tweakeroo.util.IGuiEditSign;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Screen;
-import net.minecraft.client.gui.ingame.EditSignScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.KeyCode;
-import net.minecraft.text.TextComponent;
+import net.minecraft.text.Text;
 
-@Mixin(EditSignScreen.class)
+@Mixin(SignEditScreen.class)
 public abstract class MixinEditSignScreen extends Screen implements IGuiEditSign
 {
-    protected MixinEditSignScreen(TextComponent textComponent)
+    protected MixinEditSignScreen(Text textComponent)
     {
         super(textComponent);
     }

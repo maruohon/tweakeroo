@@ -18,7 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -85,11 +85,11 @@ public abstract class MixinGameRenderer
                          "Lnet/minecraft/entity/Entity;" +
                          "Lnet/minecraft/util/math/Vec3d;" +
                          "Lnet/minecraft/util/math/Vec3d;" +
-                         "Lnet/minecraft/util/math/BoundingBox;" +
+                         "Lnet/minecraft/util/math/Box;" +
                          "Ljava/util/function/Predicate;D)" +
                          "Lnet/minecraft/util/hit/EntityHitResult;"))
     private EntityHitResult ignoreDeadEntities(Entity entity, Vec3d startVec, Vec3d endVec,
-            BoundingBox box, Predicate<Entity> predicate, double distance)
+            Box box, Predicate<Entity> predicate, double distance)
     {
         if (Configs.Disable.DISABLE_DEAD_MOB_TARGETING.getBooleanValue())
         {

@@ -10,12 +10,12 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 @Mixin(net.minecraft.client.gui.hud.ChatHud.class)
 public abstract class MixinChatHud extends net.minecraft.client.gui.DrawableHelper
 {
-    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/TextComponent;I)V", at = @At("HEAD"), argsOnly = true)
-    private net.minecraft.text.TextComponent addTimestamp(net.minecraft.text.TextComponent componentIn)
+    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"), argsOnly = true)
+    private net.minecraft.text.Text addTimestamp(net.minecraft.text.Text componentIn)
     {
         if (FeatureToggle.TWEAK_CHAT_TIMESTAMP.getBooleanValue())
         {
-            net.minecraft.text.TextComponent newComponent = new net.minecraft.text.StringTextComponent(MiscUtils.getChatTimestamp() + " ");
+            net.minecraft.text.Text newComponent = new net.minecraft.text.LiteralText(MiscUtils.getChatTimestamp() + " ");
             newComponent.append(componentIn);
             return newComponent;
         }
@@ -23,7 +23,7 @@ public abstract class MixinChatHud extends net.minecraft.client.gui.DrawableHelp
         return componentIn;
     }
 
-    @Redirect(method = "draw", at = @At(value = "INVOKE",
+    @Redirect(method = "render", at = @At(value = "INVOKE",
                 target = "Lnet/minecraft/client/gui/hud/ChatHud;fill(IIIII)V", ordinal = 0))
     private void overrideChatBackgroundColor(int left, int top, int right, int bottom, int color)
     {

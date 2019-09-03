@@ -9,7 +9,7 @@ import net.minecraft.entity.mob.RavagerEntity;
 @Mixin(RavagerEntity.class)
 public abstract class MixinRavagerEntity
 {
-    @Redirect(method = "updateState", at = @At(
+    @Redirect(method = "tickMovement", at = @At(
                 value = "FIELD",
                 target = "Lnet/minecraft/entity/mob/RavagerEntity;horizontalCollision:Z"))
     private boolean fixDontBreakBlocksOnClient(RavagerEntity entity)

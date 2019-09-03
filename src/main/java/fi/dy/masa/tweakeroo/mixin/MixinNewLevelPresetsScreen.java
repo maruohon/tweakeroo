@@ -13,15 +13,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
-import net.minecraft.client.gui.menu.NewLevelPresetsScreen;
+import net.minecraft.client.gui.screen.PresetsScreen;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemProvider;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 
-@Mixin(NewLevelPresetsScreen.class)
+@Mixin(PresetsScreen.class)
 public abstract class MixinNewLevelPresetsScreen
 {
     // name;blocks;biome;options;iconitem
@@ -32,7 +32,7 @@ public abstract class MixinNewLevelPresetsScreen
     private static List<Object> presets;
 
     @Shadow
-    private static void addPreset(String name, ItemProvider itemIn, Biome biomeIn, List<String> options, FlatChunkGeneratorLayer... layers) {};
+    private static void addPreset(String name, ItemConvertible itemIn, Biome biomeIn, List<String> options, FlatChunkGeneratorLayer... layers) {};
 
     @Inject(method = "init", at = @At("HEAD"))
     private void addCustomEntries(CallbackInfo ci)

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.minecraft.client.gui.ingame.ChatScreen;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -22,7 +22,7 @@ public abstract class MixinChatScreen
     @Shadow
     protected TextFieldWidget chatField;
     @Shadow
-    private String field_18973; // default text
+    private String originalChatText;
 
     @Inject(method = "removed", at = @At("HEAD"))
     private void storeChatText(CallbackInfo ci)
@@ -38,14 +38,14 @@ public abstract class MixinChatScreen
     {
         if (FeatureToggle.TWEAK_CHAT_PERSISTENT_TEXT.getBooleanValue())
         {
-            this.field_18973 = MiscUtils.getLastChatText();
+            this.originalChatText = MiscUtils.getLastChatText();
         }
     }
 
     @Inject(method = "keyPressed(III)Z",
             slice = @Slice(
-                    from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ingame/ChatScreen;sendMessage(Ljava/lang/String;)V")),
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/Screen;)V", shift = Shift.AFTER))
+                    from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatScreen;sendMessage(Ljava/lang/String;)V")),
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V", shift = Shift.AFTER))
     private void onSendMessage(int keyCode, int scancode, int modifiers, CallbackInfoReturnable<Boolean> cir)
     {
         MiscUtils.setLastChatText("");

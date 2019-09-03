@@ -90,7 +90,7 @@ public abstract class MixinClientPlayerInteractionManager
     private void onClickBlockPre(BlockPos pos, Direction face, CallbackInfoReturnable<Boolean> cir)
     {
         InventoryUtils.trySwitchToEffectiveTool(pos);
-        PlacementTweaks.cacheStackInHand(Hand.MAIN);
+        PlacementTweaks.cacheStackInHand(Hand.MAIN_HAND);
     }
 
     @Inject(method = "attackBlock", at = @At("HEAD"), cancellable = true)
