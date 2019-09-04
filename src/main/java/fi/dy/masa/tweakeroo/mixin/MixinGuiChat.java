@@ -9,19 +9,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiTextField;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiTextField;
 
 @Mixin(GuiChat.class)
 public abstract class MixinGuiChat
 {
-    @Shadow
-    protected GuiTextField inputField;
-    @Shadow
-    private String defaultInputFieldText;
+    @Shadow protected GuiTextField inputField;
+    @Shadow private String defaultInputFieldText;
 
     @Inject(method = "onGuiClosed", at = @At("HEAD"))
     private void storeChatText(CallbackInfo ci)
@@ -35,7 +33,7 @@ public abstract class MixinGuiChat
     @Inject(method = "<init>()V", at = @At("RETURN"))
     private void restoreText(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_CHAT_PERSISTENT_TEXT.getBooleanValue())
+        if (FeatureToggle.TWEAK_CHAT_PERSISTENT_TEXT.getBooleanValue() && MiscUtils.getLastChatText().isEmpty() == false)
         {
             this.defaultInputFieldText = MiscUtils.getLastChatText();
         }
