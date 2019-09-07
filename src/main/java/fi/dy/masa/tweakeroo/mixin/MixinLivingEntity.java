@@ -29,7 +29,7 @@ public abstract class MixinLivingEntity extends Entity
         return world.isClient && (Configs.Fixes.ELYTRA_FIX.getBooleanValue() == false || ((Object) this instanceof ClientPlayerEntity) == false);
     }
 
-    @Inject(method = "spawnPotionParticles", at = @At(value = "INVOKE", ordinal = 0,
+    @Inject(method = "tickStatusEffects", at = @At(value = "INVOKE", ordinal = 0,
             target = "Lnet/minecraft/entity/data/DataTracker;get(Lnet/minecraft/entity/data/TrackedData;)Ljava/lang/Object;"),
             cancellable = true)
     private void removeOwnPotionEffects(CallbackInfo ci)

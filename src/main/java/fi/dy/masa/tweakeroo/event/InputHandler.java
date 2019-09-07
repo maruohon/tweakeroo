@@ -98,7 +98,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         {
             BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
 
-            if (mc.world.isAir(posFront))
+            if (mc.world.method_22347(posFront)) // isAir
             {
                 Direction facing = PositionUtils.getClosestLookingDirection(mc.player).getOpposite();
                 Vec3d hitVec = PositionUtils.getHitVecCenter(posFront, facing);

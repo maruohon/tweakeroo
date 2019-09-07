@@ -102,7 +102,7 @@ public abstract class MixinClientPlayerInteractionManager
         }
     }
 
-    @Inject(method = "method_2902", at = @At("HEAD"), cancellable = true) // MCP: onPlayerDamageBlock
+    @Inject(method = "updateBlockBreakingProgress", at = @At("HEAD"), cancellable = true) // MCP: onPlayerDamageBlock
     private void handleBreakingRestriction2(BlockPos pos, Direction side, CallbackInfoReturnable<Boolean> cir)
     {
         if (PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)

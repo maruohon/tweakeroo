@@ -4,7 +4,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -45,18 +44,6 @@ public abstract class MixinEntity
         {
             cir.setReturnValue(false);
         }
-    }
-
-    @Redirect(method = "clipSneakingMovement", at = @At(value = "INVOKE",
-                target = "Lnet/minecraft/entity/Entity;isSneaking()Z", ordinal = 0))
-    private boolean fakeSneaking(Entity entity)
-    {
-        if (FeatureToggle.TWEAK_FAKE_SNEAKING.getBooleanValue() && ((Object) this) instanceof ClientPlayerEntity)
-        {
-            return true;
-        }
-
-        return ((Entity) (Object) this).isSneaking();
     }
 
     @Inject(method = "updateVelocity", at = @At("HEAD"), cancellable = true)

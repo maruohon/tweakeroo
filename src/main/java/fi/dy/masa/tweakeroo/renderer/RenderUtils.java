@@ -1,7 +1,7 @@
 package fi.dy.masa.tweakeroo.renderer;
 
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
@@ -297,7 +297,7 @@ public class RenderUtils
         GlStateManager.rotatef(entity.prevPitch + (entity.pitch - entity.prevPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
         GlStateManager.rotatef(entity.prevYaw + (entity.yaw - entity.prevYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
         GlStateManager.scalef(-1.0F, -1.0F, -1.0F);
-        GLX.renderCrosshair(10);
+        RenderSystem.renderCrosshair(10);
 
         GlStateManager.popMatrix();
     }

@@ -43,6 +43,7 @@
         "MixinObserverBlock",
         "MixinParticleManager",
         "MixinPlayerAbilities",
+        "MixinPlayerEntity",
         "MixinPlayerEntityRenderer",
         "MixinRavagerEntity",
         "MixinSignBlockEntity",
