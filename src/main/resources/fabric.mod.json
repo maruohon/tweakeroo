@@ -1,33 +1,42 @@
 {
-  "schemaVersion": 1,
-  "id": "tweakeroo",
-  "name": "Tweakeroo",
-  "version": "${mod_version}",
+    "schemaVersion": 1,
+    "id": "tweakeroo",
+    "name": "Tweakeroo",
+    "version": "${mod_version}",
 
-  "description": "Adds a bunch of configurable client-side tweaks",
-  "authors": [
-    "masa"
-  ],
-  "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/tweakeroo",
-    "sources": "https://github.com/maruohon/tweakeroo",
-    "twitter": "https://twitter.com/maruohon",
-    "discord": "https://discordapp.com/channels/211786369951989762/453662800460644354/"
-  },
+    "description": "Adds a bunch of configurable client-side tweaks",
+    "authors": [
+        "masa"
+    ],
+    "contact": {
+        "homepage": "https://www.curseforge.com/minecraft/mc-mods/tweakeroo",
+        "issues": "https://github.com/maruohon/tweakeroo/issues",
+        "sources": "https://github.com/maruohon/tweakeroo",
+        "twitter": "https://twitter.com/maruohon",
+        "discord": "https://discordapp.com/channels/211786369951989762/453662800460644354/"
+    },
 
-  "license": "LGPLv3",
+    "license": "LGPLv3",
 
-  "environment": "client",
-  "entrypoints": {
-    "main": [
-      "fi.dy.masa.tweakeroo.Tweakeroo"
-    ]
-  },
-  "mixins": [
-    "mixins.tweakeroo.json"
-  ],
+    "environment": "client",
+    "entrypoints": {
+        "main": [
+            "fi.dy.masa.tweakeroo.Tweakeroo"
+        ],
+        "modmenu": [
+            "fi.dy.masa.tweakeroo.compat.modmenu.ModMenuImpl"
+        ]
+    },
 
-  "depends": {
-    "malilib": ">=0.10.0-dev.20"
-  }
+    "mixins": [
+        "mixins.tweakeroo.json"
+    ],
+
+    "depends": {
+        "malilib": ">=0.10.0-dev.20"
+    },
+
+    "custom": {
+        "modmenu:clientsideOnly": true
+    }
 }
