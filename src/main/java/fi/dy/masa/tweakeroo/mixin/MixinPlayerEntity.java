@@ -21,7 +21,7 @@ public abstract class MixinPlayerEntity extends LivingEntity
         super(entityType_1, world_1);
     }
 
-    @Redirect(method = "clipSneakingMovement", at = @At(value = "INVOKE",
+    @Redirect(method = "adjustMovementForSneaking", at = @At(value = "INVOKE",
               target = "Lnet/minecraft/entity/player/PlayerEntity;method_21825()Z", ordinal = 0))
     private boolean fakeSneaking(PlayerEntity entity)
     {

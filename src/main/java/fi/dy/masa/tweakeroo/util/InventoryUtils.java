@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import javax.annotation.Nullable;
-import fi.dy.masa.malilib.util.Constants;
-import fi.dy.masa.malilib.util.InfoUtils;
-import fi.dy.masa.tweakeroo.Tweakeroo;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.container.Container;
@@ -32,6 +27,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.Constants;
+import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.tweakeroo.Tweakeroo;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class InventoryUtils
 {
@@ -210,8 +210,8 @@ public class InventoryUtils
                     // stack in hand, then left click, otherwise right click to split the stack
                     int button = stackSlot.getCount() + stackHand.getCount() <= stackHand.getMaxCount() ? 0 : 1;
 
-                    mc.interactionManager.method_2906(container.syncId, slot.id, button, SlotActionType.PICKUP, player);
-                    mc.interactionManager.method_2906(container.syncId, currentSlot, 0, SlotActionType.PICKUP, player);
+                    mc.interactionManager.clickSlot(container.syncId, slot.id, button, SlotActionType.PICKUP, player);
+                    mc.interactionManager.clickSlot(container.syncId, currentSlot, 0, SlotActionType.PICKUP, player);
 
                     break;
                 }
@@ -443,20 +443,20 @@ public class InventoryUtils
                 }
                 else
                 {
-                    mc.interactionManager.method_2906(container.syncId, slotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
+                    mc.interactionManager.clickSlot(container.syncId, slotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
                 }
             }
             else if (hand == Hand.OFF_HAND)
             {
                 int currentHotbarSlot = player.inventory.selectedSlot;
                 // Swap the requested slot to the current hotbar slot
-                mc.interactionManager.method_2906(container.syncId, slotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, slotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
 
                 // Swap the requested item from the hotbar slot to the offhand
-                mc.interactionManager.method_2906(container.syncId, 45, currentHotbarSlot, SlotActionType.SWAP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, 45, currentHotbarSlot, SlotActionType.SWAP, mc.player);
 
                 // Swap the original item back to the hotbar slot
-                mc.interactionManager.method_2906(container.syncId, slotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, slotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
             }
         }
     }
@@ -471,31 +471,31 @@ public class InventoryUtils
             if (type == EquipmentSlot.MAINHAND)
             {
                 int currentHotbarSlot = player.inventory.selectedSlot;
-                mc.interactionManager.method_2906(container.syncId, sourceSlotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
             }
             else if (type == EquipmentSlot.OFFHAND)
             {
                 // Use a hotbar slot that isn't the current slot
                 int tempSlot = (player.inventory.selectedSlot + 1) % 9;
                 // Swap the requested slot to the current hotbar slot
-                mc.interactionManager.method_2906(container.syncId, sourceSlotNumber, tempSlot, SlotActionType.SWAP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, tempSlot, SlotActionType.SWAP, mc.player);
 
                 // Swap the requested item from the hotbar slot to the offhand
-                mc.interactionManager.method_2906(container.syncId, 45, tempSlot, SlotActionType.SWAP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, 45, tempSlot, SlotActionType.SWAP, mc.player);
 
                 // Swap the original item back to the hotbar slot
-                mc.interactionManager.method_2906(container.syncId, sourceSlotNumber, tempSlot, SlotActionType.SWAP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, tempSlot, SlotActionType.SWAP, mc.player);
             }
             // Armor slots
             else
             {
                 int armorSlot = getSlotNumberForEquipmentType(type, player);
                 // Pick up the new item
-                mc.interactionManager.method_2906(container.syncId, sourceSlotNumber, 0, SlotActionType.PICKUP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, 0, SlotActionType.PICKUP, mc.player);
                 // Swap it to the armor slot
-                mc.interactionManager.method_2906(container.syncId, armorSlot, 0, SlotActionType.PICKUP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, armorSlot, 0, SlotActionType.PICKUP, mc.player);
                 // Place down the old armor item
-                mc.interactionManager.method_2906(container.syncId, sourceSlotNumber, 0, SlotActionType.PICKUP, mc.player);
+                mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, 0, SlotActionType.PICKUP, mc.player);
             }
         }
     }
@@ -612,13 +612,13 @@ public class InventoryUtils
                 if (stack.getCount() < stack.getMaxCount())
                 {
                     // Pick up the item from slot1 and try to put it in slot2
-                    mc.interactionManager.method_2906(container.syncId, slot1.id, 0, SlotActionType.PICKUP, player);
-                    mc.interactionManager.method_2906(container.syncId, slot2.id, 0, SlotActionType.PICKUP, player);
+                    mc.interactionManager.clickSlot(container.syncId, slot1.id, 0, SlotActionType.PICKUP, player);
+                    mc.interactionManager.clickSlot(container.syncId, slot2.id, 0, SlotActionType.PICKUP, player);
 
                     // If the items didn't all fit, return the rest
                     if (player.inventory.getMainHandStack().isEmpty() == false)
                     {
-                        mc.interactionManager.method_2906(container.syncId, slot1.id, 0, SlotActionType.PICKUP, player);
+                        mc.interactionManager.clickSlot(container.syncId, slot1.id, 0, SlotActionType.PICKUP, player);
                     }
 
                     if (slot2.getStack().getCount() >= slot2.getStack().getMaxCount())
@@ -697,7 +697,7 @@ public class InventoryUtils
                     if (slot != -1)
                     {
                         int currentHotbarSlot = player.inventory.selectedSlot;
-                        mc.interactionManager.method_2906(player.playerContainer.syncId, slot, currentHotbarSlot, SlotActionType.SWAP, mc.player);
+                        mc.interactionManager.clickSlot(player.playerContainer.syncId, slot, currentHotbarSlot, SlotActionType.SWAP, mc.player);
 
                         /*
                         if (InventoryPlayer.isHotbar(slot))
