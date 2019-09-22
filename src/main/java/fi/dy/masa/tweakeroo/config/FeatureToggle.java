@@ -188,6 +188,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     public void setModName(String modName)
     {
         this.modName = modName;
+        this.keybind.setModName(modName);
     }
 
     @Override
