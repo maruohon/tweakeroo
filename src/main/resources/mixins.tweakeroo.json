@@ -8,7 +8,7 @@
         "IMixinCommandBlockExecutor",
         "IMixinFlatChunkGeneratorConfig",
         "IMixinHorseBaseEntity",
-        "MixinAbstractPlayerInventoryScreen",
+        "MixinAbstractInventoryScreen",
         "MixinBackgroundRenderer",
         "MixinBlockEntityRenderDispatcher",
         "MixinBlockItem",

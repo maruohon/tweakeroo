@@ -61,24 +61,6 @@ public abstract class MixinGameRenderer
         }
     }
 
-    @Inject(method = "renderWeather", at = @At("HEAD"), cancellable = true)
-    private void cancelRainRender(float partialTicks, CallbackInfo ci)
-    {
-        if (Configs.Disable.DISABLE_RAIN_EFFECTS.getBooleanValue())
-        {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "renderRain", at = @At("HEAD"), cancellable = true)
-    private void cancelRainRender(CallbackInfo ci)
-    {
-        if (Configs.Disable.DISABLE_RAIN_EFFECTS.getBooleanValue())
-        {
-            ci.cancel();
-        }
-    }
-
     @Redirect(method = "updateTargetedEntity", at = @At(
                 value = "INVOKE",
                 target = "Lnet/minecraft/entity/ProjectileUtil;rayTrace(" +
@@ -156,25 +138,5 @@ public abstract class MixinGameRenderer
         {
             ci.cancel();
         }
-    }
-
-    @Inject(method = "renderCenter(FJ)V", at = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/client/render/WorldRenderer;setUpTerrain(" +
-                         "Lnet/minecraft/client/render/Camera;" +
-                         "Lnet/minecraft/client/render/VisibleRegion;IZ)V"))
-    private void preSetupTerrain(float partialTicks, long finishTimeNano, CallbackInfo ci)
-    {
-        MiscUtils.setFreeCameraSpectator(true);
-    }
-
-    @Inject(method = "renderCenter(FJ)V", at = @At(
-                value = "INVOKE", shift = At.Shift.AFTER,
-                target = "Lnet/minecraft/client/render/WorldRenderer;setUpTerrain(" +
-                         "Lnet/minecraft/client/render/Camera;" +
-                         "Lnet/minecraft/client/render/VisibleRegion;IZ)V"))
-    private void postSetupTerrain(float partialTicks, long finishTimeNano, CallbackInfo ci)
-    {
-        MiscUtils.setFreeCameraSpectator(false);
     }
 }
