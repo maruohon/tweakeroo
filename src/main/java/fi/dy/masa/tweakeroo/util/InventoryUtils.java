@@ -722,11 +722,11 @@ public class InventoryUtils
 
         if (nbt != null)
         {
-            if (nbt.containsKey("BlockEntityTag", Constants.NBT.TAG_COMPOUND))
+            if (nbt.contains("BlockEntityTag", Constants.NBT.TAG_COMPOUND))
             {
                 CompoundTag tag = nbt.getCompound("BlockEntityTag");
 
-                if (tag.containsKey("Items", Constants.NBT.TAG_LIST) &&
+                if (tag.contains("Items", Constants.NBT.TAG_LIST) &&
                     tag.getList("Items", Constants.NBT.TAG_COMPOUND).size() == 0)
                 {
                     tag.remove("Items");

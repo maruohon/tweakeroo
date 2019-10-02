@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.class_4587;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.ChunkRenderDispatcher;
 import net.minecraft.client.render.GameRenderer;
@@ -27,7 +28,7 @@ public abstract class MixinWorldRenderer
     }
 
     @Inject(method = "method_22714", at = @At("HEAD")) // renderWeather
-    private void cancelRainRender(LightmapTextureManager lightmap, Camera camera, float partialTicks, CallbackInfo ci)
+    private void cancelRainRender(LightmapTextureManager lightmap, float partialTicks, double x, double y, double z, CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_RAIN_EFFECTS.getBooleanValue())
         {
@@ -35,22 +36,22 @@ public abstract class MixinWorldRenderer
         }
     }
 
-    @Inject(method = "method_22710", at = @At(
+    @Inject(method = "render", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/render/WorldRenderer;setUpTerrain(" +
                      "Lnet/minecraft/client/render/Camera;" +
-                     "Lnet/minecraft/client/render/VisibleRegion;IZ)V"))
-    private void preSetupTerrain(float partialTicks, long finishTimeNano, boolean boolean_1, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, CallbackInfo ci)
+                     "Lnet/minecraft/class_4604;ZIZ)V"))
+    private void preSetupTerrain(class_4587 foo, float partialTicks, long finishTimeNano, boolean boolean_1, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, CallbackInfo ci)
     {
         MiscUtils.setFreeCameraSpectator(true);
     }
 
-    @Inject(method = "method_22710", at = @At(
+    @Inject(method = "render", at = @At(
             value = "INVOKE", shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/render/WorldRenderer;setUpTerrain(" +
                      "Lnet/minecraft/client/render/Camera;" +
-                     "Lnet/minecraft/client/render/VisibleRegion;IZ)V"))
-    private void postSetupTerrain(float partialTicks, long finishTimeNano, boolean boolean_1, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, CallbackInfo ci)
+                     "Lnet/minecraft/class_4604;ZIZ)V"))
+    private void postSetupTerrain(class_4587 foo, float partialTicks, long finishTimeNano, boolean boolean_1, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, CallbackInfo ci)
     {
         MiscUtils.setFreeCameraSpectator(false);
     }

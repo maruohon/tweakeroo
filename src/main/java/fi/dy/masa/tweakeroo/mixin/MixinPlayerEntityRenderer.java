@@ -11,6 +11,7 @@ import net.minecraft.client.render.entity.PlayerEntityRenderer;
 @Mixin(PlayerEntityRenderer.class)
 public abstract class MixinPlayerEntityRenderer
 {
+    /*
     @Redirect(method = "method_4215", // render
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;isMainPlayer()Z"))
@@ -24,4 +25,5 @@ public abstract class MixinPlayerEntityRenderer
 
         return entity.isMainPlayer();
     }
+    */
 }

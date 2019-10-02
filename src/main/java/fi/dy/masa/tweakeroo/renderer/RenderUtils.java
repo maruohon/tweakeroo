@@ -292,7 +292,7 @@ public class RenderUtils
 
         int width = GuiUtils.getScaledWindowWidth();
         int height = GuiUtils.getScaledWindowHeight();
-        GlStateManager.translated(width / 2, height / 2, zLevel);
+        RenderSystem.translated(width / 2, height / 2, zLevel);
         Entity entity = mc.getCameraEntity();
         GlStateManager.rotatef(entity.prevPitch + (entity.pitch - entity.prevPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
         GlStateManager.rotatef(entity.prevYaw + (entity.yaw - entity.prevYaw) * partialTicks, 0.0F, 1.0F, 0.0F);

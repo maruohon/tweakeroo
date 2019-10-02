@@ -793,7 +793,7 @@ public class PlacementTweaks
             }
             else if (FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue())
             {
-                int newSlot = player.getRand().nextInt(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue());
+                int newSlot = player.getRandom().nextInt(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue());
                 player.inventory.selectedSlot = newSlot;
             }
         }
