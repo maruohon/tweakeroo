@@ -2,9 +2,20 @@ package fi.dy.masa.tweakeroo.event;
 
 import java.util.List;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
+import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
@@ -20,16 +31,6 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 
 public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IMouseInputHandler
 {
@@ -135,19 +136,6 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 return true;
             }
-            else if (FeatureToggle.TWEAK_FLY_SPEED.getKeybind().isKeybindHeld())
-            {
-                ConfigDouble config = Configs.getActiveFlySpeedConfig();
-                double newValue = config.getDoubleValue() + (dWheel > 0 ? 0.005 : -0.005);
-                config.setDoubleValue(newValue);
-                KeyCallbackAdjustable.setValueChanged();
-
-                String strIndex = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
-                String strValue = preGreen + String.format("%.3f", config.getDoubleValue()) + rst;
-                InfoUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_to", strIndex, strValue);
-
-                return true;
-            }
             else if (FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().isKeybindHeld())
             {
                 int newValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + (dWheel > 0 ? 1 : -1);
@@ -246,6 +234,25 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
                 InfoUtils.printActionbarMessage("tweakeroo.message.set_zoom_fov_to", strValue);
 
                 return true;
+            }
+
+            for (int i = 0; i < 4; ++i)
+            {
+                ConfigHotkey hotkey = Configs.getFlySpeedHotkey(i);
+
+                if (hotkey.getKeybind().isKeybindHeld())
+                {
+                    ConfigDouble config = Configs.getFlySpeedConfig(i);
+                    double newValue = config.getDoubleValue() + (dWheel > 0 ? 0.005 : -0.005);
+                    config.setDoubleValue(newValue);
+                    KeyCallbackAdjustable.setValueChanged();
+
+                    String strIndex = preGreen + (i + 1) + rst;
+                    String strValue = preGreen + String.format("%.3f", config.getDoubleValue()) + rst;
+                    InfoUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_to", strIndex, strValue);
+
+                    return true;
+                }
             }
         }
 

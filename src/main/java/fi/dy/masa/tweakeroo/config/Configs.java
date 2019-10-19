@@ -11,6 +11,7 @@ import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
+import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.config.options.ConfigString;
@@ -329,13 +330,30 @@ public class Configs implements IConfigHandler
 
     public static ConfigDouble getActiveFlySpeedConfig()
     {
-        switch (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue())
+        return getFlySpeedConfig(Configs.Internal.FLY_SPEED_PRESET.getIntegerValue());
+    }
+
+    public static ConfigDouble getFlySpeedConfig(int preset)
+    {
+        switch (preset)
         {
             case 0:  return Configs.Generic.FLY_SPEED_PRESET_1;
             case 1:  return Configs.Generic.FLY_SPEED_PRESET_2;
             case 2:  return Configs.Generic.FLY_SPEED_PRESET_3;
             case 3:  return Configs.Generic.FLY_SPEED_PRESET_4;
             default: return Configs.Generic.FLY_SPEED_PRESET_1;
+        }
+    }
+
+    public static ConfigHotkey getFlySpeedHotkey(int preset)
+    {
+        switch (preset)
+        {
+            case 0:  return Hotkeys.FLY_PRESET_1;
+            case 1:  return Hotkeys.FLY_PRESET_2;
+            case 2:  return Hotkeys.FLY_PRESET_3;
+            case 3:  return Hotkeys.FLY_PRESET_4;
+            default: return Hotkeys.FLY_PRESET_1;
         }
     }
 }
