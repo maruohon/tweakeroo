@@ -270,86 +270,103 @@ public class MiscUtils
 
     public static float getSnappedPitch(double realPitch)
     {
-        if (Configs.Generic.SNAP_AIM_MODE.getOptionListValue() == SnapAimMode.YAW)
+        if (Configs.Generic.SNAP_AIM_MODE.getOptionListValue() != SnapAimMode.YAW)
         {
-            return (float) realPitch;
+            if (lastRealPitch != realPitch)
+            {
+                lastRealPitch = realPitch;
+                RenderUtils.notifyRotationChanged();
+            }
+
+            if (FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue())
+            {
+                return (float) Configs.Internal.SNAP_AIM_LAST_PITCH.getDoubleValue();
+            }
+
+            double step = Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue();
+            int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
+            double snappedPitch;
+
+            //realPitch = MathHelper.clamp(realPitch, -limit, limit);
+
+            if (realPitch < 0)
+            {
+                snappedPitch = -calculateSnappedAngle(-realPitch, step);
+            }
+            else
+            {
+                snappedPitch = calculateSnappedAngle(realPitch, step);
+            }
+
+            double offset = Math.abs(MathHelper.wrapDegrees((float) (snappedPitch - realPitch)));
+            if (GuiBase.isCtrlDown()) System.out.printf("real: %.2f, snapped: %.2f, offset: %.2f\n", realPitch, snappedPitch, offset);
+
+            if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue() == false ||
+                offset <= Configs.Generic.SNAP_AIM_THRESHOLD_PITCH.getDoubleValue())
+            {
+                snappedPitch = MathHelper.clamp(MathHelper.wrapDegrees(snappedPitch), -limit, limit);
+
+                if (Configs.Internal.SNAP_AIM_LAST_PITCH.getDoubleValue() != snappedPitch)
+                {
+                    String g = GuiBase.TXT_GREEN;
+                    String r = GuiBase.TXT_RST;
+                    String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedPitch)), r, g, String.valueOf(step), r);
+
+                    InfoUtils.printActionbarMessage("tweakeroo.message.snapped_to_pitch", str);
+
+                    Configs.Internal.SNAP_AIM_LAST_PITCH.setDoubleValue(snappedPitch);
+                }
+
+                return MathHelper.wrapDegrees((float) snappedPitch);
+            }
         }
 
-        if (lastRealPitch != realPitch)
-        {
-            lastRealPitch = realPitch;
-            RenderUtils.notifyRotationChanged();
-        }
+        // This causes the snap message to also get shown when re-snapping to the same snap angle, when using the threshold
+        Configs.Internal.SNAP_AIM_LAST_PITCH.setDoubleValue(realPitch);
 
-        if (FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue())
-        {
-            return (float) Configs.Internal.SNAP_AIM_LAST_PITCH.getDoubleValue();
-        }
-
-        double step = Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue();
-        int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
-        double snappedPitch;
-
-        //realPitch = MathHelper.clamp(realPitch, -limit, limit);
-
-        if (realPitch < 0)
-        {
-            snappedPitch = -calculateSnappedAngle(-realPitch, step);
-        }
-        else
-        {
-            snappedPitch = calculateSnappedAngle(realPitch, step);
-        }
-
-        snappedPitch = MathHelper.clamp(MathHelper.wrapDegrees(snappedPitch), -limit, limit);
-
-        if (Configs.Internal.SNAP_AIM_LAST_PITCH.getDoubleValue() != snappedPitch)
-        {
-            String g = GuiBase.TXT_GREEN;
-            String r = GuiBase.TXT_RST;
-            String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedPitch)), r, g, String.valueOf(step), r);
-
-            InfoUtils.printActionbarMessage("tweakeroo.message.snapped_to_pitch", str);
-
-            Configs.Internal.SNAP_AIM_LAST_PITCH.setDoubleValue(snappedPitch);
-        }
-
-        return MathHelper.wrapDegrees((float) snappedPitch);
+        return (float) realPitch;
     }
 
     public static float getSnappedYaw(double realYaw)
     {
-        if (Configs.Generic.SNAP_AIM_MODE.getOptionListValue() == SnapAimMode.PITCH)
+        if (Configs.Generic.SNAP_AIM_MODE.getOptionListValue() != SnapAimMode.PITCH)
         {
-            return (float) realYaw;
+            if (lastRealYaw != realYaw)
+            {
+                lastRealYaw = realYaw;
+                RenderUtils.notifyRotationChanged();
+            }
+
+            if (FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue())
+            {
+                return (float) Configs.Internal.SNAP_AIM_LAST_YAW.getDoubleValue();
+            }
+
+            double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
+            double snappedYaw = calculateSnappedAngle(realYaw, step);
+
+            if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue() == false ||
+                Math.abs(MathHelper.wrapDegrees((float) (snappedYaw - realYaw))) <= Configs.Generic.SNAP_AIM_THRESHOLD_YAW.getDoubleValue())
+            {
+                if (Configs.Internal.SNAP_AIM_LAST_YAW.getDoubleValue() != snappedYaw)
+                {
+                    String g = GuiBase.TXT_GREEN;
+                    String r = GuiBase.TXT_RST;
+                    String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedYaw)), r, g, String.valueOf(step), r);
+
+                    InfoUtils.printActionbarMessage("tweakeroo.message.snapped_to_yaw", str);
+
+                    Configs.Internal.SNAP_AIM_LAST_YAW.setDoubleValue(snappedYaw);
+                }
+
+                return MathHelper.wrapDegrees((float) snappedYaw);
+            }
         }
 
-        if (lastRealYaw != realYaw)
-        {
-            lastRealYaw = realYaw;
-            RenderUtils.notifyRotationChanged();
-        }
+        // This causes the snap message to also get shown when re-snapping to the same snap angle, when using the threshold
+        Configs.Internal.SNAP_AIM_LAST_YAW.setDoubleValue(realYaw);
 
-        if (FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue())
-        {
-            return (float) Configs.Internal.SNAP_AIM_LAST_YAW.getDoubleValue();
-        }
-
-        double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
-        double snappedYaw = calculateSnappedAngle(realYaw, step);
-
-        if (Configs.Internal.SNAP_AIM_LAST_YAW.getDoubleValue() != snappedYaw)
-        {
-            String g = GuiBase.TXT_GREEN;
-            String r = GuiBase.TXT_RST;
-            String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedYaw)), r, g, String.valueOf(step), r);
-
-            InfoUtils.printActionbarMessage("tweakeroo.message.snapped_to_yaw", str);
-
-            Configs.Internal.SNAP_AIM_LAST_YAW.setDoubleValue(snappedYaw);
-        }
-
-        return MathHelper.wrapDegrees((float) snappedYaw);
+        return (float) realYaw;
     }
 
     public static double calculateSnappedAngle(double realRotation, double step)

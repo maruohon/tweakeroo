@@ -333,8 +333,8 @@ public class RenderUtils
         double realYaw = MathHelper.floorMod(MiscUtils.getLastRealYaw(), 360.0D);
         double snappedYaw = MiscUtils.calculateSnappedAngle(realYaw, step);
         double startYaw = snappedYaw - (step / 2.0);
-        int x = xCenter - width / 2;
-        int y = yCenter + 10;
+        final int x = xCenter - width / 2;
+        final int y = yCenter + 10;
         int lineX = x + (int) ((MathHelper.wrapDegrees(realYaw - startYaw)) / step * width);
         TextRenderer textRenderer = mc.textRenderer;
 
@@ -345,14 +345,26 @@ public class RenderUtils
 
         fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF);
 
-        String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
+        String str = MathHelper.wrapDegrees(snappedYaw) + "°";
         textRenderer.draw(matrixStack, str, xCenter - textRenderer.getWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
-        str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "°";
+        str = "<  " + MathHelper.wrapDegrees(snappedYaw - step) + "°";
         textRenderer.draw(matrixStack, str, x - textRenderer.getWidth(str), y + height + 2, 0xFFFFFFFF);
 
-        str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "°  >";
+        str = MathHelper.wrapDegrees(snappedYaw + step) + "°  >";
         textRenderer.draw(matrixStack, str, x + width, y + height + 2, 0xFFFFFFFF);
+
+        if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())
+        {
+            double threshold = Configs.Generic.SNAP_AIM_THRESHOLD_YAW.getDoubleValue();
+
+            if (threshold < (step / 2.0))
+            {
+                int xOff = (int) (width * threshold / step);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - xOff, y, 2, height, 0xC0C0C0C0);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter + xOff, y, 2, height, 0xC0C0C0C0);
+            }
+        }
     }
 
     private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height,
@@ -432,5 +444,19 @@ public class RenderUtils
         //textRenderer.drawString(strUp, x - textRenderer.getStringWidth(strUp) - 4, y - 4, 0xFFFFFFFF);
         textRenderer.draw(matrixStack, strUp, x + width + 4, y - 4, 0xFFFFFFFF);
         textRenderer.draw(matrixStack, strDown, x + width + 4, y + height - 4, 0xFFFFFFFF);
+
+        if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())
+        {
+            double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
+            double threshold = Configs.Generic.SNAP_AIM_THRESHOLD_PITCH.getDoubleValue();
+
+            if (threshold < (step / 2.0))
+            {
+                int yCenter = y + height / 2;
+                int yOff = (int) ((double) height * threshold / indicatorRange);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter - yOff, width, 2, 0xC0C0C0C0);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter + yOff, width, 2, 0xC0C0C0C0);
+            }
+        }
     }
 }
