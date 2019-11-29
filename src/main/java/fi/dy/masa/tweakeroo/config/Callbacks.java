@@ -227,15 +227,15 @@ public class Callbacks
         {
             if (key == Hotkeys.TOOL_PICK.getKeybind())
             {
-                if (this.mc.hitResult != null && this.mc.hitResult.getType() == HitResult.Type.BLOCK)
+                if (this.mc.crosshairTarget != null && this.mc.crosshairTarget.getType() == HitResult.Type.BLOCK)
                 {
-                    InventoryUtils.trySwitchToEffectiveTool(((BlockHitResult) this.mc.hitResult).getBlockPos());
+                    InventoryUtils.trySwitchToEffectiveTool(((BlockHitResult) this.mc.crosshairTarget).getBlockPos());
                     return true;
                 }
             }
             else if (key == Hotkeys.COPY_SIGN_TEXT.getKeybind())
             {
-                HitResult trace = this.mc.hitResult;
+                HitResult trace = this.mc.crosshairTarget;
 
                 if (trace != null && trace.getType() == HitResult.Type.BLOCK)
                 {

@@ -19,6 +19,7 @@ public abstract class MixinFirstPersonRenderer
         return Configs.Disable.DISABLE_ITEM_SWITCH_COOLDOWN.getBooleanValue() ? 1.0F : player.getAttackCooldownProgress(adjustTicks);
     }
 
+    /*
     @ModifyVariable(method = "renderFirstPersonItem(F)V", ordinal = 1,
             at = @At(value = "INVOKE",
                      target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;isUsingItem()Z"))
@@ -31,4 +32,5 @@ public abstract class MixinFirstPersonRenderer
 
         return original;
     }
+    */
 }

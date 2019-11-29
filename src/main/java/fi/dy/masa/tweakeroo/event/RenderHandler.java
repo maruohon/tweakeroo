@@ -1,6 +1,12 @@
 package fi.dy.masa.tweakeroo.event;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.FilledMapItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.interfaces.IRenderer;
 import fi.dy.masa.malilib.util.ActiveMode;
@@ -9,12 +15,6 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.FilledMapItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 
 public class RenderHandler implements IRenderer
 {
@@ -85,34 +85,34 @@ public class RenderHandler implements IRenderer
     }
 
     @Override
-    public void onRenderWorldLast(float partialTicks)
+    public void onRenderWorldLast(float partialTicks, net.minecraft.client.util.math.MatrixStack matrixStack)
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         if (mc.player != null)
         {
-            this.renderOverlays(mc, partialTicks);
+            this.renderOverlays(matrixStack, mc);
         }
     }
 
-    private void renderOverlays(MinecraftClient mc, float partialTicks)
+    private void renderOverlays(net.minecraft.client.util.math.MatrixStack matrixStack, MinecraftClient mc)
     {
         Entity entity = mc.getCameraEntity();
 
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
             entity != null &&
-            mc.hitResult != null &&
-            mc.hitResult.getType() == HitResult.Type.BLOCK &&
+            mc.crosshairTarget != null &&
+            mc.crosshairTarget.getType() == HitResult.Type.BLOCK &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeybind().isKeybindHeld()))
         {
-            BlockHitResult hitResult = (BlockHitResult) mc.hitResult;
-            GlStateManager.depthMask(false);
-            GlStateManager.disableLighting();
-            GlStateManager.disableCull();
-            GlStateManager.disableTexture();
-            GlStateManager.disableDepthTest();
+            BlockHitResult hitResult = (BlockHitResult) mc.crosshairTarget;
+            RenderSystem.depthMask(false);
+            RenderSystem.disableLighting();
+            RenderSystem.disableCull();
+            RenderSystem.disableTexture();
+            RenderSystem.disableDepthTest();
 
             fi.dy.masa.malilib.render.RenderUtils.setupBlend();
 
@@ -124,13 +124,14 @@ public class RenderHandler implements IRenderer
                     hitResult.getSide(),
                     hitResult.getPos(),
                     color,
+                    matrixStack,
                     mc);
 
-            GlStateManager.enableTexture();
-            GlStateManager.enableDepthTest();
-            GlStateManager.disableBlend();
-            GlStateManager.enableCull();
-            GlStateManager.depthMask(true);
+            RenderSystem.enableTexture();
+            RenderSystem.enableDepthTest();
+            RenderSystem.disableBlend();
+            RenderSystem.enableCull();
+            RenderSystem.depthMask(true);
         }
     }
 }

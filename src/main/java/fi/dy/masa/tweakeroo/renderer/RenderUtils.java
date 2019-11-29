@@ -1,6 +1,5 @@
 package fi.dy.masa.tweakeroo.renderer;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -280,7 +279,7 @@ public class RenderUtils
 
         if (fog < 2.0F)
         {
-            GlStateManager.fogDensity(fog);
+            RenderSystem.fogDensity(fog);
         }
     }
 
@@ -288,18 +287,18 @@ public class RenderUtils
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
 
         int width = GuiUtils.getScaledWindowWidth();
         int height = GuiUtils.getScaledWindowHeight();
         RenderSystem.translated(width / 2, height / 2, zLevel);
         Entity entity = mc.getCameraEntity();
-        GlStateManager.rotatef(entity.prevPitch + (entity.pitch - entity.prevPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
-        GlStateManager.rotatef(entity.prevYaw + (entity.yaw - entity.prevYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
-        GlStateManager.scalef(-1.0F, -1.0F, -1.0F);
+        RenderSystem.rotatef(entity.prevPitch + (entity.pitch - entity.prevPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
+        RenderSystem.rotatef(entity.prevYaw + (entity.yaw - entity.prevYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
+        RenderSystem.scalef(-1.0F, -1.0F, -1.0F);
         RenderSystem.renderCrosshair(10);
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 
     public static void notifyRotationChanged()

@@ -1,8 +1,6 @@
 package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -13,6 +11,8 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class CameraEntity extends ClientPlayerEntity
 {
@@ -128,20 +128,20 @@ public class CameraEntity extends ClientPlayerEntity
 
         this.move(MovementType.SELF, this.getVelocity());
 
-        this.chunkX = (int) Math.floor(this.x) >> 4;
-        this.chunkY = (int) Math.floor(this.y) >> 4;
-        this.chunkZ = (int) Math.floor(this.z) >> 4;
+        this.chunkX = (int) Math.floor(this.getX()) >> 4;
+        this.chunkY = (int) Math.floor(this.getY()) >> 4;
+        this.chunkZ = (int) Math.floor(this.getZ()) >> 4;
     }
 
     private void updateLastTickPosition()
     {
-        this.prevRenderX = this.x;
-        this.prevRenderY = this.y;
-        this.prevRenderZ = this.z;
+        this.prevRenderX = this.getX();
+        this.prevRenderY = this.getY();
+        this.prevRenderZ = this.getZ();
 
-        this.prevX = this.x;
-        this.prevY = this.y;
-        this.prevZ = this.z;
+        this.prevX = this.getX();
+        this.prevY = this.getY();
+        this.prevZ = this.getZ();
 
         this.prevYaw = this.yaw;
         this.prevPitch = this.pitch;
@@ -172,7 +172,7 @@ public class CameraEntity extends ClientPlayerEntity
 
         if (player != null)
         {
-            camera.setPositionAndAngles(player.x, player.y, player.z, player.yaw, player.pitch);
+            camera.setPositionAndAngles(player.getX(), player.getY(), player.getZ(), player.yaw, player.pitch);
             camera.setRotations(player.yaw, player.pitch);
         }
 

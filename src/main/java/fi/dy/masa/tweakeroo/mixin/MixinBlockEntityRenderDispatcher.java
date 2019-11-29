@@ -5,8 +5,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.minecraft.class_4587;
-import net.minecraft.class_4597;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -16,8 +14,11 @@ public abstract class MixinBlockEntityRenderDispatcher
 {
     @Inject(method = "render(" +
                                 "Lnet/minecraft/block/entity/BlockEntity;F" +
-                                "Lnet/minecraft/class_4587;Lnet/minecraft/class_4597;DDD)V", at = @At("HEAD"), cancellable = true)
-    private void preventTileEntityRendering(BlockEntity tileentityIn, float partialTicks, class_4587 foo1, class_4597 foo2, double x, double y, double z, CallbackInfo ci)
+                                "Lnet/minecraft/client/util/math/MatrixStack;" +
+                                "Lnet/minecraft/client/render/VertexConsumerProvider;)V", at = @At("HEAD"), cancellable = true)
+    private void preventTileEntityRendering(BlockEntity tileentityIn, float partialTicks,
+            net.minecraft.client.util.math.MatrixStack matrixStack,
+            net.minecraft.client.render.VertexConsumerProvider vertexConsumerProvider, CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_TILE_ENTITY_RENDERING.getBooleanValue())
         {
@@ -27,8 +28,8 @@ public abstract class MixinBlockEntityRenderDispatcher
 
     @Inject(method = "renderEntity(" +
                                     "Lnet/minecraft/block/entity/BlockEntity;" +
-                                    "Lnet/minecraft/class_4587;I)V", at = @At("HEAD"), cancellable = true)
-    private void preventTileEntityRendering(BlockEntity tileEntityIn, class_4587 foo1, int foo, CallbackInfo ci)
+                                    "Lnet/minecraft/client/util/math/MatrixStack;)V", at = @At("HEAD"), cancellable = true)
+    private void preventTileEntityRendering(BlockEntity tileEntityIn, net.minecraft.client.util.math.MatrixStack matrixStack, CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_TILE_ENTITY_RENDERING.getBooleanValue())
         {
@@ -36,11 +37,13 @@ public abstract class MixinBlockEntityRenderDispatcher
         }
     }
 
-    @Inject(method = "method_23077(" +
+    @Inject(method = "renderEntity(" +
                                     "Lnet/minecraft/block/entity/BlockEntity;" +
-                                    "Lnet/minecraft/class_4587;" +
-                                    "Lnet/minecraft/class_4597;I)Z", at = @At("HEAD"), cancellable = true)
-    private void preventTileEntityRendering(BlockEntity tileEntityIn, class_4587 foo1, class_4597 foo2, int foo, CallbackInfoReturnable<Boolean> cir)
+                                    "Lnet/minecraft/client/util/math/MatrixStack;" +
+                                    "Lnet/minecraft/client/render/VertexConsumerProvider;II)Z", at = @At("HEAD"), cancellable = true)
+    private void preventTileEntityRendering(BlockEntity tileEntityIn, net.minecraft.client.util.math.MatrixStack matrixStack,
+            net.minecraft.client.render.VertexConsumerProvider vertexConsumerProvider,
+            int light, int overlay, CallbackInfoReturnable<Boolean> cir)
     {
         if (Configs.Disable.DISABLE_TILE_ENTITY_RENDERING.getBooleanValue())
         {

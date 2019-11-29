@@ -137,7 +137,7 @@ public class PlacementTweaks
     public static void onLeftClickMousePre()
     {
         MinecraftClient mc = MinecraftClient.getInstance();
-        HitResult trace = mc.hitResult;
+        HitResult trace = mc.crosshairTarget;
 
         // Only set the position if it was null, otherwise the fast left click tweak
         // would just reset it every time.
@@ -205,11 +205,11 @@ public class PlacementTweaks
             final double reach = mc.interactionManager.getReachDistance();
             final int maxCount = Configs.Generic.FAST_BLOCK_PLACEMENT_COUNT.getIntegerValue();
 
-            mc.hitResult = player.rayTrace(reach, mc.getTickDelta(), false);
+            mc.crosshairTarget = player.rayTrace(reach, mc.getTickDelta(), false);
 
             for (int i = 0; i < maxCount; ++i)
             {
-                HitResult trace = mc.hitResult;
+                HitResult trace = mc.crosshairTarget;
 
                 if (trace == null || trace.getType() != HitResult.Type.BLOCK)
                 {
@@ -253,7 +253,7 @@ public class PlacementTweaks
                     if (result == ActionResult.SUCCESS)
                     {
                         posLast = posNew;
-                        mc.hitResult = player.rayTrace(reach, mc.getTickDelta(), false);
+                        mc.crosshairTarget = player.rayTrace(reach, mc.getTickDelta(), false);
                     }
                     else
                     {

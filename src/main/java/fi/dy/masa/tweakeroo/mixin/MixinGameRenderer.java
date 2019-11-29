@@ -39,7 +39,7 @@ public abstract class MixinGameRenderer
     private float realYaw;
     private float realPitch;
 
-    @Inject(method = "renderWorld(FJ)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "renderWorld", at = @At("HEAD"), cancellable = true)
     private void onRenderWorld(CallbackInfo ci)
     {
         if (Callbacks.skipWorldRendering)
@@ -84,7 +84,7 @@ public abstract class MixinGameRenderer
         return ProjectileUtil.rayTrace(entity, startVec, endVec, box, predicate, distance);
     }
 
-    @Inject(method = "renderWorld(FJ)V", at = @At(
+    @Inject(method = "renderWorld", at = @At(
                 value = "INVOKE", shift = Shift.AFTER,
                 target = "Lnet/minecraft/client/render/GameRenderer;updateTargetedEntity(F)V"))
     private void overrideRenderViewEntityPre(CallbackInfo ci)
@@ -112,7 +112,7 @@ public abstract class MixinGameRenderer
         }
     }
 
-    @Inject(method = "renderWorld(FJ)V", at = @At("RETURN"))
+    @Inject(method = "renderWorld", at = @At("RETURN"))
     private void overrideRenderViewEntityPost(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && this.cameraEntityOriginal != null)
