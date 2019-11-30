@@ -42,7 +42,7 @@ public abstract class MixinGuiChat
     @Inject(method = "<init>(Ljava/lang/String;)V", at = @At("RETURN"))
     private void restoreText(String defaultText, CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_CHAT_PERSISTENT_TEXT.getBooleanValue())
+        if (FeatureToggle.TWEAK_CHAT_PERSISTENT_TEXT.getBooleanValue() && MiscUtils.getLastChatText().isEmpty() == false)
         {
             this.defaultInputFieldText = MiscUtils.getLastChatText();
         }
