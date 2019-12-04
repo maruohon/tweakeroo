@@ -135,9 +135,9 @@ public class CameraEntity extends ClientPlayerEntity
 
     private void updateLastTickPosition()
     {
-        this.prevRenderX = this.getX();
-        this.prevRenderY = this.getY();
-        this.prevRenderZ = this.getZ();
+        this.lastRenderX = this.getX();
+        this.lastRenderY = this.getY();
+        this.lastRenderZ = this.getZ();
 
         this.prevX = this.getX();
         this.prevY = this.getY();

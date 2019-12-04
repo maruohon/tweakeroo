@@ -27,7 +27,7 @@ public abstract class MixinAbstractInventoryScreen<T extends Container> extends 
     {
         if (Configs.Disable.DISABLE_INVENTORY_EFFECTS.getBooleanValue())
         {
-            this.left = (this.width - this.containerWidth) / 2;
+            this.x = (this.width - this.containerWidth) / 2;
             this.offsetGuiForEffects = false;
             ci.cancel();
         }
