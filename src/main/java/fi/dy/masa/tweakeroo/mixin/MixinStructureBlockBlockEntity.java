@@ -30,15 +30,16 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
 
     @ModifyConstant(method = "fromTag",
                     slice = @Slice(from = @At(value = "FIELD",
-                                              target = "Lnet/minecraft/block/entity/StructureBlockBlockEntity;offset:Lnet/minecraft/util/math/BlockPos;"),
+                                              target = "Lnet/minecraft/block/entity/StructureBlockBlockEntity;metadata:Ljava/lang/String;"),
                                    to = @At(value = "FIELD",
                                             target = "Lnet/minecraft/block/entity/StructureBlockBlockEntity;size:Lnet/minecraft/util/math/BlockPos;")),
-                    constant = @Constant(intValue = 32), require = 0)
+                    constant = { @Constant(intValue = -32), @Constant(intValue = 32) }, require = 0)
     private int overrideMaxSize(int original)
     {
         if (FeatureToggle.TWEAK_STRUCTURE_BLOCK_LIMIT.getBooleanValue())
         {
-            return Configs.Generic.STRUCTURE_BLOCK_MAX_SIZE.getIntegerValue();
+            int overridden = Configs.Generic.STRUCTURE_BLOCK_MAX_SIZE.getIntegerValue();
+            return original == -32 ? -overridden : overridden;
         }
 
         return original;
