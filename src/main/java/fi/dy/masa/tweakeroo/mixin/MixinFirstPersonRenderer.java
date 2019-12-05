@@ -4,9 +4,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.FirstPersonRenderer;
+import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(FirstPersonRenderer.class)
 public abstract class MixinFirstPersonRenderer
@@ -19,10 +19,9 @@ public abstract class MixinFirstPersonRenderer
         return Configs.Disable.DISABLE_ITEM_SWITCH_COOLDOWN.getBooleanValue() ? 1.0F : player.getAttackCooldownProgress(adjustTicks);
     }
 
-    /*
-    @ModifyVariable(method = "renderFirstPersonItem(F)V", ordinal = 1,
+    @ModifyVariable(method = "method_22976", ordinal = 1,
             at = @At(value = "INVOKE",
-                     target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;isUsingItem()Z"))
+                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z"))
     private boolean preventOffhandRendering(boolean original)
     {
         if (Configs.Disable.DISABLE_OFFHAND_RENDERING.getBooleanValue())
@@ -32,5 +31,4 @@ public abstract class MixinFirstPersonRenderer
 
         return original;
     }
-    */
 }

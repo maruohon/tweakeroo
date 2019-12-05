@@ -5,11 +5,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.entity.Entity;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -53,6 +55,19 @@ public abstract class MixinWorldRenderer
     private void postSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
     {
         MiscUtils.setFreeCameraSpectator(false);
+    }
+
+    // Allow rendering the client player entity by spoofing one of the entity rendering conditions while in Free Camera mode
+    @Redirect(method = "render", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/render/Camera;getFocusedEntity()Lnet/minecraft/entity/Entity;", ordinal = 3))
+    private Entity allowRenderingClientPlayerInFreeCameraMode(Camera camera)
+    {
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        {
+            return MinecraftClient.getInstance().player;
+        }
+
+        return camera.getFocusedEntity();
     }
 
     @Redirect(method = "setupTerrain", at = @At(
