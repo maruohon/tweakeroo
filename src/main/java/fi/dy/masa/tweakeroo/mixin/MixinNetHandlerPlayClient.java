@@ -1,13 +1,13 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import fi.dy.masa.tweakeroo.LiteModTweakeroo;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.entity.Entity;
@@ -15,6 +15,10 @@ import net.minecraft.network.play.server.SPacketCombatEvent;
 import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.event.ClickEvent;
+import fi.dy.masa.tweakeroo.LiteModTweakeroo;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 
 @Mixin(NetHandlerPlayClient.class)
 public abstract class MixinNetHandlerPlayClient
@@ -44,6 +48,44 @@ public abstract class MixinNetHandlerPlayClient
             message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, pos.getX() + " " + pos.getY() + " " + pos.getZ()));
             Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(message);
             LiteModTweakeroo.logger.info(str);
+        }
+    }
+
+    @Redirect(method = "handleChangeGameState",
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/client/Minecraft;displayGuiScreen(Lnet/minecraft/client/gui/GuiScreen;)V"),
+              slice = @Slice(to = @At(value = "FIELD", ordinal = 0, opcode = Opcodes.GETFIELD,
+                                      target = "Lnet/minecraft/client/Minecraft;gameSettings:Lnet/minecraft/client/settings/GameSettings;")))
+    private void preventPortalGuiClosing1(Minecraft mc, net.minecraft.client.gui.GuiScreen gui)
+    {
+        if (Configs.Disable.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue() == false)
+        {
+            mc.displayGuiScreen(gui);
+        }
+    }
+
+    @Redirect(method = "handleRespawn",
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/client/Minecraft;displayGuiScreen(Lnet/minecraft/client/gui/GuiScreen;)V"))
+    private void preventPortalGuiClosing2(Minecraft mc, net.minecraft.client.gui.GuiScreen gui)
+    {
+        if (Configs.Disable.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue() == false)
+        {
+            mc.displayGuiScreen(gui);
+        }
+    }
+
+    @Redirect(method = "handlePlayerPosLook",
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/client/Minecraft;displayGuiScreen(Lnet/minecraft/client/gui/GuiScreen;)V"))
+    private void preventPortalGuiClosing3(Minecraft mc, net.minecraft.client.gui.GuiScreen gui)
+    {
+        // Allow clearing the download terrain screen, for example when first logging in,
+        // but don't close the GUI otherwise.
+        if (Configs.Disable.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue() == false ||
+            mc.currentScreen instanceof net.minecraft.client.gui.GuiDownloadTerrain)
+        {
+            mc.displayGuiScreen(gui);
         }
     }
 }
