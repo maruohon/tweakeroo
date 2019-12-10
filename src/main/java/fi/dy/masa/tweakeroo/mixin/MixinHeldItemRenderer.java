@@ -5,11 +5,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.FirstPersonRenderer;
+import net.minecraft.client.render.item.HeldItemRenderer;
 import fi.dy.masa.tweakeroo.config.Configs;
 
-@Mixin(FirstPersonRenderer.class)
-public abstract class MixinFirstPersonRenderer
+@Mixin(HeldItemRenderer.class)
+public abstract class MixinHeldItemRenderer
 {
     @Redirect(method = "updateHeldItems()V", at = @At(
             value = "INVOKE",
@@ -19,7 +19,10 @@ public abstract class MixinFirstPersonRenderer
         return Configs.Disable.DISABLE_ITEM_SWITCH_COOLDOWN.getBooleanValue() ? 1.0F : player.getAttackCooldownProgress(adjustTicks);
     }
 
-    @ModifyVariable(method = "method_22976", ordinal = 1,
+    @ModifyVariable(method = "renderItem(F" +
+                                  "Lnet/minecraft/client/util/math/MatrixStack;" +
+                                  "Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;" +
+                                  "Lnet/minecraft/client/network/ClientPlayerEntity;I)V", ordinal = 1,
             at = @At(value = "INVOKE",
                      target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z"))
     private boolean preventOffhandRendering(boolean original)
