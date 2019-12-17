@@ -11,13 +11,14 @@ import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
+import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigOptionList;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.config.options.ConfigStringList;
 import fi.dy.masa.malilib.config.options.IConfigBase;
-import fi.dy.masa.malilib.util.ActiveMode;
-import fi.dy.masa.malilib.util.HudAlignment;
+import fi.dy.masa.malilib.config.values.ActiveMode;
+import fi.dy.masa.malilib.config.values.HudAlignment;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
@@ -77,8 +78,11 @@ public class Configs implements IConfigHandler
         public static final ConfigBoolean       SNAP_AIM_INDICATOR                  = new ConfigBoolean     ("snapAimIndicator", true, "Whether or not to render the snap aim angle indicator");
         public static final ConfigColor         SNAP_AIM_INDICATOR_COLOR            = new ConfigColor       ("snapAimIndicatorColor", "#603030FF", "The color for the snap aim indicator background");
         public static final ConfigOptionList    SNAP_AIM_MODE                       = new ConfigOptionList  ("snapAimMode", SnapAimMode.YAW, "Snap aim mode: yaw, or pitch, or both");
+        public static final ConfigBoolean       SNAP_AIM_ONLY_CLOSE_TO_ANGLE        = new ConfigBoolean     ("snapAimOnlyCloseToAngle", true, "If enabled, then the snap aim only snaps to the angle\nwhen the internal angle is within a certain distance of it.\nThe threshold can be set in snapAimThreshold");
         public static final ConfigBoolean       SNAP_AIM_PITCH_OVERSHOOT            = new ConfigBoolean     ("snapAimPitchOvershoot", false, "Whether or not to allow overshooting the pitch angle\nfrom the normal +/- 90 degrees up to +/- 180 degrees");
         public static final ConfigDouble        SNAP_AIM_PITCH_STEP                 = new ConfigDouble      ("snapAimPitchStep", 12.5, 0, 90, "The pitch angle step of the snap aim tweak");
+        public static final ConfigDouble        SNAP_AIM_THRESHOLD_PITCH            = new ConfigDouble      ("snapAimThresholdPitch", 1.5, "The angle threshold inside which the player rotation will\nbe snapped to the snap angle.");
+        public static final ConfigDouble        SNAP_AIM_THRESHOLD_YAW              = new ConfigDouble      ("snapAimThresholdYaw", 5.0, "The angle threshold inside which the player rotation will\nbe snapped to the snap angle.");
         public static final ConfigDouble        SNAP_AIM_YAW_STEP                   = new ConfigDouble      ("snapAimYawStep", 45, 0, 360, "The yaw angle step of the snap aim tweak");
         public static final ConfigInteger       STRUCTURE_BLOCK_MAX_SIZE            = new ConfigInteger     ("structureBlockMaxSize", 128, 1, 256, "The maximum dimensions for a Structure Block's saved area");
         public static final ConfigDouble        ZOOM_FOV                            = new ConfigDouble      ("zoomFov", 30, 0, 600, "The FOV value used for the zoom feature");
@@ -95,6 +99,7 @@ public class Configs implements IConfigHandler
                 SHULKER_DISPLAY_REQUIRE_SHIFT,
                 SLOT_SYNC_WORKAROUND,
                 SNAP_AIM_INDICATOR,
+                SNAP_AIM_ONLY_CLOSE_TO_ANGLE,
                 SNAP_AIM_PITCH_OVERSHOOT,
 
                 BREAKING_RESTRICTION_MODE,
@@ -136,6 +141,8 @@ public class Configs implements IConfigHandler
                 RENDER_LIMIT_ITEM,
                 RENDER_LIMIT_XP_ORB,
                 SNAP_AIM_PITCH_STEP,
+                SNAP_AIM_THRESHOLD_PITCH,
+                SNAP_AIM_THRESHOLD_YAW,
                 SNAP_AIM_YAW_STEP,
                 STRUCTURE_BLOCK_MAX_SIZE,
                 ZOOM_FOV
@@ -161,10 +168,13 @@ public class Configs implements IConfigHandler
         public static final ConfigOptionList FAST_RIGHT_CLICK_BLOCK_LIST_TYPE   = new ConfigOptionList("fastRightClickBlockListType", ListType.BLACKLIST, "The targeted block restriction type for the Fast Right Click tweak");
         public static final ConfigStringList FAST_RIGHT_CLICK_BLOCK_BLACKLIST   = new ConfigStringList("fastRightClickBlockBlackList", ImmutableList.of("minecraft:chest", "minecraft:ender_chest", "minecraft:trapped_chest", "minecraft:white_shulker_box"), "The blocks that are NOT allowed to be right clicked on with\nthe Fast Right Click tweak, if the fastRightClickBlockListType is set to Black List");
         public static final ConfigStringList FAST_RIGHT_CLICK_BLOCK_WHITELIST   = new ConfigStringList("fastRightClickBlockWhiteList", ImmutableList.of(), "The blocks that are allowed to be right clicked on with\nthe Fast Right Click tweak, if the fastRightClickBlockListType is set to White List");
-        public static final ConfigOptionList FAST_RIGHT_CLICK_ITEM_LIST_TYPE    = new ConfigOptionList("fastRightClickListType", ListType.NONE, "The item restriction type for the Fast Right Click tweak");
-        public static final ConfigStringList FAST_RIGHT_CLICK_ITEM_BLACKLIST    = new ConfigStringList("fastRightClickBlackList", ImmutableList.of("minecraft:fireworks"), "The items that are NOT allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to Black List");
-        public static final ConfigStringList FAST_RIGHT_CLICK_ITEM_WHITELIST    = new ConfigStringList("fastRightClickWhiteList", ImmutableList.of("minecraft:bucket", "minecraft:water_bucket", "minecraft:lava_bucket", "minecraft:glass_bottle"), "The items that are allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to White List");
+        public static final ConfigOptionList FAST_RIGHT_CLICK_ITEM_LIST_TYPE    = new ConfigOptionList("fastRightClickItemListType", ListType.BLACKLIST, "The item restriction type for the Fast Right Click tweak");
+        public static final ConfigStringList FAST_RIGHT_CLICK_ITEM_BLACKLIST    = new ConfigStringList("fastRightClickItemBlackList", ImmutableList.of("minecraft:fireworks"), "The items that are NOT allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to Black List");
+        public static final ConfigStringList FAST_RIGHT_CLICK_ITEM_WHITELIST    = new ConfigStringList("fastRightClickItemWhiteList", ImmutableList.of("minecraft:bucket", "minecraft:water_bucket", "minecraft:lava_bucket", "minecraft:glass_bottle"), "The items that are allowed to be used for the Fast Right Click tweak,\nif the fastRightClickListType is set to White List");
         public static final ConfigStringList FLAT_WORLD_PRESETS                 = new ConfigStringList("flatWorldPresets", ImmutableList.of("White Glass;1*minecraft:stained_glass;minecraft:plains;;minecraft:stained_glass", "Glass;1*minecraft:glass;minecraft:plains;;minecraft:glass"), "Custom flat world preset strings.\nThese are in the format: name;blocks_string;biome;generation_features;icon_item\nThe blocks string format is the vanilla format, such as: 62*minecraft:dirt,minecraft:grass\nThe biome can be the registry name, or the int ID\nThe icon item name format can be either minecraft:iron_nugget or minecraft:stained_glass@6");
+        public static final ConfigOptionList ITEM_GLINT_LIST_TYPE               = new ConfigOptionList("itemGlintListType", ListType.BLACKLIST, "The item restriction type for the Disable Item Glint feature");
+        public static final ConfigStringList ITEM_GLINT_BLACKLIST               = new ConfigStringList("itemGlintBlackList", ImmutableList.of("minecraft:potion"), "The items that will not have the glint effect,\nif itemGlintListType = blacklist");
+        public static final ConfigStringList ITEM_GLINT_WHITELIST               = new ConfigStringList("itemGlintWhiteList", ImmutableList.of(), "The only items that will have the glint effect,\nif itemGlintListType = whitelist");
         public static final ConfigOptionList POTION_WARNING_LIST_TYPE           = new ConfigOptionList("potionWarningListType", ListType.NONE, "The list type for potion warning effects");
         public static final ConfigStringList POTION_WARNING_BLACKLIST           = new ConfigStringList("potionWarningBlackList", ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), "The potion effects that will not be warned about");
         public static final ConfigStringList POTION_WARNING_WHITELIST           = new ConfigStringList("potionWarningWhiteList", ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing"), "The only potion effects that will be warned about");
@@ -173,16 +183,19 @@ public class Configs implements IConfigHandler
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 FAST_PLACEMENT_ITEM_LIST_TYPE,
-                FAST_RIGHT_CLICK_BLOCK_LIST_TYPE,
-                FAST_RIGHT_CLICK_ITEM_LIST_TYPE,
-                POTION_WARNING_LIST_TYPE,
                 FAST_PLACEMENT_ITEM_BLACKLIST,
                 FAST_PLACEMENT_ITEM_WHITELIST,
+                FAST_RIGHT_CLICK_BLOCK_LIST_TYPE,
                 FAST_RIGHT_CLICK_BLOCK_BLACKLIST,
                 FAST_RIGHT_CLICK_BLOCK_WHITELIST,
+                FAST_RIGHT_CLICK_ITEM_LIST_TYPE,
                 FAST_RIGHT_CLICK_ITEM_BLACKLIST,
                 FAST_RIGHT_CLICK_ITEM_WHITELIST,
                 FLAT_WORLD_PRESETS,
+                ITEM_GLINT_LIST_TYPE,
+                ITEM_GLINT_BLACKLIST,
+                ITEM_GLINT_WHITELIST,
+                POTION_WARNING_LIST_TYPE,
                 POTION_WARNING_BLACKLIST,
                 POTION_WARNING_WHITELIST,
                 REPAIR_MODE_SLOTS,
@@ -202,6 +215,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_ENTITY_TICKING          = new ConfigBooleanClient  ("disableEntityTicking",                 false, "", "Prevent everything except player entities from getting ticked");
         public static final ConfigBooleanHotkeyed       DISABLE_FALLING_BLOCK_RENDER    = new ConfigBooleanHotkeyed("disableFallingBlockEntityRendering",   false, "", "If enabled, then falling block entities won't be rendered at all");
         public static final ConfigBooleanHotkeyed       DISABLE_INVENTORY_EFFECTS       = new ConfigBooleanHotkeyed("disableInventoryEffectRendering",      false, "", "Removes the potion effect rendering from the inventory GUIs");
+        public static final ConfigBooleanHotkeyed       DISABLE_ITEM_GLINT              = new ConfigBooleanHotkeyed("disableItemGlint",                     false, "", "Disables the glint effect from the items.\nThe items to remove it from, or allow it on, can be configured\nin Lists -> itemGlint*");
         public static final ConfigBooleanHotkeyed       DISABLE_ITEM_SWITCH_COOLDOWN    = new ConfigBooleanHotkeyed("disableItemSwitchRenderCooldown",      false, "", "If true, then there won't be any cooldown/equip animation\nwhen switching the held item or using the item.");
         public static final ConfigBooleanHotkeyed       DISABLE_LIGHT_UPDATES           = new ConfigBooleanHotkeyed("disableLightUpdates",                  false, "", "If enabled, disables some client-side (rendering related) light updates");
         public static final ConfigBooleanHotkeyed       DISABLE_LIGHT_UPDATES_ALL       = new ConfigBooleanHotkeyed("disableLightUpdatesAll",               false, "", "If enabled, disables ALL client-side light updates.\nThis might look very bad unless you use the Gamma tweak.");
@@ -231,6 +245,7 @@ public class Configs implements IConfigHandler
                 DISABLE_ENTITY_TICKING,
                 DISABLE_FALLING_BLOCK_RENDER,
                 DISABLE_INVENTORY_EFFECTS,
+                DISABLE_ITEM_GLINT,
                 DISABLE_ITEM_SWITCH_COOLDOWN,
                 DISABLE_LIGHT_UPDATES,
                 DISABLE_LIGHT_UPDATES_ALL,
@@ -270,6 +285,12 @@ public class Configs implements IConfigHandler
     }
 
     @Override
+    public String getModName()
+    {
+        return Reference.MOD_NAME;
+    }
+
+    @Override
     public String getConfigFileName()
     {
         return Reference.MOD_ID + ".json";
@@ -305,36 +326,40 @@ public class Configs implements IConfigHandler
         InventoryUtils.setRepairModeSlots(Lists.REPAIR_MODE_SLOTS.getStrings());
         InventoryUtils.setUnstackingItems(Lists.UNSTACKING_ITEMS.getStrings());
 
-        PlacementTweaks.FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListType((ListType) Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.getOptionListValue());
-        PlacementTweaks.FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListContents(
-                Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.getStrings(),
-                Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.getStrings());
+        PlacementTweaks.updateFastRightClickBlockRestriction();
+        PlacementTweaks.updateFastRightClickItemRestriction();
+        PlacementTweaks.updateFastPlacementItemRestriction();
 
-        PlacementTweaks.FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListType((ListType) Lists.FAST_RIGHT_CLICK_ITEM_LIST_TYPE.getOptionListValue());
-        PlacementTweaks.FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListContents(
-                Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.getStrings(),
-                Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.getStrings());
-
-        PlacementTweaks.FAST_PLACEMENT_ITEM_RESTRICTION.setListType((ListType) Lists.FAST_PLACEMENT_ITEM_LIST_TYPE.getOptionListValue());
-        PlacementTweaks.FAST_PLACEMENT_ITEM_RESTRICTION.setListContents(
-                Lists.FAST_PLACEMENT_ITEM_BLACKLIST.getStrings(),
-                Lists.FAST_PLACEMENT_ITEM_WHITELIST.getStrings());
-
-        MiscTweaks.POTION_RESTRICTION.setListType((ListType) Lists.POTION_WARNING_LIST_TYPE.getOptionListValue());
-        MiscTweaks.POTION_RESTRICTION.setListContents(
-                Lists.POTION_WARNING_BLACKLIST.getStrings(),
-                Lists.POTION_WARNING_WHITELIST.getStrings());
+        MiscTweaks.updateItemGlintRestriction();
+        MiscTweaks.updatePotionRestrictionLists();
     }
 
     public static ConfigDouble getActiveFlySpeedConfig()
     {
-        switch (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue())
+        return getFlySpeedConfig(Configs.Internal.FLY_SPEED_PRESET.getIntegerValue());
+    }
+
+    public static ConfigDouble getFlySpeedConfig(int preset)
+    {
+        switch (preset)
         {
             case 0:  return Configs.Generic.FLY_SPEED_PRESET_1;
             case 1:  return Configs.Generic.FLY_SPEED_PRESET_2;
             case 2:  return Configs.Generic.FLY_SPEED_PRESET_3;
             case 3:  return Configs.Generic.FLY_SPEED_PRESET_4;
             default: return Configs.Generic.FLY_SPEED_PRESET_1;
+        }
+    }
+
+    public static ConfigHotkey getFlySpeedHotkey(int preset)
+    {
+        switch (preset)
+        {
+            case 0:  return Hotkeys.FLY_PRESET_1;
+            case 1:  return Hotkeys.FLY_PRESET_2;
+            case 2:  return Hotkeys.FLY_PRESET_3;
+            case 3:  return Hotkeys.FLY_PRESET_4;
+            default: return Hotkeys.FLY_PRESET_1;
         }
     }
 }

@@ -1,11 +1,5 @@
 package fi.dy.masa.tweakeroo.renderer;
 
-import fi.dy.masa.malilib.util.GuiUtils;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
-import fi.dy.masa.tweakeroo.util.RayTraceUtils;
-import fi.dy.masa.tweakeroo.util.SnapAimMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockShulkerBox;
@@ -31,6 +25,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.GuiUtils;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
+import fi.dy.masa.tweakeroo.util.RayTraceUtils;
+import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 public class RenderUtils
 {
@@ -49,7 +49,7 @@ public class RenderUtils
             int startX = offX;
             int startY = offY;
 
-            fi.dy.masa.malilib.util.HudAlignment align = (fi.dy.masa.malilib.util.HudAlignment) Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
+            fi.dy.masa.malilib.config.values.HudAlignment align = (fi.dy.masa.malilib.config.values.HudAlignment) Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
 
             switch (align)
             {
@@ -355,8 +355,8 @@ public class RenderUtils
         double realYaw = MathHelper.positiveModulo(MiscUtils.getLastRealYaw(), 360.0D);
         double snappedYaw = MiscUtils.calculateSnappedAngle(realYaw, step);
         double startYaw = snappedYaw - (step / 2.0);
-        int x = xCenter - width / 2;
-        int y = yCenter + 10;
+        final int x = xCenter - width / 2;
+        final int y = yCenter + 10;
         int lineX = x + (int) ((MathHelper.wrapDegrees(realYaw - startYaw)) / step * width);
         FontRenderer textRenderer = mc.fontRenderer;
 
@@ -375,6 +375,18 @@ public class RenderUtils
 
         str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "°  >";
         textRenderer.drawString(str, x + width, y + height + 2, 0xFFFFFFFF);
+
+        if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())
+        {
+            double threshold = Configs.Generic.SNAP_AIM_THRESHOLD_YAW.getDoubleValue();
+
+            if (threshold < (step / 2.0))
+            {
+                int xOff = (int) (width * threshold / step);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - xOff, y, 2, height, 0xC0C0C0C0);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter + xOff, y, 2, height, 0xC0C0C0C0);
+            }
+        }
     }
 
     private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height, Minecraft mc)
@@ -452,5 +464,19 @@ public class RenderUtils
         //textRenderer.drawString(strUp, x - textRenderer.getStringWidth(strUp) - 4, y - 4, 0xFFFFFFFF);
         textRenderer.drawString(strUp, x + width + 4, y - 4, 0xFFFFFFFF);
         textRenderer.drawString(strDown, x + width + 4, y + height - 4, 0xFFFFFFFF);
+
+        if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())
+        {
+            double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
+            double threshold = Configs.Generic.SNAP_AIM_THRESHOLD_PITCH.getDoubleValue();
+
+            if (threshold < (step / 2.0))
+            {
+                int yCenter = y + height / 2;
+                int yOff = (int) ((double) height * threshold / indicatorRange);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter - yOff, width, 2, 0xC0C0C0C0);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter + yOff, width, 2, 0xC0C0C0C0);
+            }
+        }
     }
 }

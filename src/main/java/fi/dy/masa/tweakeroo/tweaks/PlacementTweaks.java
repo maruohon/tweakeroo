@@ -30,6 +30,7 @@ import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
 import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
+import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -1096,5 +1097,26 @@ public class PlacementTweaks
         }
 
         return false;
+    }
+
+    public static void updateFastRightClickBlockRestriction()
+    {
+        FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListType((ListType) Configs.Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.getOptionListValue());
+        FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListContents(Configs.Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.getStrings(),
+                Configs.Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.getStrings());
+    }
+
+    public static void updateFastRightClickItemRestriction()
+    {
+        FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListType((ListType) Configs.Lists.FAST_RIGHT_CLICK_ITEM_LIST_TYPE.getOptionListValue());
+        FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListContents(Configs.Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.getStrings(),
+                Configs.Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.getStrings());
+    }
+
+    public static void updateFastPlacementItemRestriction()
+    {
+        FAST_PLACEMENT_ITEM_RESTRICTION.setListType((ListType) Configs.Lists.FAST_PLACEMENT_ITEM_LIST_TYPE.getOptionListValue());
+        FAST_PLACEMENT_ITEM_RESTRICTION.setListContents(Configs.Lists.FAST_PLACEMENT_ITEM_BLACKLIST.getStrings(),
+                Configs.Lists.FAST_PLACEMENT_ITEM_WHITELIST.getStrings());
     }
 }

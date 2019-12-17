@@ -3,10 +3,12 @@ package fi.dy.masa.tweakeroo.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(TileEntityRendererDispatcher.class)
 public abstract class MixinTileEntityRendererDispatcher
@@ -36,5 +38,18 @@ public abstract class MixinTileEntityRendererDispatcher
         {
             ci.cancel();
         }
+    }
+
+    @Redirect(method = "render(Lnet/minecraft/tileentity/TileEntity;FI)V",
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/tileentity/TileEntity;getMaxRenderDistanceSquared()D"))
+    private double overrideRenderDistance(TileEntity tileEntityIn)
+    {
+        if (FeatureToggle.TWEAK_TILE_RENDER_DISTANCE.getBooleanValue())
+        {
+            return Double.MAX_VALUE;
+        }
+
+        return tileEntityIn.getMaxRenderDistanceSquared();
     }
 }
