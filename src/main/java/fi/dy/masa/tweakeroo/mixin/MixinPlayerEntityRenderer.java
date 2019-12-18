@@ -3,10 +3,10 @@ package fi.dy.masa.tweakeroo.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class MixinPlayerEntityRenderer

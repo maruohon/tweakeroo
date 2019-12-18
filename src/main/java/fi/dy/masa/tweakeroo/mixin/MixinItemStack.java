@@ -5,9 +5,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 
 @Mixin(ItemStack.class)
 public abstract class MixinItemStack

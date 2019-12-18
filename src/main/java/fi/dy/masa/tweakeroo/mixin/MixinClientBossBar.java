@@ -2,10 +2,10 @@ package fi.dy.masa.tweakeroo.mixin;
 
 import java.util.UUID;
 import org.spongepowered.asm.mixin.Mixin;
-import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.text.Text;
+import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(ClientBossBar.class)
 public abstract class MixinClientBossBar extends BossBar

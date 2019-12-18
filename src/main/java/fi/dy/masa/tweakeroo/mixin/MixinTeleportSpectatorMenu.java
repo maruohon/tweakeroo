@@ -9,11 +9,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.google.common.collect.Ordering;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.gui.hud.spectator.SpectatorMenuCommand;
 import net.minecraft.client.gui.hud.spectator.TeleportSpectatorMenu;
 import net.minecraft.client.gui.hud.spectator.TeleportToSpecificPlayerSpectatorCommand;
 import net.minecraft.client.network.PlayerListEntry;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(TeleportSpectatorMenu.class)
 public abstract class MixinTeleportSpectatorMenu

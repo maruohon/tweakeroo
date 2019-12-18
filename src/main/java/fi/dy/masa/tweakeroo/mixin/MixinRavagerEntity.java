@@ -3,8 +3,8 @@ package fi.dy.masa.tweakeroo.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.entity.mob.RavagerEntity;
+import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(RavagerEntity.class)
 public abstract class MixinRavagerEntity

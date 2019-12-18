@@ -1,8 +1,6 @@
 package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -13,6 +11,8 @@ import net.minecraft.entity.MovementType;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class CameraEntity extends ClientPlayerEntity
 {

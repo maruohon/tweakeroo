@@ -2,13 +2,13 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.util.HashSet;
 import java.util.List;
-import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
-import fi.dy.masa.tweakeroo.Tweakeroo;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 
 public class ItemRestriction
 {

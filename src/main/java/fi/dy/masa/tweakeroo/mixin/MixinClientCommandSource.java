@@ -7,12 +7,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.server.command.CommandSource;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(ClientCommandSource.class)
 public abstract class MixinClientCommandSource

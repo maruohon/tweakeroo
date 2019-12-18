@@ -4,9 +4,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.FirstPersonRenderer;
+import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(FirstPersonRenderer.class)
 public abstract class MixinFirstPersonRenderer

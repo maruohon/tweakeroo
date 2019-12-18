@@ -3,9 +3,9 @@ package fi.dy.masa.tweakeroo.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.render.ChunkRenderDispatcher;
 import net.minecraft.client.render.WorldRenderer;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer
