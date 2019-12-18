@@ -25,7 +25,7 @@ public class MiscTweaks
     private static final ItemRestriction ITEM_GLINT_RESTRICTION = new ItemRestriction();
     private static final PotionRestriction POTION_RESTRICTION = new PotionRestriction();
 
-    private static long lastPotionWarning;
+    private static int potionWarningTimer;
     private static int periodicAttackCounter;
     private static int periodicUseCounter;
 
@@ -72,9 +72,9 @@ public class MiscTweaks
     private static void doPotionWarnings(EntityPlayer player)
     {
         if (FeatureToggle.TWEAK_POTION_WARNING.getBooleanValue() &&
-            player.getEntityWorld().getTotalWorldTime() - lastPotionWarning >= 100)
+            ++potionWarningTimer >= 100)
         {
-            lastPotionWarning = player.getEntityWorld().getTotalWorldTime();
+            potionWarningTimer = 0;
 
             Collection<PotionEffect> effects = player.getActivePotionEffects();
 
