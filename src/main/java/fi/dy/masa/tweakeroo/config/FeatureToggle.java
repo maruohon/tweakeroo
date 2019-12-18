@@ -30,6 +30,8 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     TWEAK_CHAT_BACKGROUND_COLOR     ("tweakChatBackgroundColor",            false, "",    "Overrides the default chat background color\nwith the one from Generics -> 'chatBackgroundColor'"),
     TWEAK_CHAT_PERSISTENT_TEXT      ("tweakChatPersistentText",             false, "",    "Stores the text from the chat input text field\nand restores it when the chat is opened again"),
     TWEAK_CHAT_TIMESTAMP            ("tweakChatTimestamp",                  false, "",    "Adds timestamps to chat messages"),
+    TWEAK_CHUNK_RENDER_MAIN_THREAD  ("tweakChunkRenderOnMainThread",        false, "",    "Forces the chunk rendering to happen on the main client thread.\nThis may be useful to get the chunks to render immediately,\nbut it can destroy the FPS with lots of chunk updates."),
+    TWEAK_CHUNK_RENDER_TIMEOUT      ("tweakChunkRenderTimeoutOverride",     false, "",    "Overrides the timeout for chunk render tasks with the\nvalue from Generic -> chunkRenderTimeout"),
     TWEAK_CLOUD_HEIGHT_OVERRIDE     ("tweakCloudHeightOverride",            false, "",    "Overrides the normal cloud height with the one set in Generic -> 'cloudHeightOverride'"),
     TWEAK_COMMAND_BLOCK_EXTRA_FIELDS("tweakCommandBlockExtraFields",        false, "",    "Adds extra fields to the Command Block GUI, for settings\nthe name of the command block, and seeing the stats results"),
     TWEAK_CUSTOM_FLAT_PRESETS       ("tweakCustomFlatPresets",              false, "",    "Allows adding custom flat world presets to the list.\nThe presets are defined in Lists -> flatWorldPresets"),

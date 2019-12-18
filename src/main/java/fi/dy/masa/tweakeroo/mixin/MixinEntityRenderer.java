@@ -7,8 +7,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.entity.Entity;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -16,9 +20,6 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.entity.Entity;
 
 @Mixin(EntityRenderer.class)
 public abstract class MixinEntityRenderer
@@ -39,6 +40,17 @@ public abstract class MixinEntityRenderer
         {
             ci.cancel();
         }
+    }
+
+    @ModifyVariable(method = "renderWorld(FJ)V", at = @At("HEAD"), argsOnly = true)
+    private long overrideRenderTimeout(long finishTime)
+    {
+        if (FeatureToggle.TWEAK_CHUNK_RENDER_TIMEOUT.getBooleanValue())
+        {
+            return System.nanoTime() + Configs.Generic.CHUNK_RENDER_TIMEOUT.getIntegerValue();
+        }
+
+        return finishTime;
     }
 
     @Inject(method = "setupFog(IF)V", at = @At(

@@ -5,6 +5,7 @@
     "minVersion": "0.6",
     "client": [
         "IMixinAbstractHorse",
+        "IMixinChunkRenderWorker",
         "IMixinCommandBlockBaseLogic",
         "IMixinFlatGeneratorInfo",
         "MixinBlockDispenser",
@@ -16,6 +17,7 @@
         "MixinBossInfoClient",
         "MixinChatTabCompleter",
         "MixinChunk",
+        "MixinChunkRenderDispatcher",
         "MixinCommandFillClone",
         "MixinDebugRendererChunkBorder",
         "MixinEntity",
