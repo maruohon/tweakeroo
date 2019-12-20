@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.village.TradeOffer;
+import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(TradeOffer.class)
 public abstract class MixinTradeOffer

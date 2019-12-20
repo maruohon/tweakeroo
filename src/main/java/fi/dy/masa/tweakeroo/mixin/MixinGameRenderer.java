@@ -27,7 +27,7 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
-@Mixin(GameRenderer.class)
+@Mixin(value = GameRenderer.class, priority = 1001)
 public abstract class MixinGameRenderer
 {
     @Shadow

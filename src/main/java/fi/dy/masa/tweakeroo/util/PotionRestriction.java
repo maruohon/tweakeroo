@@ -2,11 +2,11 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.util.List;
 import java.util.Set;
-import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
-import fi.dy.masa.tweakeroo.Tweakeroo;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 
 public class PotionRestriction extends UsageRestriction<StatusEffect>
 {

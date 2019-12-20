@@ -5,12 +5,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import fi.dy.masa.malilib.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.tweaks.PlacementHandler;
-import fi.dy.masa.tweakeroo.tweaks.PlacementHandler.UseContext;
-import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -18,6 +12,12 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import fi.dy.masa.malilib.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.PlacementHandler;
+import fi.dy.masa.tweakeroo.tweaks.PlacementHandler.UseContext;
+import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 
 @Mixin(BlockItem.class)
 public abstract class MixinBlockItem extends Item implements IItemStackLimit

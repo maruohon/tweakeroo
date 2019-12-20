@@ -51,7 +51,7 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
         }
     }
 
-    @Inject(method = "canMerge", at = @At("HEAD"), cancellable = true) // canMerge
+    @Inject(method = "canMerge", at = @At("HEAD"), cancellable = true)
     private void allowStackingEmptyShulkerBoxes(CallbackInfoReturnable<Boolean> cir)
     {
         if (FeatureToggle.TWEAK_SHULKERBOX_STACK_GROUND.getBooleanValue())

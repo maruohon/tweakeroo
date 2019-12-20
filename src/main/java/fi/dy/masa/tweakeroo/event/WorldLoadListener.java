@@ -1,10 +1,10 @@
 package fi.dy.masa.tweakeroo.event;
 
 import javax.annotation.Nullable;
-import fi.dy.masa.malilib.interfaces.IWorldLoadListener;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
+import fi.dy.masa.malilib.interfaces.IWorldLoadListener;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class WorldLoadListener implements IWorldLoadListener
 {

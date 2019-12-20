@@ -6,12 +6,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.hotkeys.KeybindMulti;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.IGuiEditSign;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -20,6 +14,12 @@ import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.KeyCode;
 import net.minecraft.text.Text;
+import fi.dy.masa.malilib.gui.GuiBase;
+import fi.dy.masa.malilib.hotkeys.KeybindMulti;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.IGuiEditSign;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(SignEditScreen.class)
 public abstract class MixinEditSignScreen extends Screen implements IGuiEditSign

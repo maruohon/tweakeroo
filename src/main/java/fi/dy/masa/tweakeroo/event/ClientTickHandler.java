@@ -1,8 +1,8 @@
 package fi.dy.masa.tweakeroo.event;
 
+import net.minecraft.client.MinecraftClient;
 import fi.dy.masa.malilib.interfaces.IClientTickHandler;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
-import net.minecraft.client.MinecraftClient;
 
 public class ClientTickHandler implements IClientTickHandler
 {
