@@ -111,7 +111,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         return this.isCamera();
     }
 
-    @Redirect(method = "tickMovement", at = @At(
+    @Redirect(method = "tickMovement", require = 0, at = @At(
                 value = "FIELD", ordinal = 1,
                 target = "Lnet/minecraft/entity/player/PlayerAbilities;allowFlying:Z"))
     private boolean preventFlyStateToggle(PlayerAbilities abilities)
