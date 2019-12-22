@@ -13,6 +13,7 @@
         "MixinBlockFurnace",
         "MixinBlockObserver",
         "MixinBlockPistonBase",
+        "MixinBlockShulkerBox",
         "MixinBlockSlime",
         "MixinBossInfoClient",
         "MixinChatTabCompleter",
