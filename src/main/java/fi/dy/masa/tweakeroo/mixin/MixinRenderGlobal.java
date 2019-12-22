@@ -34,7 +34,7 @@ public abstract class MixinRenderGlobal
         }
     }
 
-    @Redirect(method = "setupTerrain", at = @At(
+    @Redirect(method = "setupTerrain", require = 0, at = @At(
                 value = "INVOKE",
                 target = "Lnet/minecraft/client/renderer/chunk/RenderChunk;needsImmediateUpdate()Z"))
     private boolean forceChunkRendersOnMainThread(net.minecraft.client.renderer.chunk.RenderChunk renderer)
