@@ -55,6 +55,7 @@
         "MixinRenderManager",
         "MixinRenderPlayer",
         "MixinTeleportToPlayer",
+        "MixinTileEntityChestRenderer",
         "MixinTileEntityMobSpawnerRenderer",
         "MixinTileEntityRendererDispatcher",
         "MixinTileEntityStructure",
