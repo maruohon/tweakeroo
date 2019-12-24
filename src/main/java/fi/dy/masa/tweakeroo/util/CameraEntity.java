@@ -7,6 +7,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.recipe.book.ClientRecipeBook;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.math.MathHelper;
@@ -16,6 +17,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class CameraEntity extends ClientPlayerEntity
 {
+    @Nullable private static Entity originalCameraEntity;
     @Nullable private static CameraEntity camera;
     private static float forwardRamped;
     private static float strafeRamped;
@@ -112,7 +114,7 @@ public class CameraEntity extends ClientPlayerEntity
             base = Configs.getActiveFlySpeedConfig().getDoubleValue();
         }
 
-        return base * 6;
+        return base * 10;
     }
 
     private void handleMotion(float forward, float up, float strafe)
@@ -179,19 +181,23 @@ public class CameraEntity extends ClientPlayerEntity
         return camera;
     }
 
-    public static void createCamera(MinecraftClient mc)
-    {
-        camera = create(mc);
-    }
-
     @Nullable
     public static CameraEntity getCamera()
     {
         return camera;
     }
 
-    public static void removeCamera()
+    public static void createCamera(MinecraftClient mc)
+    {
+        camera = create(mc);
+        originalCameraEntity = mc.getCameraEntity();
+        mc.setCameraEntity(camera);
+    }
+
+    public static void removeCamera(MinecraftClient mc)
     {
         camera = null;
+        mc.setCameraEntity(originalCameraEntity);
+        originalCameraEntity = null;
     }
 }
