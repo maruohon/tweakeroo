@@ -18,7 +18,6 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
-import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(EntityRenderer.class)
@@ -73,6 +72,7 @@ public abstract class MixinEntityRenderer
         {
             cir.setReturnValue((float) Configs.Generic.ZOOM_FOV.getDoubleValue());
         }
+        // Don't change the FoV when "sprinting" in Free Camera mode, or with the static FoV tweak active 
         else if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() || FeatureToggle.TWEAK_STATIC_FOV.getBooleanValue())
         {
             cir.setReturnValue(this.mc.gameSettings.fovSetting);
@@ -102,17 +102,7 @@ public abstract class MixinEntityRenderer
                 target = "Lnet/minecraft/client/renderer/EntityRenderer;getMouseOver(F)V"))
     private void overrideRenderViewEntityPre(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
-        {
-            Entity camera = CameraEntity.getCamera();
-
-            if (camera != null)
-            {
-                this.renderViewEntityOriginal = this.mc.getRenderViewEntity();
-                this.mc.setRenderViewEntity(camera);
-            }
-        }
-        else if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
+        if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
         {
             Entity entity = this.mc.getRenderViewEntity();
 
@@ -128,12 +118,7 @@ public abstract class MixinEntityRenderer
     @Inject(method = "renderWorld(FJ)V", at = @At("RETURN"))
     private void overrideRenderViewEntityPost(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && this.renderViewEntityOriginal != null)
-        {
-            this.mc.setRenderViewEntity(this.renderViewEntityOriginal);
-            this.renderViewEntityOriginal = null;
-        }
-        else if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
+        if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
         {
             Entity entity = this.mc.getRenderViewEntity();
 

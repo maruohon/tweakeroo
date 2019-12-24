@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.MathHelper;
@@ -111,12 +112,12 @@ public class MiscUtils
 
     public static float getCameraYaw()
     {
-        return cameraYaw;
+        return MathHelper.wrapDegrees(cameraYaw);
     }
 
     public static float getCameraPitch()
     {
-        return cameraPitch;
+        return MathHelper.wrapDegrees(cameraPitch);
     }
 
     public static void setCameraYaw(float yaw)
@@ -135,6 +136,13 @@ public class MiscUtils
         entity.rotationPitch = pitch;
         entity.prevRotationYaw = yaw;
         entity.prevRotationPitch = pitch;
+
+        if (entity instanceof EntityLivingBase)
+        {
+            EntityLivingBase living = (EntityLivingBase) entity;
+            living.rotationYawHead = yaw;
+            living.prevRotationYawHead = yaw;
+        }
     }
 
     public static float getSnappedPitch(double realPitch)

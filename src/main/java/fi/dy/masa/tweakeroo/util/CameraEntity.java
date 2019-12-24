@@ -1,17 +1,18 @@
 package fi.dy.masa.tweakeroo.util;
 
 import javax.annotation.Nullable;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class CameraEntity extends EntityPlayerSP
 {
@@ -21,6 +22,7 @@ public class CameraEntity extends EntityPlayerSP
         super(mc, world, nethandler, stats, recipeBook);
     }
 
+    @Nullable private static Entity originalRenderViewEntity;
     @Nullable private static CameraEntity camera;
     private static float forwardRamped;
     private static float strafeRamped;
@@ -112,7 +114,7 @@ public class CameraEntity extends EntityPlayerSP
             base = Configs.getActiveFlySpeedConfig().getDoubleValue();
         }
 
-        return base * 6;
+        return base * 10;
     }
 
     private void handleMotion(float forward, float up, float strafe)
@@ -134,9 +136,9 @@ public class CameraEntity extends EntityPlayerSP
 
     private void updateLastTickPosition()
     {
-        this.lastTickPosX = this.posX;
-        this.lastTickPosY = this.posY;
-        this.lastTickPosZ = this.posZ;
+        this.prevPosX = this.lastTickPosX = this.posX;
+        this.prevPosY = this.lastTickPosY = this.posY;
+        this.prevPosZ = this.lastTickPosZ = this.posZ;
     }
 
     public void setRotations(float yaw, float pitch)
@@ -169,19 +171,23 @@ public class CameraEntity extends EntityPlayerSP
         return camera;
     }
 
-    public static void createCamera(Minecraft mc)
-    {
-        camera = create(mc);
-    }
-
     @Nullable
     public static CameraEntity getCamera()
     {
         return camera;
     }
 
-    public static void removeCamera()
+    public static void createCamera(Minecraft mc)
+    {
+        camera = create(mc);
+        originalRenderViewEntity = mc.getRenderViewEntity();
+        mc.setRenderViewEntity(camera);
+    }
+
+    public static void removeCamera(Minecraft mc)
     {
         camera = null;
+        mc.setRenderViewEntity(originalRenderViewEntity);
+        originalRenderViewEntity = null;
     }
 }
