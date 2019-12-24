@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
@@ -111,12 +112,12 @@ public class MiscUtils
 
     public static float getCameraYaw()
     {
-        return cameraYaw;
+        return MathHelper.wrapDegrees(cameraYaw);
     }
 
     public static float getCameraPitch()
     {
-        return cameraPitch;
+        return MathHelper.wrapDegrees(cameraPitch);
     }
 
     public static void setCameraYaw(float yaw)
@@ -135,6 +136,13 @@ public class MiscUtils
         entity.pitch = pitch;
         entity.prevYaw = yaw;
         entity.prevPitch = pitch;
+
+        if (entity instanceof LivingEntity)
+        {
+            LivingEntity living = (LivingEntity) entity;
+            living.headYaw = yaw;
+            living.prevHeadYaw = yaw;
+        }
     }
 
     public static float getSnappedPitch(double realPitch)

@@ -225,7 +225,7 @@ public class Callbacks
                 }
                 else
                 {
-                    CameraEntity.removeCamera();
+                    CameraEntity.removeCamera(MinecraftClient.getInstance());
                 }
 
                 if (Configs.Generic.FREE_CAMERA_MOTION_TOGGLE.getBooleanValue())

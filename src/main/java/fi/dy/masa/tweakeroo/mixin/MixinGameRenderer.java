@@ -24,7 +24,6 @@ import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(value = GameRenderer.class, priority = 1001)
@@ -89,17 +88,7 @@ public abstract class MixinGameRenderer
                 target = "Lnet/minecraft/client/render/GameRenderer;updateTargetedEntity(F)V"))
     private void overrideRenderViewEntityPre(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
-        {
-            Entity camera = CameraEntity.getCamera();
-
-            if (camera != null)
-            {
-                this.cameraEntityOriginal = this.client.getCameraEntity();
-                this.client.setCameraEntity(camera);
-            }
-        }
-        else if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
+        if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
         {
             Entity entity = this.client.getCameraEntity();
 
@@ -115,12 +104,7 @@ public abstract class MixinGameRenderer
     @Inject(method = "renderWorld", at = @At("RETURN"))
     private void overrideRenderViewEntityPost(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && this.cameraEntityOriginal != null)
-        {
-            this.client.setCameraEntity(this.cameraEntityOriginal);
-            this.cameraEntityOriginal = null;
-        }
-        else if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
+        if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
         {
             Entity entity = this.client.getCameraEntity();
 
