@@ -19,6 +19,7 @@
         "MixinChatTabCompleter",
         "MixinChunk",
         "MixinChunkRenderDispatcher",
+        "MixinChunkRenderWorker",
         "MixinCommandFillClone",
         "MixinDebugRendererChunkBorder",
         "MixinEntity",
