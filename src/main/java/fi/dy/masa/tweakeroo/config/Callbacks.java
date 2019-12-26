@@ -64,7 +64,12 @@ public class Callbacks
         Hotkeys.FLY_PRESET_2.getKeybind().setCallback(callbackGeneric);
         Hotkeys.FLY_PRESET_3.getKeybind().setCallback(callbackGeneric);
         Hotkeys.FLY_PRESET_4.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.FREE_CAMERA_PLAYER_MOVEMENT.getKeybind().setCallback((action, key) -> { Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.toggleBooleanValue(); return true; });
+        Hotkeys.FREE_CAMERA_PLAYER_MOVEMENT.getKeybind().setCallback((action, key) -> {
+            IConfigBoolean config = Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT;
+            config.toggleBooleanValue();
+            InfoUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
+            return true;
+        });
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
