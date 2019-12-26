@@ -16,10 +16,10 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerAbilities;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
+import fi.dy.masa.tweakeroo.util.DummyMovementInput;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
@@ -27,8 +27,8 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     @Shadow public Input input;
     @Shadow protected int field_3935; // sprintToggleTimer
 
-    @Shadow
-    protected abstract boolean isCamera();
+    private final DummyMovementInput dummyMovementInput = new DummyMovementInput(null);
+    private Input realInput;
 
     public MixinClientPlayerEntity(ClientWorld worldIn, GameProfile playerProfile)
     {
@@ -98,47 +98,32 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         }
     }
 
-    @Redirect(method = "tickMovement", at = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/client/network/ClientPlayerEntity;isCamera()Z"))
-    private boolean preventVerticalMotion(ClientPlayerEntity player)
+    @Inject(method = "tick", at = @At("HEAD"))
+    private void disableMovementInputsPre(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
+        if (CameraUtils.shouldPreventPlayerMovement())
         {
-            return false;
-        }
-
-        return this.isCamera();
-    }
-
-    @Redirect(method = "tickMovement", require = 0, at = @At(
-                value = "FIELD", ordinal = 1,
-                target = "Lnet/minecraft/entity/player/PlayerAbilities;allowFlying:Z"))
-    private boolean preventFlyStateToggle(PlayerAbilities abilities)
-    {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
-        {
-            return false;
-        }
-
-        return abilities.allowFlying;
-    }
-
-    @Inject(method = "tickNewAi", at = @At("RETURN"))
-    private void preventJumpingInCameraMode(CallbackInfo ci)
-    {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
-        {
-            this.jumping = false;
+            this.realInput = this.input;
+            this.input = this.dummyMovementInput;
         }
     }
 
-    @Inject(method = "isSneaking", at = @At("HEAD"), cancellable = true)
-    private void preventSneakingInCameraMode(CallbackInfoReturnable<Boolean> cir)
+    @Inject(method = "tick", at = @At("RETURN"))
+    private void disableMovementInputsPost(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
+        if (this.realInput != null)
         {
-            cir.setReturnValue(false);
+            this.input = this.realInput;
+            this.realInput = null;
+        }
+    }
+
+    @Inject(method = "isCamera", at = @At("HEAD"), cancellable = true)
+    private void allowPlayerMovementInFreeCameraMode(CallbackInfoReturnable<Boolean> cir)
+    {
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue())
+        {
+            cir.setReturnValue(true);
         }
     }
 

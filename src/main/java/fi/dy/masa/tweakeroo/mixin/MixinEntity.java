@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
-import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
@@ -44,15 +43,9 @@ public abstract class MixinEntity
     {
         if ((Object) this instanceof net.minecraft.client.network.ClientPlayerEntity)
         {
-            if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
+            if (CameraUtils.shouldPreventPlayerMovement())
             {
-                CameraEntity camera = CameraEntity.getCamera();
-
-                if (camera != null)
-                {
-                    this.setVelocity(this.getVelocity().multiply(1D, 0D, 1D));
-                    ci.cancel();
-                }
+                ci.cancel();
             }
             else if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
             {
@@ -78,27 +71,18 @@ public abstract class MixinEntity
     {
         if ((Object) this instanceof net.minecraft.client.network.ClientPlayerEntity)
         {
-            if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
+            if (CameraUtils.shouldPreventPlayerMovement())
             {
                 this.yaw = this.prevYaw;
                 this.pitch = this.prevPitch;
 
-                this.updateCustomRotations(yawChange, pitchChange, true, true, 90);
-
-                CameraEntity camera = CameraEntity.getCamera();
-
-                if (camera != null)
-                {
-                    camera.setRotations((float) this.forcedYaw, (float) this.forcedPitch);
-                }
-
+                CameraUtils.updateCameraRotations((float) yawChange, (float) pitchChange);
                 ci.cancel();
 
                 return;
             }
 
-            if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue() ||
-                (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue()))
+            if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue())
             {
                 this.yaw = (float) this.forcedYaw;
                 this.pitch = (float) this.forcedPitch;
@@ -120,7 +104,7 @@ public abstract class MixinEntity
                 // Not locked, or not snapping the pitch (ie. not in Pitch or Both modes)
                 boolean updatePitch = snapAimLock == false || mode == SnapAimMode.YAW;
 
-                this.updateCustomRotations(yawChange, pitchChange, updateYaw, updatePitch, pitchLimit);
+                this.updateCustomPlayerRotations(yawChange, pitchChange, updateYaw, updatePitch, pitchLimit);
 
                 this.yaw = MiscUtils.getSnappedYaw(this.forcedYaw);
                 this.pitch = MiscUtils.getSnappedPitch(this.forcedPitch);
@@ -135,7 +119,7 @@ public abstract class MixinEntity
             {
                 int pitchLimit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
 
-                this.updateCustomRotations(yawChange, pitchChange, true, true, pitchLimit);
+                this.updateCustomPlayerRotations(yawChange, pitchChange, true, true, pitchLimit);
 
                 CameraUtils.setCameraYaw((float) this.forcedYaw);
                 CameraUtils.setCameraPitch((float) this.forcedPitch);
@@ -156,7 +140,7 @@ public abstract class MixinEntity
         }
     }
 
-    private void updateCustomRotations(double yawChange, double pitchChange, boolean updateYaw, boolean updatePitch, float pitchLimit)
+    private void updateCustomPlayerRotations(double yawChange, double pitchChange, boolean updateYaw, boolean updatePitch, float pitchLimit)
     {
         if (updateYaw)
         {

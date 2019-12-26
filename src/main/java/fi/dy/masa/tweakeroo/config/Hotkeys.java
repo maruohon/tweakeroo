@@ -26,6 +26,7 @@ public class Hotkeys
     public static final ConfigHotkey FLY_PRESET_2                       = new ConfigHotkey("flyPreset2",                        "",     "Switch to fly preset 2");
     public static final ConfigHotkey FLY_PRESET_3                       = new ConfigHotkey("flyPreset3",                        "",     "Switch to fly preset 3");
     public static final ConfigHotkey FLY_PRESET_4                       = new ConfigHotkey("flyPreset4",                        "",     "Switch to fly preset 4");
+    public static final ConfigHotkey FREE_CAMERA_PLAYER_MOVEMENT        = new ConfigHotkey("freeCameraPlayerMovement",          "",     "Toggle the Generic -> freeCameraPlayerMovement option");
     public static final ConfigHotkey HOTBAR_SCROLL                      = new ConfigHotkey("hotbarScroll",                      "",     KeybindSettings.RELEASE_ALLOW_EXTRA, "The key to hold to allow scrolling the hotbar\nthrough the player inventory rows");
     public static final ConfigHotkey HOTBAR_SWAP_BASE                   = new ConfigHotkey("hotbarSwapBase",                    "",     KeybindSettings.PRESS_ALLOWEXTRA, "The base key to show the hotbar/inventory overlay");
     public static final ConfigHotkey HOTBAR_SWAP_1                      = new ConfigHotkey("hotbarSwap1",                       "",     "Swap the hotbar with the top-most inventory row");
@@ -65,6 +66,7 @@ public class Hotkeys
             FLY_PRESET_2,
             FLY_PRESET_3,
             FLY_PRESET_4,
+            FREE_CAMERA_PLAYER_MOVEMENT,
             HOTBAR_SCROLL,
             HOTBAR_SWAP_BASE,
             HOTBAR_SWAP_1,
