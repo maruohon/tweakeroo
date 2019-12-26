@@ -57,11 +57,14 @@ public class Callbacks
         Configs.Lists.POTION_WARNING_BLACKLIST.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });
         Configs.Lists.POTION_WARNING_WHITELIST.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });
 
-        FeatureCallbackSpecial featureCallback = new FeatureCallbackSpecial();
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleWithSpecialMessage(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
-        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback(featureCallback);
-        FeatureToggle.TWEAK_FREE_CAMERA.setValueChangeCallback(featureCallback);
-        FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setValueChangeCallback(featureCallback);
+        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback((cfg) -> {
+            if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
+            {
+                FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setBooleanValue(cfg.getBooleanValue());
+            }
+        });
+        FeatureToggle.TWEAK_FREE_CAMERA.setValueChangeCallback((cfg) -> CameraEntity.setCameraState(cfg.getBooleanValue()));
 
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
@@ -77,6 +80,7 @@ public class Callbacks
         Hotkeys.FLY_PRESET_2.getKeybind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
         Hotkeys.FLY_PRESET_3.getKeybind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
         Hotkeys.FLY_PRESET_4.getKeybind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
+        Hotkeys.FREE_CAMERA_PLAYER_MOVEMENT.getKeybind().setCallback((action, key) -> { Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.toggleBooleanValue(); return true; });
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
@@ -166,39 +170,6 @@ public class Callbacks
             else
             {
                 Blocks.SLIME_BLOCK.slipperiness = (float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue();
-            }
-        }
-    }
-
-    public static class FeatureCallbackSpecial implements IValueChangeCallback<IConfigBoolean>
-    {
-        public FeatureCallbackSpecial()
-        {
-        }
-
-        @Override
-        public void onValueChanged(IConfigBoolean config)
-        {
-            if (config == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT &&
-                Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
-            {
-                FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setBooleanValue(config.getBooleanValue());
-            }
-            else if (config == FeatureToggle.TWEAK_FREE_CAMERA)
-            {
-                if (config.getBooleanValue())
-                {
-                    CameraEntity.createCamera(Minecraft.getMinecraft());
-                }
-                else
-                {
-                    CameraEntity.removeCamera(Minecraft.getMinecraft());
-                }
-
-                if (Configs.Generic.FREE_CAMERA_MOTION_TOGGLE.getBooleanValue())
-                {
-                    FeatureToggle.TWEAK_FREE_CAMERA_MOTION.setBooleanValue(config.getBooleanValue());
-                }
             }
         }
     }

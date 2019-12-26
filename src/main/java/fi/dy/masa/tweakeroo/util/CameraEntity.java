@@ -28,7 +28,7 @@ public class CameraEntity extends EntityPlayerSP
     private static float forwardRamped;
     private static float strafeRamped;
     private static float verticalRamped;
-
+    private static boolean sprinting;
 
     @Override
     public boolean isSpectator()
@@ -40,10 +40,9 @@ public class CameraEntity extends EntityPlayerSP
     {
         CameraEntity camera = getCamera();
 
-        if (camera != null && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
+        if (camera != null && Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() == false)
         {
             Minecraft mc = Minecraft.getMinecraft();
-            EntityPlayerSP player = mc.player;
 
             camera.updateLastTickPosition();
 
@@ -58,6 +57,15 @@ public class CameraEntity extends EntityPlayerSP
             if (options.keyBindRight.isKeyDown())   { strafe--;   }
             if (options.keyBindJump.isKeyDown())    { vertical++; }
             if (options.keyBindSneak.isKeyDown())   { vertical--; }
+
+            if (options.keyBindSprint.isKeyDown())
+            {
+                sprinting = true;
+            }
+            else if (forward == 0)
+            {
+                sprinting = false;
+            }
 
             float rampAmount = 0.15f;
             float speed = strafe * strafe + forward * forward;
@@ -75,7 +83,7 @@ public class CameraEntity extends EntityPlayerSP
             verticalRamped = getRampedMotion(verticalRamped, vertical, rampAmount);
             strafeRamped   = getRampedMotion(strafeRamped  , strafe  , rampAmount) / speed;
 
-            forward = player.isSprinting() ? forwardRamped * 2 : forwardRamped;
+            forward = sprinting ? forwardRamped * 3 : forwardRamped;
 
             camera.handleMotion(forward, verticalRamped, strafeRamped);
         }
@@ -142,7 +150,7 @@ public class CameraEntity extends EntityPlayerSP
         this.prevPosZ = this.lastTickPosZ = this.posZ;
     }
 
-    public void setRotations(float yaw, float pitch)
+    public void setCameraRotations(float yaw, float pitch)
     {
         this.rotationYaw = yaw;
         this.rotationPitch = pitch;
@@ -152,12 +160,20 @@ public class CameraEntity extends EntityPlayerSP
         this.setRenderYawOffset(this.rotationYaw);
     }
 
-    private static CameraEntity create(Minecraft mc)
+    public void updateCameraRotations(float yawChange, float pitchChange)
+    {
+        this.rotationYaw += yawChange * 0.15F;
+        this.rotationPitch = MathHelper.clamp(this.rotationPitch - pitchChange * 0.15F, -90F, 90F);
+
+        this.setCameraRotations(this.rotationYaw, this.rotationPitch);
+    }
+
+    private static CameraEntity createCameraEntity(Minecraft mc)
     {
         CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.connection, mc.player.getStatFileWriter(), mc.player.getRecipeBook());
         camera.noClip = true;
 
-        EntityPlayerSP player = mc.player;
+        Entity player = mc.player;
 
         if (player != null)
         {
@@ -178,9 +194,24 @@ public class CameraEntity extends EntityPlayerSP
         return camera;
     }
 
-    public static void createCamera(Minecraft mc)
+    public static void setCameraState(boolean enabled)
     {
-        camera = create(mc);
+        Minecraft mc = Minecraft.getMinecraft();
+
+        if (enabled)
+        {
+            createAndSetCamera(mc);
+            //camera.setCameraRotations(mc.player.rotationYaw, mc.player.rotationPitch);
+        }
+        else
+        {
+            removeCamera(mc);
+        }
+    }
+
+    private static void createAndSetCamera(Minecraft mc)
+    {
+        camera = createCameraEntity(mc);
         originalRenderViewEntity = mc.getRenderViewEntity();
         cullChunksOriginal = mc.renderChunksMany;
 
@@ -188,7 +219,7 @@ public class CameraEntity extends EntityPlayerSP
         mc.renderChunksMany = false; // Disable chunk culling
     }
 
-    public static void removeCamera(Minecraft mc)
+    private static void removeCamera(Minecraft mc)
     {
         mc.setRenderViewEntity(originalRenderViewEntity);
         mc.renderChunksMany = cullChunksOriginal;

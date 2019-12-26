@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
+import fi.dy.masa.tweakeroo.util.DummyMovementInput;
 
 @Mixin(net.minecraft.client.entity.EntityPlayerSP.class)
 public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.AbstractClientPlayer
@@ -24,8 +25,10 @@ public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.Ab
     @Shadow public net.minecraft.util.MovementInput movementInput;
     @Shadow protected int sprintToggleTimer;
 
-    @Shadow
-    protected abstract boolean isCurrentViewEntity();
+    @Shadow protected abstract boolean isCurrentViewEntity();
+
+    private final DummyMovementInput dummyMovementInput = new DummyMovementInput(null);
+    private net.minecraft.util.MovementInput realInput;
 
     @Redirect(method = "onLivingUpdate()V",
               at = @At(value = "INVOKE",
@@ -89,47 +92,32 @@ public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.Ab
         }
     }
 
-    @Redirect(method = "onLivingUpdate", at = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/client/entity/EntityPlayerSP;isCurrentViewEntity()Z"))
-    private boolean preventVerticalMotion(net.minecraft.client.entity.EntityPlayerSP player)
+    @Inject(method = "onUpdate", at = @At("HEAD"))
+    private void disableMovementInputsPre(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
+        if (CameraUtils.shouldPreventPlayerMovement())
         {
-            return false;
-        }
-
-        return this.isCurrentViewEntity();
-    }
-
-    @Redirect(method = "onLivingUpdate", at = @At(
-                value = "FIELD", ordinal = 1,
-                target = "Lnet/minecraft/entity/player/PlayerCapabilities;allowFlying:Z"))
-    private boolean preventFlyStateToggle(net.minecraft.entity.player.PlayerCapabilities abilities)
-    {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
-        {
-            return false;
-        }
-
-        return abilities.allowFlying;
-    }
-
-    @Inject(method = "updateEntityActionState", at = @At("RETURN"))
-    private void preventJumpingInCameraMode(CallbackInfo ci)
-    {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
-        {
-            this.isJumping = false;
+            this.realInput = this.movementInput;
+            this.movementInput = this.dummyMovementInput;
         }
     }
 
-    @Inject(method = "isSneaking", at = @At("HEAD"), cancellable = true)
-    private void preventSneakingInCameraMode(CallbackInfoReturnable<Boolean> cir)
+    @Inject(method = "onUpdate", at = @At("RETURN"))
+    private void disableMovementInputsPost(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
+        if (this.realInput != null)
         {
-            cir.setReturnValue(false);
+            this.movementInput = this.realInput;
+            this.realInput = null;
+        }
+    }
+
+    @Inject(method = "isCurrentViewEntity", at = @At("HEAD"), cancellable = true)
+    private void allowPlayerMovementInFreeCameraMode(CallbackInfoReturnable<Boolean> cir)
+    {
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue())
+        {
+            cir.setReturnValue(true);
         }
     }
 

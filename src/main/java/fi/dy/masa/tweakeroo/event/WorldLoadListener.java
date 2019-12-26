@@ -1,10 +1,10 @@
 package fi.dy.masa.tweakeroo.event;
 
 import javax.annotation.Nullable;
-import fi.dy.masa.malilib.interfaces.IWorldLoadListener;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import fi.dy.masa.malilib.interfaces.IWorldLoadListener;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class WorldLoadListener implements IWorldLoadListener
 {
@@ -13,6 +13,5 @@ public class WorldLoadListener implements IWorldLoadListener
     {
         // Always disable the Free Camera mode when leaving the world or switching dimensions
         FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
-        FeatureToggle.TWEAK_FREE_CAMERA_MOTION.setBooleanValue(false);
     }
 }
