@@ -201,7 +201,6 @@ public class CameraEntity extends EntityPlayerSP
         if (enabled)
         {
             createAndSetCamera(mc);
-            //camera.setCameraRotations(mc.player.rotationYaw, mc.player.rotationPitch);
         }
         else
         {
@@ -217,6 +216,9 @@ public class CameraEntity extends EntityPlayerSP
 
         mc.setRenderViewEntity(camera);
         mc.renderChunksMany = false; // Disable chunk culling
+
+        // Disable the motion option when entering camera mode
+        Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.setBooleanValue(false);
     }
 
     private static void removeCamera(Minecraft mc)
