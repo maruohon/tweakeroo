@@ -23,6 +23,7 @@ public class CameraEntity extends ClientPlayerEntity
     private static float forwardRamped;
     private static float strafeRamped;
     private static float verticalRamped;
+    private static boolean sprinting;
 
     public CameraEntity(MinecraftClient mc, ClientWorld world,
             ClientPlayNetworkHandler nethandler, StatHandler stats,
@@ -41,10 +42,11 @@ public class CameraEntity extends ClientPlayerEntity
     {
         CameraEntity camera = getCamera();
 
-        if (camera != null && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
+        if (camera != null && Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() == false)
         {
             MinecraftClient mc = MinecraftClient.getInstance();
-            ClientPlayerEntity player = mc.player;
+
+            camera.updateLastTickPosition();
 
             float forward = 0;
             float vertical = 0;
@@ -57,6 +59,15 @@ public class CameraEntity extends ClientPlayerEntity
             if (options.keyRight.isPressed())   { strafe--;   }
             if (options.keyJump.isPressed())    { vertical++; }
             if (options.keySneak.isPressed())   { vertical--; }
+
+            if (options.keySprint.isPressed())
+            {
+                sprinting = true;
+            }
+            else if (forward == 0)
+            {
+                sprinting = false;
+            }
 
             float rampAmount = 0.15f;
             float speed = strafe * strafe + forward * forward;
@@ -74,9 +85,8 @@ public class CameraEntity extends ClientPlayerEntity
             verticalRamped = getRampedMotion(verticalRamped, vertical, rampAmount);
             strafeRamped   = getRampedMotion(strafeRamped  , strafe  , rampAmount) / speed;
 
-            forward = player.isSprinting() ? forwardRamped * 2 : forwardRamped;
+            forward = sprinting ? forwardRamped * 3 : forwardRamped;
 
-            camera.updateLastTickPosition();
             camera.handleMotion(forward, verticalRamped, strafeRamped);
         }
     }
@@ -152,7 +162,7 @@ public class CameraEntity extends ClientPlayerEntity
         this.prevHeadYaw = this.headYaw;
     }
 
-    public void setRotations(float yaw, float pitch)
+    public void setCameraRotations(float yaw, float pitch)
     {
         this.yaw = yaw;
         this.pitch = pitch;
@@ -166,7 +176,15 @@ public class CameraEntity extends ClientPlayerEntity
         //this.setRenderYawOffset(this.rotationYaw);
     }
 
-    private static CameraEntity create(MinecraftClient mc)
+    public void updateCameraRotations(float yawChange, float pitchChange)
+    {
+        this.yaw += yawChange * 0.15F;
+        this.pitch = MathHelper.clamp(this.pitch + pitchChange * 0.15F, -90F, 90F);
+
+        this.setCameraRotations(this.yaw, this.pitch);
+    }
+
+    private static CameraEntity createCameraEntity(MinecraftClient mc)
     {
         CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.networkHandler, mc.player.getStatHandler(), mc.player.getRecipeBook());
         camera.noClip = true;
@@ -176,7 +194,7 @@ public class CameraEntity extends ClientPlayerEntity
         if (player != null)
         {
             camera.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), player.yaw, player.pitch);
-            camera.setRotations(player.yaw, player.pitch);
+            camera.setRotation(player.yaw, player.pitch);
         }
 
         return camera;
@@ -188,9 +206,24 @@ public class CameraEntity extends ClientPlayerEntity
         return camera;
     }
 
-    public static void createCamera(MinecraftClient mc)
+    public static void setCameraState(boolean enabled)
     {
-        camera = create(mc);
+        MinecraftClient mc = MinecraftClient.getInstance();
+
+        if (enabled)
+        {
+            createAndSetCamera(mc);
+            //camera.setCameraRotations(mc.player.rotationYaw, mc.player.rotationPitch);
+        }
+        else
+        {
+            removeCamera(mc);
+        }
+    }
+
+    private static void createAndSetCamera(MinecraftClient mc)
+    {
+        camera = createCameraEntity(mc);
         originalCameraEntity = mc.getCameraEntity();
         cullChunksOriginal = mc.chunkCullingEnabled;
 
@@ -198,7 +231,7 @@ public class CameraEntity extends ClientPlayerEntity
         mc.chunkCullingEnabled = false; // Disable chunk culling
     }
 
-    public static void removeCamera(MinecraftClient mc)
+    private static void removeCamera(MinecraftClient mc)
     {
         mc.setCameraEntity(originalCameraEntity);
         mc.chunkCullingEnabled = cullChunksOriginal;

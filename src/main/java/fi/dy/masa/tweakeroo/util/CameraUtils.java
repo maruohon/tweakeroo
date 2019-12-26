@@ -6,6 +6,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.chunk.ChunkStatus;
 import fi.dy.masa.malilib.util.EntityUtils;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class CameraUtils
 {
@@ -21,6 +23,12 @@ public class CameraUtils
     public static boolean getFreeCameraSpectator()
     {
         return freeCameraSpectator;
+    }
+
+    public static boolean shouldPreventPlayerMovement()
+    {
+        return FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() &&
+               Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() == false;
     }
 
     public static float getCameraYaw()
@@ -41,6 +49,26 @@ public class CameraUtils
     public static void setCameraPitch(float pitch)
     {
         cameraPitch = pitch;
+    }
+
+    public static void setCameraRotations(float yaw, float pitch)
+    {
+        CameraEntity camera = CameraEntity.getCamera();
+
+        if (camera != null)
+        {
+            camera.setCameraRotations(yaw, pitch);
+        }
+    }
+
+    public static void updateCameraRotations(float yawChange, float pitchChange)
+    {
+        CameraEntity camera = CameraEntity.getCamera();
+
+        if (camera != null)
+        {
+            camera.updateCameraRotations(yawChange, pitchChange);
+        }
     }
 
     public static void markChunksForRebuild(int chunkX, int chunkZ, int lastChunkX, int lastChunkZ)
