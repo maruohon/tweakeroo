@@ -135,9 +135,7 @@ public abstract class MixinEntityRenderer
 
     @Inject(method = "renderWorldPass", at = @At(
                 value = "INVOKE",
-                target = "Lnet/minecraft/client/renderer/RenderGlobal;setupTerrain(" +
-                         "Lnet/minecraft/entity/Entity;" +
-                         "DLnet/minecraft/client/renderer/culling/ICamera;IZ)V"))
+                target = "Lnet/minecraft/client/entity/EntityPlayerSP;isSpectator()Z"))
     private void preSetupTerrain(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci)
     {
         CameraUtils.setFreeCameraSpectator(true);
