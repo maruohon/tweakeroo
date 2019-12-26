@@ -11,18 +11,14 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 
-@Mixin(Entity.class)
+@Mixin(net.minecraft.entity.Entity.class)
 public abstract class MixinEntity
 {
-    @Shadow
-    public World world;
+    @Shadow public net.minecraft.world.World world;
 
     @Shadow public float rotationPitch;
     @Shadow public float rotationYaw;
@@ -38,14 +34,14 @@ public abstract class MixinEntity
     @Redirect(method = "move",
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/entity/Entity;onGround:Z", ordinal = 0)),
             at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;isSneaking()Z", ordinal = 0))
-    private boolean fakeSneaking(Entity entity)
+    private boolean fakeSneaking(net.minecraft.entity.Entity entity)
     {
-        if (FeatureToggle.TWEAK_FAKE_SNEAKING.getBooleanValue() && ((Object) this) instanceof EntityPlayerSP)
+        if (FeatureToggle.TWEAK_FAKE_SNEAKING.getBooleanValue() && ((Object) this) instanceof net.minecraft.client.entity.EntityPlayerSP)
         {
             return true;
         }
 
-        return ((Entity) (Object) this).isSneaking();
+        return ((net.minecraft.entity.Entity) (Object) this).isSneaking();
     }
 
     @Inject(method = "moveRelative",
@@ -53,7 +49,7 @@ public abstract class MixinEntity
                      target = "Lnet/minecraft/util/math/MathHelper;sin(F)F"), cancellable = true)
     private void moreAccurateMoveRelative(float strafe, float up, float forward, float friction, CallbackInfo ci)
     {
-        if ((Object) this instanceof EntityPlayerSP)
+        if ((Object) this instanceof net.minecraft.client.entity.EntityPlayerSP)
         {
             if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
             {
@@ -84,7 +80,7 @@ public abstract class MixinEntity
                      target = "Lnet/minecraft/entity/Entity;prevRotationPitch:F", ordinal = 0))
     private void overrideYaw(float yawChange, float pitchChange, CallbackInfo ci)
     {
-        if ((Object) this instanceof EntityPlayerSP)
+        if ((Object) this instanceof net.minecraft.client.entity.EntityPlayerSP)
         {
             if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
             {
@@ -135,8 +131,8 @@ public abstract class MixinEntity
 
                 this.updateCustomRotations(yawChange, pitchChange, true, true, pitchLimit);
 
-                MiscUtils.setCameraYaw((float) this.forcedYaw);
-                MiscUtils.setCameraPitch((float) this.forcedPitch);
+                CameraUtils.setCameraYaw((float) this.forcedYaw);
+                CameraUtils.setCameraPitch((float) this.forcedPitch);
 
                 this.rotationYaw = this.prevRotationYaw;
                 this.rotationPitch = this.prevRotationPitch;
@@ -160,7 +156,7 @@ public abstract class MixinEntity
 
         if (updatePitch)
         {
-            this.forcedPitch = MathHelper.clamp(this.forcedPitch - (double) pitchChange * 0.15D, -pitchLimit, pitchLimit);
+            this.forcedPitch = net.minecraft.util.math.MathHelper.clamp(this.forcedPitch - (double) pitchChange * 0.15D, -pitchLimit, pitchLimit);
         }
     }
 }

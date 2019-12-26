@@ -10,25 +10,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.entity.Entity;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
-@Mixin(EntityRenderer.class)
+@Mixin(net.minecraft.client.renderer.EntityRenderer.class)
 public abstract class MixinEntityRenderer
 {
-    @Shadow
-    @Final
-    private Minecraft mc;
+    @Shadow @Final private net.minecraft.client.Minecraft mc;
 
-    @Nullable
-    private Entity renderViewEntityOriginal;
+    @Nullable private net.minecraft.entity.Entity renderViewEntityOriginal;
     private float realYaw;
     private float realPitch;
 
@@ -61,7 +56,7 @@ public abstract class MixinEntityRenderer
     {
         if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() && Configs.Generic.LAVA_VISIBILITY_OPTIFINE.getBooleanValue() == false)
         {
-            RenderUtils.overrideLavaFog(Minecraft.getMinecraft().getRenderViewEntity());
+            RenderUtils.overrideLavaFog(net.minecraft.client.Minecraft.getMinecraft().getRenderViewEntity());
         }
     }
 
@@ -104,13 +99,13 @@ public abstract class MixinEntityRenderer
     {
         if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
         {
-            Entity entity = this.mc.getRenderViewEntity();
+            net.minecraft.entity.Entity entity = this.mc.getRenderViewEntity();
 
             if (entity != null)
             {
                 this.realYaw = entity.rotationYaw;
                 this.realPitch = entity.rotationPitch;
-                MiscUtils.setEntityRotations(entity, MiscUtils.getCameraYaw(), MiscUtils.getCameraPitch());
+                MiscUtils.setEntityRotations(entity, CameraUtils.getCameraYaw(), CameraUtils.getCameraPitch());
             }
         }
     }
@@ -120,7 +115,7 @@ public abstract class MixinEntityRenderer
     {
         if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
         {
-            Entity entity = this.mc.getRenderViewEntity();
+            net.minecraft.entity.Entity entity = this.mc.getRenderViewEntity();
 
             if (entity != null)
             {
@@ -145,7 +140,7 @@ public abstract class MixinEntityRenderer
                          "DLnet/minecraft/client/renderer/culling/ICamera;IZ)V"))
     private void preSetupTerrain(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci)
     {
-        MiscUtils.setFreeCameraSpectator(true);
+        CameraUtils.setFreeCameraSpectator(true);
     }
 
     @Inject(method = "renderWorldPass", at = @At(
@@ -155,6 +150,6 @@ public abstract class MixinEntityRenderer
                          "DLnet/minecraft/client/renderer/culling/ICamera;IZ)V"))
     private void postSetupTerrain(int pass, float partialTicks, long finishTimeNano, CallbackInfo ci)
     {
-        MiscUtils.setFreeCameraSpectator(false);
+        CameraUtils.setFreeCameraSpectator(false);
     }
 }

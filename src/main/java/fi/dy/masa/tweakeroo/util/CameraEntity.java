@@ -24,6 +24,7 @@ public class CameraEntity extends EntityPlayerSP
 
     @Nullable private static Entity originalRenderViewEntity;
     @Nullable private static CameraEntity camera;
+    private static boolean cullChunksOriginal;
     private static float forwardRamped;
     private static float strafeRamped;
     private static float verticalRamped;
@@ -181,13 +182,23 @@ public class CameraEntity extends EntityPlayerSP
     {
         camera = create(mc);
         originalRenderViewEntity = mc.getRenderViewEntity();
+        cullChunksOriginal = mc.renderChunksMany;
+
         mc.setRenderViewEntity(camera);
+        mc.renderChunksMany = false; // Disable chunk culling
     }
 
     public static void removeCamera(Minecraft mc)
     {
-        camera = null;
         mc.setRenderViewEntity(originalRenderViewEntity);
+        mc.renderChunksMany = cullChunksOriginal;
+
+        if (mc.world != null && camera != null)
+        {
+            CameraUtils.markChunksForRebuildOnDeactivation(camera.chunkCoordX, camera.chunkCoordZ);
+        }
+
         originalRenderViewEntity = null;
+        camera = null;
     }
 }

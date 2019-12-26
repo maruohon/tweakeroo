@@ -9,27 +9,19 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import com.mojang.authlib.GameProfile;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.PlayerCapabilities;
-import net.minecraft.init.MobEffects;
-import net.minecraft.util.MovementInput;
-import net.minecraft.world.World;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
 
-@Mixin(EntityPlayerSP.class)
-public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
+@Mixin(net.minecraft.client.entity.EntityPlayerSP.class)
+public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.AbstractClientPlayer
 {
-    public MixinEntityPlayerSP(World worldIn, GameProfile playerProfile)
+    public MixinEntityPlayerSP(net.minecraft.world.World worldIn, com.mojang.authlib.GameProfile playerProfile)
     {
         super(worldIn, playerProfile);
     }
 
-    @Shadow public MovementInput movementInput;
+    @Shadow public net.minecraft.util.MovementInput movementInput;
     @Shadow protected int sprintToggleTimer;
 
     @Shadow
@@ -38,7 +30,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     @Redirect(method = "onLivingUpdate()V",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/client/gui/GuiScreen;doesGuiPauseGame()Z"))
-    private boolean onDoesGuiPauseGame(GuiScreen gui)
+    private boolean onDoesGuiPauseGame(net.minecraft.client.gui.GuiScreen gui)
     {
         // Spoof the return value to prevent entering the if block
         if (Configs.Disable.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue())
@@ -66,7 +58,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
         if (FeatureToggle.TWEAK_PERMANENT_SPRINT.getBooleanValue() &&
             ! this.isSprinting() && ! this.isHandActive() && this.movementInput.moveForward >= 0.8F &&
             (this.getFoodStats().getFoodLevel() > 6.0F || this.capabilities.allowFlying) &&
-            ! this.isPotionActive(MobEffects.BLINDNESS))
+            ! this.isPotionActive(net.minecraft.init.MobEffects.BLINDNESS))
         {
             this.setSprinting(true);
         }
@@ -74,7 +66,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
 
     @Redirect(method = "onLivingUpdate", at = @At(value = "FIELD",
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;collidedHorizontally:Z"))
-    private boolean overrideCollidedHorizontally(EntityPlayerSP player)
+    private boolean overrideCollidedHorizontally(net.minecraft.client.entity.EntityPlayerSP player)
     {
         if (Configs.Disable.DISABLE_WALL_UNSPRINT.getBooleanValue())
         {
@@ -100,7 +92,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     @Redirect(method = "onLivingUpdate", at = @At(
                 value = "INVOKE",
                 target = "Lnet/minecraft/client/entity/EntityPlayerSP;isCurrentViewEntity()Z"))
-    private boolean preventVerticalMotion(EntityPlayerSP player)
+    private boolean preventVerticalMotion(net.minecraft.client.entity.EntityPlayerSP player)
     {
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
         {
@@ -113,7 +105,7 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     @Redirect(method = "onLivingUpdate", at = @At(
                 value = "FIELD", ordinal = 1,
                 target = "Lnet/minecraft/entity/player/PlayerCapabilities;allowFlying:Z"))
-    private boolean preventFlyStateToggle(PlayerCapabilities abilities)
+    private boolean preventFlyStateToggle(net.minecraft.entity.player.PlayerCapabilities abilities)
     {
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
         {
@@ -144,6 +136,6 @@ public abstract class MixinEntityPlayerSP extends AbstractClientPlayer
     @Override
     public boolean isSpectator()
     {
-        return super.isSpectator() || MiscUtils.getFreeCameraSpectator();
+        return super.isSpectator() || CameraUtils.getFreeCameraSpectator();
     }
 }
