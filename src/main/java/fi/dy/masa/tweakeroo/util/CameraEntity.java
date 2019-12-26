@@ -19,6 +19,7 @@ public class CameraEntity extends ClientPlayerEntity
 {
     @Nullable private static Entity originalCameraEntity;
     @Nullable private static CameraEntity camera;
+    private static boolean cullChunksOriginal;
     private static float forwardRamped;
     private static float strafeRamped;
     private static float verticalRamped;
@@ -191,13 +192,23 @@ public class CameraEntity extends ClientPlayerEntity
     {
         camera = create(mc);
         originalCameraEntity = mc.getCameraEntity();
+        cullChunksOriginal = mc.chunkCullingEnabled;
+
         mc.setCameraEntity(camera);
+        mc.chunkCullingEnabled = false; // Disable chunk culling
     }
 
     public static void removeCamera(MinecraftClient mc)
     {
-        camera = null;
         mc.setCameraEntity(originalCameraEntity);
+        mc.chunkCullingEnabled = cullChunksOriginal;
+
+        if (mc.world != null && camera != null)
+        {
+            CameraUtils.markChunksForRebuildOnDeactivation(camera.chunkX, camera.chunkZ);
+        }
+
         originalCameraEntity = null;
+        camera = null;
     }
 }

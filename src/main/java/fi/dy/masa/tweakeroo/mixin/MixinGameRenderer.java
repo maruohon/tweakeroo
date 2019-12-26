@@ -1,7 +1,6 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import java.util.function.Predicate;
-import javax.annotation.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,6 +23,7 @@ import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(value = GameRenderer.class, priority = 1001)
@@ -33,8 +33,6 @@ public abstract class MixinGameRenderer
     @Final
     private MinecraftClient client;
 
-    @Nullable
-    private Entity cameraEntityOriginal;
     private float realYaw;
     private float realPitch;
 
@@ -96,7 +94,7 @@ public abstract class MixinGameRenderer
             {
                 this.realYaw = entity.yaw;
                 this.realPitch = entity.pitch;
-                MiscUtils.setEntityRotations(entity, MiscUtils.getCameraYaw(), MiscUtils.getCameraPitch());
+                MiscUtils.setEntityRotations(entity, CameraUtils.getCameraYaw(), CameraUtils.getCameraPitch());
             }
         }
     }

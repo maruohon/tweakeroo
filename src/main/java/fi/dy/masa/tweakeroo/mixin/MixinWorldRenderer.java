@@ -1,24 +1,34 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
 
 @Mixin(value = WorldRenderer.class, priority = 1001)
 public abstract class MixinWorldRenderer
 {
+    @Shadow private int cameraChunkX;
+    @Shadow private int cameraChunkZ;
+
+    private int lastUpdatePosX;
+    private int lastUpdatePosZ;
+
     @Inject(method = "method_22713", at = @At("HEAD"), cancellable = true) // renderRain
     private void cancelRainRender(Camera camera, CallbackInfo ci)
     {
@@ -46,7 +56,7 @@ public abstract class MixinWorldRenderer
     {
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
         {
-            MiscUtils.setFreeCameraSpectator(true);
+            CameraUtils.setFreeCameraSpectator(true);
         }
     }
 
@@ -57,7 +67,7 @@ public abstract class MixinWorldRenderer
                      "Lnet/minecraft/client/render/Frustum;ZIZ)V"))
     private void postSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
     {
-        MiscUtils.setFreeCameraSpectator(false);
+        CameraUtils.setFreeCameraSpectator(false);
     }
 
     // Allow rendering the client player entity by spoofing one of the entity rendering conditions while in Free Camera mode
@@ -73,16 +83,46 @@ public abstract class MixinWorldRenderer
         return camera.getFocusedEntity();
     }
 
-    @Redirect(method = "setupTerrain", require = 0, at = @At(value = "INVOKE",
-                target = "Lnet/minecraft/client/render/BuiltChunkStorage;updateCameraPosition(DD)V"))
-    private void preventRenderChunkPositionUpdates(net.minecraft.client.render.BuiltChunkStorage storage, double viewEntityX, double viewEntityZ)
+    @Inject(method = "setupTerrain", at = @At(
+            value = "FIELD", opcode = Opcodes.PUTFIELD,
+            target = "Lnet/minecraft/client/render/WorldRenderer;lastCameraChunkUpdateX:D"))
+    private void rebuildChunksAroundCamera1(
+            Camera camera,
+            Frustum frustum,
+            boolean hasForcedFrustum,
+            int frame,
+            boolean spectator,
+            CallbackInfo ci)
     {
-        // Don't update the RenderChunk positions when moving around in the Free Camera mode.
-        // Otherwise the chunks would become empty when they are outside the render range
-        // from the camera entity, ie. on the other side of the actual player.
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() == false)
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
         {
-            storage.updateCameraPosition(viewEntityX, viewEntityZ);
+            // Hold on to the previous update position before it gets updated
+            this.lastUpdatePosX = this.cameraChunkX;
+            this.lastUpdatePosZ = this.cameraChunkZ;
+        }
+    }
+
+    @Inject(method = "setupTerrain", at = @At(
+            value = "INVOKE", shift = At.Shift.AFTER,
+            target = "Lnet/minecraft/client/render/BuiltChunkStorage;updateCameraPosition(DD)V"))
+    private void rebuildChunksAroundCamera2(
+            Camera camera,
+            Frustum frustum,
+            boolean hasForcedFrustum,
+            int frame,
+            boolean spectator,
+            CallbackInfo ci)
+    {
+        // Mark the chunks at the edge of the free camera's render range for rebuilding
+        // when the camera moves around.
+        // Normally these rebuilds would happen when the server sends chunks to the client when the player moves around.
+        // But in Free Camera mode moving the ViewFrustum/BuiltChunkStorage would cause the terrain
+        // to disappear because of no dirty marking calls from chunk loading.
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        {
+            int x = MathHelper.floor(camera.getPos().x) >> 4;
+            int z = MathHelper.floor(camera.getPos().z) >> 4;
+            CameraUtils.markChunksForRebuild(x, z, this.lastUpdatePosX, this.lastUpdatePosZ);
         }
     }
 }
