@@ -5,32 +5,37 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.client.gui.GuiPlayerTabOverlay;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.Scoreboard;
 import fi.dy.masa.malilib.util.GuiUtils;
+import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
-@Mixin(GuiIngame.class)
-public abstract class MixinGuiIngame extends Gui
+@Mixin(net.minecraft.client.gui.GuiIngame.class)
+public abstract class MixinGuiIngame extends net.minecraft.client.gui.Gui
 {
-    @Shadow
-    @Final
-    private GuiPlayerTabOverlay overlayPlayerList;
+    @Shadow @Final private net.minecraft.client.gui.GuiPlayerTabOverlay overlayPlayerList;
+    @Shadow @Final private net.minecraft.client.Minecraft mc;
 
-    @Shadow
-    @Final
-    private Minecraft mc;
+    @Redirect(method = "renderHotbar", at = @At(value = "INVOKE",
+              target = "Lnet/minecraft/client/Minecraft;getRenderViewEntity()Lnet/minecraft/entity/Entity;"))
+    private net.minecraft.entity.Entity returnRealPlayer(net.minecraft.client.Minecraft mc)
+    {
+        // Fix the hotbar rendering in the Free Camera mode by using the actual player
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() &&
+            Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() &&
+            mc.player != null)
+        {
+            return mc.player;
+        }
+
+        return mc.getRenderViewEntity();
+    }
 
     @Inject(method = "renderAttackIndicator", at = @At(value = "FIELD",
             target = "Lnet/minecraft/client/settings/GameSettings;showDebugInfo:Z", ordinal = 0), cancellable = true)
-    private void overrideCursorRender(float partialTicks, ScaledResolution sr, CallbackInfo ci)
+    private void overrideCursorRender(float partialTicks, net.minecraft.client.gui.ScaledResolution sr, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_F3_CURSOR.getBooleanValue())
         {
@@ -47,8 +52,8 @@ public abstract class MixinGuiIngame extends Gui
     {
         if (FeatureToggle.TWEAK_PLAYER_LIST_ALWAYS_ON.getBooleanValue())
         {
-            Scoreboard scoreboard = this.mc.world.getScoreboard();
-            ScoreObjective objective = scoreboard.getObjectiveInDisplaySlot(0);
+            net.minecraft.scoreboard.Scoreboard scoreboard = this.mc.world.getScoreboard();
+            net.minecraft.scoreboard.ScoreObjective objective = scoreboard.getObjectiveInDisplaySlot(0);
             int width = GuiUtils.getScaledWindowWidth();
 
             this.overlayPlayerList.updatePlayerList(true);

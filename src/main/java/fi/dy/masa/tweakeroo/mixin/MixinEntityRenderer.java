@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Callbacks;
@@ -26,6 +27,24 @@ public abstract class MixinEntityRenderer
     @Nullable private net.minecraft.entity.Entity renderViewEntityOriginal;
     private float realYaw;
     private float realPitch;
+
+    @Redirect(method = "getMouseOver", at = @At(value = "INVOKE",
+              target = "Lnet/minecraft/client/Minecraft;getRenderViewEntity()Lnet/minecraft/entity/Entity;"))
+    private net.minecraft.entity.Entity returnRealPlayer(net.minecraft.client.Minecraft mc)
+    {
+        // Return the real player for the hit target ray tracing if the
+        // player motion option is enabled in Free Camera mode.
+        // Normally in Free Camera mode the Tweakeroo CameraEntity is set as the
+        // render view/camera entity, which would then also ray trace from the camera point of view.
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() &&
+            Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() &&
+            this.mc.player != null)
+        {
+            return this.mc.player;
+        }
+
+        return mc.getRenderViewEntity();
+    }
 
     @Inject(method = "renderWorld(FJ)V", at = @At("HEAD"), cancellable = true)
     private void onRenderWorld(CallbackInfo ci)

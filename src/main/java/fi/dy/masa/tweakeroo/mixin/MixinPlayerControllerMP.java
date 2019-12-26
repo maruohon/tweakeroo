@@ -4,11 +4,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
-import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +15,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
+import fi.dy.masa.tweakeroo.util.InventoryUtils;
 
 @Mixin(PlayerControllerMP.class)
 public abstract class MixinPlayerControllerMP
@@ -28,10 +30,10 @@ public abstract class MixinPlayerControllerMP
             cancellable = true)
     private void onProcessRightClickFirst(EntityPlayer player, World worldIn, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
-        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(EnumActionResult.PASS);
-            cir.cancel();
         }
     }
 
@@ -75,6 +77,15 @@ public abstract class MixinPlayerControllerMP
         PlacementTweaks.cacheStackInHand(EnumHand.MAIN_HAND);
     }
 
+    @Inject(method = "attackEntity", at = @At("HEAD"), cancellable = true)
+    private void preventEntityAttacksInFreeCameraMode(CallbackInfo ci)
+    {
+        if (CameraUtils.shouldPreventPlayerMovement())
+        {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "interactWithEntity(" +
                      "Lnet/minecraft/entity/player/EntityPlayer;" +
                      "Lnet/minecraft/entity/Entity;" +
@@ -84,10 +95,10 @@ public abstract class MixinPlayerControllerMP
             cancellable = true)
     private void onRightClickMouseOnEntityPre1(EntityPlayer player, Entity target, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
-        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(EnumActionResult.PASS);
-            cir.cancel();
         }
     }
 
@@ -101,17 +112,18 @@ public abstract class MixinPlayerControllerMP
             cancellable = true)
     private void onRightClickMouseOnEntityPre2(EntityPlayer player, Entity target, RayTraceResult ray, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
-        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(EnumActionResult.PASS);
-            cir.cancel();
         }
     }
 
     @Inject(method = "clickBlock", at = @At("HEAD"), cancellable = true)
     private void handleBreakingRestriction1(BlockPos pos, EnumFacing side, CallbackInfoReturnable<Boolean> cir)
     {
-        if (PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
         {
             cir.setReturnValue(false);
         }
@@ -120,7 +132,8 @@ public abstract class MixinPlayerControllerMP
     @Inject(method = "onPlayerDamageBlock", at = @At("HEAD"), cancellable = true)
     private void handleBreakingRestriction2(BlockPos pos, EnumFacing side, CallbackInfoReturnable<Boolean> cir)
     {
-        if (PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
         {
             cir.setReturnValue(true);
         }
@@ -132,7 +145,6 @@ public abstract class MixinPlayerControllerMP
         if (FeatureToggle.TWEAK_BLOCK_REACH_OVERRIDE.getBooleanValue())
         {
             cir.setReturnValue((float) Configs.Generic.BLOCK_REACH_DISTANCE.getDoubleValue());
-            cir.cancel();
         }
     }
 
@@ -142,7 +154,6 @@ public abstract class MixinPlayerControllerMP
         if (FeatureToggle.TWEAK_BLOCK_REACH_OVERRIDE.getBooleanValue())
         {
             cir.setReturnValue(false);
-            cir.cancel();
         }
     }
 }
