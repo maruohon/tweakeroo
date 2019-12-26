@@ -36,6 +36,7 @@ import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
@@ -291,6 +292,11 @@ public class PlacementTweaks
             Hand hand,
             BlockHitResult hitResult)
     {
+        if (CameraUtils.shouldPreventPlayerMovement())
+        {
+            return ActionResult.PASS;
+        }
+
         boolean restricted = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() || FeatureToggle.TWEAK_PLACEMENT_GRID.getBooleanValue();
         ItemStack stackPre = player.getStackInHand(hand).copy();
         Direction sideIn = hitResult.getSide();
