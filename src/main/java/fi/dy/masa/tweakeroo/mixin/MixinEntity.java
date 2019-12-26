@@ -10,14 +10,14 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 @Mixin(net.minecraft.entity.Entity.class)
 public abstract class MixinEntity
 {
-    @Shadow
-    public net.minecraft.world.World world;
+    @Shadow public net.minecraft.world.World world;
 
     @Shadow public float yaw;
     @Shadow public float pitch;
@@ -137,8 +137,8 @@ public abstract class MixinEntity
 
                 this.updateCustomRotations(yawChange, pitchChange, true, true, pitchLimit);
 
-                MiscUtils.setCameraYaw((float) this.forcedYaw);
-                MiscUtils.setCameraPitch((float) this.forcedPitch);
+                CameraUtils.setCameraYaw((float) this.forcedYaw);
+                CameraUtils.setCameraPitch((float) this.forcedPitch);
 
                 this.yaw = this.prevYaw;
                 this.pitch = this.prevPitch;

@@ -22,19 +22,6 @@ public class MiscUtils
     private static final Date DATE = new Date();
     private static double lastRealPitch;
     private static double lastRealYaw;
-    private static float cameraYaw;
-    private static float cameraPitch;
-    private static boolean freeCameraSpectator;
-
-    public static void setFreeCameraSpectator(boolean isSpectator)
-    {
-        freeCameraSpectator = isSpectator;
-    }
-
-    public static boolean getFreeCameraSpectator()
-    {
-        return freeCameraSpectator;
-    }
 
     public static boolean getUpdateExec(CommandBlockBlockEntity te)
     {
@@ -108,26 +95,6 @@ public class MiscUtils
     public static double getLastRealYaw()
     {
         return lastRealYaw;
-    }
-
-    public static float getCameraYaw()
-    {
-        return MathHelper.wrapDegrees(cameraYaw);
-    }
-
-    public static float getCameraPitch()
-    {
-        return MathHelper.wrapDegrees(cameraPitch);
-    }
-
-    public static void setCameraYaw(float yaw)
-    {
-        cameraYaw = yaw;
-    }
-
-    public static void setCameraPitch(float pitch)
-    {
-        cameraPitch = pitch;
     }
 
     public static void setEntityRotations(Entity entity, float yaw, float pitch)

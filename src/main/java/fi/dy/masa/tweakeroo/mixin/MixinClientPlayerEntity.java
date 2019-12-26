@@ -19,7 +19,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
 
 @Mixin(ClientPlayerEntity.class)
 public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
@@ -145,6 +145,6 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     @Override
     public boolean isSpectator()
     {
-        return super.isSpectator() || MiscUtils.getFreeCameraSpectator();
+        return super.isSpectator() || CameraUtils.getFreeCameraSpectator();
     }
 }
