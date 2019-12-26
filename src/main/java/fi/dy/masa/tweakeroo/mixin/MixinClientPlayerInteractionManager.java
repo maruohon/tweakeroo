@@ -4,6 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.Entity;
@@ -17,6 +18,7 @@ import net.minecraft.world.World;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
+import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 
 @Mixin(ClientPlayerInteractionManager.class)
@@ -28,7 +30,8 @@ public abstract class MixinClientPlayerInteractionManager
             cancellable = true)
     private void onProcessRightClickFirst(PlayerEntity player, World worldIn, Hand hand, CallbackInfoReturnable<ActionResult> cir)
     {
-        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(ActionResult.PASS);
             cir.cancel();
@@ -57,10 +60,10 @@ public abstract class MixinClientPlayerInteractionManager
             cancellable = true)
     private void onRightClickMouseOnEntityPre1(PlayerEntity player, Entity target, Hand hand, CallbackInfoReturnable<ActionResult> cir)
     {
-        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(ActionResult.PASS);
-            cir.cancel();
         }
     }
 
@@ -74,10 +77,19 @@ public abstract class MixinClientPlayerInteractionManager
             cancellable = true)
     private void onRightClickMouseOnEntityPre2(PlayerEntity player, Entity target, EntityHitResult trace, Hand hand, CallbackInfoReturnable<ActionResult> cir)
     {
-        if (PlacementTweaks.onProcessRightClickPre(player, hand))
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(ActionResult.PASS);
-            cir.cancel();
+        }
+    }
+
+    @Inject(method = "attackEntity", at = @At("HEAD"), cancellable = true)
+    private void preventEntityAttacksInFreeCameraMode(CallbackInfo ci)
+    {
+        if (CameraUtils.shouldPreventPlayerMovement())
+        {
+            ci.cancel();
         }
     }
 
@@ -96,7 +108,8 @@ public abstract class MixinClientPlayerInteractionManager
     @Inject(method = "attackBlock", at = @At("HEAD"), cancellable = true)
     private void handleBreakingRestriction1(BlockPos pos, Direction side, CallbackInfoReturnable<Boolean> cir)
     {
-        if (PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
         {
             cir.setReturnValue(false);
         }
@@ -105,7 +118,8 @@ public abstract class MixinClientPlayerInteractionManager
     @Inject(method = "updateBlockBreakingProgress", at = @At("HEAD"), cancellable = true) // MCP: onPlayerDamageBlock
     private void handleBreakingRestriction2(BlockPos pos, Direction side, CallbackInfoReturnable<Boolean> cir)
     {
-        if (PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
+        if (CameraUtils.shouldPreventPlayerMovement() ||
+            PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
         {
             cir.setReturnValue(true);
         }
@@ -117,7 +131,6 @@ public abstract class MixinClientPlayerInteractionManager
         if (FeatureToggle.TWEAK_BLOCK_REACH_OVERRIDE.getBooleanValue())
         {
             cir.setReturnValue((float) Configs.Generic.BLOCK_REACH_DISTANCE.getDoubleValue());
-            cir.cancel();
         }
     }
 
@@ -127,7 +140,6 @@ public abstract class MixinClientPlayerInteractionManager
         if (FeatureToggle.TWEAK_BLOCK_REACH_OVERRIDE.getBooleanValue())
         {
             cir.setReturnValue(false);
-            cir.cancel();
         }
     }
 
