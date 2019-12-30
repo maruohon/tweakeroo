@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.tweaks;
 import java.util.Collection;
 import javax.annotation.Nullable;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,11 +20,13 @@ import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PotionRestriction;
+import fi.dy.masa.tweakeroo.util.SoundRestriction;
 
 public class MiscTweaks
 {
     private static final ItemRestriction ITEM_GLINT_RESTRICTION = new ItemRestriction();
     private static final PotionRestriction POTION_RESTRICTION = new PotionRestriction();
+    private static final SoundRestriction SOUND_RESTRICTION = new SoundRestriction();
 
     private static int potionWarningTimer;
     private static int periodicAttackCounter;
@@ -118,6 +121,11 @@ public class MiscTweaks
         return Configs.Disable.DISABLE_ITEM_GLINT.getBooleanValue() && ITEM_GLINT_RESTRICTION.isAllowed(stack.getItem()) == false;
     }
 
+    public static boolean shouldDisableSound(ISound sound)
+    {
+        return Configs.Disable.DISABLE_SOUNDS_LIST.getBooleanValue() && SOUND_RESTRICTION.isAllowed(sound.getSoundLocation()) == false;
+    }
+
     @Nullable
     public static FlatLayerInfo[] parseBlockString(String blockString)
     {
@@ -136,5 +144,12 @@ public class MiscTweaks
         POTION_RESTRICTION.setListType((ListType) Configs.Lists.POTION_WARNING_LIST_TYPE.getOptionListValue());
         POTION_RESTRICTION.setListContents(Configs.Lists.POTION_WARNING_BLACKLIST.getStrings(),
                 Configs.Lists.POTION_WARNING_WHITELIST.getStrings());
+    }
+
+    public static void updateSoundRestrictionLists()
+    {
+        SOUND_RESTRICTION.setListType((ListType) Configs.Lists.SOUND_DISABLE_LIST_TYPE.getOptionListValue());
+        SOUND_RESTRICTION.setListContents(Configs.Lists.SOUND_DISABLE_BLACKLIST.getStrings(),
+                Configs.Lists.SOUND_DISABLE_WHITELIST.getStrings());
     }
 }

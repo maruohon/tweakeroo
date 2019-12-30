@@ -57,6 +57,10 @@ public class Callbacks
         Configs.Lists.POTION_WARNING_BLACKLIST.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });
         Configs.Lists.POTION_WARNING_WHITELIST.setValueChangeCallback((config) -> { MiscTweaks.updatePotionRestrictionLists(); });
 
+        Configs.Lists.SOUND_DISABLE_LIST_TYPE.setValueChangeCallback((config) -> { MiscTweaks.updateSoundRestrictionLists(); });
+        Configs.Lists.SOUND_DISABLE_BLACKLIST.setValueChangeCallback((config) -> { MiscTweaks.updateSoundRestrictionLists(); });
+        Configs.Lists.SOUND_DISABLE_WHITELIST.setValueChangeCallback((config) -> { MiscTweaks.updateSoundRestrictionLists(); });
+
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleWithSpecialMessage(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback((cfg) -> {
             if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())

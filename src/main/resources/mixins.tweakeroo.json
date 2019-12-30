@@ -55,6 +55,7 @@
         "MixinRenderLivingBase",
         "MixinRenderManager",
         "MixinRenderPlayer",
+        "MixinSoundManager",
         "MixinTeleportToPlayer",
         "MixinTileEntityChestRenderer",
         "MixinTileEntityMobSpawnerRenderer",

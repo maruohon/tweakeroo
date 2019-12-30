@@ -85,6 +85,7 @@ public class Configs implements IConfigHandler
         public static final ConfigDouble        SNAP_AIM_THRESHOLD_PITCH            = new ConfigDouble      ("snapAimThresholdPitch", 1.5, "The angle threshold inside which the player rotation will\nbe snapped to the snap angle.");
         public static final ConfigDouble        SNAP_AIM_THRESHOLD_YAW              = new ConfigDouble      ("snapAimThresholdYaw", 5.0, "The angle threshold inside which the player rotation will\nbe snapped to the snap angle.");
         public static final ConfigDouble        SNAP_AIM_YAW_STEP                   = new ConfigDouble      ("snapAimYawStep", 45, 0, 360, "The yaw angle step of the snap aim tweak");
+        public static final ConfigBoolean       SOUND_NAME_OUTPUT                   = new ConfigBoolean     ("soundNameOutput", false, "This is meant for finding out the sound names you want to\ndisable with the 'disableSoundsList' tweak. It just prints any sound\nnames to the game console that start playing, while this is enabled.");
         public static final ConfigInteger       STRUCTURE_BLOCK_MAX_SIZE            = new ConfigInteger     ("structureBlockMaxSize", 128, 1, 256, "The maximum dimensions for a Structure Block's saved area");
         public static final ConfigDouble        ZOOM_FOV                            = new ConfigDouble      ("zoomFov", 30, 0, 600, "The FOV value used for the zoom feature");
 
@@ -102,6 +103,7 @@ public class Configs implements IConfigHandler
                 SNAP_AIM_INDICATOR,
                 SNAP_AIM_ONLY_CLOSE_TO_ANGLE,
                 SNAP_AIM_PITCH_OVERSHOOT,
+                SOUND_NAME_OUTPUT,
 
                 BREAKING_RESTRICTION_MODE,
                 ELYTRA_CAMERA_INDICATOR,
@@ -181,6 +183,9 @@ public class Configs implements IConfigHandler
         public static final ConfigStringList POTION_WARNING_BLACKLIST           = new ConfigStringList("potionWarningBlackList", ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), "The potion effects that will not be warned about");
         public static final ConfigStringList POTION_WARNING_WHITELIST           = new ConfigStringList("potionWarningWhiteList", ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing"), "The only potion effects that will be warned about");
         public static final ConfigStringList REPAIR_MODE_SLOTS                  = new ConfigStringList("repairModeSlots", ImmutableList.of("mainhand", "offhand"), "The slots the repair mode should use\nValid values: mainhand, offhand, head, chest, legs, feet");
+        public static final ConfigOptionList SOUND_DISABLE_LIST_TYPE            = new ConfigOptionList("soundDisableListType", ListType.NONE, "The list type for the 'disableSoundsList' tweak");
+        public static final ConfigStringList SOUND_DISABLE_BLACKLIST            = new ConfigStringList("soundDisableBlackList", ImmutableList.of(), "The sounds that will not play, if 'disableSoundsList' is enabled\nand 'soundDisableListType' is blacklist.\nSee https://pastebin.com/mLSYyLLM for a list of vanilla 1.12 sounds.");
+        public static final ConfigStringList SOUND_DISABLE_WHITELIST            = new ConfigStringList("soundDisableWhiteList", ImmutableList.of(), "The only sounds that will play, if 'disableSoundsList' is enabled\nand 'soundDisableListType' is whitelist.\nSee https://pastebin.com/mLSYyLLM for a list of vanilla 1.12 sounds.");
         public static final ConfigStringList UNSTACKING_ITEMS                   = new ConfigStringList("unstackingItems", ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle"), "The items that should be considered for the\n'tweakItemUnstackingProtection' tweak");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
@@ -200,6 +205,9 @@ public class Configs implements IConfigHandler
                 POTION_WARNING_LIST_TYPE,
                 POTION_WARNING_BLACKLIST,
                 POTION_WARNING_WHITELIST,
+                SOUND_DISABLE_LIST_TYPE,
+                SOUND_DISABLE_BLACKLIST,
+                SOUND_DISABLE_WHITELIST,
                 REPAIR_MODE_SLOTS,
                 UNSTACKING_ITEMS
         );
@@ -233,6 +241,8 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_SIGN_GUI                = new ConfigBooleanHotkeyed("disableSignGui",                       false, "", "Prevent the Sign edit GUI from opening");
         public static final ConfigBooleanHotkeyed       DISABLE_SHULKER_BOX_TOOLTIP     = new ConfigBooleanHotkeyed("disableShulkerBoxTooltip",             false, "", "Removes the vanilla Shulker Box content tooltip lines");
         public static final ConfigBooleanHotkeyed       DISABLE_SLIME_BLOCK_SLOWDOWN    = new ConfigBooleanHotkeyed("disableSlimeBlockSlowdown",            false, "", "Removes the slowdown from walking on Slime Blocks.\n(This is originally from usefulmod by nessie.)");
+        public static final ConfigBooleanHotkeyed       DISABLE_SOUNDS_ALL              = new ConfigBooleanHotkeyed("disableSoundsAll",                     false, "", "Prevent ALL sounds from playing");
+        public static final ConfigBooleanHotkeyed       DISABLE_SOUNDS_LIST             = new ConfigBooleanHotkeyed("disableSoundsList",                    false, "", "Prevent playing the sounds controlled by the black- or whitelists in the Lists category");
         public static final ConfigBooleanHotkeyed       DISABLE_TILE_ENTITY_RENDERING   = new ConfigBooleanHotkeyed("disableTileEntityRendering",           false, "", "Prevents all TileEntity renderers from rendering");
         public static final ConfigBooleanHotkeyed       DISABLE_TILE_ENTITY_TICKING     = new ConfigBooleanClient  ("disableTileEntityTicking",             false, "", "Prevent all TileEntities from getting ticked");
         public static final ConfigBooleanHotkeyed       DISABLE_VILLAGER_TRADE_LOCKING  = new ConfigBooleanClient  ("disableVillagerTradeLocking",          false, "", "Prevents villager trades from ever locking, by always incrementing\nthe max uses as well when the recipe uses is incremented");
@@ -265,6 +275,8 @@ public class Configs implements IConfigHandler
                 DISABLE_SIGN_GUI,
                 DISABLE_SHULKER_BOX_TOOLTIP,
                 DISABLE_SLIME_BLOCK_SLOWDOWN,
+                DISABLE_SOUNDS_ALL,
+                DISABLE_SOUNDS_LIST,
                 DISABLE_TILE_ENTITY_RENDERING,
                 DISABLE_TILE_ENTITY_TICKING,
                 DISABLE_VILLAGER_TRADE_LOCKING,
