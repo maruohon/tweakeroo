@@ -7,7 +7,7 @@ import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.gui.GuiModConfigs;
 import fi.dy.masa.malilib.config.gui.liteloader.ConfigPanelBase;
 import fi.dy.masa.malilib.config.options.IConfigValue;
-import fi.dy.masa.malilib.gui.ConfigInfoProviderSimple;
+import fi.dy.masa.malilib.gui.util.ConfigInfoProviderSimple;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
