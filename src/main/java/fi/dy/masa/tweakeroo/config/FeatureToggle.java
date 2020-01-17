@@ -49,6 +49,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_FREE_CAMERA               ("tweakFreeCamera",                     false, "",    "Enables a free camera mode, similar to spectator mode,\nbut where the player will remain in place where\nyou first activate the free camera mode"),
     TWEAK_GAMMA_OVERRIDE            ("tweakGammaOverride",                  false, "",    "Overrides the video settings gamma value with\nthe one set in the Generic configs"),
     TWEAK_HAND_RESTOCK              ("tweakHandRestock",                    false, "",    "Enables swapping a new stack to the main or the offhand\nwhen the previous stack runs out"),
+    TWEAK_HANGABLE_ENTITY_BYPASS    ("tweakHangableEntityBypass",           false, "",    "Allows not targeting hangable entities (Item Frames and Paintings).\nThe Generic -> hangableEntityBypassInverse option can be used to control\nwhether you must be sneaking or not sneaking to be able to target the entity."),
     TWEAK_HOLD_ATTACK               ("tweakHoldAttack",                     false, "",    "Emulates holding down the attack button"),
     TWEAK_HOLD_USE                  ("tweakHoldUse",                        false, "",    "Emulates holding down the use button"),
     TWEAK_HOTBAR_SCROLL             ("tweakHotbarScroll",                   false, "",    "Enables the hotbar swapping via scrolling feature"),

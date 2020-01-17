@@ -32,6 +32,15 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 ext.configFile = file "build.properties"
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    options.encoding = 'UTF-8'
+}
+
 configFile.withReader {
     def prop = new Properties()
     prop.load(it)

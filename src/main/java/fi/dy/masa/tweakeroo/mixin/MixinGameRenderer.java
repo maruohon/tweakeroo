@@ -15,6 +15,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
@@ -90,10 +91,13 @@ public abstract class MixinGameRenderer
     {
         if (Configs.Disable.DISABLE_DEAD_MOB_TARGETING.getBooleanValue())
         {
-            predicate = predicate.and((entityIn) ->
-            {
-                return (entityIn instanceof LivingEntity) == false || ((LivingEntity) entityIn).getHealth() > 0f;
-            });
+            predicate = predicate.and((entityIn) -> (entityIn instanceof LivingEntity) == false || ((LivingEntity) entityIn).getHealth() > 0f);
+        }
+
+        if ((FeatureToggle.TWEAK_HANGABLE_ENTITY_BYPASS.getBooleanValue()
+             && this.client.player.isSneaking() == Configs.Generic.HANGABLE_ENTITY_BYPASS_INVERSE.getBooleanValue()))
+        {
+            predicate = predicate.and((entityIn) -> (entityIn instanceof AbstractDecorationEntity) == false);
         }
 
         return ProjectileUtil.raycast(entity, startVec, endVec, box, predicate, distance);
