@@ -60,4 +60,13 @@ public abstract class MixinGuiIngame extends net.minecraft.client.gui.Gui
             this.overlayPlayerList.renderPlayerlist(width, scoreboard, objective);
         }
     }
+
+    @Inject(method = "renderScoreboard", at = @At("HEAD"), cancellable = true)
+    private void disableScoreboardRendering(CallbackInfo ci)
+    {
+        if (Configs.Disable.DISABLE_SCOREBOARD_RENDERING.getBooleanValue())
+        {
+            ci.cancel();
+        }
+    }
 }
