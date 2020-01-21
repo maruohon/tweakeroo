@@ -165,14 +165,14 @@ public class CameraEntity extends ClientPlayerEntity
 
     private static CameraEntity create(MinecraftClient mc)
     {
-        CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.networkHandler, mc.player.getStats(), mc.player.getRecipeBook());
+        CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.networkHandler, mc.player.getStatHandler(), mc.player.getRecipeBook());
         camera.noClip = true;
 
         ClientPlayerEntity player = mc.player;
 
         if (player != null)
         {
-            camera.setPositionAndAngles(player.getX(), player.getY(), player.getZ(), player.yaw, player.pitch);
+            camera.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), player.yaw, player.pitch);
             camera.setRotations(player.yaw, player.pitch);
         }
 

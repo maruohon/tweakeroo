@@ -114,7 +114,7 @@ public class MiscTweaks
     private static boolean potionWarningShouldInclude(StatusEffectInstance effect)
     {
         return effect.isAmbient() == false &&
-               (effect.getEffectType().method_5573() || // isBeneficial()
+               (effect.getEffectType().isBeneficial() ||
                Configs.Generic.POTION_WARNING_BENEFICIAL_ONLY.getBooleanValue() == false) &&
                effect.getDuration() <= Configs.Generic.POTION_WARNING_THRESHOLD.getIntegerValue() &&
                POTION_RESTRICTION.isAllowed(effect.getEffectType());
