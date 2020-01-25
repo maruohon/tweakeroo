@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,6 +23,25 @@ public class MiscUtils
     private static final Date DATE = new Date();
     private static double lastRealPitch;
     private static double lastRealYaw;
+
+    public static void applyDebugPieChartScale()
+    {
+        double scale = Configs.Generic.DEBUG_PIE_CHART_SCALE.getDoubleValue();
+
+        if (scale > 0 && scale != 1.0)
+        {
+            Minecraft mc = Minecraft.getMinecraft();
+            int origX = mc.displayWidth - 170;
+            int origY = mc.displayHeight - 320;
+            double width = 320.0;
+            double height = 400.0;
+            double xOff = (1.0 - scale) * (origX + width / 2.0);
+            double yOff = (1.0 - scale) * (origY + height / 2.0);
+
+            GlStateManager.translate(xOff, yOff, 0.0);
+            GlStateManager.scale(scale, scale, 1);
+        }
+    }
 
     public static boolean getUpdateExec(TileEntityCommandBlock te)
     {
