@@ -185,6 +185,80 @@ public class PlacementTweaks
         }
     }
 
+    @Nullable
+    public static BlockPos getOverriddenPlacementPosition()
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        if (mc.player != null)
+        {
+            RayTraceResult trace = mc.objectMouseOver;
+
+            if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+            {
+                World world = mc.world;
+                EntityPlayer player = mc.player;
+                EnumFacing side = trace.sideHit;
+                BlockPos posTargeted = trace.getBlockPos();
+
+                if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
+                {
+                    boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
+                    boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld();
+                    boolean adjacentHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeybind().isKeybindHeld();
+                    boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
+
+                    if (offset || adjacentHeld)
+                    {
+                        EnumFacing playerFacingH = player.getHorizontalFacing();
+                        HitPart hitPart = PositionUtils.getHitPart(side, playerFacingH, posTargeted, trace.hitVec);
+                        EnumFacing sideRotated = getRotatedFacing(side, playerFacingH, hitPart);
+                        BlockPos posNew = isFirstClick && (offset || adjacentHeld) ? getPlacementPositionForTargetedPosition(posTargeted, side, world) : posTargeted;
+                        boolean handleFlexible = false;
+
+                        // Place the block into the adjacent position
+                        if (adjacentHeld && hitPart != null && hitPart != HitPart.CENTER)
+                        {
+                            posNew = posNew.offset(sideRotated.getOpposite()).offset(side.getOpposite());
+                            handleFlexible = true;
+                        }
+
+                        // Place the block into the diagonal position
+                        if (offset)
+                        {
+                            posNew = posNew.offset(sideRotated.getOpposite());
+                            handleFlexible = true;
+                        }
+
+                        if (handleFlexible)
+                        {
+                            return posNew;
+                        }
+                    }
+                }
+
+                // Fast Block Placement
+                if (posFirst != null && handFirst != null &&
+                    FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue() &&
+                    canUseItemWithRestriction(FAST_PLACEMENT_ITEM_RESTRICTION, player))
+                {
+                    BlockPos pos = getPlacementPositionForTargetedPosition(posTargeted, side, world);
+
+                    if (pos.equals(posLast) == false &&
+                        canPlaceBlockIntoPosition(pos, world) &&
+                        isPositionAllowedByPlacementRestriction(pos, side) &&
+                        canPlaceBlockAgainst(world, posTargeted, mc.player, handFirst)
+                    )
+                    {
+                        return pos;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     private static void onUsingTick()
     {
         Minecraft mc = Minecraft.getMinecraft();
