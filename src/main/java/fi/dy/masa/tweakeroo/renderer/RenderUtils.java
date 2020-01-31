@@ -345,12 +345,12 @@ public class RenderUtils
 
             if (mode != SnapAimMode.PITCH)
             {
-                renderSnapAimAngleIndicatorYaw(xCenter, yCenter, 80, 10, mc);
+                renderSnapAimAngleIndicatorYaw(xCenter, yCenter, 80, 12, mc);
             }
 
             if (mode != SnapAimMode.YAW)
             {
-                renderSnapAimAngleIndicatorPitch(xCenter, yCenter, 10, 50, mc);
+                renderSnapAimAngleIndicatorPitch(xCenter, yCenter, 12, 50, mc);
             }
         }
     }
@@ -370,9 +370,9 @@ public class RenderUtils
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
-        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
 
-        fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF, z);
+        // Draw the main box
+        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
 
         String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
         textRenderer.drawString(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
@@ -386,14 +386,20 @@ public class RenderUtils
         if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())
         {
             double threshold = Configs.Generic.SNAP_AIM_THRESHOLD_YAW.getDoubleValue();
+            int snapThreshOffset = (int) (width * threshold / step);
+
+            // Draw the middle region
+            fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - snapThreshOffset, y + 1, snapThreshOffset * 2, height - 2, 0x6050FF50, z);
 
             if (threshold < (step / 2.0))
             {
-                int xOff = (int) (width * threshold / step);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - xOff, y, 2, height, 0xC0C0C0C0, z);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter + xOff, y, 2, height, 0xC0C0C0C0, z);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - snapThreshOffset, y + 1, 2, height - 2, 0xFF20FF20, z);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter + snapThreshOffset, y + 1, 2, height - 2, 0xFF20FF20, z);
             }
         }
+
+        // Draw the current angle indicator
+        fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF, z);
     }
 
     private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height, Minecraft mc)
@@ -425,7 +431,7 @@ public class RenderUtils
     {
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
-        int width = 10;
+        int width = 12;
         int height = 50;
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
@@ -445,46 +451,52 @@ public class RenderUtils
         int z = 0;
         double angleUp = centerPitch - printedRange;
         double angleDown = centerPitch + printedRange;
-        String strUp, strDown;
-
-        if (isSnapRange)
-        {
-            strUp   = String.format("%6.1f° ^", MathHelper.wrapDegrees(angleUp));
-            strDown = String.format("%6.1f° v", MathHelper.wrapDegrees(angleDown));
-        }
-        else
-        {
-            strUp   = String.format("%6.1f°", angleUp);
-            strDown = String.format("%6.1f°", angleDown);
-        }
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
         FontRenderer textRenderer = mc.fontRenderer;
 
+        if (isSnapRange)
+        {
+            String strUp   = String.format("%6.1f° ^", MathHelper.wrapDegrees(angleUp));
+            String strDown = String.format("%6.1f° v", MathHelper.wrapDegrees(angleDown));
+            textRenderer.drawString(strUp, x + width + 4, y - 4, 0xFFFFFFFF);
+            textRenderer.drawString(strDown, x + width + 4, y + height - 4, 0xFFFFFFFF);
+
+            String str = String.format("%6.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
+            textRenderer.drawString(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
+        }
+        else
+        {
+            String str = String.format("%4.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
+            textRenderer.drawString(str, x + width + 4, lineY - 4, 0xFFFFFFFF);
+        }
+
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
+        // Draw the main box
         fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
 
-        fi.dy.masa.malilib.render.RenderUtils.drawRect(x - 1, lineY - 1, width + 2, 2, 0xFFFFFFFF, z);
+        int yCenter = y + height / 2 - 1;
 
-        String str = String.format("%6.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
-        textRenderer.drawString(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
-
-        //textRenderer.drawString(strUp, x - textRenderer.getStringWidth(strUp) - 4, y - 4, 0xFFFFFFFF);
-        textRenderer.drawString(strUp, x + width + 4, y - 4, 0xFFFFFFFF);
-        textRenderer.drawString(strDown, x + width + 4, y + height - 4, 0xFFFFFFFF);
-
-        if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())
+        if (isSnapRange && Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())
         {
             double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
             double threshold = Configs.Generic.SNAP_AIM_THRESHOLD_PITCH.getDoubleValue();
+            int snapThreshOffset = (int) ((double) height * threshold / indicatorRange);
+
+            fi.dy.masa.malilib.render.RenderUtils.drawRect(x + 1, yCenter - snapThreshOffset, width - 2, snapThreshOffset * 2, 0x6050FF50, z);
 
             if (threshold < (step / 2.0))
             {
-                int yCenter = y + height / 2;
-                int yOff = (int) ((double) height * threshold / indicatorRange);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter - yOff, width, 2, 0xC0C0C0C0, z);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter + yOff, width, 2, 0xC0C0C0C0, z);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(x + 1, yCenter - snapThreshOffset, width - 2, 2, 0xFF20FF20, z);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(x + 1, yCenter + snapThreshOffset, width - 2, 2, 0xFF20FF20, z);
             }
         }
+        else if (isSnapRange == false)
+        {
+            fi.dy.masa.malilib.render.RenderUtils.drawRect(x + 1, yCenter - 1, width - 2, 2, 0xFFC0C0C0, z);
+        }
+
+        // Draw the current angle indicator
+        fi.dy.masa.malilib.render.RenderUtils.drawRect(x, lineY - 1, width, 2, 0xFFFFFFFF, z);
     }
 }
