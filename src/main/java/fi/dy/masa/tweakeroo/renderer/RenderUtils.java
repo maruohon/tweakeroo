@@ -72,11 +72,12 @@ public class RenderUtils
 
             int x = startX;
             int y = startY;
+            int z = 0;
             FontRenderer textRenderer = mc.fontRenderer;
 
             fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
             fi.dy.masa.malilib.render.RenderUtils.bindTexture(GuiInventory.INVENTORY_BACKGROUND);
-            fi.dy.masa.malilib.render.RenderUtils.drawTexturedRect(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18);
+            fi.dy.masa.malilib.render.RenderUtils.drawTexturedRect(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18, z);
 
             for (int row = 1; row <= 3; row++)
             {
@@ -88,7 +89,7 @@ public class RenderUtils
 
                     if (stack.isEmpty() == false)
                     {
-                        fi.dy.masa.malilib.render.InventoryOverlay.renderStackAt(stack, x, y, 1, mc);
+                        fi.dy.masa.malilib.render.InventoryOverlay.renderStackAt(stack, x, y, z, 1f, mc);
                     }
 
                     x += 18;
@@ -178,6 +179,8 @@ public class RenderUtils
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
         int x = xCenter - 52 / 2;
         int y = yCenter - 92;
+        int z = 0;
+        int zItems = z + 1;
 
         if (inv != null && inv.getSizeInventory() > 0)
         {
@@ -208,22 +211,22 @@ public class RenderUtils
 
             if (isHorse)
             {
-                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, xInv, yInv, 1, 2, mc);
-                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, 1, 0, 2, mc);
+                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, xInv, yInv, z, 1, 2, mc);
+                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, zItems, 1, 0, 2, mc);
                 xInv += 32 + 4;
             }
 
             if (totalSlots > 0)
             {
-                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, xInv, yInv, props.slotsPerRow, totalSlots, mc);
-                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, props.slotsPerRow, firstSlot, totalSlots, mc);
+                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, xInv, yInv, z, props.slotsPerRow, totalSlots, mc);
+                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, zItems, props.slotsPerRow, firstSlot, totalSlots, mc);
             }
         }
 
         if (entityLivingBase != null)
         {
-            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(x, y, entityLivingBase);
-            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, mc);
+            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(x, y, z, entityLivingBase);
+            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, zItems, mc);
         }
     }
 
@@ -231,14 +234,15 @@ public class RenderUtils
     {
         int x = GuiUtils.getScaledWindowWidth() / 2 - 176 / 2;
         int y = GuiUtils.getScaledWindowHeight() / 2 + 10;
+        int z = 0;
         int slotOffsetX = 8;
         int slotOffsetY = 8;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, 9, 27, mc);
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, z, 9, 27, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, z + 1, 9, 9, 27, mc);
     }
 
     public static void renderHotbarScrollOverlay(Minecraft mc)
@@ -248,20 +252,22 @@ public class RenderUtils
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
         final int x = xCenter - 176 / 2;
         final int y = yCenter + 6;
+        final int z = 0;
+        final int zItems = z + 1;
         fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y     , 9, 27, mc);
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y + 70, 9,  9, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y     , z, 9, 27, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y + 70, z, 9,  9, mc);
 
         // Main inventory
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y +  8, 9, 9, 27, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y +  8, zItems, 9, 9, 27, mc);
         // Hotbar
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 78, 9, 0,  9, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 78, zItems, 9, 0,  9, mc);
 
         int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-        fi.dy.masa.malilib.render.RenderUtils.drawOutline(x + 5, y + currentRow * 18 + 5, 9 * 18 + 4, 22, 2, 0xFFFF2020);
+        fi.dy.masa.malilib.render.RenderUtils.drawOutline(x + 5, y + currentRow * 18 + 5, 9 * 18 + 4, 22, 2, 0xFFFF2020, z);
     }
 
     public static float getLavaFog(Entity entity, float originalFog)
@@ -357,23 +363,24 @@ public class RenderUtils
         double startYaw = snappedYaw - (step / 2.0);
         final int x = xCenter - width / 2;
         final int y = yCenter + 10;
+        final int z = 0;
         int lineX = x + (int) ((MathHelper.wrapDegrees(realYaw - startYaw)) / step * width);
         FontRenderer textRenderer = mc.fontRenderer;
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
-        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF);
+        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
 
-        fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF);
+        fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF, z);
 
-        String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
+        String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "Â°";
         textRenderer.drawString(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
-        str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "°";
+        str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "Â°";
         textRenderer.drawString(str, x - textRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
 
-        str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "°  >";
+        str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "Â°  >";
         textRenderer.drawString(str, x + width, y + height + 2, 0xFFFFFFFF);
 
         if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())
@@ -383,8 +390,8 @@ public class RenderUtils
             if (threshold < (step / 2.0))
             {
                 int xOff = (int) (width * threshold / step);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - xOff, y, 2, height, 0xC0C0C0C0);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter + xOff, y, 2, height, 0xC0C0C0C0);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - xOff, y, 2, height, 0xC0C0C0C0, z);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter + xOff, y, 2, height, 0xC0C0C0C0, z);
             }
         }
     }
@@ -435,30 +442,31 @@ public class RenderUtils
         double startPitch = centerPitch - (indicatorRange / 2.0);
         double printedRange = isSnapRange ? indicatorRange : indicatorRange / 2;
         int lineY = y + (int) ((MathHelper.wrapDegrees(currentPitch) - startPitch) / indicatorRange * height);
+        int z = 0;
         double angleUp = centerPitch - printedRange;
         double angleDown = centerPitch + printedRange;
         String strUp, strDown;
 
         if (isSnapRange)
         {
-            strUp   = String.format("%6.1f° ^", MathHelper.wrapDegrees(angleUp));
-            strDown = String.format("%6.1f° v", MathHelper.wrapDegrees(angleDown));
+            strUp   = String.format("%6.1fÂ° ^", MathHelper.wrapDegrees(angleUp));
+            strDown = String.format("%6.1fÂ° v", MathHelper.wrapDegrees(angleDown));
         }
         else
         {
-            strUp   = String.format("%6.1f°", angleUp);
-            strDown = String.format("%6.1f°", angleDown);
+            strUp   = String.format("%6.1fÂ°", angleUp);
+            strDown = String.format("%6.1fÂ°", angleDown);
         }
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
         FontRenderer textRenderer = mc.fontRenderer;
 
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
-        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF);
+        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
 
-        fi.dy.masa.malilib.render.RenderUtils.drawRect(x - 1, lineY - 1, width + 2, 2, 0xFFFFFFFF);
+        fi.dy.masa.malilib.render.RenderUtils.drawRect(x - 1, lineY - 1, width + 2, 2, 0xFFFFFFFF, z);
 
-        String str = String.format("%6.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
+        String str = String.format("%6.1fÂ°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
         textRenderer.drawString(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
 
         //textRenderer.drawString(strUp, x - textRenderer.getStringWidth(strUp) - 4, y - 4, 0xFFFFFFFF);
@@ -474,8 +482,8 @@ public class RenderUtils
             {
                 int yCenter = y + height / 2;
                 int yOff = (int) ((double) height * threshold / indicatorRange);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter - yOff, width, 2, 0xC0C0C0C0);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter + yOff, width, 2, 0xC0C0C0C0);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter - yOff, width, 2, 0xC0C0C0C0, z);
+                fi.dy.masa.malilib.render.RenderUtils.drawRect(x, yCenter + yOff, width, 2, 0xC0C0C0C0, z);
             }
         }
     }

@@ -11,29 +11,20 @@ import fi.dy.masa.malilib.render.RenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiCommandBlock;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.tileentity.TileEntityCommandBlock;
-import net.minecraft.util.math.BlockPos;
 
-@Mixin(GuiCommandBlock.class)
-public abstract class MixinGuiCommandBlock extends GuiScreen
+@Mixin(net.minecraft.client.gui.GuiCommandBlock.class)
+public abstract class MixinGuiCommandBlock extends net.minecraft.client.gui.GuiScreen
 {
-    @Shadow
-    @Final
-    private TileEntityCommandBlock commandBlock;
+    @Shadow @Final private net.minecraft.tileentity.TileEntityCommandBlock commandBlock;
 
-    @Shadow private GuiButton doneBtn;
-    @Shadow private GuiButton cancelBtn;
-    @Shadow private GuiButton modeBtn;
-    @Shadow private GuiButton conditionalBtn;
-    @Shadow private GuiButton autoExecBtn;
+    @Shadow private net.minecraft.client.gui.GuiButton doneBtn;
+    @Shadow private net.minecraft.client.gui.GuiButton cancelBtn;
+    @Shadow private net.minecraft.client.gui.GuiButton modeBtn;
+    @Shadow private net.minecraft.client.gui.GuiButton conditionalBtn;
+    @Shadow private net.minecraft.client.gui.GuiButton autoExecBtn;
 
-    private GuiTextField textFieldName;
-    private GuiButton buttonUpdateExec;
+    private net.minecraft.client.gui.GuiTextField textFieldName;
+    private net.minecraft.client.gui.GuiButton buttonUpdateExec;
     private boolean updateExecValue;
 
     @Inject(method = "initGui", at = @At("RETURN"))
@@ -59,16 +50,16 @@ public abstract class MixinGuiCommandBlock extends GuiScreen
             int widthBtn = this.fontRenderer.getStringWidth(str) + 10;
 
             y = 181;
-            this.textFieldName = new GuiTextField(100, this.fontRenderer, x1, y, width, 20);
+            this.textFieldName = new net.minecraft.client.gui.GuiTextField(100, this.fontRenderer, x1, y, width, 20);
             this.textFieldName.setText(this.commandBlock.getCommandBlockLogic().getName());
 
-            this.addButton(new GuiButton(101, x2, y, widthBtn, 20, str));
+            this.addButton(new net.minecraft.client.gui.GuiButton(101, x2, y, widthBtn, 20, str));
 
             this.updateExecValue = MiscUtils.getUpdateExec(this.commandBlock);
 
             str = this.getDisplayStringForCurrentStatus();
             width = this.mc.fontRenderer.getStringWidth(str) + 10;
-            this.buttonUpdateExec = new GuiButton(102, x2 + widthBtn + 4, y, width, 20, str);
+            this.buttonUpdateExec = new net.minecraft.client.gui.GuiButton(102, x2 + widthBtn + 4, y, width, 20, str);
 
             this.addButton(this.buttonUpdateExec);
         }
@@ -120,26 +111,24 @@ public abstract class MixinGuiCommandBlock extends GuiScreen
         if (this.buttonUpdateExec != null && this.buttonUpdateExec.isMouseOver())
         {
             String hover = "tweakeroo.gui.button.misc.command_block.hover.update_execution";
-            RenderUtils.drawHoverText(mouseX, mouseY, Arrays.asList(StringUtils.translate(hover)));
+            RenderUtils.drawHoverText(mouseX, mouseY, 1, Arrays.asList(StringUtils.translate(hover)));
         }
     }
 
     @Inject(method = "actionPerformed", at = @At("RETURN"))
-    private void handleButtons(GuiButton button, CallbackInfo ci)
+    private void handleButtons(net.minecraft.client.gui.GuiButton button, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_COMMAND_BLOCK_EXTRA_FIELDS.getBooleanValue() && button.enabled)
         {
-            EntityPlayerSP player = this.mc.player;
-
-            if (player != null)
+            if (this.mc.player != null)
             {
-                BlockPos pos = this.commandBlock.getPos();
+                net.minecraft.util.math.BlockPos pos = this.commandBlock.getPos();
 
                 // Set name
                 if (button.id == 101 && this.textFieldName != null)
                 {
                     String name = this.textFieldName.getText();
-                    player.sendChatMessage(String.format("/blockdata %d %d %d {\"CustomName\":\"%s\"}", pos.getX(), pos.getY(), pos.getZ(), name));
+                    this.mc.player.sendChatMessage(String.format("/blockdata %d %d %d {\"CustomName\":\"%s\"}", pos.getX(), pos.getY(), pos.getZ(), name));
                 }
                 // Toggle Update Last Execution
                 else if (button.id == 102 && this.buttonUpdateExec != null)
@@ -150,7 +139,7 @@ public abstract class MixinGuiCommandBlock extends GuiScreen
 
                     String cmd = String.format("/blockdata %d %d %d {\"UpdateLastExecution\":%s}",
                             pos.getX(), pos.getY(), pos.getZ(), this.updateExecValue ? "1b" : "0b");
-                    player.sendChatMessage(cmd);
+                    this.mc.player.sendChatMessage(cmd);
                 }
             }
         }
