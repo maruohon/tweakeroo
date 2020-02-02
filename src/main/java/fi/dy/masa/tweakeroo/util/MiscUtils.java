@@ -2,13 +2,19 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -40,6 +46,30 @@ public class MiscUtils
 
             GlStateManager.translate(xOff, yOff, 0.0);
             GlStateManager.scale(scale, scale, 1);
+        }
+    }
+
+    public static void addCustomBlockBreakingParticles(ParticleManager manager, World world, Random rand, BlockPos pos, IBlockState state)
+    {
+        if (state.getMaterial() != Material.AIR)
+        {
+            state = state.getActualState(world, pos);
+            int limit = Configs.Generic.BLOCK_BREAKING_PARTICLE_LIMIT.getIntegerValue();
+
+            for (int i = 0; i < limit; ++i)
+            {
+                double x = ((double) pos.getX() + rand.nextDouble());
+                double y = ((double) pos.getY() + rand.nextDouble());
+                double z = ((double) pos.getZ() + rand.nextDouble());
+                double speedX = (0.5 - rand.nextDouble());
+                double speedY = (0.5 - rand.nextDouble());
+                double speedZ = (0.5 - rand.nextDouble());
+
+                manager.addEffect((new ParticleDiggingExt(world, x, y, z, speedX, speedY, speedZ, state))
+                        .setBlockPos(pos)
+                        .multiplyVelocity(Configs.Generic.BLOCK_BREAKING_PARTICLE_SPEED.getFloatValue())
+                        .multipleParticleScaleBy(Configs.Generic.BLOCK_BREAKING_PARTICLE_SCALE.getFloatValue()));
+            }
         }
     }
 

@@ -33,6 +33,9 @@ public class Configs implements IConfigHandler
     {
         public static final ConfigInteger       AFTER_CLICKER_CLICK_COUNT           = new ConfigInteger     ("afterClickerClickCount",  1, 1, 32, "The number of right clicks to do per placed block when\ntweakAfterClicker is enabled");
         public static final ConfigDouble        BLOCK_REACH_DISTANCE                = new ConfigDouble      ("blockReachDistance", 4.5, 0, 8, "The block reach distance to use if the\noverride tweak is enabled.\nThe maximum the server allows is 8 for placing, 6 for breaking.");
+        public static final ConfigInteger       BLOCK_BREAKING_PARTICLE_LIMIT       = new ConfigInteger     ("blockBreakingParticleLimit", 8, 1, 1024, "This controls the maximum number of block breaking\nparticles produced per block broken, if 'tweakBlockBreakingParticleTweaks'\n is enabled.\nThe default in vanilla is 64 particles per block.");
+        public static final ConfigDouble        BLOCK_BREAKING_PARTICLE_SCALE       = new ConfigDouble      ("blockBreakingParticleScale", 1.0, 0, 10D, "This is just an extra option for some fun looking block breaking particles.\nWorks if you have the 'tweakBlockBreakingParticleTweaks' feature enabled.");
+        public static final ConfigDouble        BLOCK_BREAKING_PARTICLE_SPEED       = new ConfigDouble      ("blockBreakingParticleSpeedMultiplier", 1.0, 0, 20D, "This is just an extra option for some fun looking block breaking particles.\nWorks if you have the 'tweakBlockBreakingParticleTweaks' feature enabled.");
         public static final ConfigInteger       BREAKING_GRID_SIZE                  = new ConfigInteger     ("breakingGridSize", 3, 1, 1000, "The grid interval size for the grid breaking mode.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind.");
         public static final ConfigOptionList    BREAKING_RESTRICTION_MODE           = new ConfigOptionList  ("breakingRestrictionMode", PlacementRestrictionMode.LINE, "The Breaking Restriction mode to use (hotkey-selectable)");
         public static final ConfigColor         CHAT_BACKGROUND_COLOR               = new ConfigColor       ("chatBackgroundColor", "#80000000", "The background color for the chat messages,\nif 'tweakChatBackgroundColor' is enabled");
@@ -120,6 +123,9 @@ public class Configs implements IConfigHandler
                 SNAP_AIM_INDICATOR_COLOR,
 
                 AFTER_CLICKER_CLICK_COUNT,
+                BLOCK_BREAKING_PARTICLE_LIMIT,
+                BLOCK_BREAKING_PARTICLE_SCALE,
+                BLOCK_BREAKING_PARTICLE_SPEED,
                 BLOCK_REACH_DISTANCE,
                 BREAKING_GRID_SIZE,
                 CHUNK_RENDER_TIMEOUT,
@@ -219,7 +225,7 @@ public class Configs implements IConfigHandler
 
     public static class Disable
     {
-        public static final ConfigBooleanHotkeyed       DISABLE_BLOCK_BREAK_PARTICLES   = new ConfigBooleanHotkeyed("disableBlockBreakingParticles",        false, "", "Removes the block breaking particles.\n(This is originally from usefulmod by nessie.)");
+        public static final ConfigBooleanHotkeyed       DISABLE_BLOCK_BREAK_PARTICLES   = new ConfigBooleanHotkeyed("disableBlockBreakingParticles",        false, "", "Removes the block breaking particles.\n(This is originally from usefulmod by nessie.)\n§6Note: There is a separate tweak 'tweakReducedBlockBreakingParticles' in Tweak Toggles,\n§6if you just want to reduce the amount of particles produced,\n§6but not disable them completely.");
         public static final ConfigBooleanHotkeyed       DISABLE_DOUBLE_TAP_SPRINT       = new ConfigBooleanHotkeyed("disableDoubleTapSprint",               false, "", "Disables the double-tap-forward-key sprinting");
         public static final ConfigBooleanHotkeyed       DISABLE_BOSS_FOG                = new ConfigBooleanHotkeyed("disableBossFog",                       false, "", "Removes the fog that boss mobs cause");
         public static final ConfigBooleanHotkeyed       DISABLE_CHRISTMAS_CHESTS        = new ConfigBooleanHotkeyed("disableChristmasChests",               false, "", "Disables the Christmas chest textures");
