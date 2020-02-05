@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.packet.CombatEventS2CPacket;
-import net.minecraft.client.network.packet.GuiSlotUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.CombatEventS2CPacket;
+import net.minecraft.network.packet.s2c.play.ContainerSlotUpdateS2CPacket;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.util.math.BlockPos;
 import fi.dy.masa.tweakeroo.Tweakeroo;
@@ -17,11 +17,11 @@ import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class MixinClientPlayNetworkHandler
 {
-    @Inject(method = "onGuiSlotUpdate", at = @At(
+    @Inject(method = "onContainerSlotUpdate", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/container/Container;setStackInSlot(ILnet/minecraft/item/ItemStack;)V"),
             cancellable = true)
-    private void onHandleSetSlot(GuiSlotUpdateS2CPacket packet, CallbackInfo ci)
+    private void onHandleSetSlot(ContainerSlotUpdateS2CPacket packet, CallbackInfo ci)
     {
         if (PlacementTweaks.shouldSkipSlotSync(packet.getSlot(), packet.getItemStack()))
         {

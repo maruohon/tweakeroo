@@ -36,8 +36,7 @@ public abstract class MixinEntity
     @Shadow public abstract Vec3d getVelocity();
     @Shadow public abstract void setVelocity(Vec3d velocity);
 
-    // This method should be called isInvisibleToPlayer
-    @Inject(method = "canSeePlayer", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isInvisibleTo", at = @At("HEAD"), cancellable = true)
     private void overrideIsInvisibleToPlayer(PlayerEntity player, CallbackInfoReturnable<Boolean> cir)
     {
         if (FeatureToggle.TWEAK_RENDER_INVISIBLE_ENTITIES.getBooleanValue())

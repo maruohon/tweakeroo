@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.mixin;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,7 +22,7 @@ import fi.dy.masa.tweakeroo.config.Configs;
 @Mixin(ClientWorld.class)
 public abstract class MixinClientWorld extends World
 {
-    protected MixinClientWorld(LevelProperties settings, DimensionType dimType, BiFunction<World, Dimension, ChunkManager> func, Profiler profiler)
+    protected MixinClientWorld(LevelProperties settings, DimensionType dimType, BiFunction<World, Dimension, ChunkManager> func, Supplier<Profiler> profiler)
     {
         super(settings, dimType, func, profiler, true);
     }
