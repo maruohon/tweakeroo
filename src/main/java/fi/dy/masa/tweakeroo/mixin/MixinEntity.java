@@ -6,12 +6,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -19,11 +13,11 @@ import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
-@Mixin(Entity.class)
+@Mixin(net.minecraft.entity.Entity.class)
 public abstract class MixinEntity
 {
     @Shadow
-    public World world;
+    public net.minecraft.world.World world;
 
     @Shadow public float yaw;
     @Shadow public float pitch;
@@ -33,12 +27,11 @@ public abstract class MixinEntity
     private double forcedPitch;
     private double forcedYaw;
 
-    @Shadow public abstract Vec3d getVelocity();
-    @Shadow public abstract void setVelocity(Vec3d velocity);
+    @Shadow public abstract net.minecraft.util.math.Vec3d getVelocity();
+    @Shadow public abstract void setVelocity(net.minecraft.util.math.Vec3d velocity);
 
-    // This method should be called isInvisibleToPlayer
-    @Inject(method = "canSeePlayer", at = @At("HEAD"), cancellable = true)
-    private void overrideIsInvisibleToPlayer(PlayerEntity player, CallbackInfoReturnable<Boolean> cir)
+    @Inject(method = "isInvisibleTo", at = @At("HEAD"), cancellable = true)
+    private void overrideIsInvisibleToPlayer(net.minecraft.entity.player.PlayerEntity player, CallbackInfoReturnable<Boolean> cir)
     {
         if (FeatureToggle.TWEAK_RENDER_INVISIBLE_ENTITIES.getBooleanValue())
         {
@@ -47,9 +40,9 @@ public abstract class MixinEntity
     }
 
     @Inject(method = "updateVelocity", at = @At("HEAD"), cancellable = true)
-    private void moreAccurateMoveRelative(float float_1, Vec3d motion, CallbackInfo ci)
+    private void moreAccurateMoveRelative(float float_1, net.minecraft.util.math.Vec3d motion, CallbackInfo ci)
     {
-        if ((Object) this instanceof ClientPlayerEntity)
+        if ((Object) this instanceof net.minecraft.client.network.ClientPlayerEntity)
         {
             if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
             {
@@ -70,7 +63,7 @@ public abstract class MixinEntity
                    motion = (speed > 1.0D ? motion.normalize() : motion).multiply((double) float_1);
                    double xFactor = Math.sin(this.yaw * Math.PI / 180D);
                    double zFactor = Math.cos(this.yaw * Math.PI / 180D);
-                   Vec3d change = new Vec3d(motion.x * zFactor - motion.z * xFactor, motion.y, motion.z * zFactor + motion.x * xFactor);
+                   net.minecraft.util.math.Vec3d change = new net.minecraft.util.math.Vec3d(motion.x * zFactor - motion.z * xFactor, motion.y, motion.z * zFactor + motion.x * xFactor);
 
                    this.setVelocity(this.getVelocity().add(change));
                 }
@@ -83,7 +76,7 @@ public abstract class MixinEntity
     @Inject(method = "changeLookDirection", at = @At("HEAD"), cancellable = true)
     private void overrideYaw(double yawChange, double pitchChange, CallbackInfo ci)
     {
-        if ((Object) this instanceof ClientPlayerEntity)
+        if ((Object) this instanceof net.minecraft.client.network.ClientPlayerEntity)
         {
             if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && FeatureToggle.TWEAK_FREE_CAMERA_MOTION.getBooleanValue())
             {
@@ -172,7 +165,7 @@ public abstract class MixinEntity
 
         if (updatePitch)
         {
-            this.forcedPitch = MathHelper.clamp(this.forcedPitch + pitchChange * 0.15D, -pitchLimit, pitchLimit);
+            this.forcedPitch = net.minecraft.util.math.MathHelper.clamp(this.forcedPitch + pitchChange * 0.15D, -pitchLimit, pitchLimit);
         }
     }
 }
