@@ -30,6 +30,7 @@ import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IMouseInputHandler
@@ -221,13 +222,19 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             else if (FeatureToggle.TWEAK_ZOOM.getKeybind().isKeybindHeld() ||
                      (FeatureToggle.TWEAK_ZOOM.getBooleanValue() && Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld()))
             {
-                double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (dWheel > 0 ? 1 : -1);
+                double diff = GuiBase.isCtrlDown() ? 5 : 1;
+                double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (dWheel < 0 ? diff : -diff);
                 Configs.Generic.ZOOM_FOV.setDoubleValue(newValue);
 
                 // Only prevent the next trigger when adjusting the value with the actual toggle key held
                 if (FeatureToggle.TWEAK_ZOOM.getKeybind().isKeybindHeld())
                 {
                     KeyCallbackAdjustable.setValueChanged();
+                }
+
+                if (FeatureToggle.TWEAK_ZOOM.getBooleanValue())
+                {
+                    MiscUtils.setMouseSnsitivityForZoom();
                 }
 
                 String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);

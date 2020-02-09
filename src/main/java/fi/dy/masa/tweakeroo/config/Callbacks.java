@@ -109,6 +109,7 @@ public class Callbacks
         Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.ZOOM_ACTIVATE.getKeybind().setCallback(callbackGeneric);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
@@ -402,6 +403,26 @@ public class Callbacks
                 {
                     this.mc.setIngameFocus();
                     InfoUtils.printActionbarMessage("tweakeroo.message.focusing_game");
+                }
+            }
+            else if (key == Hotkeys.ZOOM_ACTIVATE.getKeybind())
+            {
+                if (action == KeyAction.RELEASE)
+                {
+                    // Refresh the rendered chunks when exiting zoom mode
+                    this.mc.renderGlobal.setDisplayListEntitiesDirty();
+                }
+
+                if (key.getSettings().getActivateOn() == KeyAction.BOTH)
+                {
+                    if (action == KeyAction.PRESS)
+                    {
+                        MiscUtils.setMouseSnsitivityForZoom();
+                    }
+                    else
+                    {
+                        MiscUtils.resetMouseSnsitivityForZoom();
+                    }
                 }
             }
 

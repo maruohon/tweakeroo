@@ -29,6 +29,37 @@ public class MiscUtils
     private static final Date DATE = new Date();
     private static double lastRealPitch;
     private static double lastRealYaw;
+    private static float mouseSensitivity = -1.0F;
+
+    public static void setMouseSnsitivityForZoom()
+    {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        float fov = Configs.Generic.ZOOM_FOV.getFloatValue();
+        float origFov = mc.gameSettings.fovSetting;
+
+        if (fov < origFov)
+        {
+            // Only store it once
+            if (mouseSensitivity <= 0.0F || mouseSensitivity > 1.0F)
+            {
+                mouseSensitivity = mc.gameSettings.mouseSensitivity;
+            }
+
+            float min = 0.04F;
+            float sens = min + (0.5F - min) * (1 - (origFov - fov) / origFov);
+            mc.gameSettings.mouseSensitivity = Math.min(mouseSensitivity, sens);
+        }
+    }
+
+    public static void resetMouseSnsitivityForZoom()
+    {
+        if (mouseSensitivity > 0.0F)
+        {
+            Minecraft.getMinecraft().gameSettings.mouseSensitivity = mouseSensitivity;
+            mouseSensitivity = -1.0F;
+        }
+    }
 
     public static void applyDebugPieChartScale()
     {
