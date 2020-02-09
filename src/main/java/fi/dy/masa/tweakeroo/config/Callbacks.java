@@ -29,6 +29,7 @@ import fi.dy.masa.tweakeroo.util.SnapAimMode;
 public class Callbacks
 {
     public static boolean skipWorldRendering;
+    private static double mouseSensitivity = -1.0;
 
     public static void init(MinecraftClient mc)
     {
@@ -67,6 +68,32 @@ public class Callbacks
         Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.ZOOM_ACTIVATE.getKeybind().setCallback((action, key) -> {
+            if (action == KeyAction.RELEASE)
+            {
+                // Refresh the rendered chunks when exiting zoom mode
+                mc.worldRenderer.scheduleTerrainUpdate();
+            }
+
+            if (key.getSettings().getActivateOn() == KeyAction.BOTH)
+            {
+                if (action == KeyAction.PRESS)
+                {
+                    // Only store it once
+                    if (mouseSensitivity == -1.0)
+                    {
+                        mouseSensitivity = mc.options.mouseSensitivity;
+                    }
+
+                    mc.options.mouseSensitivity = Math.min(mouseSensitivity, Configs.Generic.ZOOM_FOV.getDoubleValue() / 720.0);
+                }
+                else if (mouseSensitivity != -1.0)
+                {
+                    mc.options.mouseSensitivity = mouseSensitivity;
+                }
+            }
+            return false;
+        });
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
