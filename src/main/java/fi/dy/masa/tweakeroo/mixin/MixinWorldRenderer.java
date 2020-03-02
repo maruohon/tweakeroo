@@ -44,7 +44,10 @@ public abstract class MixinWorldRenderer
                      "Lnet/minecraft/client/render/Frustum;ZIZ)V"))
     private void preSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
     {
-        MiscUtils.setFreeCameraSpectator(true);
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        {
+            MiscUtils.setFreeCameraSpectator(true);
+        }
     }
 
     @Inject(method = "render", at = @At(
