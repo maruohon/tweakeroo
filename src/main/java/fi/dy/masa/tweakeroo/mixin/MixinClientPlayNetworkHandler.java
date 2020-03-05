@@ -35,7 +35,7 @@ public abstract class MixinClientPlayNetworkHandler
     {
         if (FeatureToggle.TWEAK_PRINT_DEATH_COORDINATES.getBooleanValue())
         {
-            BlockPos pos = new BlockPos(MinecraftClient.getInstance().player);
+            BlockPos pos = fi.dy.masa.malilib.util.PositionUtils.getEntityBlockPos(MinecraftClient.getInstance().player);
             String str = String.format("You died @ %d, %d, %d", pos.getX(), pos.getY(), pos.getZ());
             net.minecraft.text.LiteralText message = new net.minecraft.text.LiteralText(str);
             message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, pos.getX() + " " + pos.getY() + " " + pos.getZ()));
