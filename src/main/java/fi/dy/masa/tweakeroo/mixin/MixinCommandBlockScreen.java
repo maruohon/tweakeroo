@@ -54,10 +54,10 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             this.cancelButton.y = y;
 
             String str = StringUtils.translate("tweakeroo.gui.button.misc.command_block.set_name");
-            int widthBtn = this.font.getStringWidth(str) + 10;
+            int widthBtn = this.textRenderer.getStringWidth(str) + 10;
 
             y = 181;
-            this.textFieldName = new TextFieldWidget(this.font, x1, y, width, 20, "");
+            this.textFieldName = new TextFieldWidget(this.textRenderer, x1, y, width, 20, "");
             this.textFieldName.setText(this.blockEntity.getCommandExecutor().getCustomName().getString());
             this.children.add(this.textFieldName);
             final TextFieldWidget tf = this.textFieldName;
@@ -67,13 +67,13 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             {
                 String name = tf.getText();
                 name = String.format("{\"CustomName\":\"{\\\"text\\\":\\\"%s\\\"}\"}", name);
-                this.minecraft.player.sendChatMessage(String.format("/data merge block %d %d %d %s", pos.getX(), pos.getY(), pos.getZ(), name));
+                this.client.player.sendChatMessage(String.format("/data merge block %d %d %d %s", pos.getX(), pos.getY(), pos.getZ(), name));
             }));
 
             this.updateExecValue = MiscUtils.getUpdateExec(this.blockEntity);
 
             str = getDisplayStringForCurrentStatus(this.updateExecValue);
-            width = this.font.getStringWidth(str) + 10;
+            width = this.textRenderer.getStringWidth(str) + 10;
 
             this.buttonUpdateExec = new ButtonWidget(x2 + widthBtn + 4, y, width, 20, str, (button) ->
             {
@@ -82,11 +82,11 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
 
                 String strBtn = getDisplayStringForCurrentStatus(this.updateExecValue);
                 button.setMessage(strBtn);
-                button.setWidth(this.font.getStringWidth(strBtn) + 10);
+                button.setWidth(this.textRenderer.getStringWidth(strBtn) + 10);
 
                 String cmd = String.format("/data merge block %d %d %d {\"UpdateLastExecution\":%s}",
                         pos.getX(), pos.getY(), pos.getZ(), this.updateExecValue ? "1b" : "0b");
-                this.minecraft.player.sendChatMessage(cmd);
+                this.client.player.sendChatMessage(cmd);
             });
 
             this.addButton(this.buttonUpdateExec);
@@ -119,7 +119,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
                 this.updateExecValue = updateExec;
                 String str = getDisplayStringForCurrentStatus(this.updateExecValue);
                 this.buttonUpdateExec.setMessage(str);
-                this.buttonUpdateExec.setWidth(this.font.getStringWidth(str) + 10);
+                this.buttonUpdateExec.setWidth(this.textRenderer.getStringWidth(str) + 10);
             }
         }
     }

@@ -8,7 +8,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -16,6 +15,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
@@ -1122,11 +1122,11 @@ public class PlacementTweaks
     {
         MinecraftClient mc = MinecraftClient.getInstance();
         PlayerEntity player = mc.player;
-        Container container = player != null ? player.container : null;
+        ScreenHandler container = player != null ? player.currentScreenHandler : null;
 
         if (Configs.Generic.SLOT_SYNC_WORKAROUND.getBooleanValue() &&
             FeatureToggle.TWEAK_PICK_BEFORE_PLACE.getBooleanValue() == false &&
-            container != null && container == player.playerContainer &&
+            container != null && container == player.playerScreenHandler &&
             (slotNumber == 45 || (slotNumber - 36) == player.inventory.selectedSlot))
         {
             boolean featRight = FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue();

@@ -6,10 +6,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.container.Container;
-import net.minecraft.container.PlayerContainer;
-import net.minecraft.container.Slot;
-import net.minecraft.container.SlotActionType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
@@ -19,6 +15,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
+import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -149,7 +149,7 @@ public class InventoryUtils
 
     public static void swapHotbarWithInventoryRow(PlayerEntity player, int row)
     {
-        Container container = player.playerContainer;
+        ScreenHandler container = player.playerScreenHandler;
         row = MathHelper.clamp(row, 0, 2);
         int slot = row * 9 + 9;
 
@@ -167,11 +167,11 @@ public class InventoryUtils
         if (stackReference.getItem().isDamageable())
         {
             int minDurability = getMinDurability(stackReference);
-            slotWithItem = findSlotWithSuitableReplacementToolWithDurabilityLeft(player.playerContainer, stackReference, minDurability);
+            slotWithItem = findSlotWithSuitableReplacementToolWithDurabilityLeft(player.playerScreenHandler, stackReference, minDurability);
         }
         else
         {
-            slotWithItem = findSlotWithItem(player.playerContainer, stackReference, allowHotbar, true);
+            slotWithItem = findSlotWithItem(player.playerScreenHandler, stackReference, allowHotbar, true);
         }
 
         if (slotWithItem != -1)
@@ -186,10 +186,10 @@ public class InventoryUtils
 
         if (stackHand.isEmpty() == false && stackHand.getCount() <= 4 && stackHand.getMaxCount() > 4 &&
             FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue() &&
-            player.container == player.playerContainer && player.inventory.getCursorStack().isEmpty())
+            player.currentScreenHandler == player.playerScreenHandler && player.inventory.getCursorStack().isEmpty())
         {
             MinecraftClient mc = MinecraftClient.getInstance();
-            Container container = player.playerContainer;
+            ScreenHandler container = player.playerScreenHandler;
             int endSlot = allowHotbar ? 44 : 35;
             int currentMainHandSlot = player.inventory.selectedSlot + 36;
             int currentSlot = hand == Hand.MAIN_HAND ? currentMainHandSlot : 45;
@@ -252,9 +252,9 @@ public class InventoryUtils
             BlockState state = mc.world.getBlockState(pos);
             ItemStack stack = player.getMainHandStack();
 
-            if (stack.isEmpty() || stack.getMiningSpeed(state) <= 1f)
+            if (stack.isEmpty() || stack.getMiningSpeedMultiplier(state) <= 1f)
             {
-                Container container = player.playerContainer;
+                ScreenHandler container = player.playerScreenHandler;
                 int slotNumber = findSlotWithEffectiveItemWithDurabilityLeft(container, state);
 
                 if (slotNumber != -1 && (slotNumber - 36) != player.inventory.selectedSlot)
@@ -286,7 +286,7 @@ public class InventoryUtils
 
     private static void swapItemWithHigherDurabilityToHand(PlayerEntity player, Hand hand, ItemStack stackReference, int minDurabilityLeft)
     {
-        int slotWithItem = findSlotWithSuitableReplacementToolWithDurabilityLeft(player.playerContainer, stackReference, minDurabilityLeft);
+        int slotWithItem = findSlotWithSuitableReplacementToolWithDurabilityLeft(player.playerScreenHandler, stackReference, minDurabilityLeft);
 
         if (slotWithItem != -1)
         {
@@ -295,7 +295,7 @@ public class InventoryUtils
             return;
         }
 
-        slotWithItem = fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.playerContainer, false, false);
+        slotWithItem = fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.playerScreenHandler, false, false);
 
         if (slotWithItem != -1)
         {
@@ -304,7 +304,7 @@ public class InventoryUtils
             return;
         }
 
-        Container container = player.playerContainer;
+        ScreenHandler container = player.playerScreenHandler;
 
         for (Slot slot : container.slots)
         {
@@ -331,7 +331,7 @@ public class InventoryUtils
 
     public static void repairModeSwapItems(PlayerEntity player)
     {
-        if (player.container == player.playerContainer)
+        if (player.currentScreenHandler == player.playerScreenHandler)
         {
             for (EquipmentSlot type : REPAIR_MODE_SLOTS)
             {
@@ -356,7 +356,7 @@ public class InventoryUtils
              stack.isDamaged() == false ||
              EnchantmentHelper.getLevel(Enchantments.MENDING, stack) <= 0))
         {
-            Slot slot = player.container.getSlot(slotNum);
+            Slot slot = player.currentScreenHandler.getSlot(slotNum);
             int slotRepairableItem = findRepairableItemNotInRepairableSlot(slot, player);
 
             if (slotRepairableItem != -1)
@@ -369,7 +369,7 @@ public class InventoryUtils
 
     private static int findRepairableItemNotInRepairableSlot(Slot targetSlot, PlayerEntity player)
     {
-        Container containerPlayer = player.container;
+        ScreenHandler containerPlayer = player.currentScreenHandler;
 
         for (Slot slot : containerPlayer.slots)
         {
@@ -397,12 +397,12 @@ public class InventoryUtils
      * @param reverse
      * @return the slot number, or -1 if none were found
      */
-    public static int findSlotWithItem(Container container, ItemStack stackReference, boolean allowHotbar, boolean reverse)
+    public static int findSlotWithItem(ScreenHandler container, ItemStack stackReference, boolean allowHotbar, boolean reverse)
     {
         final int startSlot = reverse ? container.slots.size() - 1 : 0;
         final int endSlot = reverse ? -1 : container.slots.size();
         final int increment = reverse ? -1 : 1;
-        final boolean isPlayerInv = container instanceof PlayerContainer;
+        final boolean isPlayerInv = container instanceof PlayerScreenHandler;
 
         for (int slotNum = startSlot; slotNum != endSlot; slotNum += increment)
         {
@@ -426,10 +426,10 @@ public class InventoryUtils
 
     private static void swapItemToHand(PlayerEntity player, Hand hand, int slotNumber)
     {
-        if (slotNumber != -1 && player.container == player.playerContainer)
+        if (slotNumber != -1 && player.currentScreenHandler == player.playerScreenHandler)
         {
             MinecraftClient mc = MinecraftClient.getInstance();
-            Container container = player.playerContainer;
+            ScreenHandler container = player.playerScreenHandler;
 
             if (hand == Hand.MAIN_HAND)
             {
@@ -463,10 +463,10 @@ public class InventoryUtils
 
     private static void swapItemToEqupmentSlot(PlayerEntity player, EquipmentSlot type, int sourceSlotNumber)
     {
-        if (sourceSlotNumber != -1 && player.container == player.playerContainer)
+        if (sourceSlotNumber != -1 && player.currentScreenHandler == player.playerScreenHandler)
         {
             MinecraftClient mc = MinecraftClient.getInstance();
-            Container container = player.playerContainer;
+            ScreenHandler container = player.playerScreenHandler;
 
             if (type == EquipmentSlot.MAINHAND)
             {
@@ -500,7 +500,7 @@ public class InventoryUtils
         }
     }
 
-    private static int findSlotWithSuitableReplacementToolWithDurabilityLeft(Container container, ItemStack stackReference, int minDurabilityLeft)
+    private static int findSlotWithSuitableReplacementToolWithDurabilityLeft(ScreenHandler container, ItemStack stackReference, int minDurabilityLeft)
     {
         for (Slot slot : container.slots)
         {
@@ -538,7 +538,7 @@ public class InventoryUtils
         return true;
     }
 
-    private static int findSlotWithEffectiveItemWithDurabilityLeft(Container container, BlockState state)
+    private static int findSlotWithEffectiveItemWithDurabilityLeft(ScreenHandler container, BlockState state)
     {
         int slotNum = -1;
         float bestSpeed = -1f;
@@ -555,7 +555,7 @@ public class InventoryUtils
 
             if (stack.getMaxDamage() - stack.getDamage() > getMinDurability(stack))
             {
-                float speed = stack.getMiningSpeed(state);
+                float speed = stack.getMiningSpeedMultiplier(state);
 
                 if (speed > 1.0f)
                 {
@@ -581,7 +581,7 @@ public class InventoryUtils
     private static void tryCombineStacksInInventory(PlayerEntity player, ItemStack stackReference)
     {
         List<Slot> slots = new ArrayList<>();
-        Container container = player.playerContainer;
+        ScreenHandler container = player.playerScreenHandler;
         MinecraftClient mc = MinecraftClient.getInstance();
 
         for (Slot slot : container.slots)
@@ -642,11 +642,11 @@ public class InventoryUtils
             stack.getCount() > 1 &&
             UNSTACKING_ITEMS.contains(stack.getItem()))
         {
-            if (fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.playerContainer, false, false) == -1)
+            if (fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.playerScreenHandler, false, false) == -1)
             {
                 tryCombineStacksInInventory(player, stack);
 
-                if (fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.playerContainer, false, false) == -1)
+                if (fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.playerScreenHandler, false, false) == -1)
                 {
                     return true;
                 }
@@ -692,12 +692,12 @@ public class InventoryUtils
                 }
                 else
                 {
-                    int slot = fi.dy.masa.malilib.util.InventoryUtils.findSlotWithItem(player.playerContainer, stack, true); //player.inventory.getSlotFor(stack);
+                    int slot = fi.dy.masa.malilib.util.InventoryUtils.findSlotWithItem(player.playerScreenHandler, stack, true); //player.inventory.getSlotFor(stack);
 
                     if (slot != -1)
                     {
                         int currentHotbarSlot = player.inventory.selectedSlot;
-                        mc.interactionManager.clickSlot(player.playerContainer.syncId, slot, currentHotbarSlot, SlotActionType.SWAP, mc.player);
+                        mc.interactionManager.clickSlot(player.playerScreenHandler.syncId, slot, currentHotbarSlot, SlotActionType.SWAP, mc.player);
 
                         /*
                         if (InventoryPlayer.isHotbar(slot))
