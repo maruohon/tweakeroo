@@ -25,7 +25,7 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 {
     @Shadow public Input input;
-    @Shadow protected int field_3935; // sprintToggleTimer
+    @Shadow protected int ticksLeftToDoubleTapSprint;
 
     @Shadow
     protected abstract boolean isCamera();
@@ -89,12 +89,12 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
                                       target = "Lnet/minecraft/client/network/ClientPlayerEntity;getHungerManager()" +
                                                "Lnet/minecraft/entity/player/HungerManager;")),
             at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, ordinal = 0, shift = At.Shift.AFTER,
-                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;field_3935:I")) // spintToggleTimer
+                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;ticksLeftToDoubleTapSprint:I"))
     private void disableDoubleTapSprint(CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_DOUBLE_TAP_SPRINT.getBooleanValue())
         {
-            this.field_3935 = 0;
+            this.ticksLeftToDoubleTapSprint = 0;
         }
     }
 

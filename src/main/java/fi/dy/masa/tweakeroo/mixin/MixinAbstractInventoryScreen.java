@@ -5,19 +5,18 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
-import net.minecraft.container.Container;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
 import fi.dy.masa.tweakeroo.config.Configs;
 
-@Mixin(AbstractInventoryScreen.class)
-public abstract class MixinAbstractInventoryScreen<T extends Container> extends ContainerScreen<T>
+@Mixin(net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen.class)
+public abstract class MixinAbstractInventoryScreen<T extends net.minecraft.screen.ScreenHandler>
+       extends net.minecraft.client.gui.screen.ingame.ScreenWithHandler<T>
 {
     @Shadow protected boolean offsetGuiForEffects;
 
-    public MixinAbstractInventoryScreen(T container, PlayerInventory playerInventory, Text textComponent)
+    public MixinAbstractInventoryScreen(
+            T container,
+            net.minecraft.entity.player.PlayerInventory playerInventory,
+            net.minecraft.text.Text textComponent)
     {
         super(container, playerInventory, textComponent);
     }
@@ -27,7 +26,7 @@ public abstract class MixinAbstractInventoryScreen<T extends Container> extends 
     {
         if (Configs.Disable.DISABLE_INVENTORY_EFFECTS.getBooleanValue())
         {
-            this.x = (this.width - this.containerWidth) / 2;
+            this.x = (this.width - this.backgroundWidth) / 2;
             this.offsetGuiForEffects = false;
             ci.cancel();
         }
