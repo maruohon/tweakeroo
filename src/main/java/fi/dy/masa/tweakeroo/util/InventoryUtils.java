@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import javax.annotation.Nullable;
-import fi.dy.masa.malilib.util.Constants;
-import fi.dy.masa.malilib.util.InfoUtils;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -29,6 +25,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.Constants;
+import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class InventoryUtils
 {
@@ -172,40 +172,9 @@ public class InventoryUtils
 
     public static void preRestockHand(EntityPlayer player, EnumHand hand, boolean allowHotbar)
     {
-        ItemStack stackHand = player.getHeldItem(hand);
-
-        if (stackHand.isEmpty() == false && stackHand.getCount() <= 4 && stackHand.getMaxStackSize() > 4 &&
-            FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue() &&
-            player.openContainer == player.inventoryContainer && player.inventory.getItemStack().isEmpty())
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue())
         {
-            Minecraft mc = Minecraft.getMinecraft();
-            Container container = player.inventoryContainer;
-            int endSlot = allowHotbar ? 44 : 35;
-            int currentMainHandSlot = player.inventory.currentItem + 36;
-            int currentSlot = hand == EnumHand.MAIN_HAND ? currentMainHandSlot : 45;
-
-            for (int slotNum = 9; slotNum <= endSlot; ++slotNum)
-            {
-                if (slotNum == currentMainHandSlot)
-                {
-                    continue;
-                }
-
-                Slot slot = container.inventorySlots.get(slotNum);
-                ItemStack stackSlot = slot.getStack();
-
-                if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(stackSlot, stackHand))
-                {
-                    // If all the items from the found slot can fit into the current
-                    // stack in hand, then left click, otherwise right click to split the stack
-                    int button = stackSlot.getCount() + stackHand.getCount() <= stackHand.getMaxStackSize() ? 0 : 1;
-
-                    mc.playerController.windowClick(container.windowId, slot.slotNumber, button, ClickType.PICKUP, player);
-                    mc.playerController.windowClick(container.windowId, currentSlot, 0, ClickType.PICKUP, player);
-
-                    break;
-                }
-            }
+            fi.dy.masa.malilib.util.InventoryUtils.preRestockHand(player, hand, 6, allowHotbar);
         }
     }
 
@@ -682,7 +651,7 @@ public class InventoryUtils
                 }
                 else
                 {
-                    int slot = fi.dy.masa.malilib.util.InventoryUtils.findSlotWithItem(player.inventoryContainer, stack, true); //player.inventory.getSlotFor(stack);
+                    int slot = fi.dy.masa.malilib.util.InventoryUtils.findPlayerInventorySlotWithItem(player.inventoryContainer, stack, true); //player.inventory.getSlotFor(stack);
 
                     if (slot != -1)
                     {
