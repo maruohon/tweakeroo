@@ -95,7 +95,7 @@ public abstract class MixinEntity
             if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
             {
                 int pitchLimit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
-                SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+                SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
                 boolean snapAimLock = FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue();
 
                 // Not locked, or not snapping the yaw (ie. not in Yaw or Both modes)

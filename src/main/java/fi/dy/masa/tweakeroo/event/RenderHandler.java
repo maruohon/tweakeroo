@@ -1,5 +1,11 @@
 package fi.dy.masa.tweakeroo.event;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemMap;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.RayTraceResult;
 import fi.dy.masa.malilib.config.values.ActiveMode;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.interfaces.IRenderer;
@@ -8,12 +14,6 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RayTraceResult;
 
 public class RenderHandler implements IRenderer
 {
@@ -53,7 +53,7 @@ public class RenderHandler implements IRenderer
 
         if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue())
         {
-            ActiveMode mode = (ActiveMode) Configs.Generic.ELYTRA_CAMERA_INDICATOR.getOptionListValue();
+            ActiveMode mode = Configs.Generic.ELYTRA_CAMERA_INDICATOR.getOptionListValue();
 
             if (mode == ActiveMode.ALWAYS || (mode == ActiveMode.WITH_KEY && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld()))
             {

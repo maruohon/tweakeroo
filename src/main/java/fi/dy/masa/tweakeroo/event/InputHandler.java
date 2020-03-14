@@ -204,7 +204,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             }
             else if (FeatureToggle.TWEAK_SNAP_AIM.getKeybind().isKeybindHeld())
             {
-                SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+                SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
                 ConfigDouble config = mode == SnapAimMode.PITCH ? Configs.Generic.SNAP_AIM_PITCH_STEP : Configs.Generic.SNAP_AIM_YAW_STEP;
 
                 double newValue = config.getDoubleValue() * (dWheel > 0 ? 2 : 0.5);

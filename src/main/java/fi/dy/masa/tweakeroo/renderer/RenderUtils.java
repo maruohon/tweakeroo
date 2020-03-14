@@ -25,6 +25,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.config.values.HudAlignment;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
@@ -49,7 +50,7 @@ public class RenderUtils
             int startX = offX;
             int startY = offY;
 
-            fi.dy.masa.malilib.config.values.HudAlignment align = (fi.dy.masa.malilib.config.values.HudAlignment) Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
+            HudAlignment align = Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
 
             switch (align)
             {
@@ -341,7 +342,7 @@ public class RenderUtils
             Minecraft mc = Minecraft.getMinecraft();
             final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
             final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
-            SnapAimMode mode = (SnapAimMode) Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+            SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
 
             if (mode != SnapAimMode.PITCH)
             {

@@ -12,7 +12,6 @@ import net.minecraft.world.gen.FlatLayerInfo;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
-import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinFlatGeneratorInfo;
@@ -134,21 +133,21 @@ public class MiscTweaks
 
     public static void updateItemGlintRestriction()
     {
-        ITEM_GLINT_RESTRICTION.setListType((ListType) Configs.Lists.ITEM_GLINT_LIST_TYPE.getOptionListValue());
+        ITEM_GLINT_RESTRICTION.setListType(Configs.Lists.ITEM_GLINT_LIST_TYPE.getOptionListValue());
         ITEM_GLINT_RESTRICTION.setListContents(Configs.Lists.ITEM_GLINT_BLACKLIST.getStrings(),
                 Configs.Lists.ITEM_GLINT_WHITELIST.getStrings());
     }
 
     public static void updatePotionRestrictionLists()
     {
-        POTION_RESTRICTION.setListType((ListType) Configs.Lists.POTION_WARNING_LIST_TYPE.getOptionListValue());
+        POTION_RESTRICTION.setListType(Configs.Lists.POTION_WARNING_LIST_TYPE.getOptionListValue());
         POTION_RESTRICTION.setListContents(Configs.Lists.POTION_WARNING_BLACKLIST.getStrings(),
                 Configs.Lists.POTION_WARNING_WHITELIST.getStrings());
     }
 
     public static void updateSoundRestrictionLists()
     {
-        SOUND_RESTRICTION.setListType((ListType) Configs.Lists.SOUND_DISABLE_LIST_TYPE.getOptionListValue());
+        SOUND_RESTRICTION.setListType(Configs.Lists.SOUND_DISABLE_LIST_TYPE.getOptionListValue());
         SOUND_RESTRICTION.setListContents(Configs.Lists.SOUND_DISABLE_BLACKLIST.getStrings(),
                 Configs.Lists.SOUND_DISABLE_WHITELIST.getStrings());
     }

@@ -15,7 +15,7 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
-public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<IConfigBoolean>
+public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<Boolean>
 {
     CARPET_ACCURATE_PLACEMENT_PROTOCOL ("carpetAccuratePlacementProtocol",  false, "",    "If enabled, then the Flexible Block Placement and the\nAccurate Block Placement use the protocol implemented\nin the recent carpet mod versions", "Carpet protocol Accurate Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "",     "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
@@ -108,7 +108,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     private String modName;
     private boolean valueBoolean;
     private boolean lastSavedValueBoolean;
-    private IValueChangeCallback<IConfigBoolean> callback;
+    private IValueChangeCallback<Boolean> callback;
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
@@ -214,16 +214,16 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     }
 
     @Override
-    public void onValueChanged()
+    public void onValueChanged(Boolean newValue, Boolean oldValue)
     {
         if (this.callback != null)
         {
-            this.callback.onValueChanged(this);
+            this.callback.onValueChanged(newValue, oldValue);
         }
     }
 
     @Override
-    public void setValueChangeCallback(IValueChangeCallback<IConfigBoolean> callback)
+    public void setValueChangeCallback(IValueChangeCallback<Boolean> callback)
     {
         this.callback = callback;
     }
@@ -272,7 +272,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
 
         if (oldValue != this.valueBoolean)
         {
-            this.onValueChanged();
+            this.onValueChanged(value, oldValue);
         }
     }
 

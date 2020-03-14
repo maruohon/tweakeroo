@@ -3,7 +3,7 @@ package fi.dy.masa.tweakeroo.util;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 
-public enum PlacementRestrictionMode implements IConfigOptionListEntry
+public enum PlacementRestrictionMode implements IConfigOptionListEntry<PlacementRestrictionMode>
 {
     PLANE       ("plane",       "tweakeroo.label.placement_restriction_mode.plane"),
     FACE        ("face",        "tweakeroo.label.placement_restriction_mode.face"),
@@ -34,7 +34,7 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry
     }
 
     @Override
-    public IConfigOptionListEntry cycle(boolean forward)
+    public PlacementRestrictionMode cycle(boolean forward)
     {
         int id = this.ordinal();
 

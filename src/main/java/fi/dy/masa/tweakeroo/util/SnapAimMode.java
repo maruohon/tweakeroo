@@ -3,7 +3,7 @@ package fi.dy.masa.tweakeroo.util;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 
-public enum SnapAimMode implements IConfigOptionListEntry
+public enum SnapAimMode implements IConfigOptionListEntry<SnapAimMode>
 {
     YAW     ("yaw",     "tweakeroo.label.snap_aim_mode.yaw"),
     PITCH   ("pitch",   "tweakeroo.label.snap_aim_mode.pitch"),
@@ -31,7 +31,7 @@ public enum SnapAimMode implements IConfigOptionListEntry
     }
 
     @Override
-    public IConfigOptionListEntry cycle(boolean forward)
+    public SnapAimMode cycle(boolean forward)
     {
         int id = this.ordinal();
 
