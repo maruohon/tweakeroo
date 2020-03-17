@@ -1,12 +1,14 @@
 package fi.dy.masa.tweakeroo.config;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.IConfigBoolean;
 import fi.dy.masa.malilib.gui.GuiBase;
@@ -16,6 +18,8 @@ import fi.dy.masa.malilib.hotkeys.KeyAction;
 import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
 import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.PositionUtils;
+import fi.dy.masa.malilib.util.RayTraceUtils.RayTraceFluidHandling;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
@@ -73,6 +77,8 @@ public class Callbacks
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
 
+        Hotkeys.BLINK_DRIVE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeybind().setCallback(callbackGeneric);
         Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
         Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
         Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
@@ -239,6 +245,16 @@ public class Callbacks
                     return true;
                 }
             }
+            else if (key == Hotkeys.BLINK_DRIVE.getKeybind())
+            {
+                this.blinkDriveTeleport(false);
+                return true;
+            }
+            else if (key == Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeybind())
+            {
+                this.blinkDriveTeleport(true);
+                return true;
+            }
             else if (key == Hotkeys.COPY_SIGN_TEXT.getKeybind())
             {
                 RayTraceResult trace = this.mc.objectMouseOver;
@@ -402,6 +418,25 @@ public class Callbacks
 
             String str = GuiBase.TXT_GREEN + mode.name() + GuiBase.TXT_RST;
             InfoUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
+        }
+
+        private void blinkDriveTeleport(boolean maintainY)
+        {
+            if (this.mc.player.capabilities.isCreativeMode)
+            {
+                Entity entity = fi.dy.masa.malilib.util.EntityUtils.getCameraEntity();
+                RayTraceResult trace = fi.dy.masa.malilib.util.RayTraceUtils
+                        .getRayTraceFromEntity(this.mc.world, entity, RayTraceFluidHandling.SOURCE_ONLY,
+                                false, this.mc.gameSettings.renderDistanceChunks * 16 + 200);
+
+                if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+                {
+                    Vec3d pos = trace.hitVec;
+                    pos = PositionUtils.adjustPositionToSideOfEntity(pos, this.mc.player, trace.sideHit);
+
+                    this.mc.player.sendChatMessage(String.format("/tp @p %.6f %.6f %.6f", pos.x, maintainY ? this.mc.player.posY : pos.y, pos.z));
+                }
+            }
         }
     }
 

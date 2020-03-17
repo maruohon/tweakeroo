@@ -9,6 +9,8 @@ public class Hotkeys
 {
     public static final ConfigHotkey ACCURATE_BLOCK_PLACEMENT_IN        = new ConfigHotkey("accurateBlockPlacementInto",        "",     KeybindSettings.PRESS_ALLOWEXTRA, "The key to activate the accurate block placement\nmode/overlay for placing the block facing\ninto the clicked block face");
     public static final ConfigHotkey ACCURATE_BLOCK_PLACEMENT_REVERSE   = new ConfigHotkey("accurateBlockPlacementReverse",     "",     KeybindSettings.PRESS_ALLOWEXTRA, "The key to activate the accurate block placement\nmode/overlay for placing the block facing\nthe opposite way from what it would normally be");
+    public static final ConfigHotkey BLINK_DRIVE                        = new ConfigHotkey("blinkDrive",                        "",     "Teleports the player (using a tp command)\nto the location currently at the mouse cursor");
+    public static final ConfigHotkey BLINK_DRIVE_Y_LEVEL                = new ConfigHotkey("blinkDriveYLevel",                  "",     "Teleports the player (using a tp command)\nto the location currently at the mouse cursor,\nbut maintaining the current y-position");
     public static final ConfigHotkey BREAKING_RESTRICTION_MODE_COLUMN   = new ConfigHotkey("breakingRestrictionModeColumn",     "",     "Switch the Breaking Restriction mode to the Column mode");
     public static final ConfigHotkey BREAKING_RESTRICTION_MODE_DIAGONAL = new ConfigHotkey("breakingRestrictionModeDiagonal",   "",     "Switch the Breaking Restriction mode to the Diagonal mode");
     public static final ConfigHotkey BREAKING_RESTRICTION_MODE_FACE     = new ConfigHotkey("breakingRestrictionModeFace",       "",     "Switch the Breaking Restriction mode to the Face mode");
@@ -48,6 +50,8 @@ public class Hotkeys
     public static final List<ConfigHotkey> HOTKEY_LIST = ImmutableList.of(
             ACCURATE_BLOCK_PLACEMENT_IN,
             ACCURATE_BLOCK_PLACEMENT_REVERSE,
+            BLINK_DRIVE,
+            BLINK_DRIVE_Y_LEVEL,
             BREAKING_RESTRICTION_MODE_COLUMN,
             BREAKING_RESTRICTION_MODE_DIAGONAL,
             BREAKING_RESTRICTION_MODE_FACE,
