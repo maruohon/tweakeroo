@@ -44,6 +44,7 @@ public class Hotkeys
     public static final ConfigHotkey PLACEMENT_RESTRICTION_MODE_PLANE   = new ConfigHotkey("placementRestrictionModePlane",     "Z,1",  "Switch the Placement Restriction mode to the Plane mode");
     public static final ConfigHotkey SKIP_ALL_RENDERING                 = new ConfigHotkey("skipAllRendering",                  "",     "Toggles skipping _all_ rendering");
     public static final ConfigHotkey SKIP_WORLD_RENDERING               = new ConfigHotkey("skipWorldRendering",                "",     "Toggles skipping world rendering");
+    public static final ConfigHotkey TOGGLE_GRAB_CURSOR                 = new ConfigHotkey("toggleGrabCursor",                  "",     "Grabs or ungrabs the mouse cursor, depending on the current state");
     public static final ConfigHotkey TOOL_PICK                          = new ConfigHotkey("toolPick",                          "",     "Switches to the effective tool for the targeted block");
     public static final ConfigHotkey ZOOM_ACTIVATE                      = new ConfigHotkey("zoomActivate",                      "",     KeybindSettings.PRESS_ALLOWEXTRA, "Zoom activation hotkey");
 
@@ -85,6 +86,7 @@ public class Hotkeys
             PLACEMENT_RESTRICTION_MODE_PLANE,
             SKIP_ALL_RENDERING,
             SKIP_WORLD_RENDERING,
+            TOGGLE_GRAB_CURSOR,
             TOOL_PICK,
             ZOOM_ACTIVATE
     );

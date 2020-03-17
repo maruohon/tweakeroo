@@ -107,6 +107,7 @@ public class Callbacks
         Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeybind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
@@ -389,6 +390,19 @@ public class Callbacks
             {
                 GuiBase.openGui(new GuiConfigs());
                 return true;
+            }
+            else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind())
+            {
+                if (this.mc.inGameHasFocus)
+                {
+                    this.mc.setIngameNotInFocus();
+                    InfoUtils.printActionbarMessage("tweakeroo.message.unfocusing_game");
+                }
+                else
+                {
+                    this.mc.setIngameFocus();
+                    InfoUtils.printActionbarMessage("tweakeroo.message.focusing_game");
+                }
             }
 
             return false;
