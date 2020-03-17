@@ -69,6 +69,7 @@ public class Callbacks
         Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeybind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
         Hotkeys.ZOOM_ACTIVATE.getKeybind().setCallback((action, key) -> {
             if (action == KeyAction.RELEASE)
@@ -398,6 +399,22 @@ public class Callbacks
             {
                 GuiBase.openGui(new GuiConfigs());
                 return true;
+            }
+            else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind())
+            {
+                if (this.mc.isWindowFocused())
+                {
+                    if (this.mc.mouse.isCursorLocked())
+                    {
+                        this.mc.mouse.unlockCursor();
+                        InfoUtils.printActionbarMessage("tweakeroo.message.unfocusing_game");
+                    }
+                    else
+                    {
+                        this.mc.mouse.lockCursor();
+                        InfoUtils.printActionbarMessage("tweakeroo.message.focusing_game");
+                    }
+                }
             }
 
             return false;
