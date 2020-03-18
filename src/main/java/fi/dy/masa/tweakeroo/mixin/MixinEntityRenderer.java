@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Callbacks;
@@ -23,6 +24,7 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 public abstract class MixinEntityRenderer
 {
     @Shadow @Final private net.minecraft.client.Minecraft mc;
+    @Shadow private float farPlaneDistance;
 
     @Nullable private net.minecraft.entity.Entity renderViewEntityOriginal;
     private float realYaw;
@@ -76,6 +78,24 @@ public abstract class MixinEntityRenderer
         if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() && Configs.Generic.LAVA_VISIBILITY_OPTIFINE.getBooleanValue() == false)
         {
             RenderUtils.overrideLavaFog(net.minecraft.client.Minecraft.getMinecraft().getRenderViewEntity());
+        }
+    }
+
+    @Inject(method = "setupFog",
+            slice = @Slice(
+                    from = @At(value = "FIELD", ordinal = 1,
+                               target = "Lnet/minecraft/client/renderer/EntityRenderer;farPlaneDistance:F"),
+                    to = @At(value = "FIELD", ordinal = 1,
+                             target = "Lorg/lwjgl/opengl/ContextCapabilities;GL_NV_fog_distance:Z")),
+            at = @At(value = "INVOKE", shift = At.Shift.AFTER,
+                     target = "Lnet/minecraft/client/renderer/GlStateManager;setFogEnd(F)V"))
+    private void disableRenderDistanceFog(int startCoords, float partialTicks, CallbackInfo ci)
+    {
+        if (Configs.Disable.DISABLE_RENDER_DISTANCE_FOG.getBooleanValue())
+        {
+            float renderDistance = this.farPlaneDistance;
+            net.minecraft.client.renderer.GlStateManager.setFogStart(renderDistance * 1.6F);
+            net.minecraft.client.renderer.GlStateManager.setFogEnd(renderDistance * 2.0F);
         }
     }
 
