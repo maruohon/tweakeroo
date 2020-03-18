@@ -12,7 +12,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(net.minecraft.world.World.class)
 public abstract class MixinWorld
@@ -21,7 +23,20 @@ public abstract class MixinWorld
     @Shadow @Final public List<net.minecraft.tileentity.TileEntity> tickableTileEntities;
     @Shadow @Final private List<net.minecraft.tileentity.TileEntity> tileEntitiesToBeRemoved;
 
+    @Inject(method = "getFogColor", at = @At("HEAD"), cancellable = true)
+    private void adjustFogColor(float partialTicks, CallbackInfoReturnable<net.minecraft.util.math.Vec3d> cir)
+    {
+        if (FeatureToggle.TWEAK_MATCHING_SKY_FOG.getBooleanValue())
+        {
+            net.minecraft.world.World world = (net.minecraft.world.World) (Object) this;
 
+            if (world.provider.hasSkyLight() && world.isRaining() == false)
+            {
+                net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getMinecraft();
+                cir.setReturnValue(world.getSkyColor(mc.getRenderViewEntity(), mc.getRenderPartialTicks()));
+            }
+        }
+    }
 
     @Inject(method = "updateEntityWithOptionalForce", at = @At("HEAD"), cancellable = true)
     private void preventEntityTicking(net.minecraft.entity.Entity entityIn, boolean forceUpdate, CallbackInfo ci)
