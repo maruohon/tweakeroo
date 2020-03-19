@@ -14,6 +14,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.BlockUtils;
 
 public class PlacementHandler
 {
@@ -22,7 +23,7 @@ public class PlacementHandler
         IBlockState state = stateIn;
         Vec3d hitVec = context.getHitVec();
         Block block = stateIn.getBlock();
-        @Nullable PropertyDirection property = fi.dy.masa.malilib.util.BlockUtils.getFirstDirectionProperty(stateIn);
+        @Nullable PropertyDirection property = BlockUtils.getFirstDirectionProperty(stateIn);
         int x = (int) hitVec.x;
 
         if (x >= 2 && property != null)
@@ -44,8 +45,6 @@ public class PlacementHandler
                     facing = context.getEntity().getHorizontalFacing().getOpposite();
                 }
             }
-
-            //System.out.printf("plop facing: %d -> %s\n", facingIndex, facing);
 
             if (facing != facingOrig && property.getAllowedValues().contains(facing))
             {
@@ -70,11 +69,15 @@ public class PlacementHandler
             }
             else if (block instanceof BlockTrapDoor)
             {
-                state = state.withProperty(BlockTrapDoor.HALF, BlockTrapDoor.DoorHalf.TOP);
+                BlockTrapDoor.DoorHalf half = state.getValue(BlockTrapDoor.HALF);
+                half = half == BlockTrapDoor.DoorHalf.TOP ? BlockTrapDoor.DoorHalf.BOTTOM : BlockTrapDoor.DoorHalf.TOP;
+                state = state.withProperty(BlockTrapDoor.HALF, half);
             }
             else if (block instanceof BlockStairs && state.getValue(BlockStairs.HALF) == BlockStairs.EnumHalf.TOP)
             {
-                state = state.withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP);
+                BlockStairs.EnumHalf half = state.getValue(BlockStairs.HALF);
+                half = half == BlockStairs.EnumHalf.TOP ? BlockStairs.EnumHalf.BOTTOM : BlockStairs.EnumHalf.TOP;
+                state = state.withProperty(BlockStairs.HALF, half);
             }
         }
 
