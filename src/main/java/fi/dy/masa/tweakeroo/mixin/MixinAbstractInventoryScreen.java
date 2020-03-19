@@ -9,9 +9,9 @@ import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen.class)
 public abstract class MixinAbstractInventoryScreen<T extends net.minecraft.screen.ScreenHandler>
-       extends net.minecraft.client.gui.screen.ingame.ScreenWithHandler<T>
+       extends net.minecraft.client.gui.screen.ingame.HandledScreen<T>
 {
-    @Shadow protected boolean offsetGuiForEffects;
+    @Shadow protected boolean drawStatusEffects;
 
     public MixinAbstractInventoryScreen(
             T container,
@@ -27,7 +27,7 @@ public abstract class MixinAbstractInventoryScreen<T extends net.minecraft.scree
         if (Configs.Disable.DISABLE_INVENTORY_EFFECTS.getBooleanValue())
         {
             this.x = (this.width - this.backgroundWidth) / 2;
-            this.offsetGuiForEffects = false;
+            this.drawStatusEffects = false;
             ci.cancel();
         }
     }
