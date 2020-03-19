@@ -19,7 +19,7 @@ import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
-import fi.dy.masa.tweakeroo.mixin.IMixinBlock;
+import fi.dy.masa.tweakeroo.mixin.IMixinAbstractBlock;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -153,7 +153,7 @@ public class Callbacks
             // If the feature is enabled on game launch, apply the overridden value here
             if (feature.getBooleanValue())
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getSlipperiness());
+                ((IMixinAbstractBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getSlipperiness());
             }
         }
 
@@ -162,11 +162,11 @@ public class Callbacks
         {
             if (config.getBooleanValue())
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getSlipperiness());
+                ((IMixinAbstractBlock) Blocks.SLIME_BLOCK).setFriction(Blocks.STONE.getSlipperiness());
             }
             else
             {
-                ((IMixinBlock) Blocks.SLIME_BLOCK).setFriction((float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue());
+                ((IMixinAbstractBlock) Blocks.SLIME_BLOCK).setFriction((float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue());
             }
         }
     }

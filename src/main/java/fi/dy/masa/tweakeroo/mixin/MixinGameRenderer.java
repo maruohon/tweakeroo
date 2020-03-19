@@ -16,7 +16,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ProjectileUtil;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -63,7 +63,7 @@ public abstract class MixinGameRenderer
 
     @Redirect(method = "updateTargetedEntity", at = @At(
                 value = "INVOKE",
-                target = "Lnet/minecraft/entity/ProjectileUtil;rayTrace(" +
+                target = "Lnet/minecraft/entity/projectile/ProjectileUtil;rayTrace(" +
                          "Lnet/minecraft/entity/Entity;" +
                          "Lnet/minecraft/util/math/Vec3d;" +
                          "Lnet/minecraft/util/math/Vec3d;" +
