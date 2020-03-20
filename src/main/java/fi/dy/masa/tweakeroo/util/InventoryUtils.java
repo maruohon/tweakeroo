@@ -174,7 +174,8 @@ public class InventoryUtils
     {
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue())
         {
-            fi.dy.masa.malilib.util.InventoryUtils.preRestockHand(player, hand, 6, allowHotbar);
+            int threshold = Configs.Generic.HAND_RESTOCK_PRE_THRESHOLD.getIntegerValue();
+            fi.dy.masa.malilib.util.InventoryUtils.preRestockHand(player, hand, threshold, allowHotbar);
         }
     }
 
