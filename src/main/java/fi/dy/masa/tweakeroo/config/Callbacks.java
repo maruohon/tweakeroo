@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.config;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -73,6 +74,8 @@ public class Callbacks
             }
         });
         FeatureToggle.TWEAK_FREE_CAMERA.setValueChangeCallback((newValue, oldValue) -> CameraEntity.setCameraState(newValue));
+        FeatureToggle.TWEAK_HOLD_ATTACK.setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindAttack.getKeyCode()));
+        FeatureToggle.TWEAK_HOLD_USE.setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindUseItem.getKeyCode()));
 
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
@@ -127,6 +130,30 @@ public class Callbacks
     private static void createAdjustableCallbackFor(FeatureToggle feature)
     {
         feature.getKeybind().setCallback(new KeyCallbackAdjustable(null, new KeyCallbackToggleWithSpecialMessage(feature)));
+    }
+
+    public static class FeatureCallbackHold implements IValueChangeCallback<Boolean>
+    {
+        private final int keyCode;
+
+        public FeatureCallbackHold(int keyCode)
+        {
+            this.keyCode = keyCode;
+        }
+
+        @Override
+        public void onValueChanged(Boolean newValue, Boolean oldValue)
+        {
+            if (newValue)
+            {
+                KeyBinding.setKeyBindState(this.keyCode, true);
+                KeyBinding.onTick(this.keyCode);
+            }
+            else
+            {
+                KeyBinding.setKeyBindState(this.keyCode, false);
+            }
+        }
     }
 
     public static class FeatureCallbackGamma implements IValueChangeCallback<Boolean>
