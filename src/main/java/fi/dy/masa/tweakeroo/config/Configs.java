@@ -54,6 +54,7 @@ public class Configs implements IConfigHandler
         public static final ConfigDouble        FLY_SPEED_PRESET_4                  = new ConfigDouble      ("flySpeedPreset4", 0.32, 0, 4, "The fly speed for preset 4");
         public static final ConfigBooleanHotkeyed FREE_CAMERA_PLAYER_MOVEMENT       = new ConfigBooleanHotkeyed("freeCameraPlayerMovement", false, "", "When enabled, the movement inputs in the Free Camera mode\nwill move the actual client player instead of the camera");
         public static final ConfigInteger       GAMMA_OVERRIDE_VALUE                = new ConfigInteger     ("gammaOverrideValue", 16, 0, 1000, "The gamma value to use when the override option is enabled");
+        public static final ConfigBoolean       HAND_RESTOCK_CONTINUOUS             = new ConfigBoolean     ("handRestockContinuous", false, "If enabled, then hand restocking is attempted every tick,\nwhereas normally it only happens before or after left or\nright clicks or in the fast block placement mode.\nNormally I would recommend leaving this disabled, unless you\nknow you will need it for some specific things.");
         public static final ConfigBoolean       HAND_RESTOCK_PRE                    = new ConfigBoolean     ("handRestockPre", true, "If enabled, then hand restocking happens\nbefore the stack runs out");
         public static final ConfigInteger       HAND_RESTOCK_PRE_THRESHOLD          = new ConfigInteger     ("handRestockPreThreshold", 6, 1, 64, "In the pre-restock mode, when an item stack falls\nbelow this amount, the hand restock will happen");
         public static final ConfigBoolean       HANGABLE_ENTITY_BYPASS_INVERSE      = new ConfigBoolean     ("hangableEntityBypassInverse", false, "If the hangableEntityTargetingBypass tweak is enabled,\nthen this controls whether the player must be or must not be\nsneaking to be able to target the hangable entity (Item Frame or Painting).\n > true - Sneaking = ignore/bypass the entity\n > false - Sneaking = target the entity");
@@ -100,6 +101,7 @@ public class Configs implements IConfigHandler
                 CLIENT_PLACEMENT_ROTATION,
                 FREE_CAMERA_PLAYER_MOVEMENT,
                 LAVA_VISIBILITY_OPTIFINE,
+                HAND_RESTOCK_CONTINUOUS,
                 HAND_RESTOCK_PRE,
                 HANGABLE_ENTITY_BYPASS_INVERSE,
                 PERMANENT_SNEAK_ALLOW_IN_GUIS,

@@ -99,6 +99,12 @@ public class PlacementTweaks
         {
             clearClickedBlockInfoAttack();
         }
+
+        if (Configs.Generic.HAND_RESTOCK_CONTINUOUS.getBooleanValue() && GuiUtils.getCurrentScreen() == null)
+        {
+            InventoryUtils.preRestockHand(mc.player, EnumHand.MAIN_HAND, true);
+            InventoryUtils.preRestockHand(mc.player, EnumHand.OFF_HAND, true);
+        }
     }
 
     public static boolean onProcessRightClickPre(EntityPlayer player, EnumHand hand)
