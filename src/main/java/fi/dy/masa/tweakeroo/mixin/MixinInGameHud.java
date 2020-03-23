@@ -14,7 +14,6 @@ import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
-import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
@@ -29,9 +28,7 @@ public abstract class MixinInGameHud extends DrawableHelper
     private void overridePlayerForRendering(CallbackInfoReturnable<PlayerEntity> cir)
     {
         // Fix the hotbar rendering in the Free Camera mode by using the actual player
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() &&
-            Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() &&
-            this.client.player != null)
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && this.client.player != null)
         {
             cir.setReturnValue(this.client.player);
         }

@@ -292,7 +292,7 @@ public class PlacementTweaks
             Hand hand,
             BlockHitResult hitResult)
     {
-        if (CameraUtils.shouldPreventPlayerMovement())
+        if (CameraUtils.shouldPreventPlayerInputs())
         {
             return ActionResult.PASS;
         }

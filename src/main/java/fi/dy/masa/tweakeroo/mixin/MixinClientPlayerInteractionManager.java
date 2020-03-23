@@ -30,7 +30,7 @@ public abstract class MixinClientPlayerInteractionManager
             cancellable = true)
     private void onProcessRightClickFirst(PlayerEntity player, World worldIn, Hand hand, CallbackInfoReturnable<ActionResult> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(ActionResult.PASS);
@@ -60,7 +60,7 @@ public abstract class MixinClientPlayerInteractionManager
             cancellable = true)
     private void onRightClickMouseOnEntityPre1(PlayerEntity player, Entity target, Hand hand, CallbackInfoReturnable<ActionResult> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(ActionResult.PASS);
@@ -77,7 +77,7 @@ public abstract class MixinClientPlayerInteractionManager
             cancellable = true)
     private void onRightClickMouseOnEntityPre2(PlayerEntity player, Entity target, EntityHitResult trace, Hand hand, CallbackInfoReturnable<ActionResult> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(ActionResult.PASS);
@@ -87,7 +87,7 @@ public abstract class MixinClientPlayerInteractionManager
     @Inject(method = "attackEntity", at = @At("HEAD"), cancellable = true)
     private void preventEntityAttacksInFreeCameraMode(CallbackInfo ci)
     {
-        if (CameraUtils.shouldPreventPlayerMovement())
+        if (CameraUtils.shouldPreventPlayerInputs())
         {
             ci.cancel();
         }
@@ -108,7 +108,7 @@ public abstract class MixinClientPlayerInteractionManager
     @Inject(method = "attackBlock", at = @At("HEAD"), cancellable = true)
     private void handleBreakingRestriction1(BlockPos pos, Direction side, CallbackInfoReturnable<Boolean> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
         {
             cir.setReturnValue(false);
@@ -118,7 +118,7 @@ public abstract class MixinClientPlayerInteractionManager
     @Inject(method = "updateBlockBreakingProgress", at = @At("HEAD"), cancellable = true) // MCP: onPlayerDamageBlock
     private void handleBreakingRestriction2(BlockPos pos, Direction side, CallbackInfoReturnable<Boolean> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
         {
             cir.setReturnValue(true);
