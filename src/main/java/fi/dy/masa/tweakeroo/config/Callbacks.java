@@ -99,6 +99,7 @@ public class Callbacks
             InfoUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
             return true;
         });
+        Hotkeys.GHOST_BLOCK_REMOVER.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
@@ -299,6 +300,11 @@ public class Callbacks
                         InfoUtils.printActionbarMessage("tweakeroo.message.sign_text_copied");
                     }
                 }
+                return true;
+            }
+            else if (key == Hotkeys.GHOST_BLOCK_REMOVER.getKeybind())
+            {
+                MiscUtils.antiGhostBlock(this.mc);
                 return true;
             }
             else if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())

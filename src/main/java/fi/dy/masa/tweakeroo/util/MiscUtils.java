@@ -10,13 +10,20 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntityCommandBlock;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.RayTraceUtils;
+import fi.dy.masa.malilib.util.RayTraceUtils.IRayPositionHandler;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockBaseLogic;
@@ -77,6 +84,74 @@ public class MiscUtils
 
             GlStateManager.translate(xOff, yOff, 0.0);
             GlStateManager.scale(scale, scale, 1);
+        }
+    }
+
+    public static void antiGhostBlock(Minecraft mc)
+    {
+        double range = mc.playerController.getBlockReachDistance();
+        EntityPlayer player = mc.player;
+        Vec3d eyesPos = player.getPositionEyes(1f);
+        Vec3d rangedLookRot = player.getLook(1f).scale(range);
+        Vec3d lookEndPos = eyesPos.add(rangedLookRot);
+        int swappedSlotMain = -1;
+        int swappedSlotOff = -1;
+        int hotbarSlot = player.inventory.currentItem;
+        Container container = player.openContainer;
+
+        // Move away the items in the player's hands
+        if (player.getHeldItemMainhand().isEmpty() == false)
+        {
+            swappedSlotMain = fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(container, false, false);
+
+            if (swappedSlotMain != -1)
+            {
+                fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, swappedSlotMain, hotbarSlot);
+            }
+        }
+
+        if (player.getHeldItemOffhand().isEmpty() == false)
+        {
+            swappedSlotOff = fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(container, false, false);
+
+            if (swappedSlotOff != -1)
+            {
+                fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, 45, hotbarSlot);
+                fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, swappedSlotOff, hotbarSlot);
+            }
+        }
+
+        // Use a custom "collision checker" that just right clicks on all air blocks, and aborts when hitting an existing non-air block
+        IRayPositionHandler handler = (data, world, ignore) -> {
+            IBlockState state = world.getBlockState(data.blockPosMutable);
+
+            if (state.getMaterial() == Material.AIR)
+            {
+                Vec3d vec = new Vec3d(data.blockX + 0.5, data.blockY + 1.0, data.blockZ + 0.5);
+                mc.playerController.processRightClickBlock(mc.player, mc.world, data.blockPosMutable.toImmutable(), EnumFacing.UP, vec, EnumHand.MAIN_HAND);
+            }
+            else
+            {
+                return true;
+            }
+
+            return false;
+        };
+
+        RayTraceUtils.rayTraceBlocks(mc.world, eyesPos, lookEndPos,
+                handler, RayTraceUtils.RayTraceFluidHandling.NONE,
+                RayTraceUtils.BLOCK_FILTER_NON_AIR, false, false, null, 16);
+
+        // Restore the items the player was holding initially
+        if (swappedSlotOff != -1)
+        {
+            fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, swappedSlotOff, hotbarSlot);
+            fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, 45, hotbarSlot);
+        }
+
+        if (swappedSlotMain != -1)
+        {
+            fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, swappedSlotMain, hotbarSlot);
         }
     }
 
