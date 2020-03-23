@@ -52,7 +52,8 @@ public class Configs implements IConfigHandler
         public static final ConfigDouble        FLY_SPEED_PRESET_2                  = new ConfigDouble      ("flySpeedPreset2", 0.064, 0, 4, "The fly speed for preset 2");
         public static final ConfigDouble        FLY_SPEED_PRESET_3                  = new ConfigDouble      ("flySpeedPreset3", 0.128, 0, 4, "The fly speed for preset 3");
         public static final ConfigDouble        FLY_SPEED_PRESET_4                  = new ConfigDouble      ("flySpeedPreset4", 0.32, 0, 4, "The fly speed for preset 4");
-        public static final ConfigBooleanHotkeyed FREE_CAMERA_PLAYER_MOVEMENT       = new ConfigBooleanHotkeyed("freeCameraPlayerMovement", false, "", "When enabled, the movement inputs in the Free Camera mode\nwill move the actual client player instead of the camera");
+        public static final ConfigBoolean       FREE_CAMERA_PLAYER_INPUTS           = new ConfigBoolean     ("freeCameraPlayerInputs", false, "When enabled, the attacks and use actions\n(ie. left and right clicks) in Free Camera mode are\nlet through to the actual player.");
+        public static final ConfigBoolean       FREE_CAMERA_PLAYER_MOVEMENT         = new ConfigBoolean     ("freeCameraPlayerMovement", false, "When enabled, the movement inputs in the Free Camera mode\nwill move the actual client player instead of the camera");
         public static final ConfigInteger       GAMMA_OVERRIDE_VALUE                = new ConfigInteger     ("gammaOverrideValue", 16, 0, 1000, "The gamma value to use when the override option is enabled");
         public static final ConfigBoolean       HAND_RESTOCK_PRE                    = new ConfigBoolean     ("handRestockPre", true, "If enabled, then hand restocking happens\nbefore the stack runs out");
         public static final ConfigInteger       HOTBAR_SLOT_CYCLE_MAX               = new ConfigInteger     ("hotbarSlotCycleMax", 2, 1, 9, "This is the last hotbar slot to use/cycle through\nif the hotbar slot cycle tweak is enabled.\nBasically the cycle will jump back to the first slot\nwhen going over the maximum slot number set here.");
@@ -94,6 +95,7 @@ public class Configs implements IConfigHandler
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 CLIENT_PLACEMENT_ROTATION,
+                FREE_CAMERA_PLAYER_INPUTS,
                 FREE_CAMERA_PLAYER_MOVEMENT,
                 LAVA_VISIBILITY_OPTIFINE,
                 HAND_RESTOCK_PRE,

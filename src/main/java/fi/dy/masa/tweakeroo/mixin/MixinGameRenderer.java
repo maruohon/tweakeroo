@@ -63,11 +63,11 @@ public abstract class MixinGameRenderer
     private Entity overrideCameraEntityForRayTrace(MinecraftClient mc)
     {
         // Return the real player for the hit target ray tracing if the
-        // player motion option is enabled in Free Camera mode.
+        // player inputs option is enabled in Free Camera mode.
         // Normally in Free Camera mode the Tweakeroo CameraEntity is set as the
         // render view/camera entity, which would then also ray trace from the camera point of view.
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() &&
-            Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() &&
+            Configs.Generic.FREE_CAMERA_PLAYER_INPUTS.getBooleanValue() &&
             mc.player != null)
         {
             return mc.player;
