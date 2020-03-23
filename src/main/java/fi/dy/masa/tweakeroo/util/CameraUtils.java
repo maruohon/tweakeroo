@@ -22,6 +22,12 @@ public class CameraUtils
         return freeCameraSpectator;
     }
 
+    public static boolean shouldPreventPlayerInputs()
+    {
+        return FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() &&
+               Configs.Generic.FREE_CAMERA_PLAYER_INPUTS.getBooleanValue() == false;
+    }
+
     public static boolean shouldPreventPlayerMovement()
     {
         return FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() &&

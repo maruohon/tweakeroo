@@ -28,6 +28,7 @@ public class Hotkeys
     public static final ConfigHotkey FLY_PRESET_2                       = new ConfigHotkey("flyPreset2",                        "",     KeybindSettings.INGAME_BOTH, "Switch to fly preset 2");
     public static final ConfigHotkey FLY_PRESET_3                       = new ConfigHotkey("flyPreset3",                        "",     KeybindSettings.INGAME_BOTH, "Switch to fly preset 3");
     public static final ConfigHotkey FLY_PRESET_4                       = new ConfigHotkey("flyPreset4",                        "",     KeybindSettings.INGAME_BOTH, "Switch to fly preset 4");
+    public static final ConfigHotkey FREE_CAMERA_PLAYER_INPUTS          = new ConfigHotkey("freeCameraPlayerInputs",            "",     "Toggle the Generic -> freeCameraPlayerInputs option");
     public static final ConfigHotkey FREE_CAMERA_PLAYER_MOVEMENT        = new ConfigHotkey("freeCameraPlayerMovement",          "",     "Toggle the Generic -> freeCameraPlayerMovement option");
     public static final ConfigHotkey GHOST_BLOCK_REMOVER                = new ConfigHotkey("ghostBlockRemover",                 "",     "A \"manual ghost block fix\". Basically right clicks all the air blocks\nalong the look vector within the player's reach distance.");
     public static final ConfigHotkey HOTBAR_SCROLL                      = new ConfigHotkey("hotbarScroll",                      "",     KeybindSettings.RELEASE_ALLOW_EXTRA, "The key to hold to allow scrolling the hotbar\nthrough the player inventory rows");
@@ -71,6 +72,7 @@ public class Hotkeys
             FLY_PRESET_2,
             FLY_PRESET_3,
             FLY_PRESET_4,
+            FREE_CAMERA_PLAYER_INPUTS,
             FREE_CAMERA_PLAYER_MOVEMENT,
             GHOST_BLOCK_REMOVER,
             HOTBAR_SCROLL,

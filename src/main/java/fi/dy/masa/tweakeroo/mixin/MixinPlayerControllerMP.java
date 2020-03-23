@@ -30,7 +30,7 @@ public abstract class MixinPlayerControllerMP
             cancellable = true)
     private void onProcessRightClickFirst(EntityPlayer player, World worldIn, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(EnumActionResult.PASS);
@@ -80,7 +80,7 @@ public abstract class MixinPlayerControllerMP
     @Inject(method = "attackEntity", at = @At("HEAD"), cancellable = true)
     private void preventEntityAttacksInFreeCameraMode(CallbackInfo ci)
     {
-        if (CameraUtils.shouldPreventPlayerMovement())
+        if (CameraUtils.shouldPreventPlayerInputs())
         {
             ci.cancel();
         }
@@ -95,7 +95,7 @@ public abstract class MixinPlayerControllerMP
             cancellable = true)
     private void onRightClickMouseOnEntityPre1(EntityPlayer player, Entity target, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(EnumActionResult.PASS);
@@ -112,7 +112,7 @@ public abstract class MixinPlayerControllerMP
             cancellable = true)
     private void onRightClickMouseOnEntityPre2(EntityPlayer player, Entity target, RayTraceResult ray, EnumHand hand, CallbackInfoReturnable<EnumActionResult> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(EnumActionResult.PASS);
@@ -122,7 +122,7 @@ public abstract class MixinPlayerControllerMP
     @Inject(method = "clickBlock", at = @At("HEAD"), cancellable = true)
     private void handleBreakingRestriction1(BlockPos pos, EnumFacing side, CallbackInfoReturnable<Boolean> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
         {
             cir.setReturnValue(false);
@@ -132,7 +132,7 @@ public abstract class MixinPlayerControllerMP
     @Inject(method = "onPlayerDamageBlock", at = @At("HEAD"), cancellable = true)
     private void handleBreakingRestriction2(BlockPos pos, EnumFacing side, CallbackInfoReturnable<Boolean> cir)
     {
-        if (CameraUtils.shouldPreventPlayerMovement() ||
+        if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
         {
             cir.setReturnValue(true);

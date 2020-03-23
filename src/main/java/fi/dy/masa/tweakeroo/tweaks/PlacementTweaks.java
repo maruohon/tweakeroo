@@ -363,7 +363,7 @@ public class PlacementTweaks
             Vec3d hitVecIn,
             EnumHand hand)
     {
-        if (CameraUtils.shouldPreventPlayerMovement())
+        if (CameraUtils.shouldPreventPlayerInputs())
         {
             return EnumActionResult.PASS;
         }

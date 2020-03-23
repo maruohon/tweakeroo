@@ -39,7 +39,7 @@ public abstract class MixinEntityRenderer
         // Normally in Free Camera mode the Tweakeroo CameraEntity is set as the
         // render view/camera entity, which would then also ray trace from the camera point of view.
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() &&
-            Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() &&
+            Configs.Generic.FREE_CAMERA_PLAYER_INPUTS.getBooleanValue() &&
             this.mc.player != null)
         {
             return this.mc.player;
