@@ -4,6 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
@@ -16,7 +17,7 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 public abstract class MixinSignBlockEntity
 {
     @Inject(method = "fromTag", at = @At("RETURN"))
-    private void restoreCopiedText(CompoundTag nbt, CallbackInfo ci)
+    private void restoreCopiedText(BlockState state, CompoundTag nbt, CallbackInfo ci)
     {
         // Restore the copied/pasted text after the TileEntity sync overrides it with empty lines
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue())
