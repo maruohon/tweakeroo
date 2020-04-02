@@ -80,7 +80,7 @@ public class RenderUtils
 
                 for (int column = 0; column < 9; column++)
                 {
-                    ItemStack stack = player.inventory.getInvStack(row * 9 + column);
+                    ItemStack stack = player.inventory.getStack(row * 9 + column);
 
                     if (stack.isEmpty() == false)
                     {
@@ -159,10 +159,10 @@ public class RenderUtils
         int x = xCenter - 52 / 2;
         int y = yCenter - 92;
 
-        if (inv != null && inv.getInvSize() > 0)
+        if (inv != null && inv.size() > 0)
         {
             final boolean isHorse = (entityLivingBase instanceof HorseBaseEntity);
-            final int totalSlots = isHorse ? inv.getInvSize() - 2 : inv.getInvSize();
+            final int totalSlots = isHorse ? inv.size() - 2 : inv.size();
             final int firstSlot = isHorse ? 2 : 0;
 
             final fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = (entityLivingBase instanceof VillagerEntity) ? fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.VILLAGER : fi.dy.masa.malilib.render.InventoryOverlay.getInventoryType(inv);
