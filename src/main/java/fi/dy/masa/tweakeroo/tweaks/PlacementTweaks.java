@@ -1028,7 +1028,8 @@ public class PlacementTweaks
 
     private static boolean isNewPositionValidForLayerMode(BlockPos posNew, BlockPos posFirst, Direction sideFirst)
     {
-        return posNew.getY() == posFirst.getY();
+        int diff = posNew.getY() - posFirst.getY() + 1;
+        return diff > 0 && diff <= Configs.Generic.RESTRICTION_LAYER_HEIGHT.getIntegerValue();
     }
 
     private static boolean isNewPositionValidForLineMode(BlockPos posNew, BlockPos posFirst, Direction sideFirst)
