@@ -29,9 +29,8 @@ public abstract class MixinEditSignScreen extends Screen implements IGuiEditSign
         super(textComponent);
     }
 
-    @Shadow
-    @Final
-    private SignBlockEntity sign;
+    @Shadow @Final private SignBlockEntity sign;
+    @Shadow @Final private String[] field_24285;
 
     @Override
     public SignBlockEntity getTile()
@@ -53,7 +52,7 @@ public abstract class MixinEditSignScreen extends Screen implements IGuiEditSign
     {
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue())
         {
-            MiscUtils.applyPreviousTextToSign(this.sign);
+            MiscUtils.applyPreviousTextToSign(this.sign, this.field_24285);
         }
 
         if (Configs.Disable.DISABLE_SIGN_GUI.getBooleanValue())
