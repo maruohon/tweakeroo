@@ -16,7 +16,7 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
-@Mixin(WorldRenderer.class)
+@Mixin(value = WorldRenderer.class, priority = 1001)
 public abstract class MixinWorldRenderer
 {
     @Inject(method = "method_22713", at = @At("HEAD"), cancellable = true) // renderRain
@@ -61,7 +61,7 @@ public abstract class MixinWorldRenderer
     }
 
     // Allow rendering the client player entity by spoofing one of the entity rendering conditions while in Free Camera mode
-    @Redirect(method = "render", at = @At(value = "INVOKE",
+    @Redirect(method = "render", require = 0, at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/render/Camera;getFocusedEntity()Lnet/minecraft/entity/Entity;", ordinal = 3))
     private Entity allowRenderingClientPlayerInFreeCameraMode(Camera camera)
     {
@@ -73,8 +73,7 @@ public abstract class MixinWorldRenderer
         return camera.getFocusedEntity();
     }
 
-    @Redirect(method = "setupTerrain", at = @At(
-                value = "INVOKE",
+    @Redirect(method = "setupTerrain", require = 0, at = @At(value = "INVOKE",
                 target = "Lnet/minecraft/client/render/BuiltChunkStorage;updateCameraPosition(DD)V"))
     private void preventRenderChunkPositionUpdates(net.minecraft.client.render.BuiltChunkStorage storage, double viewEntityX, double viewEntityZ)
     {
