@@ -11,7 +11,6 @@ import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockExecutor;
-import fi.dy.masa.tweakeroo.mixin.IMixinSignBlockEntity;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
 public class MiscUtils
@@ -70,7 +69,7 @@ public class MiscUtils
 
     public static void copyTextFromSign(SignBlockEntity te)
     {
-        int size = ((IMixinSignBlockEntity)te).getText().length;
+        final int size = 4;
         previousSignText = new net.minecraft.text.Text[size];
 
         for (int i = 0; i < size; ++i)
@@ -83,7 +82,7 @@ public class MiscUtils
     {
         if (previousSignText != null)
         {
-            int size = Math.min(((IMixinSignBlockEntity)te).getText().length, previousSignText.length);
+            final int size = 4;
 
             for (int i = 0; i < size; ++i)
             {

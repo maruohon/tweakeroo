@@ -8,7 +8,6 @@
         "IMixinCommandBlockExecutor",
         "IMixinFlatChunkGeneratorConfig",
         "IMixinHorseBaseEntity",
-        "IMixinSignBlockEntity",
         "MixinAbstractInventoryScreen",
         "MixinBackgroundRenderer",
         "MixinBlockEntityRenderDispatcher",

@@ -15,7 +15,7 @@ public abstract class MixinChatHud extends net.minecraft.client.gui.DrawableHelp
     {
         if (FeatureToggle.TWEAK_CHAT_TIMESTAMP.getBooleanValue())
         {
-            net.minecraft.class_5250 newComponent = new net.minecraft.text.LiteralText(MiscUtils.getChatTimestamp() + " ");
+            net.minecraft.text.LiteralText newComponent = new net.minecraft.text.LiteralText(MiscUtils.getChatTimestamp() + " ");
             newComponent.append(componentIn);
             return newComponent;
         }
