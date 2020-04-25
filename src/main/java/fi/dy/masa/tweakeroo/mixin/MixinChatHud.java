@@ -15,7 +15,7 @@ public abstract class MixinChatHud extends net.minecraft.client.gui.DrawableHelp
     {
         if (FeatureToggle.TWEAK_CHAT_TIMESTAMP.getBooleanValue())
         {
-            net.minecraft.text.Text newComponent = new net.minecraft.text.LiteralText(MiscUtils.getChatTimestamp() + " ");
+            net.minecraft.text.LiteralText newComponent = new net.minecraft.text.LiteralText(MiscUtils.getChatTimestamp() + " ");
             newComponent.append(componentIn);
             return newComponent;
         }
@@ -24,14 +24,14 @@ public abstract class MixinChatHud extends net.minecraft.client.gui.DrawableHelp
     }
 
     @Redirect(method = "render", at = @At(value = "INVOKE",
-                target = "Lnet/minecraft/client/gui/hud/ChatHud;fill(IIIII)V", ordinal = 0))
-    private void overrideChatBackgroundColor(int left, int top, int right, int bottom, int color)
+                target = "Lnet/minecraft/client/gui/hud/ChatHud;fill(Lnet/minecraft/client/util/math/MatrixStack;IIIII)V", ordinal = 0))
+    private void overrideChatBackgroundColor(net.minecraft.client.util.math.MatrixStack matrixStack, int left, int top, int right, int bottom, int color)
     {
         if (FeatureToggle.TWEAK_CHAT_BACKGROUND_COLOR.getBooleanValue())
         {
             color = MiscUtils.getChatBackgroundColor(color);
         }
 
-        fill(left, top, right, bottom, color);
+        fill(matrixStack, left, top, right, bottom, color);
     }
 }

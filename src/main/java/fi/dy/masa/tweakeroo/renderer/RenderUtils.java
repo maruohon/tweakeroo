@@ -6,6 +6,7 @@ import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -32,7 +33,7 @@ public class RenderUtils
 {
     private static long lastRotationChangeTime;
 
-    public static void renderHotbarSwapOverlay(MinecraftClient mc)
+    public static void renderHotbarSwapOverlay(MinecraftClient mc, MatrixStack matrixStack)
     {
         PlayerEntity player = mc.player;
 
@@ -76,7 +77,7 @@ public class RenderUtils
 
             for (int row = 1; row <= 3; row++)
             {
-                textRenderer.drawWithShadow(String.valueOf(row), x - 10, y + 4, 0xFFFFFF);
+                textRenderer.drawWithShadow(matrixStack, String.valueOf(row), x - 10, y + 4, 0xFFFFFF);
 
                 for (int column = 0; column < 9; column++)
                 {
@@ -96,7 +97,7 @@ public class RenderUtils
         }
     }
 
-    public static void renderInventoryOverlay(MinecraftClient mc)
+    public static void renderInventoryOverlay(MinecraftClient mc, MatrixStack matrixStack)
     {
         World world = fi.dy.masa.malilib.util.WorldUtils.getBestWorld(mc);
 
@@ -202,7 +203,7 @@ public class RenderUtils
 
         if (entityLivingBase != null)
         {
-            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(x, y, entityLivingBase);
+            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(x, y, entityLivingBase, matrixStack);
             fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, mc);
         }
     }
@@ -306,7 +307,7 @@ public class RenderUtils
         lastRotationChangeTime = System.currentTimeMillis();
     }
 
-    public static void renderSnapAimAngleIndicator()
+    public static void renderSnapAimAngleIndicator(MatrixStack matrixStack)
     {
         long current = System.currentTimeMillis();
 
@@ -319,17 +320,17 @@ public class RenderUtils
 
             if (mode != SnapAimMode.PITCH)
             {
-                renderSnapAimAngleIndicatorYaw(xCenter, yCenter, 80, 10, mc);
+                renderSnapAimAngleIndicatorYaw(xCenter, yCenter, 80, 10, mc, matrixStack);
             }
 
             if (mode != SnapAimMode.YAW)
             {
-                renderSnapAimAngleIndicatorPitch(xCenter, yCenter, 10, 50, mc);
+                renderSnapAimAngleIndicatorPitch(xCenter, yCenter, 10, 50, mc, matrixStack);
             }
         }
     }
 
-    private static void renderSnapAimAngleIndicatorYaw(int xCenter, int yCenter, int width, int height, MinecraftClient mc)
+    private static void renderSnapAimAngleIndicatorYaw(int xCenter, int yCenter, int width, int height, MinecraftClient mc, MatrixStack matrixStack)
     {
         double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
         double realYaw = MathHelper.floorMod(MiscUtils.getLastRealYaw(), 360.0D);
@@ -348,16 +349,17 @@ public class RenderUtils
         fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF);
 
         String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
-        textRenderer.draw(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
+        textRenderer.draw(matrixStack, str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
         str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "°";
-        textRenderer.draw(str, x - textRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
+        textRenderer.draw(matrixStack, str, x - textRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
 
         str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "°  >";
-        textRenderer.draw(str, x + width, y + height + 2, 0xFFFFFFFF);
+        textRenderer.draw(matrixStack, str, x + width, y + height + 2, 0xFFFFFFFF);
     }
 
-    private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height, MinecraftClient mc)
+    private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height,
+            MinecraftClient mc, MatrixStack matrixStack)
     {
         double step = Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue();
         int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
@@ -379,10 +381,10 @@ public class RenderUtils
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
 
-        renderPitchIndicator(x, y, width, height, realPitch, snappedPitch, step, true, mc);
+        renderPitchIndicator(x, y, width, height, realPitch, snappedPitch, step, true, mc, matrixStack);
     }
 
-    public static void renderPitchLockIndicator(MinecraftClient mc)
+    public static void renderPitchLockIndicator(MinecraftClient mc, MatrixStack matrixStack)
     {
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
@@ -394,11 +396,12 @@ public class RenderUtils
         double centerPitch = 0;
         double indicatorRange = 180;
 
-        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange, false, mc);
+        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange, false, mc, matrixStack);
     }
 
     private static void renderPitchIndicator(int x, int y, int width, int height,
-            double currentPitch, double centerPitch, double indicatorRange, boolean isSnapRange, MinecraftClient mc)
+            double currentPitch, double centerPitch, double indicatorRange, boolean isSnapRange,
+            MinecraftClient mc, MatrixStack matrixStack)
     {
         double startPitch = centerPitch - (indicatorRange / 2.0);
         double printedRange = isSnapRange ? indicatorRange : indicatorRange / 2;
@@ -427,10 +430,10 @@ public class RenderUtils
         fi.dy.masa.malilib.render.RenderUtils.drawRect(x - 1, lineY - 1, width + 2, 2, 0xFFFFFFFF);
 
         String str = String.format("%6.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
-        textRenderer.draw(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
+        textRenderer.draw(matrixStack, str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
 
         //textRenderer.drawString(strUp, x - textRenderer.getStringWidth(strUp) - 4, y - 4, 0xFFFFFFFF);
-        textRenderer.draw(strUp, x + width + 4, y - 4, 0xFFFFFFFF);
-        textRenderer.draw(strDown, x + width + 4, y + height - 4, 0xFFFFFFFF);
+        textRenderer.draw(matrixStack, strUp, x + width + 4, y - 4, 0xFFFFFFFF);
+        textRenderer.draw(matrixStack, strDown, x + width + 4, y + height - 4, 0xFFFFFFFF);
     }
 }

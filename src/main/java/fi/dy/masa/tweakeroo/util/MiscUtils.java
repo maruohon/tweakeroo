@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.annotation.Nullable;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.Entity;
@@ -69,7 +70,7 @@ public class MiscUtils
 
     public static void copyTextFromSign(SignBlockEntity te)
     {
-        int size = te.text.length;
+        final int size = 4;
         previousSignText = new net.minecraft.text.Text[size];
 
         for (int i = 0; i < size; ++i)
@@ -78,15 +79,21 @@ public class MiscUtils
         }
     }
 
-    public static void applyPreviousTextToSign(SignBlockEntity te)
+    public static void applyPreviousTextToSign(SignBlockEntity te, @Nullable String[] guiLines)
     {
         if (previousSignText != null)
         {
-            int size = Math.min(te.text.length, previousSignText.length);
+            final int size = previousSignText.length;
 
             for (int i = 0; i < size; ++i)
             {
-                te.setTextOnRow(i, previousSignText[i]);
+                net.minecraft.text.Text text = previousSignText[i];
+                te.setTextOnRow(i, text);
+
+                if (guiLines != null)
+                {
+                    guiLines[i] = text.asString();
+                }
             }
         }
     }

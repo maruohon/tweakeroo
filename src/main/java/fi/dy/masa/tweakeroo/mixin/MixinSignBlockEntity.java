@@ -26,7 +26,7 @@ public abstract class MixinSignBlockEntity
 
             if ((mc.currentScreen instanceof SignEditScreen) && ((IGuiEditSign) mc.currentScreen).getTile() == (Object) this)
             {
-                MiscUtils.applyPreviousTextToSign((SignBlockEntity) (Object) this);
+                MiscUtils.applyPreviousTextToSign((SignBlockEntity) (Object) this, null);
             }
         }
     }
