@@ -1173,8 +1173,9 @@ public class PlacementTweaks
         {
             boolean featRight = FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue();
             boolean featLeft = FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue();
+            boolean featPlace = FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue();
 
-            if ((featRight && mc.gameSettings.keyBindUseItem.isKeyDown()) ||
+            if (((featRight || featPlace) && mc.gameSettings.keyBindUseItem.isKeyDown()) ||
                 (featLeft && mc.gameSettings.keyBindAttack.isKeyDown()))
             {
                 return true;
