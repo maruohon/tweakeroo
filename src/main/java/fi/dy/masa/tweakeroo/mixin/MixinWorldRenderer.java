@@ -1,6 +1,12 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.entity.EntityType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -19,6 +25,10 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer
 {
+    @Shadow
+    @Final
+    private EntityRenderDispatcher entityRenderDispatcher;
+
     @Inject(method = "method_22713", at = @At("HEAD"), cancellable = true) // renderRain
     private void cancelRainRender(Camera camera, CallbackInfo ci)
     {
@@ -85,5 +95,16 @@ public abstract class MixinWorldRenderer
         {
             storage.updateCameraPosition(viewEntityX, viewEntityZ);
         }
+    }
+
+    @Redirect(method = "renderEntity", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/render/entity/EntityRenderDispatcher;getLight(Lnet/minecraft/entity/Entity;F)I"))
+    private <E extends Entity> int fixingBlackTNTOnSoulsand(EntityRenderDispatcher entityRenderDispatcher, E entity, float tickDelta) {
+        if (!(Configs.Fixes.TNT_ON_SOULSAND_LIGHTING_FIX.getBooleanValue()) || entity.getType() != EntityType.TNT) {
+            return entityRenderDispatcher.getLight(entity, tickDelta);
+        }
+        int blockLight = entity.isOnFire() ? 15 : entity.world.getLightLevel(LightType.BLOCK, new BlockPos(entity.getCameraPosVec(tickDelta).add(0, 0.15, 0)));
+        return LightmapTextureManager.pack(blockLight, entity.world.getLightLevel(LightType.SKY, new BlockPos(entity.getCameraPosVec(tickDelta).add(0, 0.15, 0))));
     }
 }
