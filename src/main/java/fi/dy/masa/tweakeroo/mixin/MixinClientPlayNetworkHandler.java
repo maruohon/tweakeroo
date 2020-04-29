@@ -34,7 +34,8 @@ public abstract class MixinClientPlayNetworkHandler
             net.minecraft.util.math.BlockPos pos = fi.dy.masa.malilib.util.PositionUtils.getEntityBlockPos(mc.player);
             String str = String.format("You died @ %d, %d, %d", pos.getX(), pos.getY(), pos.getZ());
             net.minecraft.text.LiteralText message = new net.minecraft.text.LiteralText(str);
-            message.getStyle().setClickEvent(new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.SUGGEST_COMMAND, pos.getX() + " " + pos.getY() + " " + pos.getZ()));
+            message.getStyle().withClickEvent(new net.minecraft.text.ClickEvent(net.minecraft.text.ClickEvent.Action.SUGGEST_COMMAND, pos.getX() + " " + pos.getY() + " " + pos.getZ()));
+            message.formatted(net.minecraft.util.Formatting.UNDERLINE);
             net.minecraft.client.MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(message);
             Tweakeroo.logger.info(str);
         }

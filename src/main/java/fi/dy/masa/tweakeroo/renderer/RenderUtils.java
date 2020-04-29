@@ -349,10 +349,10 @@ public class RenderUtils
         fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF);
 
         String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
-        textRenderer.draw(matrixStack, str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
+        textRenderer.draw(matrixStack, str, xCenter - textRenderer.getWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
         str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "°";
-        textRenderer.draw(matrixStack, str, x - textRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
+        textRenderer.draw(matrixStack, str, x - textRenderer.getWidth(str), y + height + 2, 0xFFFFFFFF);
 
         str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "°  >";
         textRenderer.draw(matrixStack, str, x + width, y + height + 2, 0xFFFFFFFF);

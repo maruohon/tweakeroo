@@ -58,7 +58,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             this.cancelButton.y = y;
 
             Text str = new TranslatableText("tweakeroo.gui.button.misc.command_block.set_name");
-            int widthBtn = this.textRenderer.method_27525(str) + 10;
+            int widthBtn = this.textRenderer.getStringWidth(str) + 10;
 
             y = 181;
             this.textFieldName = new TextFieldWidget(this.textRenderer, x1, y, width, 20, new LiteralText(""));
@@ -77,7 +77,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             this.updateExecValue = MiscUtils.getUpdateExec(this.blockEntity);
 
             str = getDisplayStringForCurrentStatus(this.updateExecValue);
-            width = this.textRenderer.method_27525(str) + 10;
+            width = this.textRenderer.getStringWidth(str) + 10;
 
             this.buttonUpdateExec = new ButtonWidget(x2 + widthBtn + 4, y, width, 20, str, (button) ->
             {
@@ -86,7 +86,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
 
                 Text strBtn = getDisplayStringForCurrentStatus(this.updateExecValue);
                 button.setMessage(strBtn);
-                button.setWidth(this.textRenderer.method_27525(strBtn) + 10);
+                button.setWidth(this.textRenderer.getStringWidth(strBtn) + 10);
 
                 String cmd = String.format("/data merge block %d %d %d {\"UpdateLastExecution\":%s}",
                         pos.getX(), pos.getY(), pos.getZ(), this.updateExecValue ? "1b" : "0b");
@@ -123,7 +123,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
                 this.updateExecValue = updateExec;
                 Text str = getDisplayStringForCurrentStatus(this.updateExecValue);
                 this.buttonUpdateExec.setMessage(str);
-                this.buttonUpdateExec.setWidth(this.textRenderer.method_27525(str) + 10);
+                this.buttonUpdateExec.setWidth(this.textRenderer.getStringWidth(str) + 10);
             }
         }
     }
