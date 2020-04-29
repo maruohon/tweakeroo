@@ -1171,12 +1171,16 @@ public class PlacementTweaks
             container != null && container == player.inventoryContainer &&
             (slotNumber == 45 || (slotNumber - 36) == player.inventory.currentItem))
         {
-            boolean featRight = FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue();
-            boolean featLeft = FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue();
-            boolean featPlace = FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue();
+            if (mc.gameSettings.keyBindUseItem.isKeyDown() &&
+                (Configs.Generic.SLOT_SYNC_WORKAROUND_ALWAYS.getBooleanValue() ||
+                 FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue() ||
+                 FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue()))
+            {
+                return true;
+            }
 
-            if (((featRight || featPlace) && mc.gameSettings.keyBindUseItem.isKeyDown()) ||
-                (featLeft && mc.gameSettings.keyBindAttack.isKeyDown()))
+            if (mc.gameSettings.keyBindAttack.isKeyDown() &&
+                FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue())
             {
                 return true;
             }
