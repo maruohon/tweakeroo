@@ -149,13 +149,15 @@ public class Configs implements IConfigHandler
         public static final ConfigBoolean PROFILER_CHART_FIX                = new ConfigBoolean("profilerChartFix", false, "Adds a fix for the debug profiler pie chart, that broke in MC 1.14.4");
         public static final ConfigBoolean RAVAGER_CLIENT_BLOCK_BREAK_FIX    = new ConfigBoolean("ravagerClientBlockBreakFix", false, "Fixes Ravagers breaking blocks on the client side,\nwhich causes annoying ghost blocks/block desyncs");
         public static final ConfigBoolean TILE_UNLOAD_OPTIMIZATION          = new ConfigBoolean("tileEntityUnloadOptimization", false, "Optimizes the removal of unloading TileEntities from the World lists.\nThis can greatly improve performance if there are lots of\nTileEntities loaded and/or unloading at once.");
+        public static final ConfigBoolean TNT_ON_SOULSAND_LIGHTING_FIX      = new ConfigBoolean("entityOnSoulsandLightingFix", false, "Fixes tnts rendering black on soulsand ");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 CLIENT_CHUNK_ENTITY_DUPE,
                 ELYTRA_FIX,
                 PROFILER_CHART_FIX,
                 RAVAGER_CLIENT_BLOCK_BREAK_FIX,
-                TILE_UNLOAD_OPTIMIZATION
+                TILE_UNLOAD_OPTIMIZATION,
+                TNT_ON_SOULSAND_LIGHTING_FIX
         );
     }
 
