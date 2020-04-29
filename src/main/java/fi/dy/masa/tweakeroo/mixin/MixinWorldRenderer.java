@@ -92,12 +92,12 @@ public abstract class MixinWorldRenderer
                 target = "Lnet/minecraft/client/render/entity/EntityRenderDispatcher;getLight(Lnet/minecraft/entity/Entity;F)I"))
     private <E extends Entity> int fixingBlackTNTOnSoulsand(EntityRenderDispatcher entityRenderDispatcher, E entity, float tickDelta)
     {
-        if (!(Configs.Fixes.TNT_ON_SOULSAND_LIGHTING_FIX.getBooleanValue()) || entity.getType() != EntityType.TNT)
+        if (!Configs.Fixes.TNT_ON_SOULSAND_LIGHTING_FIX.getBooleanValue() || entity.getType() != EntityType.TNT)
         {
             return entityRenderDispatcher.getLight(entity, tickDelta);
         }
-        BlockPos newCamaraBlockPos = new BlockPos(entity.getCameraPosVec(tickDelta).add(0, 0.15, 0));
-        return entity.isOnFire() ? 15 : entity.world.getLightLevel(LightType.BLOCK,newCamaraBlockPos) << 4 | (entity.world.getLightLevel(LightType.SKY,newCamaraBlockPos) << 20);
+        BlockPos newCameraBlockPos = new BlockPos(entity.getCameraPosVec(tickDelta).add(0, 0.15, 0));
+        return entity.isOnFire() ? 15 : entity.world.getLightLevel(LightType.BLOCK,newCameraBlockPos) << 4 | (entity.world.getLightLevel(LightType.SKY,newCameraBlockPos) << 20);
     }
 
 }
