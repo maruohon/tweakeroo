@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.gui.screen.PresetsScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
@@ -22,7 +24,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 
 @Mixin(PresetsScreen.class)
-public abstract class MixinNewLevelPresetsScreen
+public abstract class MixinPresetsScreen
 {
     // name;blocks;biome;options;iconitem
     private static final Pattern PATTERN_PRESET = Pattern.compile("^(?<name>[a-zA-Z0-9_ -]+);(?<blocks>[a-z0-9_:\\.\\*-]+);(?<biome>[a-z0-9_:]+);(?<options>[a-z0-9_, \\(\\)=]*);(?<icon>[a-z0-9_:-]+)$");
@@ -32,7 +34,7 @@ public abstract class MixinNewLevelPresetsScreen
     private static List<Object> presets;
 
     @Shadow
-    private static void addPreset(String name, ItemConvertible itemIn, Biome biomeIn, List<String> options, FlatChunkGeneratorLayer... layers) {};
+    private static void addPreset(Text name, ItemConvertible itemIn, Biome biomeIn, List<String> options, FlatChunkGeneratorLayer... layers) {};
 
     @Inject(method = "init", at = @At("HEAD"))
     private void addCustomEntries(CallbackInfo ci)
@@ -120,7 +122,7 @@ public abstract class MixinNewLevelPresetsScreen
                 return false;
             }
 
-            addPreset(name, item, biome, features, layers);
+            addPreset(new TranslatableText(name), item, biome, features, layers);
 
             return true;
         }
