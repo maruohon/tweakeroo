@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.gui.screen.PresetsScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
@@ -32,7 +34,7 @@ public abstract class MixinNewLevelPresetsScreen
     private static List<Object> presets;
 
     @Shadow
-    private static void addPreset(String name, ItemConvertible itemIn, Biome biomeIn, List<String> options, FlatChunkGeneratorLayer... layers) {};
+    private static void addPreset(Text name, ItemConvertible itemIn, Biome biomeIn, List<String> options, FlatChunkGeneratorLayer... layers) {};
 
     @Inject(method = "init", at = @At("HEAD"))
     private void addCustomEntries(CallbackInfo ci)
@@ -120,7 +122,7 @@ public abstract class MixinNewLevelPresetsScreen
                 return false;
             }
 
-            addPreset(name, item, biome, features, layers);
+            addPreset(new TranslatableText(name), item, biome, features, layers);
 
             return true;
         }
