@@ -24,7 +24,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 
 @Mixin(PresetsScreen.class)
-public abstract class MixinNewLevelPresetsScreen
+public abstract class MixinPresetsScreen
 {
     // name;blocks;biome;options;iconitem
     private static final Pattern PATTERN_PRESET = Pattern.compile("^(?<name>[a-zA-Z0-9_ -]+);(?<blocks>[a-z0-9_:\\.\\*-]+);(?<biome>[a-z0-9_:]+);(?<options>[a-z0-9_, \\(\\)=]*);(?<icon>[a-z0-9_:-]+)$");

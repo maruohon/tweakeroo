@@ -22,9 +22,9 @@ import fi.dy.masa.tweakeroo.util.IGuiEditSign;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(SignEditScreen.class)
-public abstract class MixinEditSignScreen extends Screen implements IGuiEditSign
+public abstract class MixinSignEditScreen extends Screen implements IGuiEditSign
 {
-    protected MixinEditSignScreen(Text textComponent)
+    protected MixinSignEditScreen(Text textComponent)
     {
         super(textComponent);
     }
