@@ -112,12 +112,12 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
         {
             if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue())
             {
-                KeyBinding.setKeyPressed(InputUtil.fromName(this.options.keyAttack.getName()), true);
+                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.options.keyAttack.getBoundKeyTranslationKey()), true);
             }
 
             if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue())
             {
-                KeyBinding.setKeyPressed(InputUtil.fromName(this.options.keyUse.getName()), true);
+                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.options.keyUse.getBoundKeyTranslationKey()), true);
             }
         }
     }

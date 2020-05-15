@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.FacingBlock;
 import net.minecraft.block.ObserverBlock;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(value = ObserverBlock.class, priority = 1001)
@@ -20,7 +20,7 @@ public abstract class MixinObserverBlock extends FacingBlock
     }
 
     @Inject(method = "scheduleTick", at = @At("HEAD"), cancellable = true)
-    private void preventTrigger(IWorld worldIn, BlockPos pos, CallbackInfo ci)
+    private void preventTrigger(WorldAccess worldIn, BlockPos pos, CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_OBSERVER.getBooleanValue())
         {
