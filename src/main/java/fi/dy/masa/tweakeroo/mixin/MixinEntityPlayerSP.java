@@ -120,10 +120,4 @@ public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.Ab
             cir.setReturnValue(true);
         }
     }
-
-    @Override
-    public boolean isSpectator()
-    {
-        return super.isSpectator() || CameraUtils.getFreeCameraSpectator();
-    }
 }

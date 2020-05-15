@@ -8,6 +8,7 @@
         "IMixinChunkRenderWorker",
         "IMixinCommandBlockBaseLogic",
         "IMixinFlatGeneratorInfo",
+        "MixinAbstractClientPlayer",
         "MixinBlockDispenser",
         "MixinBlockFenceGateAndPumpkin",
         "MixinBlockFurnace",
