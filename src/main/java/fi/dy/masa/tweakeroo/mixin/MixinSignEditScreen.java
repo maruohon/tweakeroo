@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.InputUtil.KeyCode;
 import net.minecraft.text.Text;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
@@ -62,7 +61,7 @@ public abstract class MixinSignEditScreen extends Screen implements IGuiEditSign
             // Update the keybind state, because opening a GUI resets them all.
             // Also, KeyBinding.updateKeyBindState() only works for keyboard keys
             KeyBinding keybind = MinecraftClient.getInstance().options.keyUse;
-            KeyCode input = InputUtil.fromName(keybind.getName());
+            InputUtil.Key input = InputUtil.fromTranslationKey(keybind.getBoundKeyTranslationKey());
 
             if (input != null)
             {

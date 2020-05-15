@@ -4,6 +4,7 @@
     "minVersion": "0.7",
     "compatibilityLevel": "JAVA_8",
     "client": [
+        "Mixinclass_5296",
         "IMixinAbstractBlock",
         "IMixinCommandBlockExecutor",
         "IMixinFlatChunkGeneratorConfig",
@@ -49,7 +50,6 @@
         "MixinSlimeBlock",
         "MixinStructureBlockBlockEntity",
         "MixinTeleportSpectatorMenu",
-        "MixinTheNetherDimension",
         "MixinTradeOffer",
         "MixinUpdateStructureBlockC2SPacket",
         "MixinWorld",
