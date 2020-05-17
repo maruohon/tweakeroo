@@ -65,6 +65,10 @@ public class Configs implements IConfigHandler
         public static final ConfigInteger       MAP_PREVIEW_SIZE                    = new ConfigInteger     ("mapPreviewSize", 160, 16, 512, "The size of the rendered map previews");
         public static final ConfigInteger       PERIODIC_ATTACK_INTERVAL            = new ConfigInteger     ("periodicAttackInterval", 20, 0, Integer.MAX_VALUE, "The number of game ticks between automatic attacks (left clicks)");
         public static final ConfigInteger       PERIODIC_USE_INTERVAL               = new ConfigInteger     ("periodicUseInterval", 20, 0, Integer.MAX_VALUE, "The number of game ticks between automatic uses (right clicks)");
+        public static final ConfigInteger       PERIODIC_HOLD_ATTACK_DURATION       = new ConfigInteger     ("periodicHoldAttackDuration", 20, 0, Integer.MAX_VALUE, "The number of game ticks to hold down attack");
+        public static final ConfigInteger       PERIODIC_HOLD_ATTACK_INTERVAL       = new ConfigInteger     ("periodicHoldAttackInterval", 20, 0, Integer.MAX_VALUE, "The number of game ticks between starting to hold down attack (left click)");
+        public static final ConfigInteger       PERIODIC_HOLD_USE_DURATION          = new ConfigInteger     ("periodicHoldUseDuration", 20, 0, Integer.MAX_VALUE, "The number of game ticks to hold down use");
+        public static final ConfigInteger       PERIODIC_HOLD_USE_INTERVAL          = new ConfigInteger     ("periodicHoldUseInterval", 20, 0, Integer.MAX_VALUE, "The number of game ticks between starting to hold down use (right click)");
         public static final ConfigBoolean       PERMANENT_SNEAK_ALLOW_IN_GUIS       = new ConfigBoolean     ("permanentSneakAllowInGUIs", false, "If true, then the permanent sneak tweak will\nalso work while GUIs are open");
         public static final ConfigInteger       PLACEMENT_GRID_SIZE                 = new ConfigInteger     ("placementGridSize", 3, 1, 1000, "The grid interval size for the grid placement mode.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind.");
         public static final ConfigInteger       PLACEMENT_LIMIT                     = new ConfigInteger     ("placementLimit", 3, 1, 10000, "The number of blocks you are able to place at maximum per\nright click, if tweakPlacementLimit is enabled.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind.");
@@ -131,6 +135,10 @@ public class Configs implements IConfigHandler
                 MAP_PREVIEW_SIZE,
                 PERIODIC_ATTACK_INTERVAL,
                 PERIODIC_USE_INTERVAL,
+                PERIODIC_HOLD_ATTACK_DURATION,
+                PERIODIC_HOLD_ATTACK_INTERVAL,
+                PERIODIC_HOLD_USE_DURATION,
+                PERIODIC_HOLD_USE_INTERVAL,
                 PLACEMENT_GRID_SIZE,
                 PLACEMENT_LIMIT,
                 POTION_WARNING_THRESHOLD,
