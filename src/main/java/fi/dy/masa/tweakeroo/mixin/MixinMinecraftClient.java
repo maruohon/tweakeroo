@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -120,6 +121,44 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
                 KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.options.keyUse.getBoundKeyTranslationKey()), true);
             }
         }
+    }
+
+    @Inject(method = "handleInputEvents", at = @At(
+            value = "JUMP",
+            opcode = Opcodes.IINC, ordinal=1))
+    private void thirdPersonPerspectiveInversion(CallbackInfo ci) {
+        // consider using data storage instead to store the perspective state
+        // not sure on how best to solve code duplication
+
+        if (this.options.perspective == 2) {
+
+            InputUtil.Key keyRight = InputUtil.fromTranslationKey(this.options.keyRight.getBoundKeyTranslationKey());
+            InputUtil.Key keyLeft = InputUtil.fromTranslationKey(this.options.keyLeft.getBoundKeyTranslationKey());
+
+            InputUtil.Key keyForward = InputUtil.fromTranslationKey(this.options.keyForward.getBoundKeyTranslationKey());
+            InputUtil.Key keyBack = InputUtil.fromTranslationKey(this.options.keyBack.getBoundKeyTranslationKey());
+
+            this.options.keyRight.setBoundKey(keyLeft);
+            this.options.keyLeft.setBoundKey(keyRight);
+
+            this.options.keyForward.setBoundKey(keyBack);
+            this.options.keyBack.setBoundKey(keyForward);
+
+        } else if (this.options.perspective == 3) {
+
+            InputUtil.Key keyRight = InputUtil.fromTranslationKey(this.options.keyRight.getBoundKeyTranslationKey());
+            InputUtil.Key keyLeft = InputUtil.fromTranslationKey(this.options.keyLeft.getBoundKeyTranslationKey());
+
+            InputUtil.Key keyForward = InputUtil.fromTranslationKey(this.options.keyForward.getBoundKeyTranslationKey());
+            InputUtil.Key keyBack = InputUtil.fromTranslationKey(this.options.keyBack.getBoundKeyTranslationKey());
+
+            this.options.keyRight.setBoundKey(keyLeft);
+            this.options.keyLeft.setBoundKey(keyRight);
+
+            this.options.keyForward.setBoundKey(keyBack);
+            this.options.keyBack.setBoundKey(keyForward);
+        }
+        KeyBinding.updateKeysByCode();
     }
 
     @ModifyConstant(method = "handleProfilerKeyPress", constant = @Constant(intValue = 46), require = 0, allow = 1)
