@@ -4,10 +4,8 @@
     "minVersion": "0.7",
     "compatibilityLevel": "JAVA_8",
     "client": [
-        "Mixinclass_5296",
         "IMixinAbstractBlock",
         "IMixinCommandBlockExecutor",
-        "IMixinFlatChunkGeneratorConfig",
         "IMixinHorseBaseEntity",
         "MixinAbstractInventoryScreen",
         "MixinBackgroundRenderer",
@@ -47,6 +45,7 @@
         "MixinRavagerEntity",
         "MixinSignBlockEntity",
         "MixinSignEditScreen",
+        "MixinSkyProperties_Nether",
         "MixinSlimeBlock",
         "MixinStructureBlockBlockEntity",
         "MixinTeleportSpectatorMenu",
