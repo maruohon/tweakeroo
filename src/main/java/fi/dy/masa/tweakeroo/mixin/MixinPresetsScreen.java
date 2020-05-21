@@ -1,6 +1,5 @@
 package fi.dy.masa.tweakeroo.mixin;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,6 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.PresetsScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -19,6 +19,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
+import net.minecraft.world.gen.feature.StructureFeature;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
@@ -34,7 +35,7 @@ public abstract class MixinPresetsScreen
     private static List<Object> presets;
 
     @Shadow
-    private static void addPreset(Text name, ItemConvertible itemIn, Biome biomeIn, List<String> options, FlatChunkGeneratorLayer... layers) {};
+    private static void addPreset(Text name, ItemConvertible itemIn, Biome biomeIn, List<StructureFeature<?>> structures, boolean b1, boolean b2, boolean b3, FlatChunkGeneratorLayer... layers) {};
 
     @Inject(method = "init", at = @At("HEAD"))
     private void addCustomEntries(CallbackInfo ci)
@@ -73,7 +74,7 @@ public abstract class MixinPresetsScreen
             String name = matcher.group("name");
             String blocksString = matcher.group("blocks");
             String biomeName = matcher.group("biome");
-            String options = matcher.group("options");
+            // TODO add back the features
             String iconItemName = matcher.group("icon");
 
             Biome biome = null;
@@ -99,7 +100,6 @@ public abstract class MixinPresetsScreen
                 return false;
             }
 
-            List<String> features = Arrays.asList(options.split(","));
             Item item = null;
 
             try
@@ -122,7 +122,7 @@ public abstract class MixinPresetsScreen
                 return false;
             }
 
-            addPreset(new TranslatableText(name), item, biome, features, layers);
+            addPreset(new TranslatableText(name), item, biome, ImmutableList.of(), false, false, false, layers);
 
             return true;
         }
