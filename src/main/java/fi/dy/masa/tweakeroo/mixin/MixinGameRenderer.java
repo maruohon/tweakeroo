@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
@@ -48,16 +49,18 @@ public abstract class MixinGameRenderer
         }
     }
 
-    @Inject(method = "getFov", at = @At("HEAD"), cancellable = true)
-    private void applyZoom(Camera camera, float partialTicks, boolean useFOVSetting, CallbackInfoReturnable<Double> cir)
+    @Inject(method = "getFov", locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true, at = @At(
+              value = "FIELD",
+              target = "Lnet/minecraft/client/render/GameRenderer;lastMovementFovMultiplier:F"))
+    private void overrideFov(Camera camera, float partialTicks, boolean useFOVSetting, CallbackInfoReturnable<Double> cir, double currentFov)
     {
         if (FeatureToggle.TWEAK_ZOOM.getBooleanValue() && Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld())
         {
             cir.setReturnValue(Configs.Generic.ZOOM_FOV.getDoubleValue());
         }
-        else if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
+        else if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() || Configs.Disable.DISABLE_FOV_CHANGES.getBooleanValue())
         {
-            cir.setReturnValue(this.client.options.fov);
+            cir.setReturnValue(currentFov);
         }
     }
 
