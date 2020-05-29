@@ -70,12 +70,13 @@ public class MiscUtils
 
     public static void copyTextFromSign(SignBlockEntity te)
     {
-        final int size = 4;
+        net.minecraft.text.Text[] text = ((ISignTextAccess) te).getText();
+        final int size = text.length;
         previousSignText = new net.minecraft.text.Text[size];
 
         for (int i = 0; i < size; ++i)
         {
-            previousSignText[i] = te.getTextOnRow(i);
+            previousSignText[i] = text[i];
         }
     }
 

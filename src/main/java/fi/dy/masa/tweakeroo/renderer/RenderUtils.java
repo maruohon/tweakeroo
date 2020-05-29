@@ -168,7 +168,7 @@ public class RenderUtils
 
             final fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = (entityLivingBase instanceof VillagerEntity) ? fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.VILLAGER : fi.dy.masa.malilib.render.InventoryOverlay.getInventoryType(inv);
             final fi.dy.masa.malilib.render.InventoryOverlay.InventoryProperties props = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryPropsTemp(type, totalSlots);
-            final int rows = (int) Math.ceil(totalSlots / props.slotsPerRow);
+            final int rows = (int) Math.ceil((double) totalSlots / props.slotsPerRow);
             int xInv = xCenter - (props.width / 2);
             int yInv = yCenter - props.height - 6;
 

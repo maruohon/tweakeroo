@@ -25,7 +25,7 @@ public class CameraEntity extends ClientPlayerEntity
             ClientPlayNetworkHandler nethandler, StatHandler stats,
             ClientRecipeBook recipeBook)
     {
-        super(mc, world, nethandler, stats, recipeBook);
+        super(mc, world, nethandler, stats, recipeBook, false, false);
     }
 
     @Override
