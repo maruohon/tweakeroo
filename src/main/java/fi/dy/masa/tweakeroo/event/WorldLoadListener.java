@@ -17,9 +17,5 @@ public class WorldLoadListener implements IWorldLoadListener
         FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
         FeatureToggle.TWEAK_FREE_CAMERA_MOTION.setBooleanValue(false);
 
-        // Quick and dirty fix to ensure IValueChangeCallback using callbacks are called.
-        FeatureToggle.TWEAK_GAMMA_OVERRIDE.onValueChanged();
-        Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN.onValueChanged();
-
     }
 }

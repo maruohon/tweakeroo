@@ -281,7 +281,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
         {
             if (element.isJsonPrimitive())
             {
-                this.valueBoolean = element.getAsBoolean();
+                this.setBooleanValue(element.getAsBoolean());
             }
             else
             {
