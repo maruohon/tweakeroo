@@ -10,9 +10,9 @@ import fi.dy.masa.tweakeroo.config.Configs;
 @Mixin(SkyProperties.Nether.class)
 public abstract class MixinSkyProperties_Nether extends SkyProperties
 {
-    private MixinSkyProperties_Nether(float cloudsHeight, boolean alternateSkyColor, class_5401 arg, boolean bl, boolean bl2)
+    public MixinSkyProperties_Nether(float cloudsHeight, boolean alternateSkyColor, SkyType skyType, boolean shouldRenderSky, boolean darkened)
     {
-        super(cloudsHeight, alternateSkyColor, arg, bl, bl2);
+        super(cloudsHeight, alternateSkyColor, skyType, shouldRenderSky, darkened);
     }
 
     @Inject(method = "useThickFog", at = @At("HEAD"), cancellable = true)
