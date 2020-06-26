@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
@@ -25,6 +26,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
+import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
@@ -64,14 +66,17 @@ public class PlacementTweaks
 
     public static void onTick(Minecraft mc)
     {
+        boolean attackHeld = isVanillaKeybindHeld(mc.gameSettings.keyBindAttack);
+        boolean useHeld = isVanillaKeybindHeld(mc.gameSettings.keyBindUseItem);
+
         if (GuiUtils.getCurrentScreen() == null)
         {
-            if (mc.gameSettings.keyBindUseItem.isKeyDown())
+            if (useHeld)
             {
                 onUsingTick();
             }
 
-            if (mc.gameSettings.keyBindAttack.isKeyDown())
+            if (attackHeld)
             {
                 onAttackTick(mc);
             }
@@ -82,20 +87,20 @@ public class PlacementTweaks
             stackBeforeUse[1] = ItemStack.EMPTY;
         }
 
-        if (mc.gameSettings.keyBindUseItem.isKeyDown() == false)
+        if (useHeld == false)
         {
             clearClickedBlockInfoUse();
 
             // Clear the cached stack when releasing both keys, so that the restock doesn't happen when
             // using another another item or an empty hand.
-            if (mc.gameSettings.keyBindAttack.isKeyDown() == false)
+            if (attackHeld == false)
             {
                 stackBeforeUse[0] = ItemStack.EMPTY;
                 stackBeforeUse[1] = ItemStack.EMPTY;
             }
         }
 
-        if (mc.gameSettings.keyBindAttack.isKeyDown() == false)
+        if (attackHeld == false)
         {
             clearClickedBlockInfoAttack();
         }
@@ -340,7 +345,7 @@ public class PlacementTweaks
             ((IMinecraftAccessor) mc).setRightClickDelayTimer(4);
         }
         else if (FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue() &&
-                mc.gameSettings.keyBindUseItem.isKeyDown() &&
+                isVanillaKeybindHeld(mc.gameSettings.keyBindUseItem) &&
                 canUseFastRightClick(mc.player))
         {
             final int count = Configs.Generic.FAST_RIGHT_CLICK_COUNT.getIntegerValue();
@@ -352,6 +357,11 @@ public class PlacementTweaks
                 isEmulatedClick = false;
             }
         }
+    }
+
+    private static boolean isVanillaKeybindHeld(KeyBinding key)
+    {
+        return KeybindMulti.isKeyDown(key.getKeyCode());
     }
 
     public static EnumActionResult onProcessRightClickBlock(
