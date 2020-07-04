@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import fi.dy.masa.malilib.config.values.ActiveMode;
 import fi.dy.masa.malilib.gui.GuiBase;
@@ -97,6 +98,10 @@ public class RenderHandler implements IRenderer
     private void renderOverlays(Minecraft mc, float partialTicks)
     {
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
+        	!mc.player.isSpectator() &&
+        	!(mc.player.getHeldItem(EnumHand.MAIN_HAND).isEmpty() ||
+        	  mc.player.getHeldItem(EnumHand.OFF_HAND).isEmpty()
+        	 ) &&
             mc.objectMouseOver != null &&
             mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
