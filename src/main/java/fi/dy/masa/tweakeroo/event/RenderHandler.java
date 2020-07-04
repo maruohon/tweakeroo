@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.event;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -99,9 +100,14 @@ public class RenderHandler implements IRenderer
     {
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
         	!mc.player.isSpectator() &&
-        	(!mc.player.getHeldItem(EnumHand.MAIN_HAND).isEmpty() ||
-        	 !mc.player.getHeldItem(EnumHand.OFF_HAND).isEmpty()
-        	) &&
+        	(
+              (!mc.player.getHeldItem(EnumHand.MAIN_HAND).isEmpty() && 
+               (mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemBlock) 
+              ) ||
+              (!mc.player.getHeldItem(EnumHand.OFF_HAND).isEmpty() && 
+               (mc.player.getHeldItem(EnumHand.OFF_HAND).getItem() instanceof ItemBlock)
+              )
+            ) &&
             mc.objectMouseOver != null &&
             mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
