@@ -99,9 +99,9 @@ public class RenderHandler implements IRenderer
     {
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
         	!mc.player.isSpectator() &&
-        	!(mc.player.getHeldItem(EnumHand.MAIN_HAND).isEmpty() ||
-        	  mc.player.getHeldItem(EnumHand.OFF_HAND).isEmpty()
-        	 ) &&
+        	(!mc.player.getHeldItem(EnumHand.MAIN_HAND).isEmpty() ||
+        	 !mc.player.getHeldItem(EnumHand.OFF_HAND).isEmpty()
+        	) &&
             mc.objectMouseOver != null &&
             mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
