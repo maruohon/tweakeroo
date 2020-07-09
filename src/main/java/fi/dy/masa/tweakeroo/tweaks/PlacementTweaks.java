@@ -404,6 +404,18 @@ public class PlacementTweaks
             }
         }
 
+        boolean simpleOffset = false;
+
+        if (handleFlexible == false &&
+            FeatureToggle.TWEAK_FAKE_SNEAK_PLACEMENT.getBooleanValue() &&
+            stack.isEmpty() == false)
+        {
+            BlockHitResult hitResult = new BlockHitResult(hitVec, sideIn, posIn, false);
+            ItemPlacementContext ctx = new ItemPlacementContext(new ItemUsageContext(player, hand, hitResult));
+            posNew = getPlacementPositionForTargetedPosition(world, posIn, sideIn, ctx);
+            simpleOffset = true;
+        }
+
         boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
         boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld();
         boolean accurateReverse = Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld();
@@ -538,7 +550,7 @@ public class PlacementTweaks
             return handleFlexibleBlockPlacement(controller, player, world, posIn, sideIn, playerYaw, hitVec, hand, null);
         }
 
-        return processRightClickBlockWrapper(controller, player, world, posIn, sideIn, hitVec, hand);
+        return processRightClickBlockWrapper(controller, player, world, simpleOffset ? posNew : posIn, sideIn, hitVec, hand);
     }
 
     private static boolean canPlaceBlockAgainst(World world, BlockPos pos, PlayerEntity player, Hand hand)
