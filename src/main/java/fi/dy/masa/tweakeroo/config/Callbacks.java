@@ -131,12 +131,12 @@ public class Callbacks
         {
             if (config.getBooleanValue())
             {
-                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.keyBind.getTranslationKey()), true);
-                KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(this.keyBind.getTranslationKey()));
+                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.keyBind.getBoundKeyTranslationKey()), true);
+                KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(this.keyBind.getBoundKeyTranslationKey()));
             }
             else
             {
-                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.keyBind.getTranslationKey()), false);
+                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.keyBind.getBoundKeyTranslationKey()), false);
             }
         }
     }

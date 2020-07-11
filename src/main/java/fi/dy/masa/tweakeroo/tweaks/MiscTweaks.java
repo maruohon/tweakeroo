@@ -90,7 +90,7 @@ public class MiscTweaks
         {
             this.state = state;
 
-            InputUtil.Key key = InputUtil.fromTranslationKey(this.keybind.getTranslationKey());
+            InputUtil.Key key = InputUtil.fromTranslationKey(this.keybind.getBoundKeyTranslationKey());
             KeyBinding.setKeyPressed(key, state);
 
             if (state)
