@@ -28,6 +28,7 @@ import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import fi.dy.masa.malilib.util.BlockUtils;
+import fi.dy.masa.malilib.util.PlacementUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
 import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
@@ -242,6 +243,11 @@ public class PlacementTweaks
 
                         if (handleFlexible)
                         {
+                            if (PlacementUtils.isReplaceable(world, posNew, true) == false)
+                            {
+                                posNew = posNew.offset(side); // the side here is probably wrong with Flexible Placement Rotation...
+                            }
+
                             return posNew;
                         }
                     }
