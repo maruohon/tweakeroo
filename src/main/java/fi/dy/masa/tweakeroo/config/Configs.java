@@ -88,6 +88,7 @@ public class Configs implements IConfigHandler
         public static final ConfigDouble        SNAP_AIM_PITCH_STEP                 = new ConfigDouble      ("snapAimPitchStep", 12.5, 0, 90, "The pitch angle step of the snap aim tweak");
         public static final ConfigDouble        SNAP_AIM_YAW_STEP                   = new ConfigDouble      ("snapAimYawStep", 45, 0, 360, "The yaw angle step of the snap aim tweak");
         public static final ConfigInteger       STRUCTURE_BLOCK_MAX_SIZE            = new ConfigInteger     ("structureBlockMaxSize", 128, 1, 256, "The maximum dimensions for a Structure Block's saved area");
+        public static final ConfigBoolean       ZOOM_ADJUST_MOUSE_SENSITIVITY       = new ConfigBoolean     ("zoomAdjustMouseSensitivity", true, "If enabled, then the mouse sensitivity is reduced\nwhile the zoom feature is enabled and the zoom key is active");
         public static final ConfigDouble        ZOOM_FOV                            = new ConfigDouble      ("zoomFov", 30, 0.01, 359.99, "The FOV value used for the zoom feature");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
@@ -103,6 +104,7 @@ public class Configs implements IConfigHandler
                 SLOT_SYNC_WORKAROUND,
                 SNAP_AIM_INDICATOR,
                 SNAP_AIM_PITCH_OVERSHOOT,
+                ZOOM_ADJUST_MOUSE_SENSITIVITY,
 
                 BREAKING_RESTRICTION_MODE,
                 ELYTRA_CAMERA_INDICATOR,
