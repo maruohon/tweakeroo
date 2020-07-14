@@ -91,6 +91,7 @@ public class Configs implements IConfigHandler
         public static final ConfigDouble        SNAP_AIM_YAW_STEP                   = new ConfigDouble      ("snapAimYawStep", 45, 0, 360, "The yaw angle step of the snap aim tweak");
         public static final ConfigBoolean       SOUND_NAME_OUTPUT                   = new ConfigBoolean     ("soundNameOutput", false, "This is meant for finding out the sound names you want to\ndisable with the 'disableSoundsList' tweak. It just prints any sound\nnames to the game console that start playing, while this is enabled.");
         public static final ConfigInteger       STRUCTURE_BLOCK_MAX_SIZE            = new ConfigInteger     ("structureBlockMaxSize", 128, 1, 256, "The maximum dimensions for a Structure Block's saved area");
+        public static final ConfigBoolean       ZOOM_ADJUST_MOUSE_SENSITIVITY       = new ConfigBoolean     ("zoomAdjustMouseSensitivity", true, "If enabled, then the mouse sensitivity is reduced\nwhile the zoom feature is enabled and the zoom key is active");
         public static final ConfigDouble        ZOOM_FOV                            = new ConfigDouble      ("zoomFov", 30, 0.01, 359.99, "The FOV value used for the zoom feature");
 
         public static final ConfigOptionList<PlacementRestrictionMode>      BREAKING_RESTRICTION_MODE           = new ConfigOptionList<PlacementRestrictionMode>("breakingRestrictionMode", PlacementRestrictionMode.LINE, "The Breaking Restriction mode to use (hotkey-selectable)");
@@ -118,6 +119,7 @@ public class Configs implements IConfigHandler
                 SNAP_AIM_ONLY_CLOSE_TO_ANGLE,
                 SNAP_AIM_PITCH_OVERSHOOT,
                 SOUND_NAME_OUTPUT,
+                ZOOM_ADJUST_MOUSE_SENSITIVITY,
 
                 BREAKING_RESTRICTION_MODE,
                 ELYTRA_CAMERA_INDICATOR,

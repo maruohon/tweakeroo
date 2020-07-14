@@ -56,7 +56,11 @@ public class MiscUtils
 
     public static void onZoomActivated()
     {
-        setMouseSensitivityForZoom();
+        if (Configs.Generic.ZOOM_ADJUST_MOUSE_SENSITIVITY.getBooleanValue())
+        {
+            setMouseSensitivityForZoom();
+        }
+
         zoomActive = true;
     }
 
