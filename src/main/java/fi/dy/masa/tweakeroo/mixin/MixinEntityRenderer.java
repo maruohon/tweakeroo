@@ -102,7 +102,7 @@ public abstract class MixinEntityRenderer
     @Inject(method = "getFOVModifier", at = @At("HEAD"), cancellable = true)
     private void zoom(float partialTicks, boolean useFOVSetting, CallbackInfoReturnable<Float> cir)
     {
-        if (FeatureToggle.TWEAK_ZOOM.getBooleanValue() && Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld())
+        if (MiscUtils.isZoomActive())
         {
             cir.setReturnValue((float) Configs.Generic.ZOOM_FOV.getDoubleValue());
         }

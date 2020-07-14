@@ -446,22 +446,13 @@ public class Callbacks
             }
             else if (key == Hotkeys.ZOOM_ACTIVATE.getKeybind())
             {
-                if (action == KeyAction.RELEASE)
+                if (action == KeyAction.PRESS)
                 {
-                    // Refresh the rendered chunks when exiting zoom mode
-                    this.mc.renderGlobal.setDisplayListEntitiesDirty();
+                    MiscUtils.onZoomActivated();
                 }
-
-                if (key.getSettings().getActivateOn() == KeyAction.BOTH)
+                else
                 {
-                    if (action == KeyAction.PRESS)
-                    {
-                        MiscUtils.setMouseSnsitivityForZoom();
-                    }
-                    else
-                    {
-                        MiscUtils.resetMouseSnsitivityForZoom();
-                    }
+                    MiscUtils.onZoomDeactivated();
                 }
             }
 

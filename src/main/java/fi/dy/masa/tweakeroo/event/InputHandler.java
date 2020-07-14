@@ -82,6 +82,8 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             this.storeLastMovementDirection(eventKey, mc);
         }
 
+        MiscUtils.checkZoomStatus();
+
         return false;
     }
 
@@ -234,7 +236,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
                 if (FeatureToggle.TWEAK_ZOOM.getBooleanValue())
                 {
-                    MiscUtils.setMouseSnsitivityForZoom();
+                    MiscUtils.onZoomActivated();
                 }
 
                 String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);

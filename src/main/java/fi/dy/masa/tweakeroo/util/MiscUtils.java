@@ -26,6 +26,7 @@ import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.IRayPositionHandler;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockBaseLogic;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
@@ -37,8 +38,42 @@ public class MiscUtils
     private static double lastRealPitch;
     private static double lastRealYaw;
     private static float mouseSensitivity = -1.0F;
+    private static boolean zoomActive;
 
-    public static void setMouseSnsitivityForZoom()
+    public static boolean isZoomActive()
+    {
+        return FeatureToggle.TWEAK_ZOOM.getBooleanValue() &&
+               Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld();
+    }
+
+    public static void checkZoomStatus()
+    {
+        if (zoomActive && isZoomActive() == false)
+        {
+            onZoomDeactivated();
+        }
+    }
+
+    public static void onZoomActivated()
+    {
+        setMouseSensitivityForZoom();
+        zoomActive = true;
+    }
+
+    public static void onZoomDeactivated()
+    {
+        if (zoomActive)
+        {
+            resetMouseSensitivityForZoom();
+
+            // Refresh the rendered chunks when exiting zoom mode
+            Minecraft.getMinecraft().renderGlobal.setDisplayListEntitiesDirty();
+
+            zoomActive = false;
+        }
+    }
+
+    public static void setMouseSensitivityForZoom()
     {
         Minecraft mc = Minecraft.getMinecraft();
 
@@ -59,7 +94,7 @@ public class MiscUtils
         }
     }
 
-    public static void resetMouseSnsitivityForZoom()
+    public static void resetMouseSensitivityForZoom()
     {
         if (mouseSensitivity > 0.0F)
         {
