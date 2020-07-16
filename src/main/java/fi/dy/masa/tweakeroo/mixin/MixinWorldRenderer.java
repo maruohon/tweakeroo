@@ -79,8 +79,10 @@ public abstract class MixinWorldRenderer
         return camera.getFocusedEntity();
     }
 
-    @Inject(method = "setupTerrain", at = @At(
-            value = "FIELD", opcode = Opcodes.PUTFIELD,
+    // These injections will fail when Sodium is present, but the Free Camera
+    // rendering seems to work fine with Sodium without these anyway
+    @Inject(method = "setupTerrain", require = 0,
+            at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD,
             target = "Lnet/minecraft/client/render/WorldRenderer;lastCameraChunkUpdateX:D"))
     private void rebuildChunksAroundCamera1(
             Camera camera,
@@ -98,8 +100,10 @@ public abstract class MixinWorldRenderer
         }
     }
 
-    @Inject(method = "setupTerrain", at = @At(
-            value = "INVOKE", shift = At.Shift.AFTER,
+    // These injections will fail when Sodium is present, but the Free Camera
+    // rendering seems to work fine with Sodium without these anyway
+    @Inject(method = "setupTerrain", require = 0,
+            at = @At(value = "INVOKE", shift = At.Shift.AFTER,
             target = "Lnet/minecraft/client/render/BuiltChunkStorage;updateCameraPosition(DD)V"))
     private void rebuildChunksAroundCamera2(
             Camera camera,
