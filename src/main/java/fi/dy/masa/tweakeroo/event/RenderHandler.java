@@ -101,13 +101,13 @@ public class RenderHandler implements IRenderer
 
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
             entity != null &&
-            mc.hitResult != null &&
-            mc.hitResult.getType() == HitResult.Type.BLOCK &&
+            mc.crosshairTarget != null &&
+            mc.crosshairTarget.getType() == HitResult.Type.BLOCK &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeybind().isKeybindHeld()))
         {
-            BlockHitResult hitResult = (BlockHitResult) mc.hitResult;
+            BlockHitResult hitResult = (BlockHitResult) mc.crosshairTarget;
             GlStateManager.depthMask(false);
             GlStateManager.disableLighting();
             GlStateManager.disableCull();

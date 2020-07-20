@@ -68,7 +68,7 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
             {
                 for (int cx = minX >> 4; cx <= (maxX >> 4); ++cx)
                 {
-                    WorldChunk chunk = world.method_8497(cx, cz);
+                    WorldChunk chunk = world.getChunk(cx, cz);
 
                     if (chunk == null)
                     {

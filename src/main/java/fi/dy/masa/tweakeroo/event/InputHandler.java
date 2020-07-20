@@ -94,7 +94,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         if (GuiUtils.getCurrentScreen() == null && mc.player != null && mc.player.abilities.creativeMode &&
             eventButtonState && mc.options.keyUse.matchesMouse(eventButton) &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
-            mc.hitResult != null && mc.hitResult.getType() == HitResult.Type.MISS)
+            mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.MISS)
         {
             BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
 

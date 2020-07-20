@@ -5,10 +5,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.FirstPersonRenderer;
+import net.minecraft.client.render.item.HeldItemRenderer;
 import fi.dy.masa.tweakeroo.config.Configs;
 
-@Mixin(FirstPersonRenderer.class)
+@Mixin(HeldItemRenderer.class)
 public abstract class MixinFirstPersonRenderer
 {
     @Redirect(method = "updateHeldItems()V", at = @At(

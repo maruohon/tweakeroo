@@ -16,7 +16,7 @@ public abstract class MixinTheNetherDimension extends Dimension
     }
 
     @Override
-    public boolean shouldRenderFog(int x, int z)
+    public boolean isFogThick(int x, int z)
     {
         return ! Configs.Disable.DISABLE_NETHER_FOG.getBooleanValue();
     }

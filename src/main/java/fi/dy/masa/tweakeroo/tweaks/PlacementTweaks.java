@@ -15,7 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
-import net.minecraft.server.network.packet.PlayerMoveC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
@@ -137,7 +137,7 @@ public class PlacementTweaks
     public static void onLeftClickMousePre()
     {
         MinecraftClient mc = MinecraftClient.getInstance();
-        HitResult trace = mc.hitResult;
+        HitResult trace = mc.crosshairTarget;
 
         // Only set the position if it was null, otherwise the fast left click tweak
         // would just reset it every time.
@@ -205,11 +205,11 @@ public class PlacementTweaks
             final double reach = mc.interactionManager.getReachDistance();
             final int maxCount = Configs.Generic.FAST_BLOCK_PLACEMENT_COUNT.getIntegerValue();
 
-            mc.hitResult = player.rayTrace(reach, mc.getTickDelta(), false);
+            mc.crosshairTarget = player.rayTrace(reach, mc.getTickDelta(), false);
 
             for (int i = 0; i < maxCount; ++i)
             {
-                HitResult trace = mc.hitResult;
+                HitResult trace = mc.crosshairTarget;
 
                 if (trace == null || trace.getType() != HitResult.Type.BLOCK)
                 {
@@ -253,7 +253,7 @@ public class PlacementTweaks
                     if (result == ActionResult.SUCCESS)
                     {
                         posLast = posNew;
-                        mc.hitResult = player.rayTrace(reach, mc.getTickDelta(), false);
+                        mc.crosshairTarget = player.rayTrace(reach, mc.getTickDelta(), false);
                     }
                     else
                     {
@@ -793,7 +793,7 @@ public class PlacementTweaks
             }
             else if (FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue())
             {
-                int newSlot = player.getRand().nextInt(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue());
+                int newSlot = player.getRandom().nextInt(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue());
                 player.inventory.selectedSlot = newSlot;
             }
         }

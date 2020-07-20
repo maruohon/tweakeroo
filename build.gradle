@@ -7,18 +7,11 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.fabricmc:fabric-loom:0.2.6-SNAPSHOT'
+        classpath 'net.fabricmc:fabric-loom:0.4-SNAPSHOT'
     }
 }
 
 apply plugin: "fabric-loom"
-
-/*
-plugins {
-    id 'fabric-loom' version '0.2.6-SNAPSHOT'
-    id 'maven-publish'
-}
-*/
 
 repositories {
     maven {
@@ -43,11 +36,11 @@ dependencies {
     modCompile "net.fabricmc:fabric-loader:${config.fabric_loader_version}"
     compile "com.google.code.findbugs:jsr305:3.0.2"
 
-    modCompile "fi.dy.masa.malilib:malilib-fabric-${config.minecraft_version_out}:${config.malilib_version}"
-    modCompile "io.github.prospector:modmenu:" + config.mod_menu_version
-
     // Fabric API. This is technically optional, but you probably want it anyway.
     //modCompile "net.fabricmc.fabric-api:fabric-api:" + config.fabric_version
+
+    modCompile "fi.dy.masa.malilib:malilib-fabric-${config.minecraft_version_out}:${config.malilib_version}"
+    modCompile "io.github.prospector:modmenu:${config.mod_menu_version}"
 }
 
 minecraft {

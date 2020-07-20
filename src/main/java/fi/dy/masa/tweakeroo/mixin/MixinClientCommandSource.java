@@ -23,7 +23,7 @@ public abstract class MixinClientCommandSource
         MinecraftClient mc = MinecraftClient.getInstance();
 
         if (FeatureToggle.TWEAK_TAB_COMPLETE_COORDINATE.getBooleanValue() &&
-            mc.player != null && (mc.hitResult == null || mc.hitResult.getType() == HitResult.Type.MISS))
+            mc.player != null && (mc.crosshairTarget == null || mc.crosshairTarget.getType() == HitResult.Type.MISS))
         {
             BlockPos pos = new BlockPos(mc.player);
             cir.setReturnValue(Collections.singleton(new CommandSource.RelativePosition(formatInt(pos.getX()), formatInt(pos.getY()), formatInt(pos.getZ()))));
@@ -36,7 +36,7 @@ public abstract class MixinClientCommandSource
         MinecraftClient mc = MinecraftClient.getInstance();
 
         if (FeatureToggle.TWEAK_TAB_COMPLETE_COORDINATE.getBooleanValue() &&
-            mc.player != null && (mc.hitResult == null || mc.hitResult.getType() == HitResult.Type.MISS))
+            mc.player != null && (mc.crosshairTarget == null || mc.crosshairTarget.getType() == HitResult.Type.MISS))
         {
             cir.setReturnValue(Collections.singleton(new CommandSource.RelativePosition(formatDouble(mc.player.x), formatDouble(mc.player.y), formatDouble(mc.player.z))));
         }

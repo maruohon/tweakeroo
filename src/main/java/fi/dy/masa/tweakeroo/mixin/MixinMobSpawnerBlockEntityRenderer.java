@@ -10,7 +10,7 @@ import fi.dy.masa.tweakeroo.config.Configs;
 @Mixin(MobSpawnerBlockEntityRenderer.class)
 public abstract class MixinMobSpawnerBlockEntityRenderer
 {
-    @Inject(method = "method_3590", at = @At("HEAD"), cancellable = true) // render
+    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void cancelRender(CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_MOB_SPAWNER_MOB_RENDER.getBooleanValue())

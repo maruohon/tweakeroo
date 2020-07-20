@@ -135,9 +135,9 @@ public class CameraEntity extends ClientPlayerEntity
 
     private void updateLastTickPosition()
     {
-        this.prevRenderX = this.x;
-        this.prevRenderY = this.y;
-        this.prevRenderZ = this.z;
+        this.lastRenderX = this.x;
+        this.lastRenderY = this.y;
+        this.lastRenderZ = this.z;
 
         this.prevX = this.x;
         this.prevY = this.y;
@@ -165,14 +165,14 @@ public class CameraEntity extends ClientPlayerEntity
 
     private static CameraEntity create(MinecraftClient mc)
     {
-        CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.networkHandler, mc.player.getStats(), mc.player.getRecipeBook());
+        CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.networkHandler, mc.player.getStatHandler(), mc.player.getRecipeBook());
         camera.noClip = true;
 
         ClientPlayerEntity player = mc.player;
 
         if (player != null)
         {
-            camera.setPositionAndAngles(player.x, player.y, player.z, player.yaw, player.pitch);
+            camera.refreshPositionAndAngles(player.x, player.y, player.z, player.yaw, player.pitch);
             camera.setRotations(player.yaw, player.pitch);
         }
 

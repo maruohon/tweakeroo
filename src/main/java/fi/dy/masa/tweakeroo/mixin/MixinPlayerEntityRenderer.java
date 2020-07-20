@@ -11,7 +11,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 @Mixin(PlayerEntityRenderer.class)
 public abstract class MixinPlayerEntityRenderer
 {
-    @Redirect(method = "method_4215", // render
+    @Redirect(method = "render",
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;isMainPlayer()Z"))
     private boolean overrideIsUser(AbstractClientPlayerEntity entity)

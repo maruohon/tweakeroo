@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -72,7 +72,7 @@ public class RenderUtils
             TextRenderer textRenderer = mc.textRenderer;
 
             fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
-            fi.dy.masa.malilib.render.RenderUtils.bindTexture(AbstractContainerScreen.BACKGROUND_TEXTURE);
+            fi.dy.masa.malilib.render.RenderUtils.bindTexture(ContainerScreen.BACKGROUND_TEXTURE);
             fi.dy.masa.malilib.render.RenderUtils.drawTexturedRect(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18);
 
             for (int row = 1; row <= 3; row++)

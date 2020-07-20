@@ -18,7 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.packet.UpdateSelectedSlotC2SPacket;
+import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -201,7 +201,7 @@ public class InventoryUtils
                     continue;
                 }
 
-                Slot slot = container.slotList.get(slotNum);
+                Slot slot = container.slots.get(slotNum);
                 ItemStack stackSlot = slot.getStack();
 
                 if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(stackSlot, stackHand))
@@ -306,7 +306,7 @@ public class InventoryUtils
 
         Container container = player.playerContainer;
 
-        for (Slot slot : container.slotList)
+        for (Slot slot : container.slots)
         {
             if (slot.id <= 8)
             {
@@ -371,7 +371,7 @@ public class InventoryUtils
     {
         Container containerPlayer = player.container;
 
-        for (Slot slot : containerPlayer.slotList)
+        for (Slot slot : containerPlayer.slots)
         {
             if (slot.hasStack() && isConfiguredRepairSlot(slot.id, player) == false)
             {
@@ -399,14 +399,14 @@ public class InventoryUtils
      */
     public static int findSlotWithItem(Container container, ItemStack stackReference, boolean allowHotbar, boolean reverse)
     {
-        final int startSlot = reverse ? container.slotList.size() - 1 : 0;
-        final int endSlot = reverse ? -1 : container.slotList.size();
+        final int startSlot = reverse ? container.slots.size() - 1 : 0;
+        final int endSlot = reverse ? -1 : container.slots.size();
         final int increment = reverse ? -1 : 1;
         final boolean isPlayerInv = container instanceof PlayerContainer;
 
         for (int slotNum = startSlot; slotNum != endSlot; slotNum += increment)
         {
-            Slot slot = container.slotList.get(slotNum);
+            Slot slot = container.slots.get(slotNum);
 
             if ((isPlayerInv == false || fi.dy.masa.malilib.util.InventoryUtils.isRegularInventorySlot(slot.id, false)) &&
                 (allowHotbar || isHotbarSlot(slot) == false) &&
@@ -502,7 +502,7 @@ public class InventoryUtils
 
     private static int findSlotWithSuitableReplacementToolWithDurabilityLeft(Container container, ItemStack stackReference, int minDurabilityLeft)
     {
-        for (Slot slot : container.slotList)
+        for (Slot slot : container.slots)
         {
             ItemStack stackSlot = slot.getStack();
 
@@ -543,7 +543,7 @@ public class InventoryUtils
         int slotNum = -1;
         float bestSpeed = -1f;
 
-        for (Slot slot : container.slotList)
+        for (Slot slot : container.slots)
         {
             // Don't consider armor and crafting slots
             if (slot.id <= 8 || slot.hasStack() == false)
@@ -584,7 +584,7 @@ public class InventoryUtils
         Container container = player.playerContainer;
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        for (Slot slot : container.slotList)
+        for (Slot slot : container.slots)
         {
             // Inventory crafting and armor slots are not valid
             if (slot.id < 8)
@@ -722,11 +722,11 @@ public class InventoryUtils
 
         if (nbt != null)
         {
-            if (nbt.containsKey("BlockEntityTag", Constants.NBT.TAG_COMPOUND))
+            if (nbt.contains("BlockEntityTag", Constants.NBT.TAG_COMPOUND))
             {
                 CompoundTag tag = nbt.getCompound("BlockEntityTag");
 
-                if (tag.containsKey("Items", Constants.NBT.TAG_LIST) &&
+                if (tag.contains("Items", Constants.NBT.TAG_LIST) &&
                     tag.getList("Items", Constants.NBT.TAG_COMPOUND).size() == 0)
                 {
                     tag.remove("Items");
