@@ -14,6 +14,7 @@
         "MixinBlockItem",
         "MixinChatHud",
         "MixinChatScreen",
+        "MixinChunkBuilder_BuiltChunk",
         "MixinClientBossBar",
         "MixinClientCommandSource",
         "MixinClientPlayerEntity",
