@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.annotation.Nullable;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
@@ -12,6 +13,7 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockExecutor;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
@@ -22,6 +24,75 @@ public class MiscUtils
     private static final Date DATE = new Date();
     private static double lastRealPitch;
     private static double lastRealYaw;
+    private static double mouseSensitivity = -1.0F;
+    private static boolean zoomActive;
+
+    public static boolean isZoomActive()
+    {
+        return FeatureToggle.TWEAK_ZOOM.getBooleanValue() &&
+               Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld();
+    }
+
+    public static void checkZoomStatus()
+    {
+        if (zoomActive && isZoomActive() == false)
+        {
+            onZoomDeactivated();
+        }
+    }
+
+    public static void onZoomActivated()
+    {
+        if (Configs.Generic.ZOOM_ADJUST_MOUSE_SENSITIVITY.getBooleanValue())
+        {
+            setMouseSensitivityForZoom();
+        }
+
+        zoomActive = true;
+    }
+
+    public static void onZoomDeactivated()
+    {
+        if (zoomActive)
+        {
+            resetMouseSensitivityForZoom();
+
+            // Refresh the rendered chunks when exiting zoom mode
+            MinecraftClient.getInstance().worldRenderer.scheduleTerrainUpdate();
+
+            zoomActive = false;
+        }
+    }
+
+    public static void setMouseSensitivityForZoom()
+    {
+        MinecraftClient mc = MinecraftClient.getInstance();
+
+        double fov = Configs.Generic.ZOOM_FOV.getDoubleValue();
+        double origFov = mc.options.fov;
+
+        if (fov < origFov)
+        {
+            // Only store it once
+            if (mouseSensitivity <= 0.0 || mouseSensitivity > 1.0)
+            {
+                mouseSensitivity = mc.options.mouseSensitivity;
+            }
+
+            double min = 0.04;
+            double sens = min + (0.5 - min) * (1.0 - (origFov - fov) / origFov);
+            mc.options.mouseSensitivity = Math.min(mouseSensitivity, sens);
+        }
+    }
+
+    public static void resetMouseSensitivityForZoom()
+    {
+        if (mouseSensitivity > 0.0)
+        {
+            MinecraftClient.getInstance().options.mouseSensitivity = mouseSensitivity;
+            mouseSensitivity = -1.0;
+        }
+    }
 
     public static boolean getUpdateExec(CommandBlockBlockEntity te)
     {

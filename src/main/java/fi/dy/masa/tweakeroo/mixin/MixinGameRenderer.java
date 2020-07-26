@@ -48,7 +48,7 @@ public abstract class MixinGameRenderer
     @Inject(method = "getFov", at = @At("HEAD"), cancellable = true)
     private void applyZoom(Camera camera, float partialTicks, boolean useFOVSetting, CallbackInfoReturnable<Double> cir)
     {
-        if (FeatureToggle.TWEAK_ZOOM.getBooleanValue() && Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld())
+        if (MiscUtils.isZoomActive())
         {
             cir.setReturnValue(Configs.Generic.ZOOM_FOV.getDoubleValue());
         }
