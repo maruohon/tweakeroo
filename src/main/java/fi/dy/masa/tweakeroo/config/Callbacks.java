@@ -10,15 +10,15 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import fi.dy.masa.malilib.config.options.ConfigBoolean;
-import fi.dy.masa.malilib.config.options.IConfigBoolean;
+import fi.dy.masa.malilib.config.option.ConfigBoolean;
+import fi.dy.masa.malilib.config.option.IConfigBoolean;
 import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
-import fi.dy.masa.malilib.hotkeys.IKeybind;
-import fi.dy.masa.malilib.hotkeys.KeyAction;
-import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
-import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
-import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.input.IHotkeyCallback;
+import fi.dy.masa.malilib.input.IKeyBind;
+import fi.dy.masa.malilib.input.KeyAction;
+import fi.dy.masa.malilib.input.KeyCallbackAdjustable;
+import fi.dy.masa.malilib.config.IValueChangeCallback;
+import fi.dy.masa.malilib.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.RayTraceFluidHandling;
 import fi.dy.masa.malilib.util.StringUtils;
@@ -66,7 +66,7 @@ public class Callbacks
         Configs.Lists.SOUND_DISABLE_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updateSoundRestrictionLists(); });
         Configs.Lists.SOUND_DISABLE_WHITELIST.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updateSoundRestrictionLists(); });
 
-        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleWithSpecialMessage(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
+        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind().setCallback(new KeyCallbackToggleWithSpecialMessage(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback((newValue, oldValue) -> {
             if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
             {
@@ -80,49 +80,49 @@ public class Callbacks
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
 
-        Hotkeys.BLINK_DRIVE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.COPY_SIGN_TEXT.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.FLY_PRESET_1.getKeybind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
-        Hotkeys.FLY_PRESET_2.getKeybind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
-        Hotkeys.FLY_PRESET_3.getKeybind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
-        Hotkeys.FLY_PRESET_4.getKeybind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
-        Hotkeys.FREE_CAMERA_PLAYER_INPUTS.getKeybind().setCallback((action, key) -> {
+        Hotkeys.BLINK_DRIVE.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.COPY_SIGN_TEXT.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.FLY_PRESET_1.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
+        Hotkeys.FLY_PRESET_2.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
+        Hotkeys.FLY_PRESET_3.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
+        Hotkeys.FLY_PRESET_4.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
+        Hotkeys.FREE_CAMERA_PLAYER_INPUTS.getKeyBind().setCallback((action, key) -> {
             IConfigBoolean config = Configs.Generic.FREE_CAMERA_PLAYER_INPUTS;
             config.toggleBooleanValue();
-            InfoUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
+            MessageUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
             return true;
         });
-        Hotkeys.FREE_CAMERA_PLAYER_MOVEMENT.getKeybind().setCallback((action, key) -> {
+        Hotkeys.FREE_CAMERA_PLAYER_MOVEMENT.getKeyBind().setCallback((action, key) -> {
             IConfigBoolean config = Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT;
             config.toggleBooleanValue();
-            InfoUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
+            MessageUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
             return true;
         });
-        Hotkeys.GHOST_BLOCK_REMOVER.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.HOTBAR_SWAP_1.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.HOTBAR_SWAP_2.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.HOTBAR_SWAP_3.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.HOTBAR_SCROLL.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.OPEN_CONFIG_GUI.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
-        Hotkeys.ZOOM_ACTIVATE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.GHOST_BLOCK_REMOVER.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.HOTBAR_SWAP_1.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.HOTBAR_SWAP_2.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.HOTBAR_SWAP_3.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.HOTBAR_SCROLL.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.OPEN_CONFIG_GUI.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.TOOL_PICK.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.ZOOM_ACTIVATE.getKeyBind().setCallback(callbackGeneric);
 
-        Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
-        Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
+        Hotkeys.SKIP_ALL_RENDERING.getKeyBind().setCallback(callbackMessage);
+        Hotkeys.SKIP_WORLD_RENDERING.getKeyBind().setCallback(callbackMessage);
 
         createAdjustableCallbackFor(FeatureToggle.TWEAK_AFTER_CLICKER);
         createAdjustableCallbackFor(FeatureToggle.TWEAK_BREAKING_GRID);
@@ -136,7 +136,7 @@ public class Callbacks
 
     private static void createAdjustableCallbackFor(FeatureToggle feature)
     {
-        feature.getKeybind().setCallback(new KeyCallbackAdjustable(null, new KeyCallbackToggleWithSpecialMessage(feature)));
+        feature.getKeyBind().setCallback(new KeyCallbackAdjustable(null, new KeyCallbackToggleWithSpecialMessage(feature)));
     }
 
     public static class FeatureCallbackHold implements IValueChangeCallback<Boolean>
@@ -235,18 +235,18 @@ public class Callbacks
         }
 
         @Override
-        public boolean onKeyAction(KeyAction action, IKeybind key)
+        public boolean onKeyAction(KeyAction action, IKeyBind key)
         {
-            if (key == Hotkeys.SKIP_ALL_RENDERING.getKeybind())
+            if (key == Hotkeys.SKIP_ALL_RENDERING.getKeyBind())
             {
                 this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
 
                 String pre = mc.skipRenderWorld ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
                 String status = StringUtils.translate("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
                 String message = StringUtils.translate("tweakeroo.message.toggled", "Skip All Rendering", pre + status + GuiBase.TXT_RST);
-                InfoUtils.printActionbarMessage(message);
+                MessageUtils.printActionbarMessage(message);
             }
-            else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeybind())
+            else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeyBind())
             {
                 skipWorldRendering = ! skipWorldRendering;
 
@@ -254,7 +254,7 @@ public class Callbacks
                 String pre = enabled ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
                 String status = StringUtils.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
                 String message = StringUtils.translate("tweakeroo.message.toggled", "Skip World Rendering", pre + status + GuiBase.TXT_RST);
-                InfoUtils.printActionbarMessage(message);
+                MessageUtils.printActionbarMessage(message);
             }
 
             return true;
@@ -271,9 +271,9 @@ public class Callbacks
         }
 
         @Override
-        public boolean onKeyAction(KeyAction action, IKeybind key)
+        public boolean onKeyAction(KeyAction action, IKeyBind key)
         {
-            if (key == Hotkeys.TOOL_PICK.getKeybind())
+            if (key == Hotkeys.TOOL_PICK.getKeyBind())
             {
                 if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
                 {
@@ -281,17 +281,17 @@ public class Callbacks
                     return true;
                 }
             }
-            else if (key == Hotkeys.BLINK_DRIVE.getKeybind())
+            else if (key == Hotkeys.BLINK_DRIVE.getKeyBind())
             {
                 this.blinkDriveTeleport(false);
                 return true;
             }
-            else if (key == Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeybind())
+            else if (key == Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeyBind())
             {
                 this.blinkDriveTeleport(true);
                 return true;
             }
-            else if (key == Hotkeys.COPY_SIGN_TEXT.getKeybind())
+            else if (key == Hotkeys.COPY_SIGN_TEXT.getKeyBind())
             {
                 RayTraceResult trace = this.mc.objectMouseOver;
 
@@ -303,17 +303,17 @@ public class Callbacks
                     if (te instanceof TileEntitySign)
                     {
                         MiscUtils.copyTextFromSign((TileEntitySign) te);
-                        InfoUtils.printActionbarMessage("tweakeroo.message.sign_text_copied");
+                        MessageUtils.printActionbarMessage("tweakeroo.message.sign_text_copied");
                     }
                 }
                 return true;
             }
-            else if (key == Hotkeys.GHOST_BLOCK_REMOVER.getKeybind())
+            else if (key == Hotkeys.GHOST_BLOCK_REMOVER.getKeyBind())
             {
                 MiscUtils.antiGhostBlock(this.mc);
                 return true;
             }
-            else if (key == Hotkeys.HOTBAR_SWAP_1.getKeybind())
+            else if (key == Hotkeys.HOTBAR_SWAP_1.getKeyBind())
             {
                 if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
                 {
@@ -321,7 +321,7 @@ public class Callbacks
                     return true;
                 }
             }
-            else if (key == Hotkeys.HOTBAR_SWAP_2.getKeybind())
+            else if (key == Hotkeys.HOTBAR_SWAP_2.getKeyBind())
             {
                 if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
                 {
@@ -329,7 +329,7 @@ public class Callbacks
                     return true;
                 }
             }
-            else if (key == Hotkeys.HOTBAR_SWAP_3.getKeybind())
+            else if (key == Hotkeys.HOTBAR_SWAP_3.getKeyBind())
             {
                 if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
                 {
@@ -337,27 +337,27 @@ public class Callbacks
                     return true;
                 }
             }
-            else if (key == Hotkeys.FLY_PRESET_1.getKeybind())
+            else if (key == Hotkeys.FLY_PRESET_1.getKeyBind())
             {
                 this.setFlySpeedPreset(0);
                 return true;
             }
-            else if (key == Hotkeys.FLY_PRESET_2.getKeybind())
+            else if (key == Hotkeys.FLY_PRESET_2.getKeyBind())
             {
                 this.setFlySpeedPreset(1);
                 return true;
             }
-            else if (key == Hotkeys.FLY_PRESET_3.getKeybind())
+            else if (key == Hotkeys.FLY_PRESET_3.getKeyBind())
             {
                 this.setFlySpeedPreset(2);
                 return true;
             }
-            else if (key == Hotkeys.FLY_PRESET_4.getKeybind())
+            else if (key == Hotkeys.FLY_PRESET_4.getKeyBind())
             {
                 this.setFlySpeedPreset(3);
                 return true;
             }
-            else if (key == Hotkeys.HOTBAR_SCROLL.getKeybind())
+            else if (key == Hotkeys.HOTBAR_SCROLL.getKeyBind())
             {
                 if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue())
                 {
@@ -366,85 +366,85 @@ public class Callbacks
                     return true;
                 }
             }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeybind())
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.COLUMN);
                 return true;
             }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeybind())
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.DIAGONAL);
                 return true;
             }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeybind())
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.FACE);
                 return true;
             }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.getKeybind())
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.LAYER);
                 return true;
             }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeybind())
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.LINE);
                 return true;
             }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeybind())
+            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.PLANE);
                 return true;
             }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
                 return true;
             }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
                 return true;
             }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
                 return true;
             }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.LAYER);
                 return true;
             }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
                 return true;
             }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeybind())
+            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
                 return true;
             }
-            else if (key == Hotkeys.OPEN_CONFIG_GUI.getKeybind())
+            else if (key == Hotkeys.OPEN_CONFIG_GUI.getKeyBind())
             {
                 GuiBase.openGui(new GuiConfigs());
                 return true;
             }
-            else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind())
+            else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind())
             {
                 if (this.mc.inGameHasFocus)
                 {
                     this.mc.setIngameNotInFocus();
-                    InfoUtils.printActionbarMessage("tweakeroo.message.unfocusing_game");
+                    MessageUtils.printActionbarMessage("tweakeroo.message.unfocusing_game");
                 }
                 else
                 {
                     this.mc.setIngameFocus();
-                    InfoUtils.printActionbarMessage("tweakeroo.message.focusing_game");
+                    MessageUtils.printActionbarMessage("tweakeroo.message.focusing_game");
                 }
             }
-            else if (key == Hotkeys.ZOOM_ACTIVATE.getKeybind())
+            else if (key == Hotkeys.ZOOM_ACTIVATE.getKeyBind())
             {
                 if (action == KeyAction.PRESS)
                 {
@@ -466,7 +466,7 @@ public class Callbacks
             float speed = (float) Configs.getActiveFlySpeedConfig().getDoubleValue();
             String strPreset = GuiBase.TXT_GREEN + (preset + 1) + GuiBase.TXT_RST;
             String strSpeed = String.format("%s%.3f%s", GuiBase.TXT_GREEN, speed, GuiBase.TXT_RST);
-            InfoUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
+            MessageUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
         }
 
         private void setBreakingRestrictionMode(PlacementRestrictionMode mode)
@@ -474,7 +474,7 @@ public class Callbacks
             Configs.Generic.BREAKING_RESTRICTION_MODE.setOptionListValue(mode);
 
             String str = GuiBase.TXT_GREEN + mode.name() + GuiBase.TXT_RST;
-            InfoUtils.printActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", str);
+            MessageUtils.printActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", str);
         }
 
         private void setPlacementRestrictionMode(PlacementRestrictionMode mode)
@@ -482,7 +482,7 @@ public class Callbacks
             Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
 
             String str = GuiBase.TXT_GREEN + mode.name() + GuiBase.TXT_RST;
-            InfoUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
+            MessageUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
         }
 
         private void blinkDriveTeleport(boolean maintainY)
@@ -515,7 +515,7 @@ public class Callbacks
         }
 
         @Override
-        public boolean onKeyAction(KeyAction action, IKeybind key)
+        public boolean onKeyAction(KeyAction action, IKeyBind key)
         {
             this.config.toggleBooleanValue();
 
@@ -527,13 +527,13 @@ public class Callbacks
             String prettyName = this.config.getPrettyName();
             strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 
-            if (key == FeatureToggle.TWEAK_FLY_SPEED.getKeybind())
+            if (key == FeatureToggle.TWEAK_FLY_SPEED.getKeyBind())
             {
                 if (enabled)
                 {
                     String strPreset = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
                     String strSpeed = String.format("%s%.3f%s", preGreen, Configs.getActiveFlySpeedConfig().getDoubleValue(), rst);
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_fly_speed_on", strStatus, strPreset, strSpeed);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_fly_speed_on", strStatus, strPreset, strSpeed);
                 }
                 else
                 {
@@ -544,76 +544,76 @@ public class Callbacks
                         player.capabilities.setFlySpeed(0.05f);
                     }
 
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
                 }
             }
             else
             {
                 if (enabled == false)
                 {
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
                     return true;
                 }
 
-                if (key == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind())
+                if (key == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind())
                 {
                     String strMode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue().name();
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
                 }
-                else if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind())
+                else if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeyBind())
                 {
                     String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
                 }
-                else if (key == FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind())
+                else if (key == FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeyBind())
                 {
                     String strValue = Configs.Generic.PLACEMENT_LIMIT.getStringValue();
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
                 }
-                else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeybind())
+                else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeyBind())
                 {
                     String strValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getStringValue();
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
                 }
-                else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeybind())
+                else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeyBind())
                 {
                     String strValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getStringValue();
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_slot_randomizer_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_slot_randomizer_on", strStatus, preGreen + strValue + rst);
                 }
-                else if (key == FeatureToggle.TWEAK_PLACEMENT_GRID.getKeybind())
+                else if (key == FeatureToggle.TWEAK_PLACEMENT_GRID.getKeyBind())
                 {
                     String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
                 }
-                else if (key == FeatureToggle.TWEAK_BREAKING_GRID.getKeybind())
+                else if (key == FeatureToggle.TWEAK_BREAKING_GRID.getKeyBind())
                 {
                     String strValue = Configs.Generic.BREAKING_GRID_SIZE.getStringValue();
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_breaking_grid_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_breaking_grid_on", strStatus, preGreen + strValue + rst);
                 }
-                else if (key == FeatureToggle.TWEAK_ZOOM.getKeybind())
+                else if (key == FeatureToggle.TWEAK_ZOOM.getKeyBind())
                 {
                     String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
-                    InfoUtils.printActionbarMessage("tweakeroo.message.toggled_zoom_on", strStatus, strValue);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_zoom_on", strStatus, strValue);
                 }
-                else if (key == FeatureToggle.TWEAK_SNAP_AIM.getKeybind())
+                else if (key == FeatureToggle.TWEAK_SNAP_AIM.getKeyBind())
                 {
                     SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
 
                     if (mode == SnapAimMode.YAW)
                     {
                         String yaw = String.valueOf(Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue());
-                        InfoUtils.printActionbarMessage("tweakeroo.message.toggled_snap_aim_on_yaw", strStatus, preGreen + yaw + rst);
+                        MessageUtils.printActionbarMessage("tweakeroo.message.toggled_snap_aim_on_yaw", strStatus, preGreen + yaw + rst);
                     }
                     else if (mode == SnapAimMode.PITCH)
                     {
                         String pitch = String.valueOf(Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue());
-                        InfoUtils.printActionbarMessage("tweakeroo.message.toggled_snap_aim_on_pitch", strStatus, preGreen + pitch + rst);
+                        MessageUtils.printActionbarMessage("tweakeroo.message.toggled_snap_aim_on_pitch", strStatus, preGreen + pitch + rst);
                     }
                     else
                     {
                         String yaw = String.valueOf(Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue());
                         String pitch = String.valueOf(Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue());
-                        InfoUtils.printActionbarMessage("tweakeroo.message.toggled_snap_aim_on_both", strStatus, preGreen + yaw + rst, preGreen + pitch + rst);
+                        MessageUtils.printActionbarMessage("tweakeroo.message.toggled_snap_aim_on_both", strStatus, preGreen + yaw + rst, preGreen + pitch + rst);
                     }
                 }
             }

@@ -7,7 +7,7 @@ import com.mumfrey.liteloader.Configurable;
 import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
-import fi.dy.masa.malilib.event.InitializationHandler;
+import fi.dy.masa.malilib.event.dispatch.InitializationDispatcher;
 import fi.dy.masa.tweakeroo.config.gui.TweakerooConfigPanel;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.minecraft.client.Minecraft;
@@ -44,7 +44,7 @@ public class LiteModTweakeroo implements LiteMod, Configurable, Tickable
     @Override
     public void init(File configPath)
     {
-        InitializationHandler.getInstance().registerInitializationHandler(new InitHandler());
+        InitializationDispatcher.INSTANCE.registerInitializationHandler(new InitHandler());
     }
 
     @Override

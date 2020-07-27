@@ -3,6 +3,10 @@ language.region=US
 language.code=en_US
 
 
+tweakeroo.error.invalid_block_blacklist_entry=Invalid block black- or whitelist entry: '%s'
+tweakeroo.error.invalid_potion_blacklist_entry=Invalid potion black- or whitelist entry: '%s'
+tweakeroo.error.invalid_sound_blacklist_entry=Invalid sound black- or whitelist entry: '%s'
+
 tweakeroo.gui.button.config_gui.disable_hotkeys=TweakNo Hotkeys
 tweakeroo.gui.button.config_gui.disable_toggle=TweakNo Toggles
 tweakeroo.gui.button.config_gui.fixes=Fixes

@@ -25,8 +25,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
-import fi.dy.masa.malilib.config.values.HudAlignment;
+import fi.dy.masa.malilib.config.value.HudAlignment;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
+import fi.dy.masa.malilib.render.overlay.InventoryOverlay;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -90,7 +91,7 @@ public class RenderUtils
 
                     if (stack.isEmpty() == false)
                     {
-                        fi.dy.masa.malilib.render.InventoryOverlay.renderStackAt(stack, x, y, z, 1f, mc);
+                        InventoryOverlay.renderStackAt(stack, x, y, z, 1f, mc);
                     }
 
                     x += 18;
@@ -189,8 +190,8 @@ public class RenderUtils
             final int totalSlots = isHorse ? inv.getSizeInventory() - 2 : inv.getSizeInventory();
             final int firstSlot = isHorse ? 2 : 0;
 
-            final fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = (entityLivingBase instanceof EntityVillager) ? fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.VILLAGER : fi.dy.masa.malilib.render.InventoryOverlay.getInventoryType(inv);
-            final fi.dy.masa.malilib.render.InventoryOverlay.InventoryProperties props = fi.dy.masa.malilib.render.InventoryOverlay.getInventoryPropsTemp(type, totalSlots);
+            final InventoryOverlay.InventoryRenderType type = (entityLivingBase instanceof EntityVillager) ? InventoryOverlay.InventoryRenderType.VILLAGER : InventoryOverlay.getInventoryType(inv);
+            final InventoryOverlay.InventoryProperties props = InventoryOverlay.getInventoryPropsTemp(type, totalSlots);
             final int rows = (int) Math.ceil(totalSlots / props.slotsPerRow);
             int xInv = xCenter - (props.width / 2);
             int yInv = yCenter - props.height - 6;
@@ -212,22 +213,22 @@ public class RenderUtils
 
             if (isHorse)
             {
-                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, xInv, yInv, z, 1, 2, mc);
-                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, zItems, 1, 0, 2, mc);
+                InventoryOverlay.renderInventoryBackground(type, xInv, yInv, z, 1, 2, mc);
+                InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, zItems, 1, 0, 2, mc);
                 xInv += 32 + 4;
             }
 
             if (totalSlots > 0)
             {
-                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, xInv, yInv, z, props.slotsPerRow, totalSlots, mc);
-                fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, zItems, props.slotsPerRow, firstSlot, totalSlots, mc);
+                InventoryOverlay.renderInventoryBackground(type, xInv, yInv, z, props.slotsPerRow, totalSlots, mc);
+                InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, zItems, props.slotsPerRow, firstSlot, totalSlots, mc);
             }
         }
 
         if (entityLivingBase != null)
         {
-            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentOverlayBackground(x, y, z, entityLivingBase);
-            fi.dy.masa.malilib.render.InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, zItems, mc);
+            InventoryOverlay.renderEquipmentOverlayBackground(x, y, z, entityLivingBase);
+            InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, zItems, mc);
         }
     }
 
@@ -238,12 +239,12 @@ public class RenderUtils
         int z = 0;
         int slotOffsetX = 8;
         int slotOffsetY = 8;
-        fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
+        InventoryOverlay.InventoryRenderType type = InventoryOverlay.InventoryRenderType.GENERIC;
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, z, 9, 27, mc);
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, z + 1, 9, 9, 27, mc);
+        InventoryOverlay.renderInventoryBackground(type, x, y, z, 9, 27, mc);
+        InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, z + 1, 9, 9, 27, mc);
     }
 
     public static void renderHotbarScrollOverlay(Minecraft mc)
@@ -255,17 +256,17 @@ public class RenderUtils
         final int y = yCenter + 6;
         final int z = 0;
         final int zItems = z + 1;
-        fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType type = fi.dy.masa.malilib.render.InventoryOverlay.InventoryRenderType.GENERIC;
+        InventoryOverlay.InventoryRenderType type = InventoryOverlay.InventoryRenderType.GENERIC;
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y     , z, 9, 27, mc);
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y + 70, z, 9,  9, mc);
+        InventoryOverlay.renderInventoryBackground(type, x, y     , z, 9, 27, mc);
+        InventoryOverlay.renderInventoryBackground(type, x, y + 70, z, 9, 9, mc);
 
         // Main inventory
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y +  8, zItems, 9, 9, 27, mc);
+        InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y +  8, zItems, 9, 9, 27, mc);
         // Hotbar
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 78, zItems, 9, 0,  9, mc);
+        InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 78, zItems, 9, 0, 9, mc);
 
         int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
         fi.dy.masa.malilib.render.RenderUtils.drawOutline(x + 5, y + currentRow * 18 + 5, 9 * 18 + 4, 22, 2, 0xFFFF2020, z);

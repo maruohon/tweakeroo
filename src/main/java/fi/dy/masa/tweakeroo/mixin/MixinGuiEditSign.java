@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.hotkeys.KeybindMulti;
+import fi.dy.masa.malilib.input.KeyBindMulti;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -47,7 +47,7 @@ public abstract class MixinGuiEditSign
             // Update the keybind state, because opening a GUI resets them all.
             // Also, KeyBinding.updateKeyBindState() only works for keyboard keys
             int keyCode = Minecraft.getMinecraft().gameSettings.keyBindUseItem.getKeyCode();
-            KeyBinding.setKeyBindState(keyCode, KeybindMulti.isKeyDown(keyCode));
+            KeyBinding.setKeyBindState(keyCode, KeyBindMulti.isKeyDown(keyCode));
 
             ci.cancel();
         }

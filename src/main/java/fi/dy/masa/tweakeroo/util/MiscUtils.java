@@ -21,9 +21,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.message.MessageUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.IRayPositionHandler;
+import fi.dy.masa.malilib.util.inventory.InventoryUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -43,7 +44,7 @@ public class MiscUtils
     public static boolean isZoomActive()
     {
         return FeatureToggle.TWEAK_ZOOM.getBooleanValue() &&
-               Hotkeys.ZOOM_ACTIVATE.getKeybind().isKeybindHeld();
+               Hotkeys.ZOOM_ACTIVATE.getKeyBind().isKeyBindHeld();
     }
 
     public static void checkZoomStatus()
@@ -141,22 +142,22 @@ public class MiscUtils
         // Move away the items in the player's hands
         if (player.getHeldItemMainhand().isEmpty() == false)
         {
-            swappedSlotMain = fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(container, false, false);
+            swappedSlotMain = InventoryUtils.findEmptySlotInPlayerInventory(container, false, false);
 
             if (swappedSlotMain != -1)
             {
-                fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, swappedSlotMain, hotbarSlot);
+                InventoryUtils.swapSlots(container, swappedSlotMain, hotbarSlot);
             }
         }
 
         if (player.getHeldItemOffhand().isEmpty() == false)
         {
-            swappedSlotOff = fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(container, false, false);
+            swappedSlotOff = InventoryUtils.findEmptySlotInPlayerInventory(container, false, false);
 
             if (swappedSlotOff != -1)
             {
-                fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, 45, hotbarSlot);
-                fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, swappedSlotOff, hotbarSlot);
+                InventoryUtils.swapSlots(container, 45, hotbarSlot);
+                InventoryUtils.swapSlots(container, swappedSlotOff, hotbarSlot);
             }
         }
 
@@ -184,13 +185,13 @@ public class MiscUtils
         // Restore the items the player was holding initially
         if (swappedSlotOff != -1)
         {
-            fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, swappedSlotOff, hotbarSlot);
-            fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, 45, hotbarSlot);
+            InventoryUtils.swapSlots(container, swappedSlotOff, hotbarSlot);
+            InventoryUtils.swapSlots(container, 45, hotbarSlot);
         }
 
         if (swappedSlotMain != -1)
         {
-            fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, swappedSlotMain, hotbarSlot);
+            InventoryUtils.swapSlots(container, swappedSlotMain, hotbarSlot);
         }
     }
 
@@ -351,7 +352,7 @@ public class MiscUtils
                     String r = GuiBase.TXT_RST;
                     String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedPitch)), r, g, String.valueOf(step), r);
 
-                    InfoUtils.printActionbarMessage("tweakeroo.message.snapped_to_pitch", str);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.snapped_to_pitch", str);
 
                     Configs.Internal.SNAP_AIM_LAST_PITCH.setDoubleValue(snappedPitch);
                 }
@@ -393,7 +394,7 @@ public class MiscUtils
                     String r = GuiBase.TXT_RST;
                     String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedYaw)), r, g, String.valueOf(step), r);
 
-                    InfoUtils.printActionbarMessage("tweakeroo.message.snapped_to_yaw", str);
+                    MessageUtils.printActionbarMessage("tweakeroo.message.snapped_to_yaw", str);
 
                     Configs.Internal.SNAP_AIM_LAST_YAW.setDoubleValue(snappedYaw);
                 }

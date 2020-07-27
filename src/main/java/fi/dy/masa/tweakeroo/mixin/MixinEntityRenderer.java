@@ -136,7 +136,7 @@ public abstract class MixinEntityRenderer
                 target = "Lnet/minecraft/client/renderer/EntityRenderer;getMouseOver(F)V"))
     private void overrideRenderViewEntityPre(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
+        if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeyBind().isKeyBindHeld())
         {
             net.minecraft.entity.Entity entity = this.mc.getRenderViewEntity();
 
@@ -152,7 +152,7 @@ public abstract class MixinEntityRenderer
     @Inject(method = "renderWorld(FJ)V", at = @At("RETURN"))
     private void overrideRenderViewEntityPost(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())
+        if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeyBind().isKeyBindHeld())
         {
             net.minecraft.entity.Entity entity = this.mc.getRenderViewEntity();
 

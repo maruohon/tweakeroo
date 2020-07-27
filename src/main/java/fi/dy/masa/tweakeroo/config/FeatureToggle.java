@@ -3,15 +3,15 @@ package fi.dy.masa.tweakeroo.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
-import fi.dy.masa.malilib.config.options.IConfigBoolean;
-import fi.dy.masa.malilib.config.options.IConfigNotifiable;
+import fi.dy.masa.malilib.config.option.IConfigBoolean;
+import fi.dy.masa.malilib.config.option.IConfigNotifiable;
 import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.hotkeys.IHotkey;
-import fi.dy.masa.malilib.hotkeys.IKeybind;
-import fi.dy.masa.malilib.hotkeys.KeyCallbackToggleBooleanConfigWithMessage;
-import fi.dy.masa.malilib.hotkeys.KeybindMulti;
-import fi.dy.masa.malilib.hotkeys.KeybindSettings;
-import fi.dy.masa.malilib.interfaces.IValueChangeCallback;
+import fi.dy.masa.malilib.input.IHotkey;
+import fi.dy.masa.malilib.input.IKeyBind;
+import fi.dy.masa.malilib.input.KeyCallbackToggleBooleanConfigWithMessage;
+import fi.dy.masa.malilib.input.KeyBindMulti;
+import fi.dy.masa.malilib.input.KeyBindSettings;
+import fi.dy.masa.malilib.config.IValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
@@ -21,12 +21,12 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "",     "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
     REMEMBER_FLEXIBLE               ("rememberFlexibleFromClick",           true, "",     "If enabled, then the flexible block placement status\nwill be remembered from the first placed block,\nas long as the use key is held down.", "Remember Flexible Orientation From First Click"),
     TWEAK_ACCURATE_BLOCK_PLACEMENT  ("tweakAccurateBlockPlacement",         false, "",    "Enables a simpler version of Flexible placement, similar to\nthe Carpet mod, so basically either facing into or out\nfrom the block face clicked on."),
-    TWEAK_AFTER_CLICKER             ("tweakAfterClicker",                   false, "",    KeybindSettings.INGAME_BOTH, "Enables a \"after clicker\" tweak, which does automatic right\nclicks on the just-placed block.\nUseful for example for Repeaters (setting the delay).\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
+    TWEAK_AFTER_CLICKER             ("tweakAfterClicker", false, "", KeyBindSettings.INGAME_BOTH, "Enables a \"after clicker\" tweak, which does automatic right\nclicks on the just-placed block.\nUseful for example for Repeaters (setting the delay).\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
     TWEAK_AIM_LOCK                  ("tweakAimLock",                        false, "",    "Enables an aim lock, locking the yaw and pitch rotations\nto the current values.\nThis is separate from the snap aim lock,\nwhich locks them to the snapped value.\nThis allows locking them \"freely\" to the current value."),
     TWEAK_ANGEL_BLOCK               ("tweakAngelBlock",                     false, "",    "Enables an \"Angel Block\" tweak, which allows\nplacing blocks in mid-air in Creative mode"),
     TWEAK_BLOCK_BREAKING_PARTICLES  ("tweakBlockBreakingParticleTweaks",    false, "",    "Allows tweaking the block breaking particles, such as reducing the number\nof particles produced per block broken.\nSet the limit in Generic -> 'blockBreakingParticleLimit'."),
     TWEAK_BLOCK_REACH_OVERRIDE      ("tweakBlockReachOverride",             false, "",    "Overrides the block reach distance with\nthe one set in Generic -> blockReachDistance"),
-    TWEAK_BREAKING_GRID             ("tweakBreakingGrid",                   false, "",    KeybindSettings.INGAME_BOTH, "When enabled, you can only break blocks in\na grid pattern, with a configurable interval.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
+    TWEAK_BREAKING_GRID             ("tweakBreakingGrid", false, "", KeyBindSettings.INGAME_BOTH, "When enabled, you can only break blocks in\na grid pattern, with a configurable interval.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
     TWEAK_BREAKING_RESTRICTION      ("tweakBreakingRestriction",            false, "",    "Enables the Breaking Restriction mode\n  (Plane, Layer, Face, Column, Line, Diagonal)"),
     TWEAK_CHAT_BACKGROUND_COLOR     ("tweakChatBackgroundColor",            false, "",    "Overrides the default chat background color\nwith the one from Generics -> 'chatBackgroundColor'"),
     TWEAK_CHAT_PERSISTENT_TEXT      ("tweakChatPersistentText",             false, "",    "Stores the text from the chat input text field\nand restores it when the chat is opened again"),
@@ -56,8 +56,8 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     TWEAK_HOLD_ATTACK               ("tweakHoldAttack",                     false, "",    "Emulates holding down the attack button\n§6NOTE: You should ONLY toggle this via the toggle hotkey!\n§6You should also make the toggle hotkey have the attack\n§6key as part of the keybind, so that it properly activates/deactivates\n§6 the vanilla keybind when you toggle the tweak on/off"),
     TWEAK_HOLD_USE                  ("tweakHoldUse",                        false, "",    "Emulates holding down the use button\n§6NOTE: You should ONLY toggle this via the toggle hotkey!\n§6You should also make the toggle hotkey have the use\n§6key as part of the keybind, so that it properly activates/deactivates\n§6 the vanilla keybind when you toggle the tweak on/off"),
     TWEAK_HOTBAR_SCROLL             ("tweakHotbarScroll",                   false, "",    "Enables the hotbar swapping via scrolling feature"),
-    TWEAK_HOTBAR_SLOT_CYCLE         ("tweakHotbarSlotCycle",                false, "",    KeybindSettings.INGAME_BOTH, "Enables cycling the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
-    TWEAK_HOTBAR_SLOT_RANDOMIZER    ("tweakHotbarSlotRandomizer",           false, "",    KeybindSettings.INGAME_BOTH, "Enables randomizing the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
+    TWEAK_HOTBAR_SLOT_CYCLE         ("tweakHotbarSlotCycle", false, "", KeyBindSettings.INGAME_BOTH, "Enables cycling the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
+    TWEAK_HOTBAR_SLOT_RANDOMIZER    ("tweakHotbarSlotRandomizer", false, "", KeyBindSettings.INGAME_BOTH, "Enables randomizing the selected hotbar slot after each placed\nblock, up to the set max slot number.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
     TWEAK_HOTBAR_SWAP               ("tweakHotbarSwap",                     false, "",    "Enables the hotbar swapping via hotkeys feature"),
     TWEAK_INVENTORY_PREVIEW         ("tweakInventoryPreview",               false, true, "",    "Enables an inventory preview while having the cursor over\na block or an entity with an inventory and holding down\nthe configured hotkey."),
     TWEAK_ITEM_UNSTACKING_PROTECTION("tweakItemUnstackingProtection",       false, "",    "If enabled, then items configured in Lists -> unstackingItems\nwon't be allowed to spill out when using.\nThis is meant for example to prevent throwing buckets\ninto lava when filling them."),
@@ -71,8 +71,8 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     TWEAK_PERMANENT_SNEAK           ("tweakPermanentSneak",                 false, "",    "If enabled, the player will be sneaking the entire time"),
     TWEAK_PERMANENT_SPRINT          ("tweakPermanentSprint",                false, "",    "If enabled, the player will be always sprinting when moving forward"),
     TWEAK_PICK_BEFORE_PLACE         ("tweakPickBeforePlace",                false, "",    "If enabled, then before each block placement, the same block\nis switched to hand that you are placing against"),
-    TWEAK_PLACEMENT_GRID            ("tweakPlacementGrid",                  false, "",    KeybindSettings.INGAME_BOTH, "When enabled, you can only place blocks in\na grid pattern, with a configurable interval.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
-    TWEAK_PLACEMENT_LIMIT           ("tweakPlacementLimit",                 false, "",    KeybindSettings.INGAME_BOTH, "When enabled, you can only place a set number\nof blocks per use/right click.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
+    TWEAK_PLACEMENT_GRID            ("tweakPlacementGrid", false, "", KeyBindSettings.INGAME_BOTH, "When enabled, you can only place blocks in\na grid pattern, with a configurable interval.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
+    TWEAK_PLACEMENT_LIMIT           ("tweakPlacementLimit", false, "", KeyBindSettings.INGAME_BOTH, "When enabled, you can only place a set number\nof blocks per use/right click.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."),
     TWEAK_PLACEMENT_RESTRICTION     ("tweakPlacementRestriction",           false, "",    "Enables the Placement Restriction mode\n  (Plane, Layer, Face, Column, Line, Diagonal)"),
     TWEAK_PLACEMENT_REST_FIRST      ("tweakPlacementRestrictionFirst",      false, "",    "Restricts block placement so that you can only\nplace blocks against the same block type\nyou first clicked on"),
     TWEAK_PLACEMENT_REST_HAND       ("tweakPlacementRestrictionHand",       false, "",    "Restricts block placement so that you can only\nplace blocks against the same block type\nyou are holding in your hand"),
@@ -89,7 +89,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     TWEAK_REPAIR_MODE               ("tweakRepairMode",                     false, "",    "If enabled, then fully repaired items held in hand will\nbe swapped to damaged items that have Mending on them."),
     TWEAK_SHULKERBOX_DISPLAY        ("tweakShulkerBoxDisplay",              false, "",    "Enables the Shulker Box contents display when hovering\nover them in an inventory and holding shift"),
     TWEAK_SIGN_COPY                 ("tweakSignCopy",                       false, "",    "When enabled, placed signs will use the text from\nthe previously placed sign.\nCan be combined with tweakNoSignGui to quickly place copies\nof a sign, by enabling that tweak after making the first sign."),
-    TWEAK_SNAP_AIM                  ("tweakSnapAim",                        false, "",    KeybindSettings.INGAME_BOTH, "Enabled a snap aim tweak, to make the player face to pre-set exact yaw rotations"),
+    TWEAK_SNAP_AIM                  ("tweakSnapAim", false, "", KeyBindSettings.INGAME_BOTH, "Enabled a snap aim tweak, to make the player face to pre-set exact yaw rotations"),
     TWEAK_SNAP_AIM_LOCK             ("tweakSnapAimLock",                    false, "",    "Enables a snap aim lock, locking the yaw and/or pitch rotations\nto the currently snapped value"),
     TWEAK_SPECTATOR_TELEPORT        ("tweakSpectatorTeleport",              false, "",    "Allows spectators to teleport to other spectators.\nThis is originally from usefulmod by nessie."),
     TWEAK_STATIC_FOV                ("tweakStaticFov",                      false, "",    "Prevents speed effects or sprinting etc. from changing the FoV"),
@@ -99,12 +99,12 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     TWEAK_TILE_RENDER_DISTANCE      ("tweakTileEntityRenderDistance",       false, "",    "Allows Tile Entities to be rendered from any distance,\nand not only from the usual 64 blocks away"),
     TWEAK_TOOL_SWITCH               ("tweakToolSwitch",                     false, "",    "Enables automatically switching to an effective tool for the targeted block"),
     TWEAK_Y_MIRROR                  ("tweakYMirror",                        false, "",    "Mirrors the targeted y-position within the block bounds.\nThis is basically for placing slabs or stairs\nin the opposite top/bottom state from normal,\nif you have to place them against another slab for example."),
-    TWEAK_ZOOM                      ("tweakZoom",                           false, "",    KeybindSettings.INGAME_BOTH, "Enables using the zoom hotkey to, well, zoom in");
+    TWEAK_ZOOM                      ("tweakZoom", false, "", KeyBindSettings.INGAME_BOTH, "Enables using the zoom hotkey to, well, zoom in");
 
     private final String name;
     private final String comment;
     private final String prettyName;
-    private final IKeybind keybind;
+    private final IKeyBind keybind;
     private final boolean defaultValueBoolean;
     private final boolean singlePlayer;
     private String modName;
@@ -114,20 +114,20 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
-        this(name, defaultValue, false, defaultHotkey, KeybindSettings.DEFAULT, comment);
+        this(name, defaultValue, false, defaultHotkey, KeyBindSettings.DEFAULT, comment);
     }
 
     private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment)
     {
-        this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT, comment);
+        this(name, defaultValue, singlePlayer, defaultHotkey, KeyBindSettings.DEFAULT, comment);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment)
+    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeyBindSettings settings, String comment)
     {
         this(name, defaultValue, false, defaultHotkey, settings, comment);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment)
+    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeyBindSettings settings, String comment)
     {
         this(name, defaultValue, singlePlayer, defaultHotkey, settings, comment, StringUtils.splitCamelCase(name.substring(5)));
     }
@@ -139,10 +139,10 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
 
     private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName)
     {
-        this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT, comment, prettyName);
+        this(name, defaultValue, singlePlayer, defaultHotkey, KeyBindSettings.DEFAULT, comment, prettyName);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName)
+    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeyBindSettings settings, String comment, String prettyName)
     {
         this.name = name;
         this.valueBoolean = defaultValue;
@@ -150,7 +150,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
         this.singlePlayer = singlePlayer;
         this.comment = comment;
         this.prettyName = prettyName;
-        this.keybind = KeybindMulti.fromStorageString(name, defaultHotkey, settings);
+        this.keybind = KeyBindMulti.fromStorageString(name, defaultHotkey, settings);
         this.keybind.setCallback(new KeyCallbackToggleBooleanConfigWithMessage(this));
 
         this.cacheSavedValue();
@@ -249,7 +249,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     }
 
     @Override
-    public IKeybind getKeybind()
+    public IKeyBind getKeyBind()
     {
         return this.keybind;
     }

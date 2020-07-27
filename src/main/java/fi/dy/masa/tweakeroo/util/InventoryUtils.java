@@ -25,8 +25,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import fi.dy.masa.malilib.util.Constants;
-import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.data.Constants;
+import fi.dy.masa.malilib.message.MessageUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
@@ -145,7 +145,7 @@ public class InventoryUtils
 
         for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++)
         {
-            fi.dy.masa.malilib.util.InventoryUtils.swapSlots(container, slot, hotbarSlot);
+            fi.dy.masa.malilib.util.inventory.InventoryUtils.swapSlots(container, slot, hotbarSlot);
             slot++;
         }
     }
@@ -175,7 +175,7 @@ public class InventoryUtils
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue())
         {
             int threshold = Configs.Generic.HAND_RESTOCK_PRE_THRESHOLD.getIntegerValue();
-            fi.dy.masa.malilib.util.InventoryUtils.preRestockHand(player, hand, threshold, allowHotbar);
+            fi.dy.masa.malilib.util.inventory.InventoryUtils.preRestockHand(player, hand, threshold, allowHotbar);
         }
     }
 
@@ -251,16 +251,16 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            InfoUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_better_durability");
+            MessageUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_better_durability");
             return;
         }
 
-        slotWithItem = fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false);
+        slotWithItem = fi.dy.masa.malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false);
 
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            InfoUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_off_players_hand");
+            MessageUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_off_players_hand");
             return;
         }
 
@@ -285,7 +285,7 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            InfoUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_dummy_item");
+            MessageUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_dummy_item");
         }
     }
 
@@ -322,7 +322,7 @@ public class InventoryUtils
             if (slotRepairableItem != -1)
             {
                 swapItemToEqupmentSlot(player, type, slotRepairableItem);
-                InfoUtils.printActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_slot", type.getName());
+                MessageUtils.printActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_slot", type.getName());
             }
         }
     }
@@ -368,9 +368,9 @@ public class InventoryUtils
         {
             Slot slot = container.inventorySlots.get(slotNum);
 
-            if ((isPlayerInv == false || fi.dy.masa.malilib.util.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false)) &&
+            if ((isPlayerInv == false || fi.dy.masa.malilib.util.inventory.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false)) &&
                 (allowHotbar || isHotbarSlot(slot) == false) &&
-                fi.dy.masa.malilib.util.InventoryUtils.areStacksEqualIgnoreDurability(slot.getStack(), stackReference))
+                fi.dy.masa.malilib.util.inventory.InventoryUtils.areStacksEqualIgnoreDurability(slot.getStack(), stackReference))
             {
                 return slot.slotNumber;
             }
@@ -467,7 +467,7 @@ public class InventoryUtils
             ItemStack stackSlot = slot.getStack();
 
             // Only accept regular inventory slots (no crafting, armor slots, or offhand)
-            if (fi.dy.masa.malilib.util.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false) &&
+            if (fi.dy.masa.malilib.util.inventory.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false) &&
                 stackSlot.isItemEqualIgnoreDurability(stackReference) &&
                 stackSlot.getMaxDamage() - stackSlot.getItemDamage() > minDurabilityLeft &&
                 hasSameIshEnchantments(stackReference, stackSlot))
@@ -554,7 +554,7 @@ public class InventoryUtils
 
             ItemStack stack = slot.getStack();
 
-            if (stack.getCount() < stack.getMaxStackSize() && fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackReference, stack))
+            if (stack.getCount() < stack.getMaxStackSize() && fi.dy.masa.malilib.util.inventory.InventoryUtils.areStacksEqual(stackReference, stack))
             {
                 slots.add(slot);
             }
@@ -602,11 +602,11 @@ public class InventoryUtils
             stack.getCount() > 1 &&
             UNSTACKING_ITEMS.contains(stack.getItem()))
         {
-            if (fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1)
+            if (fi.dy.masa.malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1)
             {
                 tryCombineStacksInInventory(player, stack);
 
-                if (fi.dy.masa.malilib.util.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1)
+                if (fi.dy.masa.malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1)
                 {
                     return true;
                 }
@@ -652,7 +652,7 @@ public class InventoryUtils
                 }
                 else
                 {
-                    int slot = fi.dy.masa.malilib.util.InventoryUtils.findPlayerInventorySlotWithItem(player.inventoryContainer, stack, true); //player.inventory.getSlotFor(stack);
+                    int slot = fi.dy.masa.malilib.util.inventory.InventoryUtils.findPlayerInventorySlotWithItem(player.inventoryContainer, stack, true); //player.inventory.getSlotFor(stack);
 
                     if (slot != -1)
                     {

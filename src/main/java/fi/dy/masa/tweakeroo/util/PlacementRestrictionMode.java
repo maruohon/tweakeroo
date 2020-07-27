@@ -1,6 +1,8 @@
 package fi.dy.masa.tweakeroo.util;
 
-import fi.dy.masa.malilib.config.IConfigOptionListEntry;
+import com.google.common.collect.ImmutableList;
+import fi.dy.masa.malilib.config.value.ConfigOptionListEntry;
+import fi.dy.masa.malilib.config.value.IConfigOptionListEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 
 public enum PlacementRestrictionMode implements IConfigOptionListEntry<PlacementRestrictionMode>
@@ -12,13 +14,15 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry<Placement
     LAYER       ("layer",       "tweakeroo.label.placement_restriction_mode.layer"),
     DIAGONAL    ("diagonal",    "tweakeroo.label.placement_restriction_mode.diagonal");
 
-    private final String configString;
-    private final String unlocName;
+    public static final ImmutableList<PlacementRestrictionMode> VALUES = ImmutableList.copyOf(values());
 
-    private PlacementRestrictionMode(String configString, String unlocName)
+    private final String configString;
+    private final String translationKey;
+
+    PlacementRestrictionMode(String configString, String translationKey)
     {
         this.configString = configString;
-        this.unlocName = unlocName;
+        this.translationKey = translationKey;
     }
 
     @Override
@@ -30,48 +34,18 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry<Placement
     @Override
     public String getDisplayName()
     {
-        return StringUtils.translate(this.unlocName);
+        return StringUtils.translate(this.translationKey);
     }
 
     @Override
     public PlacementRestrictionMode cycle(boolean forward)
     {
-        int id = this.ordinal();
-
-        if (forward)
-        {
-            if (++id >= values().length)
-            {
-                id = 0;
-            }
-        }
-        else
-        {
-            if (--id < 0)
-            {
-                id = values().length - 1;
-            }
-        }
-
-        return values()[id % values().length];
+        return ConfigOptionListEntry.cycleValue(VALUES, this.ordinal(), forward);
     }
 
     @Override
     public PlacementRestrictionMode fromString(String name)
     {
-        return fromStringStatic(name);
-    }
-
-    public static PlacementRestrictionMode fromStringStatic(String name)
-    {
-        for (PlacementRestrictionMode mode : PlacementRestrictionMode.values())
-        {
-            if (mode.configString.equalsIgnoreCase(name))
-            {
-                return mode;
-            }
-        }
-
-        return PlacementRestrictionMode.FACE;
+        return ConfigOptionListEntry.findValueByName(name, VALUES);
     }
 }

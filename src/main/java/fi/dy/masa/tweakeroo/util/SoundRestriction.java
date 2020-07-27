@@ -2,7 +2,8 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.util.List;
 import java.util.Set;
-import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
+import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.malilib.util.restriction.UsageRestriction;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
 public class SoundRestriction extends UsageRestriction<net.minecraft.util.ResourceLocation>
@@ -29,7 +30,7 @@ public class SoundRestriction extends UsageRestriction<net.minecraft.util.Resour
             {
             }
 
-            LiteModTweakeroo.logger.warn("Invalid sound name '{}'", name);
+            LiteModTweakeroo.logger.warn(StringUtils.translate("tweakeroo.error.invalid_sound_blacklist_entry", name));
         }
     }
 }

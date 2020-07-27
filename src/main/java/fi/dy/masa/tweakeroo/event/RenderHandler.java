@@ -6,41 +6,43 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
-import fi.dy.masa.malilib.config.values.ActiveMode;
+import fi.dy.masa.malilib.config.value.ActiveMode;
+import fi.dy.masa.malilib.event.IPostGameOverlayRenderer;
+import fi.dy.masa.malilib.event.IPostItemTooltipRenderer;
+import fi.dy.masa.malilib.event.IPostWorldRenderer;
 import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.interfaces.IRenderer;
-import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
-public class RenderHandler implements IRenderer
+public class RenderHandler implements IPostGameOverlayRenderer, IPostItemTooltipRenderer, IPostWorldRenderer
 {
     @Override
-    public void onRenderGameOverlayPost(float partialTicks)
+    public void onPostGameOverlayRender(float partialTicks)
     {
         Minecraft mc = Minecraft.getMinecraft();
 
         if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
-            Hotkeys.HOTBAR_SWAP_BASE.getKeybind().isKeybindHeld())
+            Hotkeys.HOTBAR_SWAP_BASE.getKeyBind().isKeyBindHeld())
         {
             RenderUtils.renderHotbarSwapOverlay(mc);
         }
         else if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() &&
-                 Hotkeys.HOTBAR_SCROLL.getKeybind().isKeybindHeld())
+                 Hotkeys.HOTBAR_SCROLL.getKeyBind().isKeyBindHeld())
         {
             RenderUtils.renderHotbarScrollOverlay(mc);
         }
 
         if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
-            Hotkeys.INVENTORY_PREVIEW.getKeybind().isKeybindHeld())
+            Hotkeys.INVENTORY_PREVIEW.getKeyBind().isKeyBindHeld())
         {
             RenderUtils.renderInventoryOverlay(mc);
         }
 
         if (FeatureToggle.TWEAK_PLAYER_INVENTORY_PEEK.getBooleanValue() &&
-            Hotkeys.PLAYER_INVENTORY_PEEK.getKeybind().isKeybindHeld())
+            Hotkeys.PLAYER_INVENTORY_PEEK.getKeyBind().isKeyBindHeld())
         {
             RenderUtils.renderPlayerInventoryOverlay(mc);
         }
@@ -55,7 +57,7 @@ public class RenderHandler implements IRenderer
         {
             ActiveMode mode = Configs.Generic.ELYTRA_CAMERA_INDICATOR.getOptionListValue();
 
-            if (mode == ActiveMode.ALWAYS || (mode == ActiveMode.WITH_KEY && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld()))
+            if (mode == ActiveMode.ALWAYS || (mode == ActiveMode.WITH_KEY && Hotkeys.ELYTRA_CAMERA.getKeyBind().isKeyBindHeld()))
             {
                 RenderUtils.renderPitchLockIndicator(mc);
             }
@@ -63,7 +65,7 @@ public class RenderHandler implements IRenderer
     }
 
     @Override
-    public void onRenderTooltipLast(ItemStack stack, int x, int y)
+    public void onPostRenderItemTooltip(ItemStack stack, int x, int y)
     {
         if (stack.getItem() instanceof ItemMap)
         {
@@ -84,7 +86,7 @@ public class RenderHandler implements IRenderer
     }
 
     @Override
-    public void onRenderWorldLast(float partialTicks)
+    public void onPostWorldRender(float partialTicks)
     {
         Minecraft mc = Minecraft.getMinecraft();
 
@@ -99,9 +101,9 @@ public class RenderHandler implements IRenderer
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
             mc.objectMouseOver != null &&
             mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK &&
-            (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld() ||
-             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld() ||
-             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeybind().isKeybindHeld()))
+            (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld() ||
+             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld() ||
+             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld()))
         {
             Entity entity = mc.getRenderViewEntity() != null ? mc.getRenderViewEntity() : mc.player;
             GlStateManager.depthMask(false);

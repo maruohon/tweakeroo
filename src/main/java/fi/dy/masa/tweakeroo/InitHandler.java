@@ -2,17 +2,16 @@ package fi.dy.masa.tweakeroo;
 
 import net.minecraft.client.Minecraft;
 import fi.dy.masa.malilib.config.ConfigManager;
-import fi.dy.masa.malilib.event.InputEventHandler;
-import fi.dy.masa.malilib.event.RenderEventHandler;
-import fi.dy.masa.malilib.event.WorldLoadHandler;
-import fi.dy.masa.malilib.interfaces.IInitializationHandler;
-import fi.dy.masa.malilib.interfaces.IRenderer;
+import fi.dy.masa.malilib.event.dispatch.ClientWorldChangeEventDispatcher;
+import fi.dy.masa.malilib.event.dispatch.InputEventDispatcher;
+import fi.dy.masa.malilib.event.dispatch.RenderEventDispatcher;
+import fi.dy.masa.malilib.event.IInitializationHandler;
 import fi.dy.masa.malilib.systems.BlockPlacementPositionHandler;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.event.ClientWorldChangeHandler;
 import fi.dy.masa.tweakeroo.event.InputHandler;
 import fi.dy.masa.tweakeroo.event.RenderHandler;
-import fi.dy.masa.tweakeroo.event.WorldLoadListener;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 
 public class InitHandler implements IInitializationHandler
@@ -20,19 +19,19 @@ public class InitHandler implements IInitializationHandler
     @Override
     public void registerModHandlers()
     {
-        ConfigManager.getInstance().registerConfigHandler(Reference.MOD_ID, new Configs());
+        ConfigManager.INSTANCE.registerConfigHandler(Reference.MOD_ID, new Configs());
 
-        InputEventHandler.getKeybindManager().registerKeybindProvider(InputHandler.getInstance());
-        InputEventHandler.getInputManager().registerKeyboardInputHandler(InputHandler.getInstance());
-        InputEventHandler.getInputManager().registerMouseInputHandler(InputHandler.getInstance());
+        InputEventDispatcher.getKeyBindManager().registerKeyBindProvider(InputHandler.getInstance());
+        InputEventDispatcher.getInputManager().registerKeyboardInputHandler(InputHandler.getInstance());
+        InputEventDispatcher.getInputManager().registerMouseInputHandler(InputHandler.getInstance());
 
-        IRenderer renderer = new RenderHandler();
-        RenderEventHandler.getInstance().registerGameOverlayRenderer(renderer);
-        RenderEventHandler.getInstance().registerTooltipLastRenderer(renderer);
-        RenderEventHandler.getInstance().registerWorldLastRenderer(renderer);
+        RenderHandler renderer = new RenderHandler();
+        RenderEventDispatcher.INSTANCE.registerGameOverlayRenderer(renderer);
+        RenderEventDispatcher.INSTANCE.registerTooltipPostRenderer(renderer);
+        RenderEventDispatcher.INSTANCE.registerWorldPostRenderer(renderer);
 
         BlockPlacementPositionHandler.INSTANCE.registerPositionProvider(PlacementTweaks::getOverriddenPlacementPosition);
-        WorldLoadHandler.getInstance().registerWorldLoadPreHandler(new WorldLoadListener());
+        ClientWorldChangeEventDispatcher.INSTANCE.registerClientWorldChangeHandler(new ClientWorldChangeHandler());
 
         Callbacks.init(Minecraft.getMinecraft());
     }

@@ -6,25 +6,26 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.gen.FlatLayerInfo;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
-import fi.dy.masa.malilib.util.InfoUtils;
-import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
+import fi.dy.masa.malilib.message.MessageUtils;
+import fi.dy.masa.malilib.util.restriction.UsageRestriction;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinFlatGeneratorInfo;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.PotionRestriction;
 import fi.dy.masa.tweakeroo.util.SoundRestriction;
 
 public class MiscTweaks
 {
-    private static final ItemRestriction ITEM_GLINT_RESTRICTION = new ItemRestriction();
-    private static final PotionRestriction POTION_RESTRICTION = new PotionRestriction();
+    private static final UsageRestriction<Item> ITEM_GLINT_RESTRICTION = new UsageRestriction<>();
+    private static final UsageRestriction<Potion> POTION_RESTRICTION = new UsageRestriction<>();
     private static final SoundRestriction SOUND_RESTRICTION = new SoundRestriction();
 
     private static int potionWarningTimer;
@@ -100,8 +101,8 @@ public class MiscTweaks
 
                 if (count > 0)
                 {
-                    InfoUtils.printActionbarMessage("tweakeroo.message.potion_effects_running_out",
-                            Integer.valueOf(count), Integer.valueOf(minDuration / 20));
+                    MessageUtils.printActionbarMessage("tweakeroo.message.potion_effects_running_out",
+                                                       Integer.valueOf(count), Integer.valueOf(minDuration / 20));
                 }
             }
         }
@@ -134,15 +135,19 @@ public class MiscTweaks
     public static void updateItemGlintRestriction()
     {
         ITEM_GLINT_RESTRICTION.setListType(Configs.Lists.ITEM_GLINT_LIST_TYPE.getOptionListValue());
-        ITEM_GLINT_RESTRICTION.setListContents(Configs.Lists.ITEM_GLINT_BLACKLIST.getStrings(),
-                Configs.Lists.ITEM_GLINT_WHITELIST.getStrings());
+        ITEM_GLINT_RESTRICTION.setListContentsBasedOnRegistry(
+                Configs.Lists.ITEM_GLINT_BLACKLIST.getStrings(),
+                Configs.Lists.ITEM_GLINT_WHITELIST.getStrings(),
+                Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
     }
 
     public static void updatePotionRestrictionLists()
     {
         POTION_RESTRICTION.setListType(Configs.Lists.POTION_WARNING_LIST_TYPE.getOptionListValue());
-        POTION_RESTRICTION.setListContents(Configs.Lists.POTION_WARNING_BLACKLIST.getStrings(),
-                Configs.Lists.POTION_WARNING_WHITELIST.getStrings());
+        POTION_RESTRICTION.setListContentsBasedOnRegistry(
+                Configs.Lists.POTION_WARNING_BLACKLIST.getStrings(),
+                Configs.Lists.POTION_WARNING_WHITELIST.getStrings(),
+                Potion.REGISTRY, "tweakeroo.error.invalid_potion_blacklist_entry");
     }
 
     public static void updateSoundRestrictionLists()

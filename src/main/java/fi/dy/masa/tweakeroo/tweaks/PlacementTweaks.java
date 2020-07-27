@@ -26,13 +26,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
-import fi.dy.masa.malilib.hotkeys.KeybindMulti;
+import fi.dy.masa.malilib.input.KeyBindMulti;
 import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.malilib.util.PlacementUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
-import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
-import fi.dy.masa.malilib.util.restrictions.ItemRestriction;
+import fi.dy.masa.malilib.util.restriction.UsageRestriction;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -61,9 +60,9 @@ public class PlacementTweaks
     private static int placementCount;
     private static ItemStack stackClickedOn = ItemStack.EMPTY;
     @Nullable private static IBlockState stateClickedOn = null;
-    public static final BlockRestriction FAST_RIGHT_CLICK_BLOCK_RESTRICTION = new BlockRestriction();
-    public static final ItemRestriction FAST_RIGHT_CLICK_ITEM_RESTRICTION = new ItemRestriction();
-    public static final ItemRestriction FAST_PLACEMENT_ITEM_RESTRICTION = new ItemRestriction();
+    public static final UsageRestriction<Block> FAST_RIGHT_CLICK_BLOCK_RESTRICTION = new UsageRestriction<>();
+    public static final UsageRestriction<Item> FAST_RIGHT_CLICK_ITEM_RESTRICTION = new UsageRestriction<>();
+    public static final UsageRestriction<Item> FAST_PLACEMENT_ITEM_RESTRICTION = new UsageRestriction<>();
 
     public static void onTick(Minecraft mc)
     {
@@ -215,8 +214,8 @@ public class PlacementTweaks
                 if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
                 {
                     boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
-                    boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld();
-                    boolean adjacentHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeybind().isKeybindHeld();
+                    boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld();
+                    boolean adjacentHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld();
                     boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
 
                     if (offset || adjacentHeld)
@@ -367,7 +366,7 @@ public class PlacementTweaks
 
     private static boolean isVanillaKeybindHeld(KeyBinding key)
     {
-        return KeybindMulti.isKeyDown(key.getKeyCode());
+        return KeyBindMulti.isKeyDown(key.getKeyCode());
     }
 
     public static EnumActionResult onProcessRightClickBlock(
@@ -412,10 +411,10 @@ public class PlacementTweaks
         {
             boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
             boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
-            boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
-            boolean offset = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld();
-            boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld();
-            boolean accurateReverse = Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld();
+            boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld();
+            boolean offset = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld();
+            boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeyBind().isKeyBindHeld();
+            boolean accurateReverse = Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeyBind().isKeyBindHeld();
 
             firstWasRotation = (flexible && rotation) || (accurate && (accurateIn || accurateReverse));
             firstWasOffset = flexible && offset;
@@ -451,9 +450,9 @@ public class PlacementTweaks
         boolean handleFlexible = false;
         BlockPos posNew = null;
         boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
-        boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
-        boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeybind().isKeybindHeld();
-        boolean adjacent = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeybind().isKeybindHeld();
+        boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld();
+        boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld();
+        boolean adjacent = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld();
         boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
         boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
         boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
@@ -490,8 +489,8 @@ public class PlacementTweaks
         }
 
         boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
-        boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld();
-        boolean accurateReverse = Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld();
+        boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeyBind().isKeyBindHeld();
+        boolean accurateReverse = Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeyBind().isKeyBindHeld();
         boolean afterClicker = FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue();
 
         if (accurate && (accurateIn || accurateReverse || afterClicker))
@@ -614,7 +613,7 @@ public class PlacementTweaks
             {
                 ItemStack stack = state.getBlock().getItem(world, pos, state);
 
-                if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackClickedOn, stack) == false)
+                if (fi.dy.masa.malilib.util.inventory.InventoryUtils.areStacksEqual(stackClickedOn, stack) == false)
                 {
                     return false;
                 }
@@ -634,7 +633,7 @@ public class PlacementTweaks
             ItemStack stackClicked = state.getBlock().getItem(world, pos, state);
             ItemStack stackHand = player.getHeldItem(hand);
 
-            if (fi.dy.masa.malilib.util.InventoryUtils.areStacksEqual(stackClicked, stackHand) == false)
+            if (fi.dy.masa.malilib.util.inventory.InventoryUtils.areStacksEqual(stackClicked, stackHand) == false)
             {
                 return false;
             }
@@ -643,7 +642,7 @@ public class PlacementTweaks
         return true;
     }
 
-    private static boolean canUseItemWithRestriction(ItemRestriction restriction, EntityPlayer player)
+    private static boolean canUseItemWithRestriction(UsageRestriction<Item> restriction, EntityPlayer player)
     {
         ItemStack stack = player.getHeldItemMainhand();
 
@@ -759,11 +758,11 @@ public class PlacementTweaks
 
         EnumFacing facing = sideIn;
         boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
-        boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeybind().isKeybindHeld();
+        boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld();
         boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
         boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
         boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
-        boolean keys = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeybind().isKeybindHeld() || Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeybind().isKeybindHeld();
+        boolean keys = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeyBind().isKeyBindHeld() || Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeyBind().isKeyBindHeld();
         accurate = accurate && keys;
 
         // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
@@ -783,7 +782,7 @@ public class PlacementTweaks
             hitVecIn = new Vec3d(x, hitVecIn.y, hitVecIn.z);
         }
 
-        if (FeatureToggle.TWEAK_Y_MIRROR.getBooleanValue() && Hotkeys.PLACEMENT_Y_MIRROR.getKeybind().isKeybindHeld())
+        if (FeatureToggle.TWEAK_Y_MIRROR.getBooleanValue() && Hotkeys.PLACEMENT_Y_MIRROR.getKeyBind().isKeyBindHeld())
         {
             double y = 1 - hitVecIn.y + 2 * posIn.getY(); // = 1 - (hitVec.y - pos.getY()) + pos.getY();
             hitVecIn = new Vec3d(hitVecIn.x, y, hitVecIn.z);
@@ -1208,21 +1207,27 @@ public class PlacementTweaks
     public static void updateFastRightClickBlockRestriction()
     {
         FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListType(Configs.Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.getOptionListValue());
-        FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListContents(Configs.Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.getStrings(),
-                Configs.Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.getStrings());
+        FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListContentsBasedOnRegistry(
+                Configs.Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.getStrings(),
+                Configs.Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.getStrings(),
+                Block.REGISTRY, "tweakeroo.error.invalid_block_blacklist_entry");
     }
 
     public static void updateFastRightClickItemRestriction()
     {
         FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListType(Configs.Lists.FAST_RIGHT_CLICK_ITEM_LIST_TYPE.getOptionListValue());
-        FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListContents(Configs.Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.getStrings(),
-                Configs.Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.getStrings());
+        FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListContentsBasedOnRegistry(
+                Configs.Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.getStrings(),
+                Configs.Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.getStrings(),
+                Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
     }
 
     public static void updateFastPlacementItemRestriction()
     {
         FAST_PLACEMENT_ITEM_RESTRICTION.setListType(Configs.Lists.FAST_PLACEMENT_ITEM_LIST_TYPE.getOptionListValue());
-        FAST_PLACEMENT_ITEM_RESTRICTION.setListContents(Configs.Lists.FAST_PLACEMENT_ITEM_BLACKLIST.getStrings(),
-                Configs.Lists.FAST_PLACEMENT_ITEM_WHITELIST.getStrings());
+        FAST_PLACEMENT_ITEM_RESTRICTION.setListContentsBasedOnRegistry(
+                Configs.Lists.FAST_PLACEMENT_ITEM_BLACKLIST.getStrings(),
+                Configs.Lists.FAST_PLACEMENT_ITEM_WHITELIST.getStrings(),
+                Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
     }
 }
