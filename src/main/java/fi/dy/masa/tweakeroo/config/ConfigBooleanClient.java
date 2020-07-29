@@ -6,14 +6,13 @@ import fi.dy.masa.malilib.util.StringUtils;
 
 public class ConfigBooleanClient extends ConfigBooleanHotkeyed
 {
-    public ConfigBooleanClient(String name, boolean defaultValue, String defaultHotkey, String comment)
+    private final String guiDisplayName;
+    public ConfigBooleanClient(String prefix, String name, boolean defaultValue, String defaultHotkey)
     {
-        this(name, defaultValue, defaultHotkey, comment, name);
-    }
-
-    public ConfigBooleanClient(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
-    {
-        super(name, defaultValue, defaultHotkey, comment, prettyName);
+        super(name, defaultValue, defaultHotkey,
+                String.format("%s.comment.%s", prefix, name),
+                String.format("%s.pretty_name.%s", prefix, name));
+        this.guiDisplayName = String.format("%s.%s", prefix, name);
     }
 
     @Override
@@ -30,8 +29,26 @@ public class ConfigBooleanClient extends ConfigBooleanHotkeyed
     }
 
     @Override
+    public String getPrettyName()
+    {
+        String ret = super.getPrettyName();
+        if (ret.contains("pretty_name")) {
+            ret = StringUtils.splitCamelCase(this.getRawConfigGuiDisplayName());
+        }
+        return ret;
+    }
+
+    private String getRawConfigGuiDisplayName()
+    {
+        return StringUtils.translate(this.guiDisplayName);
+    }
+
+    @Override
     public String getConfigGuiDisplayName()
     {
-        return GuiBase.TXT_GOLD + this.getName() + GuiBase.TXT_RST;
+        return String.format("%s%s%s",
+                GuiBase.TXT_GOLD,
+                this.getRawConfigGuiDisplayName(),
+                GuiBase.TXT_RST);
     }
 }
