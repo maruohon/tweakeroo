@@ -18,6 +18,7 @@ public abstract class MixinWidgetListConfigOptions extends WidgetListConfigOptio
         super(x, y, width, height, configWidth);
     }
 
+    // search name and gui display name
     @Overwrite(remap = false)
     protected List<String> getEntryStringsForFilter(GuiConfigsBase.ConfigOptionWrapper entry)
     {
@@ -25,9 +26,51 @@ public abstract class MixinWidgetListConfigOptions extends WidgetListConfigOptio
 
         if (config != null)
         {
-            return ImmutableList.of(config.getConfigGuiDisplayName().toLowerCase(), config.getComment().toLowerCase());
+            return ImmutableList.of(config.getConfigGuiDisplayName().toLowerCase(), config.getName().toLowerCase());
         }
 
         return Collections.emptyList();
+    }
+
+    // fix render width error
+    @Overwrite(remap = false)
+    protected void reCreateListEntryWidgets()
+    {
+        this.maxLabelWidth = this.getMaxGuiDisplayNameLengthWrapped(this.listContents);
+        super.reCreateListEntryWidgets();
+    }
+
+    private int getMaxGuiDisplayNameLengthWrapped(List<GuiConfigsBase.ConfigOptionWrapper> wrappers)
+    {
+        int width = 0;
+
+        for (GuiConfigsBase.ConfigOptionWrapper wrapper : wrappers)
+        {
+            if (wrapper.getType() == GuiConfigsBase.ConfigOptionWrapper.Type.CONFIG)
+            {
+                width = Math.max(width, this.getStringWidth(wrapper.getConfig().getConfigGuiDisplayName()));
+            }
+        }
+        return width;
+    }
+
+    // fix upper case when search Disable Hotkeys
+    @Override
+    protected boolean matchesFilter(List<String> entryStrings, String filterText)
+    {
+        filterText = filterText.toLowerCase();
+        if (filterText.isEmpty())
+        {
+            return true;
+        }
+
+        for (String str : entryStrings)
+        {
+            if (this.matchesFilter(str, filterText))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

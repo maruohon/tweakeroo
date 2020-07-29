@@ -68,5 +68,12 @@
     "tweakeroo.message.toggled_snap_aim_on_yaw": "Toggled Yaw Snap Aim %s, with yaw step size %s degrees",
     "tweakeroo.message.toggled_zoom_on": "Toggled zoom %s, FOV: %s",
     "tweakeroo.message.value.off": "OFF",
-    "tweakeroo.message.value.on": "ON"
+    "tweakeroo.message.value.on": "ON",
+
+    "tweakeroo.label.config_gui.generic.afterClickerClickCount": "afterClickerClickCount",
+    "tweakeroo.label.config_gui.generic.comment.afterClickerClickCount": "The number of right clicks to do per placed block when\ntweakAfterClicker is enabled",
+    "tweakeroo.label.config_gui.generic.blockReachDistance": "blockReachDistance",
+    "tweakeroo.label.config_gui.generic.comment.blockReachDistance":"The block reach distance to use if the\noverride tweak is enabled.\nThe maximum the server allows is 8 for placing, 6 for breaking.",
+    "tweakeroo.label.config_gui.generic.breakingGridSize": "breakingGridSize",
+    "tweakeroo.label.config_gui.generic.comment.breakingGridSize": "The grid interval size for the grid breaking mode.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind."
 }
