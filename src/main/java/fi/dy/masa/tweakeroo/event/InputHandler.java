@@ -14,8 +14,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.ConfigUtils;
-import fi.dy.masa.malilib.config.option.ConfigDouble;
-import fi.dy.masa.malilib.config.option.ConfigHotkey;
+import fi.dy.masa.malilib.config.option.DoubleConfig;
+import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.IHotkey;
@@ -208,7 +208,7 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
             else if (FeatureToggle.TWEAK_SNAP_AIM.getKeyBind().isKeyBindHeld())
             {
                 SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
-                ConfigDouble config = mode == SnapAimMode.PITCH ? Configs.Generic.SNAP_AIM_PITCH_STEP : Configs.Generic.SNAP_AIM_YAW_STEP;
+                DoubleConfig config = mode == SnapAimMode.PITCH ? Configs.Generic.SNAP_AIM_PITCH_STEP : Configs.Generic.SNAP_AIM_YAW_STEP;
 
                 double newValue = config.getDoubleValue() * (wheelDelta > 0 ? 2 : 0.5);
                 config.setDoubleValue(newValue);
@@ -247,11 +247,11 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
 
             for (int i = 0; i < 4; ++i)
             {
-                ConfigHotkey hotkey = Configs.getFlySpeedHotkey(i);
+                HotkeyConfig hotkey = Configs.getFlySpeedHotkey(i);
 
                 if (hotkey.getKeyBind().isKeyBindHeld())
                 {
-                    ConfigDouble config = Configs.getFlySpeedConfig(i);
+                    DoubleConfig config = Configs.getFlySpeedConfig(i);
                     double newValue = config.getDoubleValue() + (wheelDelta > 0 ? 0.005 : -0.005);
                     config.setDoubleValue(newValue);
                     KeyCallbackAdjustable.setValueChanged();

@@ -1,17 +1,17 @@
 package fi.dy.masa.tweakeroo.config;
 
-import fi.dy.masa.malilib.config.option.ConfigBooleanHotkeyed;
+import fi.dy.masa.malilib.config.option.HotkeyedBooleanConfig;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.StringUtils;
 
-public class ConfigBooleanClient extends ConfigBooleanHotkeyed
+public class ClientBooleanConfig extends HotkeyedBooleanConfig
 {
-    public ConfigBooleanClient(String name, boolean defaultValue, String defaultHotkey, String comment)
+    public ClientBooleanConfig(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
         this(name, defaultValue, defaultHotkey, comment, name);
     }
 
-    public ConfigBooleanClient(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
+    public ClientBooleanConfig(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
     {
         super(name, defaultValue, defaultHotkey, comment, prettyName);
     }

@@ -10,14 +10,13 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import fi.dy.masa.malilib.config.option.ConfigBoolean;
-import fi.dy.masa.malilib.config.option.IConfigBoolean;
+import fi.dy.masa.malilib.config.IValueChangeCallback;
+import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.input.IHotkeyCallback;
 import fi.dy.masa.malilib.input.IKeyBind;
 import fi.dy.masa.malilib.input.KeyAction;
 import fi.dy.masa.malilib.input.KeyCallbackAdjustable;
-import fi.dy.masa.malilib.config.IValueChangeCallback;
 import fi.dy.masa.malilib.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.RayTraceFluidHandling;
@@ -94,13 +93,13 @@ public class Callbacks
         Hotkeys.FLY_PRESET_3.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
         Hotkeys.FLY_PRESET_4.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
         Hotkeys.FREE_CAMERA_PLAYER_INPUTS.getKeyBind().setCallback((action, key) -> {
-            IConfigBoolean config = Configs.Generic.FREE_CAMERA_PLAYER_INPUTS;
+            BooleanConfig config = Configs.Generic.FREE_CAMERA_PLAYER_INPUTS;
             config.toggleBooleanValue();
             MessageUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
             return true;
         });
         Hotkeys.FREE_CAMERA_PLAYER_MOVEMENT.getKeyBind().setCallback((action, key) -> {
-            IConfigBoolean config = Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT;
+            BooleanConfig config = Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT;
             config.toggleBooleanValue();
             MessageUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
             return true;
@@ -200,7 +199,7 @@ public class Callbacks
 
     public static class FeatureCallbackSlime implements IValueChangeCallback<Boolean>
     {
-        public FeatureCallbackSlime(ConfigBoolean feature)
+        public FeatureCallbackSlime(BooleanConfig feature)
         {
             Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.slipperiness);
 
@@ -507,9 +506,9 @@ public class Callbacks
 
     private static class KeyCallbackToggleWithSpecialMessage implements IHotkeyCallback
     {
-        private final IConfigBoolean config;
+        private final BooleanConfig config;
 
-        private KeyCallbackToggleWithSpecialMessage(IConfigBoolean config)
+        private KeyCallbackToggleWithSpecialMessage(BooleanConfig config)
         {
             this.config = config;
         }
