@@ -10,18 +10,18 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import fi.dy.masa.malilib.config.IValueChangeCallback;
+import fi.dy.masa.malilib.config.ValueChangeCallback;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
-import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.input.IHotkeyCallback;
-import fi.dy.masa.malilib.input.IKeyBind;
+import fi.dy.masa.malilib.gui.BaseScreen;
+import fi.dy.masa.malilib.input.callback.HotkeyCallback;
+import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.KeyAction;
-import fi.dy.masa.malilib.input.KeyCallbackAdjustable;
-import fi.dy.masa.malilib.message.MessageUtils;
+import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
+import fi.dy.masa.malilib.render.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.RayTraceFluidHandling;
 import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.tweakeroo.gui.GuiConfigs;
+import fi.dy.masa.tweakeroo.gui.ConfigScreen;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
@@ -76,8 +76,8 @@ public class Callbacks
         FeatureToggle.TWEAK_HOLD_ATTACK.setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindAttack.getKeyCode()));
         FeatureToggle.TWEAK_HOLD_USE.setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindUseItem.getKeyCode()));
 
-        IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
-        IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
+        HotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
+        HotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
 
         Hotkeys.BLINK_DRIVE.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeyBind().setCallback(callbackGeneric);
@@ -88,10 +88,10 @@ public class Callbacks
         Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.COPY_SIGN_TEXT.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.FLY_PRESET_1.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
-        Hotkeys.FLY_PRESET_2.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
-        Hotkeys.FLY_PRESET_3.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
-        Hotkeys.FLY_PRESET_4.getKeyBind().setCallback(new KeyCallbackAdjustable(null, callbackGeneric));
+        Hotkeys.FLY_PRESET_1.getKeyBind().setCallback(new AdjustableKeyCallback(null, callbackGeneric));
+        Hotkeys.FLY_PRESET_2.getKeyBind().setCallback(new AdjustableKeyCallback(null, callbackGeneric));
+        Hotkeys.FLY_PRESET_3.getKeyBind().setCallback(new AdjustableKeyCallback(null, callbackGeneric));
+        Hotkeys.FLY_PRESET_4.getKeyBind().setCallback(new AdjustableKeyCallback(null, callbackGeneric));
         Hotkeys.FREE_CAMERA_PLAYER_INPUTS.getKeyBind().setCallback((action, key) -> {
             BooleanConfig config = Configs.Generic.FREE_CAMERA_PLAYER_INPUTS;
             config.toggleBooleanValue();
@@ -135,10 +135,10 @@ public class Callbacks
 
     private static void createAdjustableCallbackFor(FeatureToggle feature)
     {
-        feature.getKeyBind().setCallback(new KeyCallbackAdjustable(null, new KeyCallbackToggleWithSpecialMessage(feature)));
+        feature.getKeyBind().setCallback(new AdjustableKeyCallback(null, new KeyCallbackToggleWithSpecialMessage(feature)));
     }
 
-    public static class FeatureCallbackHold implements IValueChangeCallback<Boolean>
+    public static class FeatureCallbackHold implements ValueChangeCallback<Boolean>
     {
         private final int keyCode;
 
@@ -162,7 +162,7 @@ public class Callbacks
         }
     }
 
-    public static class FeatureCallbackGamma implements IValueChangeCallback<Boolean>
+    public static class FeatureCallbackGamma implements ValueChangeCallback<Boolean>
     {
         private final Minecraft mc;
 
@@ -197,7 +197,7 @@ public class Callbacks
         }
     }
 
-    public static class FeatureCallbackSlime implements IValueChangeCallback<Boolean>
+    public static class FeatureCallbackSlime implements ValueChangeCallback<Boolean>
     {
         public FeatureCallbackSlime(BooleanConfig feature)
         {
@@ -224,7 +224,7 @@ public class Callbacks
         }
     }
 
-    public static class KeyCallbackHotkeyWithMessage implements IHotkeyCallback
+    public static class KeyCallbackHotkeyWithMessage implements HotkeyCallback
     {
         private final Minecraft mc;
 
@@ -234,15 +234,15 @@ public class Callbacks
         }
 
         @Override
-        public boolean onKeyAction(KeyAction action, IKeyBind key)
+        public boolean onKeyAction(KeyAction action, KeyBind key)
         {
             if (key == Hotkeys.SKIP_ALL_RENDERING.getKeyBind())
             {
                 this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
 
-                String pre = mc.skipRenderWorld ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
+                String pre = mc.skipRenderWorld ? BaseScreen.TXT_GREEN : BaseScreen.TXT_RED;
                 String status = StringUtils.translate("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
-                String message = StringUtils.translate("tweakeroo.message.toggled", "Skip All Rendering", pre + status + GuiBase.TXT_RST);
+                String message = StringUtils.translate("tweakeroo.message.toggled", "Skip All Rendering", pre + status + BaseScreen.TXT_RST);
                 MessageUtils.printActionbarMessage(message);
             }
             else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeyBind())
@@ -250,9 +250,9 @@ public class Callbacks
                 skipWorldRendering = ! skipWorldRendering;
 
                 boolean enabled = skipWorldRendering;
-                String pre = enabled ? GuiBase.TXT_GREEN : GuiBase.TXT_RED;
+                String pre = enabled ? BaseScreen.TXT_GREEN : BaseScreen.TXT_RED;
                 String status = StringUtils.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String message = StringUtils.translate("tweakeroo.message.toggled", "Skip World Rendering", pre + status + GuiBase.TXT_RST);
+                String message = StringUtils.translate("tweakeroo.message.toggled", "Skip World Rendering", pre + status + BaseScreen.TXT_RST);
                 MessageUtils.printActionbarMessage(message);
             }
 
@@ -260,7 +260,7 @@ public class Callbacks
         }
     }
 
-    private static class KeyCallbackHotkeysGeneric implements IHotkeyCallback
+    private static class KeyCallbackHotkeysGeneric implements HotkeyCallback
     {
         private final Minecraft mc;
 
@@ -270,7 +270,7 @@ public class Callbacks
         }
 
         @Override
-        public boolean onKeyAction(KeyAction action, IKeyBind key)
+        public boolean onKeyAction(KeyAction action, KeyBind key)
         {
             if (key == Hotkeys.TOOL_PICK.getKeyBind())
             {
@@ -427,7 +427,7 @@ public class Callbacks
             }
             else if (key == Hotkeys.OPEN_CONFIG_GUI.getKeyBind())
             {
-                GuiBase.openGui(new GuiConfigs());
+                BaseScreen.openGui(new ConfigScreen());
                 return true;
             }
             else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind())
@@ -463,8 +463,8 @@ public class Callbacks
             Configs.Internal.FLY_SPEED_PRESET.setIntegerValue(preset);
 
             float speed = (float) Configs.getActiveFlySpeedConfig().getDoubleValue();
-            String strPreset = GuiBase.TXT_GREEN + (preset + 1) + GuiBase.TXT_RST;
-            String strSpeed = String.format("%s%.3f%s", GuiBase.TXT_GREEN, speed, GuiBase.TXT_RST);
+            String strPreset = BaseScreen.TXT_GREEN + (preset + 1) + BaseScreen.TXT_RST;
+            String strSpeed = String.format("%s%.3f%s", BaseScreen.TXT_GREEN, speed, BaseScreen.TXT_RST);
             MessageUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
         }
 
@@ -472,7 +472,7 @@ public class Callbacks
         {
             Configs.Generic.BREAKING_RESTRICTION_MODE.setOptionListValue(mode);
 
-            String str = GuiBase.TXT_GREEN + mode.name() + GuiBase.TXT_RST;
+            String str = BaseScreen.TXT_GREEN + mode.name() + BaseScreen.TXT_RST;
             MessageUtils.printActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", str);
         }
 
@@ -480,7 +480,7 @@ public class Callbacks
         {
             Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
 
-            String str = GuiBase.TXT_GREEN + mode.name() + GuiBase.TXT_RST;
+            String str = BaseScreen.TXT_GREEN + mode.name() + BaseScreen.TXT_RST;
             MessageUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
         }
 
@@ -504,7 +504,7 @@ public class Callbacks
         }
     }
 
-    private static class KeyCallbackToggleWithSpecialMessage implements IHotkeyCallback
+    private static class KeyCallbackToggleWithSpecialMessage implements HotkeyCallback
     {
         private final BooleanConfig config;
 
@@ -514,15 +514,15 @@ public class Callbacks
         }
 
         @Override
-        public boolean onKeyAction(KeyAction action, IKeyBind key)
+        public boolean onKeyAction(KeyAction action, KeyBind key)
         {
             this.config.toggleBooleanValue();
 
             boolean enabled = this.config.getBooleanValue();
             String strStatus = StringUtils.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
-            String preGreen = GuiBase.TXT_GREEN;
-            String preRed = GuiBase.TXT_RED;
-            String rst = GuiBase.TXT_RST;
+            String preGreen = BaseScreen.TXT_GREEN;
+            String preRed = BaseScreen.TXT_RED;
+            String rst = BaseScreen.TXT_RST;
             String prettyName = this.config.getPrettyName();
             strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
 

@@ -1,7 +1,7 @@
 package fi.dy.masa.tweakeroo.config;
 
 import fi.dy.masa.malilib.config.option.HotkeyedBooleanConfig;
-import fi.dy.masa.malilib.gui.GuiBase;
+import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.util.StringUtils;
 
 public class ClientBooleanConfig extends HotkeyedBooleanConfig
@@ -30,8 +30,8 @@ public class ClientBooleanConfig extends HotkeyedBooleanConfig
     }
 
     @Override
-    public String getConfigGuiDisplayName()
+    public String getDisplayName()
     {
-        return GuiBase.TXT_GOLD + this.getName() + GuiBase.TXT_RST;
+        return BaseScreen.TXT_GOLD + this.getName() + BaseScreen.TXT_RST;
     }
 }

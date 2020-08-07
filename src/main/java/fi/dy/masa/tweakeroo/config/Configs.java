@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import com.google.common.collect.ImmutableList;
+import fi.dy.masa.malilib.config.ModConfig;
 import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.ConfigUtils;
-import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.config.option.ColorConfig;
 import fi.dy.masa.malilib.config.option.ConfigOption;
@@ -27,7 +27,7 @@ import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
-public class Configs implements IConfigHandler
+public class Configs implements ModConfig
 {
     public static class Generic
     {
@@ -326,6 +326,12 @@ public class Configs implements IConfigHandler
                 SLIME_BLOCK_SLIPPERINESS_ORIGINAL,
                 SNAP_AIM_LAST_YAW
         );
+    }
+
+    @Override
+    public String getModId()
+    {
+        return Reference.MOD_ID;
     }
 
     @Override

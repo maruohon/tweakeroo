@@ -16,15 +16,15 @@ import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.option.DoubleConfig;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
-import fi.dy.masa.malilib.gui.GuiBase;
+import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
-import fi.dy.masa.malilib.input.IHotkey;
-import fi.dy.masa.malilib.input.IKeyBindProvider;
-import fi.dy.masa.malilib.input.IKeyboardInputHandler;
-import fi.dy.masa.malilib.input.IMouseInputHandler;
-import fi.dy.masa.malilib.input.KeyCallbackAdjustable;
+import fi.dy.masa.malilib.input.Hotkey;
+import fi.dy.masa.malilib.input.KeyBindProvider;
+import fi.dy.masa.malilib.input.KeyboardInputHandler;
+import fi.dy.masa.malilib.input.MouseInputHandler;
+import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
 import fi.dy.masa.malilib.input.KeyBindCategory;
-import fi.dy.masa.malilib.message.MessageUtils;
+import fi.dy.masa.malilib.render.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -33,7 +33,7 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
-public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IMouseInputHandler
+public class InputHandler implements KeyBindProvider, KeyboardInputHandler, MouseInputHandler
 {
     private static final InputHandler INSTANCE = new InputHandler();
     private LeftRight lastSidewaysInput = LeftRight.NONE;
@@ -50,9 +50,9 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
     }
 
     @Override
-    public List<? extends IHotkey> getAllHotkeys()
+    public List<? extends Hotkey> getAllHotkeys()
     {
-        ImmutableList.Builder<IHotkey> builder = ImmutableList.builder();
+        ImmutableList.Builder<Hotkey> builder = ImmutableList.builder();
 
         builder.add(FeatureToggle.values());
         builder.addAll(Configs.Disable.OPTIONS);
@@ -123,8 +123,8 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
         // Not in a GUI
         else if (GuiUtils.getCurrentScreen() == null && wheelDelta != 0)
         {
-            String preGreen = GuiBase.TXT_GREEN;
-            String rst = GuiBase.TXT_RST;
+            String preGreen = BaseScreen.TXT_GREEN;
+            String rst = BaseScreen.TXT_RST;
 
             if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() && Hotkeys.HOTBAR_SCROLL.getKeyBind().isKeyBindHeld())
             {
@@ -143,7 +143,7 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
                 Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(newValue);
-                KeyCallbackAdjustable.setValueChanged();
+                AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + rst;
                 MessageUtils.printActionbarMessage("tweakeroo.message.set_after_clicker_count_to", strValue);
@@ -154,7 +154,7 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
                 Configs.Generic.PLACEMENT_LIMIT.setIntegerValue(newValue);
-                KeyCallbackAdjustable.setValueChanged();
+                AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + rst;
                 MessageUtils.printActionbarMessage("tweakeroo.message.set_placement_limit_to", strValue);
@@ -165,7 +165,7 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
                 Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.setIntegerValue(newValue);
-                KeyCallbackAdjustable.setValueChanged();
+                AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + rst;
                 MessageUtils.printActionbarMessage("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue);
@@ -176,7 +176,7 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
                 Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.setIntegerValue(newValue);
-                KeyCallbackAdjustable.setValueChanged();
+                AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + rst;
                 MessageUtils.printActionbarMessage("tweakeroo.message.set_hotbar_slot_randomizer_max_to", strValue);
@@ -187,7 +187,7 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
                 Configs.Generic.BREAKING_GRID_SIZE.setIntegerValue(newValue);
-                KeyCallbackAdjustable.setValueChanged();
+                AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + rst;
                 MessageUtils.printActionbarMessage("tweakeroo.message.set_breaking_grid_size_to", strValue);
@@ -198,7 +198,7 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
             {
                 int newValue = Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
                 Configs.Generic.PLACEMENT_GRID_SIZE.setIntegerValue(newValue);
-                KeyCallbackAdjustable.setValueChanged();
+                AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + rst;
                 MessageUtils.printActionbarMessage("tweakeroo.message.set_placement_grid_size_to", strValue);
@@ -212,7 +212,7 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
 
                 double newValue = config.getDoubleValue() * (wheelDelta > 0 ? 2 : 0.5);
                 config.setDoubleValue(newValue);
-                KeyCallbackAdjustable.setValueChanged();
+                AdjustableKeyCallback.setValueChanged();
 
                 String val = preGreen + String.valueOf(config.getDoubleValue()) + rst;
                 String key = mode == SnapAimMode.PITCH ? "tweakeroo.message.set_snap_aim_pitch_step_to" : "tweakeroo.message.set_snap_aim_yaw_step_to";
@@ -224,14 +224,14 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
             else if (FeatureToggle.TWEAK_ZOOM.getKeyBind().isKeyBindHeld() ||
                      (FeatureToggle.TWEAK_ZOOM.getBooleanValue() && Hotkeys.ZOOM_ACTIVATE.getKeyBind().isKeyBindHeld()))
             {
-                double diff = GuiBase.isCtrlDown() ? 5 : 1;
+                double diff = BaseScreen.isCtrlDown() ? 5 : 1;
                 double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (wheelDelta < 0 ? diff : -diff);
                 Configs.Generic.ZOOM_FOV.setDoubleValue(newValue);
 
                 // Only prevent the next trigger when adjusting the value with the actual toggle key held
                 if (FeatureToggle.TWEAK_ZOOM.getKeyBind().isKeyBindHeld())
                 {
-                    KeyCallbackAdjustable.setValueChanged();
+                    AdjustableKeyCallback.setValueChanged();
                 }
 
                 if (FeatureToggle.TWEAK_ZOOM.getBooleanValue())
@@ -254,7 +254,7 @@ public class InputHandler implements IKeyBindProvider, IKeyboardInputHandler, IM
                     DoubleConfig config = Configs.getFlySpeedConfig(i);
                     double newValue = config.getDoubleValue() + (wheelDelta > 0 ? 0.005 : -0.005);
                     config.setDoubleValue(newValue);
-                    KeyCallbackAdjustable.setValueChanged();
+                    AdjustableKeyCallback.setValueChanged();
 
                     String strIndex = preGreen + (i + 1) + rst;
                     String strValue = preGreen + String.format("%.3f", config.getDoubleValue()) + rst;

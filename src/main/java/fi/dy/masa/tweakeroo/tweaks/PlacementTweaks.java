@@ -26,7 +26,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
-import fi.dy.masa.malilib.input.KeyBindMulti;
+import fi.dy.masa.malilib.input.KeyBindImpl;
 import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.malilib.util.PlacementUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
@@ -366,7 +366,7 @@ public class PlacementTweaks
 
     private static boolean isVanillaKeybindHeld(KeyBinding key)
     {
-        return KeyBindMulti.isKeyDown(key.getKeyCode());
+        return KeyBindImpl.isKeyDown(key.getKeyCode());
     }
 
     public static EnumActionResult onProcessRightClickBlock(

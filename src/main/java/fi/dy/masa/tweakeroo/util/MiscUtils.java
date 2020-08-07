@@ -20,8 +20,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.message.MessageUtils;
+import fi.dy.masa.malilib.gui.BaseScreen;
+import fi.dy.masa.malilib.render.message.MessageUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.IRayPositionHandler;
 import fi.dy.masa.malilib.util.inventory.InventoryUtils;
@@ -339,7 +339,7 @@ public class MiscUtils
             }
 
             double offset = Math.abs(MathHelper.wrapDegrees((float) (snappedPitch - realPitch)));
-            if (GuiBase.isCtrlDown()) System.out.printf("real: %.2f, snapped: %.2f, offset: %.2f\n", realPitch, snappedPitch, offset);
+            if (BaseScreen.isCtrlDown()) System.out.printf("real: %.2f, snapped: %.2f, offset: %.2f\n", realPitch, snappedPitch, offset);
 
             if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue() == false ||
                 offset <= Configs.Generic.SNAP_AIM_THRESHOLD_PITCH.getDoubleValue())
@@ -348,8 +348,8 @@ public class MiscUtils
 
                 if (Configs.Internal.SNAP_AIM_LAST_PITCH.getDoubleValue() != snappedPitch)
                 {
-                    String g = GuiBase.TXT_GREEN;
-                    String r = GuiBase.TXT_RST;
+                    String g = BaseScreen.TXT_GREEN;
+                    String r = BaseScreen.TXT_RST;
                     String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedPitch)), r, g, String.valueOf(step), r);
 
                     MessageUtils.printActionbarMessage("tweakeroo.message.snapped_to_pitch", str);
@@ -390,8 +390,8 @@ public class MiscUtils
             {
                 if (Configs.Internal.SNAP_AIM_LAST_YAW.getDoubleValue() != snappedYaw)
                 {
-                    String g = GuiBase.TXT_GREEN;
-                    String r = GuiBase.TXT_RST;
+                    String g = BaseScreen.TXT_GREEN;
+                    String r = BaseScreen.TXT_RST;
                     String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedYaw)), r, g, String.valueOf(step), r);
 
                     MessageUtils.printActionbarMessage("tweakeroo.message.snapped_to_yaw", str);

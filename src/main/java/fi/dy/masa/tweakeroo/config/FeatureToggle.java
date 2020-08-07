@@ -5,17 +5,17 @@ import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
 import fi.dy.masa.malilib.config.option.IConfigBoolean;
 import fi.dy.masa.malilib.config.option.IConfigNotifiable;
-import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.input.IHotkey;
-import fi.dy.masa.malilib.input.IKeyBind;
-import fi.dy.masa.malilib.input.KeyCallbackToggleBooleanConfigWithMessage;
-import fi.dy.masa.malilib.input.KeyBindMulti;
+import fi.dy.masa.malilib.gui.BaseScreen;
+import fi.dy.masa.malilib.input.Hotkey;
+import fi.dy.masa.malilib.input.KeyBind;
+import fi.dy.masa.malilib.input.callback.ToggleBooleanWithMessageKeyCallback;
+import fi.dy.masa.malilib.input.KeyBindImpl;
 import fi.dy.masa.malilib.input.KeyBindSettings;
-import fi.dy.masa.malilib.config.IValueChangeCallback;
+import fi.dy.masa.malilib.config.ValueChangeCallback;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 
-public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<Boolean>
+public enum FeatureToggle implements IConfigBoolean, Hotkey, IConfigNotifiable<Boolean>
 {
     CARPET_ACCURATE_PLACEMENT_PROTOCOL ("carpetAccuratePlacementProtocol",  false, "",    "If enabled, then the Flexible Block Placement and the\nAccurate Block Placement use the protocol implemented\nin the recent carpet mod versions", "Carpet protocol Accurate Placement"),
     FAST_PLACEMENT_REMEMBER_ALWAYS  ("fastPlacementRememberOrientation",    true, "",     "If enabled, then the fast placement mode will always remember\nthe orientation of the first block you place.\nWithout this, the orientation will only be remembered\nwith the flexible placement enabled and active.", "Fast Placement Remember Orientation"),
@@ -104,13 +104,13 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     private final String name;
     private final String comment;
     private final String prettyName;
-    private final IKeyBind keybind;
+    private final KeyBind keybind;
     private final boolean defaultValueBoolean;
     private final boolean singlePlayer;
     private String modName;
     private boolean valueBoolean;
     private boolean lastSavedValueBoolean;
-    private IValueChangeCallback<Boolean> callback;
+    private ValueChangeCallback<Boolean> callback;
 
     private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
@@ -150,8 +150,8 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
         this.singlePlayer = singlePlayer;
         this.comment = comment;
         this.prettyName = prettyName;
-        this.keybind = KeyBindMulti.fromStorageString(name, defaultHotkey, settings);
-        this.keybind.setCallback(new KeyCallbackToggleBooleanConfigWithMessage(this));
+        this.keybind = KeyBindImpl.fromStorageString(name, defaultHotkey, settings);
+        this.keybind.setCallback(new ToggleBooleanWithMessageKeyCallback(this));
 
         this.cacheSavedValue();
     }
@@ -173,7 +173,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     {
         if (this.singlePlayer)
         {
-            return GuiBase.TXT_GOLD + this.getName() + GuiBase.TXT_RST;
+            return BaseScreen.TXT_GOLD + this.getName() + BaseScreen.TXT_RST;
         }
 
         return this.getName();
@@ -195,7 +195,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     public void setModName(String modName)
     {
         this.modName = modName;
-        this.keybind.setModName(modName);
+        this.keybind.setModId(modName);
     }
 
     @Override
@@ -225,7 +225,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     }
 
     @Override
-    public void setValueChangeCallback(IValueChangeCallback<Boolean> callback)
+    public void setValueChangeCallback(ValueChangeCallback<Boolean> callback)
     {
         this.callback = callback;
     }
@@ -249,7 +249,7 @@ public enum FeatureToggle implements IConfigBoolean, IHotkey, IConfigNotifiable<
     }
 
     @Override
-    public IKeyBind getKeyBind()
+    public KeyBind getKeyBind()
     {
         return this.keybind;
     }

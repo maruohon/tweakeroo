@@ -7,17 +7,17 @@ import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 import fi.dy.masa.malilib.config.value.ActiveMode;
-import fi.dy.masa.malilib.event.IPostGameOverlayRenderer;
-import fi.dy.masa.malilib.event.IPostItemTooltipRenderer;
-import fi.dy.masa.malilib.event.IPostWorldRenderer;
-import fi.dy.masa.malilib.gui.GuiBase;
+import fi.dy.masa.malilib.event.PostGameOverlayRenderer;
+import fi.dy.masa.malilib.event.PostItemTooltipRenderer;
+import fi.dy.masa.malilib.event.PostWorldRenderer;
+import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
-public class RenderHandler implements IPostGameOverlayRenderer, IPostItemTooltipRenderer, IPostWorldRenderer
+public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRenderer, PostWorldRenderer
 {
     @Override
     public void onPostGameOverlayRender(float partialTicks)
@@ -76,7 +76,7 @@ public class RenderHandler implements IPostGameOverlayRenderer, IPostItemTooltip
         }
         else if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
         {
-            boolean render = Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown();
+            boolean render = Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || BaseScreen.isShiftDown();
 
             if (render)
             {

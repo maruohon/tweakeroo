@@ -1,11 +1,11 @@
 package fi.dy.masa.tweakeroo.util;
 
 import com.google.common.collect.ImmutableList;
+import fi.dy.masa.malilib.config.value.BaseConfigOptionListEntry;
 import fi.dy.masa.malilib.config.value.ConfigOptionListEntry;
-import fi.dy.masa.malilib.config.value.IConfigOptionListEntry;
 import fi.dy.masa.malilib.util.StringUtils;
 
-public enum PlacementRestrictionMode implements IConfigOptionListEntry<PlacementRestrictionMode>
+public enum PlacementRestrictionMode implements ConfigOptionListEntry<PlacementRestrictionMode>
 {
     PLANE       ("plane",       "tweakeroo.label.placement_restriction_mode.plane"),
     FACE        ("face",        "tweakeroo.label.placement_restriction_mode.face"),
@@ -40,12 +40,12 @@ public enum PlacementRestrictionMode implements IConfigOptionListEntry<Placement
     @Override
     public PlacementRestrictionMode cycle(boolean forward)
     {
-        return ConfigOptionListEntry.cycleValue(VALUES, this.ordinal(), forward);
+        return BaseConfigOptionListEntry.cycleValue(VALUES, this.ordinal(), forward);
     }
 
     @Override
     public PlacementRestrictionMode fromString(String name)
     {
-        return ConfigOptionListEntry.findValueByName(name, VALUES);
+        return BaseConfigOptionListEntry.findValueByName(name, VALUES);
     }
 }
