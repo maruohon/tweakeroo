@@ -25,12 +25,10 @@ public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.Ab
     @Shadow public net.minecraft.util.MovementInput movementInput;
     @Shadow protected int sprintToggleTimer;
 
-    @Shadow protected abstract boolean isCurrentViewEntity();
-
     private final DummyMovementInput dummyMovementInput = new DummyMovementInput(null);
     private net.minecraft.util.MovementInput realInput;
 
-    @Redirect(method = "onLivingUpdate()V",
+    @Redirect(method = "onLivingUpdate()V", require = 0,
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/client/gui/GuiScreen;doesGuiPauseGame()Z"))
     private boolean onDoesGuiPauseGame(net.minecraft.client.gui.GuiScreen gui)
@@ -67,8 +65,9 @@ public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.Ab
         }
     }
 
-    @Redirect(method = "onLivingUpdate", at = @At(value = "FIELD",
-            target = "Lnet/minecraft/client/entity/EntityPlayerSP;collidedHorizontally:Z"))
+    @Redirect(method = "onLivingUpdate", require = 0,
+              at = @At(value = "FIELD",
+                       target = "Lnet/minecraft/client/entity/EntityPlayerSP;collidedHorizontally:Z"))
     private boolean overrideCollidedHorizontally(net.minecraft.client.entity.EntityPlayerSP player)
     {
         if (Configs.Disable.DISABLE_WALL_UNSPRINT.getBooleanValue())
