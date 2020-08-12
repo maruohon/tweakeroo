@@ -16,7 +16,7 @@ import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 public abstract class MixinBackgroundRenderer
 {
     @Inject(method = "applyFog(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/BackgroundRenderer$FogType;FZ)V", require = 0,
-            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/tag/FluidTags;LAVA:Lnet/minecraft/tag/Tag;")),
+            slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/tag/FluidTags;LAVA:Lnet/minecraft/tag/Tag$Identified;")),
             at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;fogDensity(F)V",
                      ordinal = 0, shift = At.Shift.AFTER))
     private static void onSetupLavaFog(Camera camera, net.minecraft.client.render.BackgroundRenderer.FogType fogType,

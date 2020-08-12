@@ -17,6 +17,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import net.minecraft.world.gen.feature.StructureFeature;
@@ -35,7 +36,7 @@ public abstract class MixinPresetsScreen
     private static List<Object> presets;
 
     @Shadow
-    private static void addPreset(Text name, ItemConvertible itemIn, Biome biomeIn, List<StructureFeature<?>> structures, boolean b1, boolean b2, boolean b3, FlatChunkGeneratorLayer... layers) {};
+    private static void addPreset(Text name, ItemConvertible itemIn, RegistryKey<Biome> biomeIn, List<StructureFeature<?>> structures, boolean b1, boolean b2, boolean b3, FlatChunkGeneratorLayer... layers) {};
 
     @Inject(method = "init", at = @At("HEAD"))
     private void addCustomEntries(CallbackInfo ci)
@@ -77,22 +78,14 @@ public abstract class MixinPresetsScreen
             // TODO add back the features
             String iconItemName = matcher.group("icon");
 
-            Biome biome = null;
+            RegistryKey<Biome> biome = null;
 
             try
             {
-                int biomeId = Integer.parseInt(biomeName);
-                biome = Registry.BIOME.get(biomeId);
+                biome = RegistryKey.of(Registry.BIOME_KEY, new Identifier(biomeName));
             }
-            catch (Exception e)
+            catch (Exception e2)
             {
-                try
-                {
-                    biome = Registry.BIOME.get(new Identifier(biomeName));
-                }
-                catch (Exception e2)
-                {
-                }
             }
 
             if (biome == null)
