@@ -5,7 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 import com.google.common.collect.ArrayListMultimap;
 import com.mojang.brigadier.StringReader;
-import net.minecraft.command.arguments.ItemStringReader;
+import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;

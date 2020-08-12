@@ -20,9 +20,9 @@ import fi.dy.masa.tweakeroo.config.Configs;
 @Mixin(ClientWorld.class)
 public abstract class MixinClientWorld extends World
 {
-    protected MixinClientWorld(MutableWorldProperties mutableWorldProperties, RegistryKey<World> registryKey, RegistryKey<DimensionType> registryKey2, DimensionType dimensionType, Supplier<Profiler> supplier, boolean bl, boolean bl2, long l)
+    protected MixinClientWorld(MutableWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, Supplier<Profiler> supplier, boolean bl, boolean bl2, long l)
     {
-        super(mutableWorldProperties, registryKey, registryKey2, dimensionType, supplier, bl, bl2, l);
+        super(properties, registryKey, dimensionType, supplier, bl, bl2, l);
     }
 
     @Override
