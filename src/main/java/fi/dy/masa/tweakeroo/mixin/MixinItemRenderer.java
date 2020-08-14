@@ -6,11 +6,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.ItemRenderer;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(ItemRenderer.class)
 public abstract class MixinItemRenderer
@@ -20,7 +20,7 @@ public abstract class MixinItemRenderer
             target = "Lnet/minecraft/client/entity/EntityPlayerSP;getCooledAttackStrength(F)F"))
     public float redirectedGetCooledAttackStrength(EntityPlayerSP player, float adjustTicks)
     {
-        return Configs.Disable.DISABLE_ITEM_SWITCH_COOLDOWN.getBooleanValue() ? 1.0F : player.getCooledAttackStrength(adjustTicks);
+        return DisableToggle.DISABLE_ITEM_SWITCH_COOLDOWN.getBooleanValue() ? 1.0F : player.getCooledAttackStrength(adjustTicks);
     }
 
     @ModifyVariable(method = "renderItemInFirstPerson(F)V", ordinal = 1,
@@ -28,7 +28,7 @@ public abstract class MixinItemRenderer
                      target = "Lnet/minecraft/client/entity/AbstractClientPlayer;isHandActive()Z"))
     private boolean preventOffhandRendering(boolean original)
     {
-        if (Configs.Disable.DISABLE_OFFHAND_RENDERING.getBooleanValue())
+        if (DisableToggle.DISABLE_OFFHAND_RENDERING.getBooleanValue())
         {
             return false;
         }

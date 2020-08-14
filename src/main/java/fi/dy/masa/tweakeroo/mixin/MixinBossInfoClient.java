@@ -2,7 +2,7 @@ package fi.dy.masa.tweakeroo.mixin;
 
 import java.util.UUID;
 import org.spongepowered.asm.mixin.Mixin;
-import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 
 @Mixin(net.minecraft.client.gui.BossInfoClient.class)
 public abstract class MixinBossInfoClient extends net.minecraft.world.BossInfo
@@ -15,7 +15,7 @@ public abstract class MixinBossInfoClient extends net.minecraft.world.BossInfo
     @Override
     public boolean shouldCreateFog()
     {
-        if (Configs.Disable.DISABLE_BOSS_FOG.getBooleanValue())
+        if (DisableToggle.DISABLE_BOSS_FOG.getBooleanValue())
         {
             return false;
         }

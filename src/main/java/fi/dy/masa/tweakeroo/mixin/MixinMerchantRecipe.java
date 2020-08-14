@@ -5,8 +5,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.village.MerchantRecipe;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 
 @Mixin(MerchantRecipe.class)
 public abstract class MixinMerchantRecipe
@@ -16,7 +16,7 @@ public abstract class MixinMerchantRecipe
     @Inject(method = "incrementToolUses", at = @At("RETURN"))
     private void preventTradeLocking(CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_VILLAGER_TRADE_LOCKING.getBooleanValue())
+        if (DisableToggle.DISABLE_VILLAGER_TRADE_LOCKING.getBooleanValue())
         {
             // Prevents the trade from getting locked, by also incrementing
             // the max uses every time the trade use count is incremented.

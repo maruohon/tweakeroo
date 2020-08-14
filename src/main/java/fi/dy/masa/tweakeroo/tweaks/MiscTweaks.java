@@ -15,6 +15,7 @@ import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.render.message.MessageUtils;
 import fi.dy.masa.malilib.util.restriction.UsageRestriction;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.mixin.IMixinFlatGeneratorInfo;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
@@ -118,12 +119,12 @@ public class MiscTweaks
 
     public static boolean shouldPreventItemGlintFor(ItemStack stack)
     {
-        return Configs.Disable.DISABLE_ITEM_GLINT.getBooleanValue() && ITEM_GLINT_RESTRICTION.isAllowed(stack.getItem()) == false;
+        return DisableToggle.DISABLE_ITEM_GLINT.getBooleanValue() && ITEM_GLINT_RESTRICTION.isAllowed(stack.getItem()) == false;
     }
 
     public static boolean shouldDisableSound(ISound sound)
     {
-        return Configs.Disable.DISABLE_SOUNDS_LIST.getBooleanValue() && SOUND_RESTRICTION.isAllowed(sound.getSoundLocation()) == false;
+        return DisableToggle.DISABLE_SOUNDS_LIST.getBooleanValue() && SOUND_RESTRICTION.isAllowed(sound.getSoundLocation()) == false;
     }
 
     @Nullable

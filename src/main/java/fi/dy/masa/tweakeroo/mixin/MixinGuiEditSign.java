@@ -6,15 +6,15 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.malilib.gui.BaseScreen;
-import fi.dy.masa.malilib.input.KeyBindImpl;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.tileentity.TileEntitySign;
+import fi.dy.masa.malilib.gui.BaseScreen;
+import fi.dy.masa.malilib.input.KeyBindImpl;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(GuiEditSign.class)
 public abstract class MixinGuiEditSign
@@ -40,7 +40,7 @@ public abstract class MixinGuiEditSign
             MiscUtils.applyPreviousTextToSign(this.tileSign);
         }
 
-        if (Configs.Disable.DISABLE_SIGN_GUI.getBooleanValue())
+        if (DisableToggle.DISABLE_SIGN_GUI.getBooleanValue())
         {
             BaseScreen.openGui(null);
 

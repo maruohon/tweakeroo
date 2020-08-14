@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 
 @Mixin(net.minecraft.client.audio.SoundManager.class)
@@ -19,7 +20,7 @@ public abstract class MixinSoundManager
             LiteModTweakeroo.logger.info("Sound: '{}'", sound.getSoundLocation());
         }
 
-        if (Configs.Disable.DISABLE_SOUNDS_ALL.getBooleanValue() || MiscTweaks.shouldDisableSound(sound))
+        if (DisableToggle.DISABLE_SOUNDS_ALL.getBooleanValue() || MiscTweaks.shouldDisableSound(sound))
         {
             ci.cancel();
         }
@@ -33,7 +34,7 @@ public abstract class MixinSoundManager
             LiteModTweakeroo.logger.info("Sound: '{}'", sound.getSoundLocation());
         }
 
-        if (Configs.Disable.DISABLE_SOUNDS_ALL.getBooleanValue() || MiscTweaks.shouldDisableSound(sound))
+        if (DisableToggle.DISABLE_SOUNDS_ALL.getBooleanValue() || MiscTweaks.shouldDisableSound(sound))
         {
             ci.cancel();
         }

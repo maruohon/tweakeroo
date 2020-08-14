@@ -12,22 +12,21 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import fi.dy.masa.malilib.config.ConfigType;
-import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.option.DoubleConfig;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.Hotkey;
+import fi.dy.masa.malilib.input.KeyBindCategory;
 import fi.dy.masa.malilib.input.KeyBindProvider;
 import fi.dy.masa.malilib.input.KeyboardInputHandler;
 import fi.dy.masa.malilib.input.MouseInputHandler;
 import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
-import fi.dy.masa.malilib.input.KeyBindCategory;
 import fi.dy.masa.malilib.render.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -54,9 +53,10 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
     {
         ImmutableList.Builder<Hotkey> builder = ImmutableList.builder();
 
-        builder.add(FeatureToggle.values());
-        builder.addAll(Configs.Disable.OPTIONS);
+        builder.addAll(Configs.Generic.HOTKEY_LIST);
         builder.addAll(Hotkeys.HOTKEY_LIST);
+        builder.addAll(FeatureToggle.TOGGLE_HOTKEYS);
+        builder.addAll(DisableToggle.TOGGLE_HOTKEYS);
 
         return builder.build();
     }
@@ -65,9 +65,10 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
     public List<KeyBindCategory> getHotkeyCategoriesForCombinedView()
     {
         return ImmutableList.of(
-                new KeyBindCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.disable_toggle_hotkeys", ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, Configs.Disable.OPTIONS)),
-                new KeyBindCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.HOTKEY_LIST),
-                new KeyBindCategory(Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", ImmutableList.copyOf(FeatureToggle.values()))
+                new KeyBindCategory(Reference.MOD_ID, Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic", Configs.Generic.HOTKEY_LIST),
+                new KeyBindCategory(Reference.MOD_ID, Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.HOTKEY_LIST),
+                new KeyBindCategory(Reference.MOD_ID, Reference.MOD_NAME, "tweakeroo.hotkeys.category.disable_toggle_hotkeys", DisableToggle.TOGGLE_HOTKEYS),
+                new KeyBindCategory(Reference.MOD_ID, Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", FeatureToggle.TOGGLE_HOTKEYS)
         );
     }
 
@@ -214,7 +215,7 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
                 config.setDoubleValue(newValue);
                 AdjustableKeyCallback.setValueChanged();
 
-                String val = preGreen + String.valueOf(config.getDoubleValue()) + rst;
+                String val = preGreen + config.getDoubleValue() + rst;
                 String key = mode == SnapAimMode.PITCH ? "tweakeroo.message.set_snap_aim_pitch_step_to" : "tweakeroo.message.set_snap_aim_yaw_step_to";
 
                 MessageUtils.printActionbarMessage(key, val);

@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
@@ -91,7 +92,7 @@ public abstract class MixinEntityRenderer
                      target = "Lnet/minecraft/client/renderer/GlStateManager;setFogEnd(F)V"))
     private void disableRenderDistanceFog(int startCoords, float partialTicks, CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_RENDER_DISTANCE_FOG.getBooleanValue())
+        if (DisableToggle.DISABLE_RENDER_DISTANCE_FOG.getBooleanValue())
         {
             float renderDistance = this.farPlaneDistance;
             net.minecraft.client.renderer.GlStateManager.setFogStart(renderDistance * 1.6F);
@@ -116,7 +117,7 @@ public abstract class MixinEntityRenderer
     @Inject(method = "renderRainSnow", at = @At("HEAD"), cancellable = true)
     private void cancelRainRender(float partialTicks, CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_RAIN_EFFECTS.getBooleanValue())
+        if (DisableToggle.DISABLE_RAIN_EFFECTS.getBooleanValue())
         {
             ci.cancel();
         }
@@ -125,7 +126,7 @@ public abstract class MixinEntityRenderer
     @Inject(method = "addRainParticles", at = @At("HEAD"), cancellable = true)
     private void cancelRainRender(CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_RAIN_EFFECTS.getBooleanValue())
+        if (DisableToggle.DISABLE_RAIN_EFFECTS.getBooleanValue())
         {
             ci.cancel();
         }

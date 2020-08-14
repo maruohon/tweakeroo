@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 
 @Mixin(net.minecraft.block.BlockShulkerBox.class)
 public abstract class MixinBlockShulkerBox extends net.minecraft.block.Block
@@ -23,7 +23,7 @@ public abstract class MixinBlockShulkerBox extends net.minecraft.block.Block
             List<String> tooltip,
             net.minecraft.client.util.ITooltipFlag flagIn, CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_SHULKER_BOX_TOOLTIP.getBooleanValue())
+        if (DisableToggle.DISABLE_SHULKER_BOX_TOOLTIP.getBooleanValue())
         {
             ci.cancel();
         }

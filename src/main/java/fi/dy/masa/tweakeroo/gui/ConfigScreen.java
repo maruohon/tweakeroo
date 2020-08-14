@@ -1,57 +1,51 @@
 package fi.dy.masa.tweakeroo.gui;
 
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.ConfigType;
-import fi.dy.masa.malilib.config.ConfigUtils;
-import fi.dy.masa.malilib.gui.config.BaseConfigTab;
 import fi.dy.masa.malilib.gui.config.BaseConfigScreen;
+import fi.dy.masa.malilib.gui.config.BaseConfigTab;
 import fi.dy.masa.malilib.gui.config.ConfigTab;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 
-public class ConfigScreen extends BaseConfigScreen
+public class ConfigScreen
 {
-    private static final BaseConfigTab GENERIC         = new BaseConfigTab("tweakeroo.gui.button.config_gui.generic", 120, false, Configs.Generic.OPTIONS);
-    private static final BaseConfigTab FIXES           = new BaseConfigTab("tweakeroo.gui.button.config_gui.fixes", 80, false, Configs.Fixes.OPTIONS);
-    private static final BaseConfigTab LISTS           = new BaseConfigTab("tweakeroo.gui.button.config_gui.lists", 204, false, Configs.Lists.OPTIONS);
-    private static final BaseConfigTab TWEAK_TOGGLES   = new BaseConfigTab("tweakeroo.gui.button.config_gui.tweak_toggles", 80, false, ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(FeatureToggle.values())));
-    private static final BaseConfigTab TWEAK_HOTKEYS   = new BaseConfigTab("tweakeroo.gui.button.config_gui.tweak_hotkeys", 204, true, ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(FeatureToggle.values())));
-    private static final BaseConfigTab GENERIC_HOTKEYS = new BaseConfigTab("tweakeroo.gui.button.config_gui.generic_hotkeys", 204, true, Hotkeys.HOTKEY_LIST);
-    private static final BaseConfigTab DISABLE_TOGGLES = new BaseConfigTab("tweakeroo.gui.button.config_gui.disable_toggle", 80, false, ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS)));
-    private static final BaseConfigTab DISABLE_HOTKEYS = new BaseConfigTab("tweakeroo.gui.button.config_gui.disable_hotkeys", 204, true, ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(Configs.Disable.OPTIONS)));
-    private static final BaseConfigTab PLACEMENT       = new BaseConfigTab("tweakeroo.gui.button.config_gui.placement", 204, false, ImmutableList.of(),
-                                                                           (tab, gui) -> (button, mouseButton) -> { });
+    private static final BaseConfigTab GENERIC         = new BaseConfigTab("tweakeroo.gui.button.config_gui.generic",           Reference.MOD_NAME, 160, Configs.Generic.OPTIONS);
+    private static final BaseConfigTab FIXES           = new BaseConfigTab("tweakeroo.gui.button.config_gui.fixes",             Reference.MOD_NAME,  -1, Configs.Fixes.OPTIONS);
+    private static final BaseConfigTab LISTS           = new BaseConfigTab("tweakeroo.gui.button.config_gui.lists",             Reference.MOD_NAME, 200, Configs.Lists.OPTIONS);
+    private static final BaseConfigTab TWEAK_TOGGLES   = new BaseConfigTab("tweakeroo.gui.button.config_gui.tweaks",            Reference.MOD_NAME, 200, FeatureToggle.VALUES);
+    private static final BaseConfigTab DISABLE_TOGGLES = new BaseConfigTab("tweakeroo.gui.button.config_gui.disable_toggles",   Reference.MOD_NAME, 200, DisableToggle.VALUES);
+    private static final BaseConfigTab GENERIC_HOTKEYS = new BaseConfigTab("tweakeroo.gui.button.config_gui.generic_hotkeys",   Reference.MOD_NAME, 160, Hotkeys.HOTKEY_LIST);
+    private static final BaseConfigTab PLACEMENT       = new BaseConfigTab("tweakeroo.gui.button.config_gui.placement",         Reference.MOD_NAME, 204, ImmutableList.of(),
+                                                                           (tab, gui) -> (button, mouseButton) -> openPlacementStuffScreen(gui));
 
     private static final ImmutableList<ConfigTab> TABS = ImmutableList.of(
             GENERIC,
             FIXES,
             LISTS,
             TWEAK_TOGGLES,
-            TWEAK_HOTKEYS,
-            GENERIC_HOTKEYS,
             DISABLE_TOGGLES,
-            DISABLE_HOTKEYS,
+            GENERIC_HOTKEYS,
             PLACEMENT
     );
 
-    private static ConfigTab tab = TWEAK_TOGGLES;
-
-    public ConfigScreen()
+    public static BaseConfigScreen create()
     {
-        super(10, 50, Reference.MOD_ID, null, TABS, "tweakeroo.gui.title.configs");
+        return new BaseConfigScreen(10, 50, Reference.MOD_ID, null, TABS, TWEAK_TOGGLES, "tweakeroo.gui.title.configs");
     }
 
-    @Override
-    public ConfigTab getCurrentTab()
+
+    public static ImmutableList<ConfigTab> getConfigTabs()
     {
-        return tab;
+        return TABS;
     }
 
-    @Override
-    public void setCurrentTab(ConfigTab tab)
+    private static boolean openPlacementStuffScreen(BaseConfigScreen screen)
     {
-        ConfigScreen.tab = tab;
+        screen.setCurrentTab(PLACEMENT);
+        //BaseScreen.openGui(new PlacementStuffScreen());
+        return true;
     }
 }

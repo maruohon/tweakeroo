@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.DummyMovementInput;
@@ -34,7 +35,7 @@ public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.Ab
     private boolean onDoesGuiPauseGame(net.minecraft.client.gui.GuiScreen gui)
     {
         // Spoof the return value to prevent entering the if block
-        if (Configs.Disable.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue())
+        if (DisableToggle.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue())
         {
             return true;
         }
@@ -70,7 +71,7 @@ public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.Ab
                        target = "Lnet/minecraft/client/entity/EntityPlayerSP;collidedHorizontally:Z"))
     private boolean overrideCollidedHorizontally(net.minecraft.client.entity.EntityPlayerSP player)
     {
-        if (Configs.Disable.DISABLE_WALL_UNSPRINT.getBooleanValue())
+        if (DisableToggle.DISABLE_WALL_UNSPRINT.getBooleanValue())
         {
             return false;
         }
@@ -85,7 +86,7 @@ public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.Ab
                      target = "Lnet/minecraft/client/entity/EntityPlayerSP;sprintToggleTimer:I"))
     private void disableDoubleTapSprint(CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_DOUBLE_TAP_SPRINT.getBooleanValue())
+        if (DisableToggle.DISABLE_DOUBLE_TAP_SPRINT.getBooleanValue())
         {
             this.sprintToggleTimer = 0;
         }

@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 
 @Mixin(net.minecraft.client.renderer.tileentity.TileEntityChestRenderer.class)
 public abstract class MixinTileEntityChestRenderer extends
@@ -16,6 +16,6 @@ public abstract class MixinTileEntityChestRenderer extends
               target = "Lnet/minecraft/client/renderer/tileentity/TileEntityChestRenderer;isChristmas:Z"))
     private boolean disableChristmasTexture(net.minecraft.client.renderer.tileentity.TileEntityChestRenderer renderer)
     {
-        return Configs.Disable.DISABLE_CHRISTMAS_CHESTS.getBooleanValue() ? false : this.isChristmas;
+        return DisableToggle.DISABLE_CHRISTMAS_CHESTS.getBooleanValue() ? false : this.isChristmas;
     }
 }

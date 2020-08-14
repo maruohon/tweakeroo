@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
@@ -64,7 +65,7 @@ public abstract class MixinGuiIngame extends net.minecraft.client.gui.Gui
     @Inject(method = "renderScoreboard", at = @At("HEAD"), cancellable = true)
     private void disableScoreboardRendering(CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_SCOREBOARD_RENDERING.getBooleanValue())
+        if (DisableToggle.DISABLE_SCOREBOARD_RENDERING.getBooleanValue())
         {
             ci.cancel();
         }

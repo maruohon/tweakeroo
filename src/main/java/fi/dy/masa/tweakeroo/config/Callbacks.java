@@ -13,10 +13,10 @@ import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.malilib.config.ValueChangeCallback;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.gui.BaseScreen;
-import fi.dy.masa.malilib.input.callback.HotkeyCallback;
-import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.KeyAction;
+import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
+import fi.dy.masa.malilib.input.callback.HotkeyCallback;
 import fi.dy.masa.malilib.render.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.RayTraceFluidHandling;
@@ -34,42 +34,44 @@ public class Callbacks
 {
     public static boolean skipWorldRendering;
 
-    public static void init(Minecraft mc)
+    public static void init()
     {
+        Minecraft mc = Minecraft.getMinecraft();
+
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
-        Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN));
-        Configs.Lists.REPAIR_MODE_SLOTS.setValueChangeCallback((newValue, oldValue) -> { InventoryUtils.setRepairModeSlots(newValue); });
-        Configs.Lists.UNSTACKING_ITEMS.setValueChangeCallback((newValue, oldValue) -> { InventoryUtils.setUnstackingItems(newValue); });
+        DisableToggle.DISABLE_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(DisableToggle.DISABLE_SLIME_BLOCK_SLOWDOWN.getBooleanConfig()));
+        Configs.Lists.REPAIR_MODE_SLOTS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setRepairModeSlots(newValue));
+        Configs.Lists.UNSTACKING_ITEMS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setUnstackingItems(newValue));
 
-        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> { PlacementTweaks.updateFastRightClickBlockRestriction(); });
-        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> { PlacementTweaks.updateFastRightClickBlockRestriction(); });
-        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.setValueChangeCallback((newValue, oldValue) -> { PlacementTweaks.updateFastRightClickBlockRestriction(); });
+        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickBlockRestriction());
+        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickBlockRestriction());
+        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickBlockRestriction());
 
-        Configs.Lists.FAST_RIGHT_CLICK_ITEM_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> { PlacementTweaks.updateFastRightClickItemRestriction(); });
-        Configs.Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> { PlacementTweaks.updateFastRightClickItemRestriction(); });
-        Configs.Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.setValueChangeCallback((newValue, oldValue) -> { PlacementTweaks.updateFastRightClickItemRestriction(); });
+        Configs.Lists.FAST_RIGHT_CLICK_ITEM_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickItemRestriction());
+        Configs.Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickItemRestriction());
+        Configs.Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickItemRestriction());
 
-        Configs.Lists.FAST_PLACEMENT_ITEM_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> { PlacementTweaks.updateFastPlacementItemRestriction(); });
-        Configs.Lists.FAST_PLACEMENT_ITEM_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> { PlacementTweaks.updateFastPlacementItemRestriction(); });
-        Configs.Lists.FAST_PLACEMENT_ITEM_WHITELIST.setValueChangeCallback((newValue, oldValue) -> { PlacementTweaks.updateFastPlacementItemRestriction(); });
+        Configs.Lists.FAST_PLACEMENT_ITEM_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastPlacementItemRestriction());
+        Configs.Lists.FAST_PLACEMENT_ITEM_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastPlacementItemRestriction());
+        Configs.Lists.FAST_PLACEMENT_ITEM_WHITELIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastPlacementItemRestriction());
 
-        Configs.Lists.ITEM_GLINT_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updateItemGlintRestriction(); });
-        Configs.Lists.ITEM_GLINT_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updateItemGlintRestriction(); });
-        Configs.Lists.ITEM_GLINT_WHITELIST.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updateItemGlintRestriction(); });
+        Configs.Lists.ITEM_GLINT_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateItemGlintRestriction());
+        Configs.Lists.ITEM_GLINT_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateItemGlintRestriction());
+        Configs.Lists.ITEM_GLINT_WHITELIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateItemGlintRestriction());
 
-        Configs.Lists.POTION_WARNING_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updatePotionRestrictionLists(); });
-        Configs.Lists.POTION_WARNING_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updatePotionRestrictionLists(); });
-        Configs.Lists.POTION_WARNING_WHITELIST.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updatePotionRestrictionLists(); });
+        Configs.Lists.POTION_WARNING_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updatePotionRestrictionLists());
+        Configs.Lists.POTION_WARNING_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updatePotionRestrictionLists());
+        Configs.Lists.POTION_WARNING_WHITELIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updatePotionRestrictionLists());
 
-        Configs.Lists.SOUND_DISABLE_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updateSoundRestrictionLists(); });
-        Configs.Lists.SOUND_DISABLE_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updateSoundRestrictionLists(); });
-        Configs.Lists.SOUND_DISABLE_WHITELIST.setValueChangeCallback((newValue, oldValue) -> { MiscTweaks.updateSoundRestrictionLists(); });
+        Configs.Lists.SOUND_DISABLE_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateSoundRestrictionLists());
+        Configs.Lists.SOUND_DISABLE_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateSoundRestrictionLists());
+        Configs.Lists.SOUND_DISABLE_WHITELIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateSoundRestrictionLists());
 
-        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind().setCallback(new KeyCallbackToggleWithSpecialMessage(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
+        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind().setCallback(new KeyCallbackToggleWithSpecialMessage(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanConfig()));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback((newValue, oldValue) -> {
             if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
             {
-                FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.setBooleanValue(newValue);
+                FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanConfig().setBooleanValue(newValue);
             }
         });
         FeatureToggle.TWEAK_FREE_CAMERA.setValueChangeCallback((newValue, oldValue) -> CameraEntity.setCameraState(newValue));
@@ -109,7 +111,7 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_2.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_3.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SCROLL.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.OPEN_CONFIG_GUI.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.OPEN_CONFIG_GUI.getKeyBind().setCallback((a, k) -> BaseScreen.openGui(ConfigScreen.create()));
         Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeyBind().setCallback(callbackGeneric);
@@ -135,7 +137,7 @@ public class Callbacks
 
     private static void createAdjustableCallbackFor(FeatureToggle feature)
     {
-        feature.getKeyBind().setCallback(new AdjustableKeyCallback(null, new KeyCallbackToggleWithSpecialMessage(feature)));
+        feature.getKeyBind().setCallback(new AdjustableKeyCallback(null, new KeyCallbackToggleWithSpecialMessage(feature.getBooleanConfig())));
     }
 
     public static class FeatureCallbackHold implements ValueChangeCallback<Boolean>
@@ -423,11 +425,6 @@ public class Callbacks
             else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
-                return true;
-            }
-            else if (key == Hotkeys.OPEN_CONFIG_GUI.getKeyBind())
-            {
-                BaseScreen.openGui(new ConfigScreen());
                 return true;
             }
             else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind())

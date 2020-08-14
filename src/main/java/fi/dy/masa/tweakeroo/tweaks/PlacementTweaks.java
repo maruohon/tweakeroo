@@ -213,7 +213,7 @@ public class PlacementTweaks
 
                 if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
                 {
-                    boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
+                    boolean rememberFlexible = Configs.Generic.REMEMBER_FLEXIBLE.getBooleanValue();
                     boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld();
                     boolean adjacentHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld();
                     boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
@@ -453,7 +453,7 @@ public class PlacementTweaks
         boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld();
         boolean offsetHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld();
         boolean adjacent = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld();
-        boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
+        boolean rememberFlexible = Configs.Generic.REMEMBER_FLEXIBLE.getBooleanValue();
         boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
         boolean offset = offsetHeld || (rememberFlexible && firstWasOffset);
 
@@ -561,7 +561,7 @@ public class PlacementTweaks
                 handleAccurate = true;
             }
 
-            if ((handleAccurate || afterClicker) && FeatureToggle.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue())
+            if ((handleAccurate || afterClicker) && Configs.Generic.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue())
             {
                 // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
                 double x = handleAccurate && isFacingValidFor(facing, stack) ? facing.getIndex() + 2 + posNew.getX() : hitVec.x;
@@ -595,7 +595,7 @@ public class PlacementTweaks
             }
         }
 
-        if (isFirstClick == false && FeatureToggle.FAST_PLACEMENT_REMEMBER_ALWAYS.getBooleanValue())
+        if (isFirstClick == false && Configs.Generic.FAST_PLACEMENT_REMEMBER.getBooleanValue())
         {
             return handleFlexibleBlockPlacement(controller, player, world, posIn, sideIn, playerYaw, hitVec, hand, null);
         }
@@ -759,7 +759,7 @@ public class PlacementTweaks
         EnumFacing facing = sideIn;
         boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
         boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld();
-        boolean rememberFlexible = FeatureToggle.REMEMBER_FLEXIBLE.getBooleanValue();
+        boolean rememberFlexible = Configs.Generic.REMEMBER_FLEXIBLE.getBooleanValue();
         boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
         boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
         boolean keys = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeyBind().isKeyBindHeld() || Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeyBind().isKeyBindHeld();
@@ -767,7 +767,7 @@ public class PlacementTweaks
 
         // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
         if (flexible && rotation && accurate == false &&
-            FeatureToggle.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() &&
+            Configs.Generic.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() &&
             isFacingValidFor(facing, stackOriginal))
         {
             facing = facing.getOpposite(); // go from block face to click on to the requested facing
@@ -825,7 +825,7 @@ public class PlacementTweaks
         tryRestockHand(player, hand, stackOriginal);
 
         if (FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue() &&
-            FeatureToggle.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() == false &&
+            Configs.Generic.CARPET_ACCURATE_PLACEMENT_PROTOCOL.getBooleanValue() == false &&
             world.getBlockState(posPlacement) != stateBefore)
         {
             for (int i = 0; i < afterClickerClickCount; i++)

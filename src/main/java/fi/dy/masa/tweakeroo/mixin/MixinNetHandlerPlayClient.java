@@ -16,7 +16,7 @@ import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.event.ClickEvent;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
-import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 
@@ -58,7 +58,7 @@ public abstract class MixinNetHandlerPlayClient
                                       target = "Lnet/minecraft/client/Minecraft;gameSettings:Lnet/minecraft/client/settings/GameSettings;")))
     private void preventPortalGuiClosing1(Minecraft mc, net.minecraft.client.gui.GuiScreen gui)
     {
-        if (Configs.Disable.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue() == false)
+        if (DisableToggle.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue() == false)
         {
             mc.displayGuiScreen(gui);
         }
@@ -69,7 +69,7 @@ public abstract class MixinNetHandlerPlayClient
                        target = "Lnet/minecraft/client/Minecraft;displayGuiScreen(Lnet/minecraft/client/gui/GuiScreen;)V"))
     private void preventPortalGuiClosing2(Minecraft mc, net.minecraft.client.gui.GuiScreen gui)
     {
-        if (Configs.Disable.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue() == false)
+        if (DisableToggle.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue() == false)
         {
             mc.displayGuiScreen(gui);
         }
@@ -82,7 +82,7 @@ public abstract class MixinNetHandlerPlayClient
     {
         // Allow clearing the download terrain screen, for example when first logging in,
         // but don't close the GUI otherwise.
-        if (Configs.Disable.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue() == false ||
+        if (DisableToggle.DISABLE_PORTAL_GUI_CLOSING.getBooleanValue() == false ||
             mc.currentScreen instanceof net.minecraft.client.gui.GuiDownloadTerrain)
         {
             mc.displayGuiScreen(gui);

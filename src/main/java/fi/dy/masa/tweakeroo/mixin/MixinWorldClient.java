@@ -1,7 +1,6 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import fi.dy.masa.tweakeroo.config.Configs;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.WorldInfo;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 
 @Mixin(WorldClient.class)
 public abstract class MixinWorldClient extends World
@@ -24,7 +24,7 @@ public abstract class MixinWorldClient extends World
     @Override
     public boolean checkLight(BlockPos pos)
     {
-        if (Configs.Disable.DISABLE_LIGHT_UPDATES_ALL.getBooleanValue() == false)
+        if (DisableToggle.DISABLE_LIGHT_UPDATES_ALL.getBooleanValue() == false)
         {
             return super.checkLight(pos);
         }
@@ -35,7 +35,7 @@ public abstract class MixinWorldClient extends World
     @Override
     public void setLightFor(EnumSkyBlock type, BlockPos pos, int lightValue)
     {
-        if (Configs.Disable.DISABLE_LIGHT_UPDATES_ALL.getBooleanValue() == false)
+        if (DisableToggle.DISABLE_LIGHT_UPDATES_ALL.getBooleanValue() == false)
         {
             super.setLightFor(type, pos, lightValue);
         }
@@ -44,7 +44,7 @@ public abstract class MixinWorldClient extends World
     @Override
     public void updateEntity(Entity entity)
     {
-        if (Configs.Disable.DISABLE_CLIENT_ENTITY_UPDATES.getBooleanValue() == false || entity instanceof EntityPlayer)
+        if (DisableToggle.DISABLE_CLIENT_ENTITY_UPDATES.getBooleanValue() == false || entity instanceof EntityPlayer)
         {
             super.updateEntity(entity);
         }

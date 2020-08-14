@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
@@ -25,7 +25,7 @@ public abstract class MixinParticleManager
             net.minecraft.block.state.IBlockState state,
             CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_BLOCK_BREAK_PARTICLES.getBooleanValue())
+        if (DisableToggle.DISABLE_BLOCK_BREAK_PARTICLES.getBooleanValue())
         {
             ci.cancel();
             return;
@@ -43,7 +43,7 @@ public abstract class MixinParticleManager
             net.minecraft.client.particle.Particle effect,
             CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_PARTICLES.getBooleanValue())
+        if (DisableToggle.DISABLE_PARTICLES.getBooleanValue())
         {
             ci.cancel();
         }
