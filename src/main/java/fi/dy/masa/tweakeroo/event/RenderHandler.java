@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import fi.dy.masa.malilib.config.value.ActiveMode;
 import fi.dy.masa.malilib.event.PostGameOverlayRenderer;
@@ -101,9 +102,12 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
             mc.objectMouseOver != null &&
             mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK &&
+            mc.player.isSpectator() == false &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld() ||
-             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld()))
+             Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld()) &&
+            (mc.player.getHeldItem(EnumHand.MAIN_HAND).isEmpty() == false ||
+             mc.player.getHeldItem(EnumHand.OFF_HAND).isEmpty() == false))
         {
             Entity entity = mc.getRenderViewEntity() != null ? mc.getRenderViewEntity() : mc.player;
             GlStateManager.depthMask(false);
