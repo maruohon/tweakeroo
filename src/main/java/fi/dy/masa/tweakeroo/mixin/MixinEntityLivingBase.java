@@ -5,13 +5,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.DisableToggle;
 
 @Mixin(EntityLivingBase.class)
 public abstract class MixinEntityLivingBase extends Entity
@@ -33,7 +33,7 @@ public abstract class MixinEntityLivingBase extends Entity
             cancellable = true)
     private void removeOwnPotionEffects(CallbackInfo ci)
     {
-        if (FeatureToggle.TWEAK_REMOVE_OWN_POTION_EFFECTS.getBooleanValue() &&
+        if (DisableToggle.DISABLE_FP_POTION_EFFECTS.getBooleanValue() &&
             ((Object) this) == Minecraft.getMinecraft().player &&
             Minecraft.getMinecraft().gameSettings.thirdPersonView == 0)
         {

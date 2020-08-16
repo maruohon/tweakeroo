@@ -24,6 +24,7 @@ public enum DisableToggle implements ConfigInfo
     DISABLE_ENTITY_RENDERING        ("disableEntityRendering",              false),
     DISABLE_ENTITY_TICKING          ("disableEntityTicking",                false),
     DISABLE_FALLING_BLOCK_RENDER    ("disableFallingBlockEntityRendering",  false),
+    DISABLE_FP_POTION_EFFECTS       ("disableFirstPersonPotionEffects",     false),
     DISABLE_INVENTORY_EFFECTS       ("disableInventoryEffectRendering",     false),
     DISABLE_ITEM_GLINT              ("disableItemGlint",                    false),
     DISABLE_ITEM_SWITCH_COOLDOWN    ("disableItemSwitchRenderCooldown",     false),

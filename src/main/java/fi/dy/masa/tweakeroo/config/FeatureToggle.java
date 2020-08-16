@@ -76,7 +76,6 @@ public enum FeatureToggle implements ConfigInfo
     TWEAK_POTION_WARNING                ("tweakPotionWarning",                      false),
     TWEAK_PRINT_DEATH_COORDINATES       ("tweakPrintDeathCoordinates",              false),
     TWEAK_RELAXED_BLOCK_PLACEMENT       ("tweakRelaxedBlockPlacement",              false),
-    TWEAK_REMOVE_OWN_POTION_EFFECTS     ("tweakRemoveOwnPotionEffects",             false),
     TWEAK_RENDER_EDGE_CHUNKS            ("tweakRenderEdgeChunks",                   false),
     TWEAK_RENDER_INVISIBLE_ENTITIES     ("tweakRenderInvisibleEntities",            false),
     TWEAK_RENDER_LIMIT_ENTITIES         ("tweakRenderLimitEntities",                false),
