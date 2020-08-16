@@ -78,7 +78,7 @@ public abstract class MixinEntityRenderer
     {
         if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() && Configs.Generic.LAVA_VISIBILITY_OPTIFINE.getBooleanValue() == false)
         {
-            RenderUtils.overrideLavaFog(net.minecraft.client.Minecraft.getMinecraft().getRenderViewEntity());
+            RenderUtils.overrideLavaFog(net.minecraft.client.Minecraft.getMinecraft().player);
         }
     }
 

@@ -23,7 +23,7 @@ public abstract class MixinGlStateManager
             FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() &&
             Configs.Generic.LAVA_VISIBILITY_OPTIFINE.getBooleanValue())
         {
-            return RenderUtils.getLavaFog(Minecraft.getMinecraft().getRenderViewEntity(), fogDensity);
+            return RenderUtils.getLavaFog(Minecraft.getMinecraft().player, fogDensity);
         }
         else
         {
