@@ -782,7 +782,7 @@ public class PlacementTweaks
             hitVecIn = new Vec3d(x, hitVecIn.y, hitVecIn.z);
         }
 
-        if (FeatureToggle.TWEAK_Y_MIRROR.getBooleanValue() && Hotkeys.PLACEMENT_Y_MIRROR.getKeyBind().isKeyBindHeld())
+        if (FeatureToggle.TWEAK_BLOCK_PLACEMENT_Y_MIRROR.getBooleanValue() && Hotkeys.PLACEMENT_Y_MIRROR.getKeyBind().isKeyBindHeld())
         {
             double y = 1 - hitVecIn.y + 2 * posIn.getY(); // = 1 - (hitVec.y - pos.getY()) + pos.getY();
             hitVecIn = new Vec3d(hitVecIn.x, y, hitVecIn.z);

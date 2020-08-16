@@ -18,6 +18,7 @@ public enum FeatureToggle implements ConfigInfo
     TWEAK_AFTER_CLICKER                 ("tweakAfterClicker",                       false, KeyBindSettings.INGAME_BOTH),
     TWEAK_AIM_LOCK                      ("tweakAimLock",                            false),
     TWEAK_ANGEL_BLOCK                   ("tweakAngelBlock",                         false),
+    TWEAK_BLOCK_PLACEMENT_Y_MIRROR      ("tweakBlockPlacementYMirror",              false),
     TWEAK_BLOCK_BREAKING_PARTICLES      ("tweakBlockBreakingParticleTweaks",        false),
     TWEAK_BLOCK_REACH_OVERRIDE          ("tweakBlockReachOverride",                 false),
     TWEAK_BREAKING_GRID                 ("tweakBreakingGrid",                       false, KeyBindSettings.INGAME_BOTH),
@@ -91,7 +92,6 @@ public enum FeatureToggle implements ConfigInfo
     TWEAK_TAB_COMPLETE_COORDINATE       ("tweakTabCompleteCoordinate",              false),
     TWEAK_TILE_RENDER_DISTANCE          ("tweakTileEntityRenderDistance",           false),
     TWEAK_TOOL_SWITCH                   ("tweakToolSwitch",                         false),
-    TWEAK_Y_MIRROR                      ("tweakYMirror",                            false),
     TWEAK_ZOOM                          ("tweakZoom",                               false, KeyBindSettings.INGAME_BOTH);
 
     public static final ImmutableList<FeatureToggle> VALUES = ImmutableList.copyOf(values());
