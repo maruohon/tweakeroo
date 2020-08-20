@@ -176,27 +176,27 @@ tweakeroo.config.name.elytrafix=Elytra Fix
 tweakeroo.config.name.tileentityunloadoptimization=Tile Entity Unload Optimization
 
 
-tweakeroo.config.name.fastplacementitemblacklist=Fast Placement Item Black List 
-tweakeroo.config.name.fastplacementitemwhitelist=Fast Placement Item White List 
-tweakeroo.config.name.fastrightclickblockblacklist=Fast Right Click Block Black List 
-tweakeroo.config.name.fastrightclickblockwhitelist=Fast Right Click Block White List 
-tweakeroo.config.name.fastrightclickitemblacklist=Fast Right Click Item Black List 
-tweakeroo.config.name.fastrightclickitemwhitelist=Fast Right Click Item White List 
-tweakeroo.config.name.flatworldpresets=Flat World Presets 
-tweakeroo.config.name.itemglintblacklist=Item Glint Black List 
-tweakeroo.config.name.itemglintwhitelist=Item Glint White List 
-tweakeroo.config.name.potionwarningblacklist=Potion Warning Black List 
-tweakeroo.config.name.potionwarningwhitelist=Potion Warning White List 
-tweakeroo.config.name.repairmodeslots=Repair Mode Slots 
-tweakeroo.config.name.sounddisableblacklist=Sound Disable Black List 
-tweakeroo.config.name.sounddisablewhitelist=Sound Disable White List 
-tweakeroo.config.name.unstackingitems=Unstacking Items 
+tweakeroo.config.name.fastplacementitemblacklist=Fast Placement Item Black List
+tweakeroo.config.name.fastplacementitemwhitelist=Fast Placement Item White List
+tweakeroo.config.name.fastrightclickblockblacklist=Fast Right Click Block Black List
+tweakeroo.config.name.fastrightclickblockwhitelist=Fast Right Click Block White List
+tweakeroo.config.name.fastrightclickitemblacklist=Fast Right Click Item Black List
+tweakeroo.config.name.fastrightclickitemwhitelist=Fast Right Click Item White List
+tweakeroo.config.name.flatworldpresets=Flat World Presets
+tweakeroo.config.name.itemglintblacklist=Item Glint Black List
+tweakeroo.config.name.itemglintwhitelist=Item Glint White List
+tweakeroo.config.name.potionwarningblacklist=Potion Warning Black List
+tweakeroo.config.name.potionwarningwhitelist=Potion Warning White List
+tweakeroo.config.name.repairmodeslots=Repair Mode Slots
+tweakeroo.config.name.sounddisableblacklist=Sound Disable Black List
+tweakeroo.config.name.sounddisablewhitelist=Sound Disable White List
+tweakeroo.config.name.unstackingitems=Unstacking Items
 
-tweakeroo.config.name.fastplacementitemlisttype=Fast Placement Item List Type 
-tweakeroo.config.name.fastrightclickblocklisttype=Fast Right Click Block List Type 
-tweakeroo.config.name.fastrightclickitemlisttype=Fast Right Click Item List Type 
-tweakeroo.config.name.itemglintlisttype=Item Glint List Type 
-tweakeroo.config.name.potionwarninglisttype=Potion Warning List Type 
+tweakeroo.config.name.fastplacementitemlisttype=Fast Placement Item List Type
+tweakeroo.config.name.fastrightclickblocklisttype=Fast Right Click Block List Type
+tweakeroo.config.name.fastrightclickitemlisttype=Fast Right Click Item List Type
+tweakeroo.config.name.itemglintlisttype=Item Glint List Type
+tweakeroo.config.name.potionwarninglisttype=Potion Warning List Type
 tweakeroo.config.name.sounddisablelisttype=Sound Disable List Type
 
 
