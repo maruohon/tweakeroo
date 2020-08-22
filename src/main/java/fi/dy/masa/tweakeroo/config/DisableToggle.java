@@ -4,7 +4,6 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.ValueChangeCallback;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
@@ -72,11 +71,6 @@ public enum DisableToggle implements ConfigInfo
         String nameKey = "tweakeroo.disable_toggle.name." + nameLower;
         this.toggleStatus.setNameTranslationKey(nameKey).setPrettyNameTranslationKey(nameKey);
         this.toggleStatus.setCommentTranslationKey("tweakeroo.disable_toggle.comment." + nameLower);
-    }
-
-    public void setValueChangeCallback(ValueChangeCallback<Boolean> callback)
-    {
-        this.toggleStatus.setValueChangeCallback(callback);
     }
 
     public boolean getBooleanValue()

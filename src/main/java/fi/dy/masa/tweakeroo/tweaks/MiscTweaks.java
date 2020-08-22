@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.gen.FlatLayerInfo;
+import fi.dy.masa.malilib.config.value.BlackWhiteList;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.render.message.MessageUtils;
 import fi.dy.masa.malilib.util.restriction.UsageRestriction;
@@ -133,28 +134,18 @@ public class MiscTweaks
         return IMixinFlatGeneratorInfo.getLayersFromStringInvoker(3, blockString).toArray(new FlatLayerInfo[0]);
     }
 
-    public static void updateItemGlintRestriction()
+    public static void updateItemGlintRestriction(BlackWhiteList list)
     {
-        ITEM_GLINT_RESTRICTION.setListType(Configs.Lists.ITEM_GLINT_LIST_TYPE.getOptionListValue());
-        ITEM_GLINT_RESTRICTION.setListContentsBasedOnRegistry(
-                Configs.Lists.ITEM_GLINT_BLACKLIST.getStrings(),
-                Configs.Lists.ITEM_GLINT_WHITELIST.getStrings(),
-                Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
+        ITEM_GLINT_RESTRICTION.setValuesBasedOnRegistry(list, Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
     }
 
-    public static void updatePotionRestrictionLists()
+    public static void updatePotionRestrictionLists(BlackWhiteList list)
     {
-        POTION_RESTRICTION.setListType(Configs.Lists.POTION_WARNING_LIST_TYPE.getOptionListValue());
-        POTION_RESTRICTION.setListContentsBasedOnRegistry(
-                Configs.Lists.POTION_WARNING_BLACKLIST.getStrings(),
-                Configs.Lists.POTION_WARNING_WHITELIST.getStrings(),
-                Potion.REGISTRY, "tweakeroo.error.invalid_potion_blacklist_entry");
+        POTION_RESTRICTION.setValuesBasedOnRegistry(list, Potion.REGISTRY, "tweakeroo.error.invalid_potion_blacklist_entry");
     }
 
-    public static void updateSoundRestrictionLists()
+    public static void updateSoundRestrictionLists(BlackWhiteList list)
     {
-        SOUND_RESTRICTION.setListType(Configs.Lists.SOUND_DISABLE_LIST_TYPE.getOptionListValue());
-        SOUND_RESTRICTION.setListContents(Configs.Lists.SOUND_DISABLE_BLACKLIST.getStrings(),
-                Configs.Lists.SOUND_DISABLE_WHITELIST.getStrings());
+        SOUND_RESTRICTION.setListContents(list);
     }
 }

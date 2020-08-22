@@ -118,11 +118,6 @@ public enum FeatureToggle implements ConfigInfo
         this.toggleStatus.setCommentTranslationKey("tweakeroo.feature_toggle.comment." + nameLower);
     }
 
-    public void setValueChangeCallback(ValueChangeCallback<Boolean> callback)
-    {
-        this.toggleStatus.setValueChangeCallback(callback);
-    }
-
     public boolean getBooleanValue()
     {
         return this.toggleStatus.getBooleanValue();

@@ -33,7 +33,7 @@ public class ConfigScreen
 
     public static BaseConfigScreen create()
     {
-        return new BaseConfigScreen(10, 50, Reference.MOD_ID, null, TABS, TWEAK_TOGGLES, "tweakeroo.gui.title.configs");
+        return new BaseConfigScreen(Reference.MOD_ID, null, TABS, TWEAK_TOGGLES, "tweakeroo.gui.title.configs");
     }
 
 

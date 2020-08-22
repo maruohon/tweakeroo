@@ -25,6 +25,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.config.value.BlackWhiteList;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.KeyBindImpl;
 import fi.dy.masa.malilib.util.BlockUtils;
@@ -1204,30 +1205,18 @@ public class PlacementTweaks
         return false;
     }
 
-    public static void updateFastRightClickBlockRestriction()
+    public static void updateFastRightClickBlockRestriction(BlackWhiteList list)
     {
-        FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListType(Configs.Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.getOptionListValue());
-        FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListContentsBasedOnRegistry(
-                Configs.Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.getStrings(),
-                Configs.Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.getStrings(),
-                Block.REGISTRY, "tweakeroo.error.invalid_block_blacklist_entry");
+        FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setValuesBasedOnRegistry(list, Block.REGISTRY, "tweakeroo.error.invalid_block_blacklist_entry");
     }
 
-    public static void updateFastRightClickItemRestriction()
+    public static void updateFastRightClickItemRestriction(BlackWhiteList list)
     {
-        FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListType(Configs.Lists.FAST_RIGHT_CLICK_ITEM_LIST_TYPE.getOptionListValue());
-        FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListContentsBasedOnRegistry(
-                Configs.Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.getStrings(),
-                Configs.Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.getStrings(),
-                Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
+        FAST_RIGHT_CLICK_ITEM_RESTRICTION.setValuesBasedOnRegistry(list, Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
     }
 
-    public static void updateFastPlacementItemRestriction()
+    public static void updateFastPlacementItemRestriction(BlackWhiteList list)
     {
-        FAST_PLACEMENT_ITEM_RESTRICTION.setListType(Configs.Lists.FAST_PLACEMENT_ITEM_LIST_TYPE.getOptionListValue());
-        FAST_PLACEMENT_ITEM_RESTRICTION.setListContentsBasedOnRegistry(
-                Configs.Lists.FAST_PLACEMENT_ITEM_BLACKLIST.getStrings(),
-                Configs.Lists.FAST_PLACEMENT_ITEM_WHITELIST.getStrings(),
-                Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
+        FAST_PLACEMENT_ITEM_RESTRICTION.setValuesBasedOnRegistry(list, Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
     }
 }

@@ -36,47 +36,63 @@ public class Callbacks
 
     public static void init()
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanConfig().setValueLoadCallback((newValue) -> {
+            // If the feature is enabled on game launch, apply it here. Note: This does require the Generic configs to be read first.
+            if (newValue) { Minecraft.getMinecraft().gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue(); }
+        });
 
-        FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
-        DisableToggle.DISABLE_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(DisableToggle.DISABLE_SLIME_BLOCK_SLOWDOWN.getBooleanConfig()));
+        FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> {
+            Minecraft mc = Minecraft.getMinecraft();
+            if (newValue) {
+                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(mc.gameSettings.gammaSetting);
+                mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
+            }
+            else { mc.gameSettings.gammaSetting = Configs.Internal.GAMMA_VALUE_ORIGINAL.getFloatValue(); }
+        });
+
+        DisableToggle.DISABLE_SLIME_BLOCK_SLOWDOWN.getBooleanConfig().setValueLoadCallback((newValue) -> { if (newValue) { Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness; } });
+        DisableToggle.DISABLE_SLIME_BLOCK_SLOWDOWN.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> {
+            if (newValue) { Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness; }
+            else { Blocks.SLIME_BLOCK.slipperiness = Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getFloatValue(); }
+        });
+
+        Minecraft mc = Minecraft.getMinecraft();
+        Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(mc.gameSettings.gammaSetting);
+        Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.slipperiness);
+
+        Configs.Lists.REPAIR_MODE_SLOTS.setValueLoadCallback(InventoryUtils::setRepairModeSlots);
         Configs.Lists.REPAIR_MODE_SLOTS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setRepairModeSlots(newValue));
+        Configs.Lists.UNSTACKING_ITEMS.setValueLoadCallback(InventoryUtils::setUnstackingItems);
         Configs.Lists.UNSTACKING_ITEMS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setUnstackingItems(newValue));
 
-        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickBlockRestriction());
-        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickBlockRestriction());
-        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_WHITELIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickBlockRestriction());
+        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_LIST.setValueLoadCallback(PlacementTweaks::updateFastRightClickBlockRestriction);
+        Configs.Lists.FAST_RIGHT_CLICK_BLOCK_LIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickBlockRestriction(newValue));
 
-        Configs.Lists.FAST_RIGHT_CLICK_ITEM_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickItemRestriction());
-        Configs.Lists.FAST_RIGHT_CLICK_ITEM_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickItemRestriction());
-        Configs.Lists.FAST_RIGHT_CLICK_ITEM_WHITELIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickItemRestriction());
+        Configs.Lists.FAST_RIGHT_CLICK_ITEM_LIST.setValueLoadCallback(PlacementTweaks::updateFastRightClickItemRestriction);
+        Configs.Lists.FAST_RIGHT_CLICK_ITEM_LIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastRightClickItemRestriction(newValue));
 
-        Configs.Lists.FAST_PLACEMENT_ITEM_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastPlacementItemRestriction());
-        Configs.Lists.FAST_PLACEMENT_ITEM_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastPlacementItemRestriction());
-        Configs.Lists.FAST_PLACEMENT_ITEM_WHITELIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastPlacementItemRestriction());
+        Configs.Lists.FAST_PLACEMENT_ITEM_LIST.setValueLoadCallback(PlacementTweaks::updateFastPlacementItemRestriction);
+        Configs.Lists.FAST_PLACEMENT_ITEM_LIST.setValueChangeCallback((newValue, oldValue) -> PlacementTweaks.updateFastPlacementItemRestriction(newValue));
 
-        Configs.Lists.ITEM_GLINT_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateItemGlintRestriction());
-        Configs.Lists.ITEM_GLINT_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateItemGlintRestriction());
-        Configs.Lists.ITEM_GLINT_WHITELIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateItemGlintRestriction());
+        Configs.Lists.ITEM_GLINT_ITEM_LIST.setValueLoadCallback(MiscTweaks::updateItemGlintRestriction);
+        Configs.Lists.ITEM_GLINT_ITEM_LIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateItemGlintRestriction(newValue));
 
-        Configs.Lists.POTION_WARNING_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updatePotionRestrictionLists());
-        Configs.Lists.POTION_WARNING_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updatePotionRestrictionLists());
-        Configs.Lists.POTION_WARNING_WHITELIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updatePotionRestrictionLists());
+        Configs.Lists.POTION_WARNING_LIST.setValueLoadCallback(MiscTweaks::updatePotionRestrictionLists);
+        Configs.Lists.POTION_WARNING_LIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updatePotionRestrictionLists(newValue));
 
-        Configs.Lists.SOUND_DISABLE_LIST_TYPE.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateSoundRestrictionLists());
-        Configs.Lists.SOUND_DISABLE_BLACKLIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateSoundRestrictionLists());
-        Configs.Lists.SOUND_DISABLE_WHITELIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateSoundRestrictionLists());
+        Configs.Lists.SOUND_DISABLE_LIST.setValueLoadCallback(MiscTweaks::updateSoundRestrictionLists);
+        Configs.Lists.SOUND_DISABLE_LIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateSoundRestrictionLists(newValue));
 
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind().setCallback(new KeyCallbackToggleWithSpecialMessage(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanConfig()));
-        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback((newValue, oldValue) -> {
+        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> {
             if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
             {
                 FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanConfig().setBooleanValue(newValue);
             }
         });
-        FeatureToggle.TWEAK_FREE_CAMERA.setValueChangeCallback((newValue, oldValue) -> CameraEntity.setCameraState(newValue));
-        FeatureToggle.TWEAK_HOLD_ATTACK.setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindAttack.getKeyCode()));
-        FeatureToggle.TWEAK_HOLD_USE.setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindUseItem.getKeyCode()));
+        FeatureToggle.TWEAK_FREE_CAMERA.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> CameraEntity.setCameraState(newValue));
+        FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanConfig().setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindAttack.getKeyCode()));
+        FeatureToggle.TWEAK_HOLD_USE.getBooleanConfig().setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindUseItem.getKeyCode()));
 
         HotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         HotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
@@ -160,68 +176,6 @@ public class Callbacks
             else
             {
                 KeyBinding.setKeyBindState(this.keyCode, false);
-            }
-        }
-    }
-
-    public static class FeatureCallbackGamma implements ValueChangeCallback<Boolean>
-    {
-        private final Minecraft mc;
-
-        public FeatureCallbackGamma(FeatureToggle feature, Minecraft mc)
-        {
-            this.mc = mc;
-
-            if (this.mc.gameSettings.gammaSetting <= 1.0F)
-            {
-                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.gameSettings.gammaSetting);
-            }
-
-            // If the feature is enabled on game launch, apply it here
-            if (feature.getBooleanValue())
-            {
-                this.mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
-            }
-        }
-
-        @Override
-        public void onValueChanged(Boolean newValue, Boolean oldValue)
-        {
-            if (newValue.booleanValue())
-            {
-                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.gameSettings.gammaSetting);
-                this.mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
-            }
-            else
-            {
-                this.mc.gameSettings.gammaSetting = (float) Configs.Internal.GAMMA_VALUE_ORIGINAL.getDoubleValue();
-            }
-        }
-    }
-
-    public static class FeatureCallbackSlime implements ValueChangeCallback<Boolean>
-    {
-        public FeatureCallbackSlime(BooleanConfig feature)
-        {
-            Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.slipperiness);
-
-            // If the feature is enabled on game launch, apply the overridden value here
-            if (feature.getBooleanValue())
-            {
-                Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness;
-            }
-        }
-
-        @Override
-        public void onValueChanged(Boolean newValue, Boolean oldValue)
-        {
-            if (newValue.booleanValue())
-            {
-                Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness;
-            }
-            else
-            {
-                Blocks.SLIME_BLOCK.slipperiness = (float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue();
             }
         }
     }

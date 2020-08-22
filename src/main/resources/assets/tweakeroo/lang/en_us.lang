@@ -76,28 +76,15 @@ tweakeroo.config.comment.elytrafix=Elytra deployment/landing fix by Earthcompute
 tweakeroo.config.comment.tileentityunloadoptimization=Optimizes the removal of unloading TileEntities from the World lists.\nThis can greatly improve performance if there are lots of TileEntities\nloaded in the world and/or unloading at once (in one chunk).
 
 
-tweakeroo.config.comment.fastplacementitemblacklist=The items that are NOT allowed to be used for the Fast Block Placement tweak,\nif the 'Fast Placement Item List Type' is set to Black List.
-tweakeroo.config.comment.fastplacementitemwhitelist=The items that are allowed to be used for the Fast Block Placement tweak,\nif the 'Fast Placement Item List Type' is set to White List.
-tweakeroo.config.comment.fastrightclickblockblacklist=The blocks that are NOT allowed to be right clicked on with\nthe Fast Right Click tweak, if the 'Fast Right Click Block List Type' is set to Black List.
-tweakeroo.config.comment.fastrightclickblockwhitelist=The blocks that are allowed to be right clicked on with\nthe Fast Right Click tweak, if the 'Fast Right Click Block List Type' is set to White List.
-tweakeroo.config.comment.fastrightclickitemblacklist=The items that are NOT allowed to be used for the Fast Right Click tweak,\nif the 'Fast Right Click List Type' is set to Black List.
-tweakeroo.config.comment.fastrightclickitemwhitelist=The items that are allowed to be used for the Fast Right Click tweak,\nif the 'Fast Right Click List Type' is set to White List.
-tweakeroo.config.comment.flatworldpresets=Custom flat world preset strings. These are in the format:\nname;blocks_string;biome;generation_features;icon_item\nThe blocks string format is the vanilla format, such as:\n62*minecraft:dirt,minecraft:grass\nThe biome should be the registry name, (but it can also be the int ID)\nThe icon item name format can be either minecraft:iron_nugget or minecraft:stained_glass@6
-tweakeroo.config.comment.itemglintblacklist=The items that will not have the glint effect,\nif 'Item Glint List Type' is blacklist.
-tweakeroo.config.comment.itemglintwhitelist=The only items that will have the glint effect,\nif 'Item Glint List Type' is whitelist");
-tweakeroo.config.comment.potionwarningblacklist=The potion effects that will not be warned about,\nif 'Potion Warning List Type' is blacklist.
-tweakeroo.config.comment.potionwarningwhitelist=The only potion effects that will be warned about,\nif 'Potion Warning List Type' is whitelist.
+tweakeroo.config.comment.fastplacementitemlist=The item restriction configs for the\n'Fast Block Placement' tweak (which items can\nor can't be placed using that feature).
+tweakeroo.config.comment.fastrightclickblocklist=The targeted block restriction configs for the\n'Fast Right Click' tweak. This controls which blocks\nyou can or can't use fast right clicking against.\nNote: This means the blocks you cursor is over!\nTo control which items you can or can't hold in your\nhand, use the 'Fast Right Click Item List' option instead.
+tweakeroo.config.comment.fastrightclickitemlist=The held item restriction configs for the\n'Fast Right Click' tweak. This controls which items\nyou can or can't use fast right clicking with.\nNote: This means the items you can or can't hold in your\nhand! To control which blocks you can or can't target,\nuse the 'Fast Right Click Block List' option instead.
+tweakeroo.config.comment.flatworldpresets=Custom flat world preset strings. These are in the format:\nname;blocks_string;biome;generation_features;icon_item\nThe blocks string format is the vanilla format, such as:\n62*minecraft:dirt,minecraft:grass\nThe biome should be the registry name, (but it can also be the int ID)\nThe icon item name format can be either\nminecraft:iron_nugget or minecraft:stained_glass@6
+tweakeroo.config.comment.itemglintitemlist=The item type configs for the 'Disable Item Glint' tweak.
+tweakeroo.config.comment.potionwarninglist=The effect type configs for the 'Potion Warning' tweak.
 tweakeroo.config.comment.repairmodeslots=The slots the repair mode should use\nValid values: mainhand, offhand, head, chest, legs, feet
-tweakeroo.config.comment.sounddisableblacklist=The sounds that will not play, if the 'Disable Sounds List' tweak is enabled\nand 'Sound Disable List Type' is blacklist.\nSee https://pastebin.com/mLSYyLLM for a list of vanilla 1.12 sounds.
-tweakeroo.config.comment.sounddisablewhitelist=The only sounds that will play, if the 'Disable Sounds List' tweak is enabled\nand 'Sound Disable List Type' is whitelist.\nSee https://pastebin.com/mLSYyLLM for a list of vanilla 1.12 sounds.
+tweakeroo.config.comment.sounddisablelist=The sound type configs for the 'Disable Sounds List' tweak.\nSee https://pastebin.com/mLSYyLLM for a list of vanilla 1.12 sounds.\nUse the Generic -> 'Sound Name Output' option to get any played\nsound names printed to the game console to see the name.\n(Don't leave that option on afterwards!!)
 tweakeroo.config.comment.unstackingitems=The items that should be considered for the\n'Item Unstacking Protection' tweak.
-
-tweakeroo.config.comment.fastplacementitemlisttype=The item restriction type for the 'Fast Block Placement' tweak.
-tweakeroo.config.comment.fastrightclickblocklisttype=The targeted block restriction type for the 'Fast Right Click' tweak.
-tweakeroo.config.comment.fastrightclickitemlisttype=The item restriction type for the 'Fast Right Click' tweak.
-tweakeroo.config.comment.itemglintlisttype=The item restriction type for the 'Disable Item Glint' tweak.
-tweakeroo.config.comment.potionwarninglisttype=The list type for the 'Potion Warning' tweak.
-tweakeroo.config.comment.sounddisablelisttype=The list type for the 'Disable Sounds List' tweak.
 
 
 tweakeroo.config.name.afterclickerclickcount=After Clicker Click Count
@@ -176,28 +163,15 @@ tweakeroo.config.name.elytrafix=Elytra Fix
 tweakeroo.config.name.tileentityunloadoptimization=Tile Entity Unload Optimization
 
 
-tweakeroo.config.name.fastplacementitemblacklist=Fast Placement Item Black List
-tweakeroo.config.name.fastplacementitemwhitelist=Fast Placement Item White List
-tweakeroo.config.name.fastrightclickblockblacklist=Fast Right Click Block Black List
-tweakeroo.config.name.fastrightclickblockwhitelist=Fast Right Click Block White List
-tweakeroo.config.name.fastrightclickitemblacklist=Fast Right Click Item Black List
-tweakeroo.config.name.fastrightclickitemwhitelist=Fast Right Click Item White List
+tweakeroo.config.name.fastplacementitemlist=Fast Placement Item List
+tweakeroo.config.name.fastrightclickblocklist=Fast Right Click Block List
+tweakeroo.config.name.fastrightclickitemlist=Fast Right Click Item List
 tweakeroo.config.name.flatworldpresets=Flat World Presets
-tweakeroo.config.name.itemglintblacklist=Item Glint Black List
-tweakeroo.config.name.itemglintwhitelist=Item Glint White List
-tweakeroo.config.name.potionwarningblacklist=Potion Warning Black List
-tweakeroo.config.name.potionwarningwhitelist=Potion Warning White List
+tweakeroo.config.name.itemglintitemlist=Item Glint Item List
+tweakeroo.config.name.potionwarninglist=Potion Warning List
 tweakeroo.config.name.repairmodeslots=Repair Mode Slots
-tweakeroo.config.name.sounddisableblacklist=Sound Disable Black List
-tweakeroo.config.name.sounddisablewhitelist=Sound Disable White List
+tweakeroo.config.name.sounddisablelist=Sound Disable List
 tweakeroo.config.name.unstackingitems=Unstacking Items
-
-tweakeroo.config.name.fastplacementitemlisttype=Fast Placement Item List Type
-tweakeroo.config.name.fastrightclickblocklisttype=Fast Right Click Block List Type
-tweakeroo.config.name.fastrightclickitemlisttype=Fast Right Click Item List Type
-tweakeroo.config.name.itemglintlisttype=Item Glint List Type
-tweakeroo.config.name.potionwarninglisttype=Potion Warning List Type
-tweakeroo.config.name.sounddisablelisttype=Sound Disable List Type
 
 
 tweakeroo.feature_toggle.comment.tweakaccurateblockplacement=Enables the "Accurate Placement" mode, where you have two keys\nto control the block placement: "into" and "reverse".\n"Into" will place the block facing into the block side\nyou click on, and "reverse" will flip it from\nwhatever the facing would be otherwise.\nThe reverse key can be used together with "into" or\nthe Flexible Placement "rotation" key.
