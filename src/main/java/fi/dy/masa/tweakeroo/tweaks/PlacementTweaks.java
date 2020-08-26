@@ -115,7 +115,7 @@ public class PlacementTweaks
 
     public static boolean onProcessRightClickPre(EntityPlayer player, EnumHand hand)
     {
-        InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+        InventoryUtils.trySwapCurrentToolIfNearlyBroken(hand);
 
         ItemStack stackOriginal = player.getHeldItem(hand);
 
@@ -182,7 +182,7 @@ public class PlacementTweaks
 
             for (int i = 0; i < count; ++i)
             {
-                InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+                InventoryUtils.trySwapCurrentToolIfNearlyBroken(EnumHand.MAIN_HAND);
                 isEmulatedClick = true;
                 ((IMinecraftAccessor) mc).leftClickMouseAccessor();
                 isEmulatedClick = false;
@@ -190,8 +190,8 @@ public class PlacementTweaks
         }
         else
         {
-            InventoryUtils.trySwapCurrentToolIfNearlyBroken();
             EnumHand hand = EnumHand.MAIN_HAND;
+            InventoryUtils.trySwapCurrentToolIfNearlyBroken(hand);
             tryRestockHand(mc.player, hand, stackBeforeUse[hand.ordinal()]);
         }
     }
@@ -800,7 +800,7 @@ public class PlacementTweaks
             InventoryUtils.switchToPickedBlock();
         }
 
-        InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+        InventoryUtils.trySwapCurrentToolIfNearlyBroken(hand);
 
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
         EnumActionResult result;

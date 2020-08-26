@@ -202,6 +202,7 @@ public class Configs implements ModConfig
         public static final BlackWhiteListConfig POTION_WARNING_LIST            = new BlackWhiteListConfig("potionWarningList", BlackWhiteList.of(ListType.NONE, ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing")));
         public static final StringListConfig REPAIR_MODE_SLOTS                  = new StringListConfig("repairModeSlots", ImmutableList.of("mainhand", "offhand"));
         public static final BlackWhiteListConfig SOUND_DISABLE_LIST             = new BlackWhiteListConfig("soundDisableList", BlackWhiteList.of(ListType.NONE, ImmutableList.of(), ImmutableList.of()));
+        public static final StringListConfig SWAP_BROKEN_TOOLS_SLOTS            = new StringListConfig("swapBrokenToolsSlots", ImmutableList.of("mainhand", "offhand"));
         public static final StringListConfig UNSTACKING_ITEMS                   = new StringListConfig("unstackingItems", ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle"));
 
         public static final ImmutableList<ConfigOption<?>> OPTIONS = ImmutableList.of(
@@ -213,6 +214,7 @@ public class Configs implements ModConfig
                 POTION_WARNING_LIST,
                 REPAIR_MODE_SLOTS,
                 SOUND_DISABLE_LIST,
+                SWAP_BROKEN_TOOLS_SLOTS,
                 UNSTACKING_ITEMS
         );
     }

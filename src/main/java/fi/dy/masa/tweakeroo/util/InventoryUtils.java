@@ -33,7 +33,8 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 public class InventoryUtils
 {
     private static final List<EntityEquipmentSlot> REPAIR_MODE_SLOTS = new ArrayList<>();
-    private static final List<Integer> REPAIR_MODE_SLOT_NUMBES = new ArrayList<>();
+    private static final List<EntityEquipmentSlot> SWAP_BROKEN_TOOLS_SLOTS = new ArrayList<>();
+    private static final List<Integer> REPAIR_MODE_SLOT_NUMBERS = new ArrayList<>();
     private static final HashSet<Item> UNSTACKING_ITEMS = new HashSet<>();
 
     public static void setUnstackingItems(List<String> names)
@@ -54,28 +55,51 @@ public class InventoryUtils
     public static void setRepairModeSlots(List<String> names)
     {
         REPAIR_MODE_SLOTS.clear();
-        REPAIR_MODE_SLOT_NUMBES.clear();
+        REPAIR_MODE_SLOT_NUMBERS.clear();
 
         for (String name : names)
         {
-            EntityEquipmentSlot type = null;
-
-            switch (name)
-            {
-                case "mainhand":    type = EntityEquipmentSlot.MAINHAND; break;
-                case "offhand":     type = EntityEquipmentSlot.OFFHAND; break;
-                case "head":        type = EntityEquipmentSlot.HEAD; break;
-                case "chest":       type = EntityEquipmentSlot.CHEST; break;
-                case "legs":        type = EntityEquipmentSlot.LEGS; break;
-                case "feet":        type = EntityEquipmentSlot.FEET; break;
-            }
+            EntityEquipmentSlot type = getEquipmentSlotByName(name);
 
             if (type != null)
             {
                 REPAIR_MODE_SLOTS.add(type);
-                REPAIR_MODE_SLOT_NUMBES.add(getSlotNumberForEquipmentType(type, null));
+                REPAIR_MODE_SLOT_NUMBERS.add(getSlotNumberForEquipmentType(type, null));
             }
         }
+    }
+
+    public static void setSwapBrokenToolsSlots(List<String> names)
+    {
+        SWAP_BROKEN_TOOLS_SLOTS.clear();
+
+        for (String name : names)
+        {
+            EntityEquipmentSlot type = getEquipmentSlotByName(name);
+
+            if (type != null)
+            {
+                SWAP_BROKEN_TOOLS_SLOTS.add(type);
+            }
+        }
+    }
+
+    @Nullable
+    private static EntityEquipmentSlot getEquipmentSlotByName(String name)
+    {
+        EntityEquipmentSlot slot = null;
+
+        switch (name)
+        {
+            case "mainhand":    slot = EntityEquipmentSlot.MAINHAND; break;
+            case "offhand":     slot = EntityEquipmentSlot.OFFHAND; break;
+            case "head":        slot = EntityEquipmentSlot.HEAD; break;
+            case "chest":       slot = EntityEquipmentSlot.CHEST; break;
+            case "legs":        slot = EntityEquipmentSlot.LEGS; break;
+            case "feet":        slot = EntityEquipmentSlot.FEET; break;
+        }
+
+        return slot;
     }
 
     private static boolean isConfiguredRepairSlot(int slotNum, EntityPlayer player)
@@ -86,7 +110,7 @@ public class InventoryUtils
             return true;
         }
 
-        return REPAIR_MODE_SLOT_NUMBES.contains(slotNum);
+        return REPAIR_MODE_SLOT_NUMBERS.contains(slotNum);
     }
 
     /**
@@ -179,25 +203,22 @@ public class InventoryUtils
         }
     }
 
-    public static void trySwapCurrentToolIfNearlyBroken()
+    public static void trySwapCurrentToolIfNearlyBroken(EnumHand hand)
     {
         if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
         {
             Minecraft mc = Minecraft.getMinecraft();
             EntityPlayer player = mc.player;
+            ItemStack stack = player.getHeldItem(hand);
+            EntityEquipmentSlot slot = hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND;
 
-            for (EnumHand hand : EnumHand.values())
+            if (stack.isEmpty() == false && SWAP_BROKEN_TOOLS_SLOTS.contains(slot))
             {
-                ItemStack stack = player.getHeldItem(hand);
+                int minDurability = getMinDurability(stack);
 
-                if (stack.isEmpty() == false)
+                if (isItemAtLowDurability(stack, minDurability))
                 {
-                    int minDurability = getMinDurability(stack);
-
-                    if (isItemAtLowDurability(stack, minDurability))
-                    {
-                        swapItemWithHigherDurabilityToHand(player, hand, stack, minDurability);
-                    }
+                    swapItemWithHigherDurabilityToHand(player, hand, stack, minDurability);
                 }
             }
         }

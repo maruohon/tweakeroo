@@ -62,6 +62,8 @@ public class Callbacks
 
         Configs.Lists.REPAIR_MODE_SLOTS.setValueLoadCallback(InventoryUtils::setRepairModeSlots);
         Configs.Lists.REPAIR_MODE_SLOTS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setRepairModeSlots(newValue));
+        Configs.Lists.SWAP_BROKEN_TOOLS_SLOTS.setValueLoadCallback(InventoryUtils::setSwapBrokenToolsSlots);
+        Configs.Lists.SWAP_BROKEN_TOOLS_SLOTS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setSwapBrokenToolsSlots(newValue));
         Configs.Lists.UNSTACKING_ITEMS.setValueLoadCallback(InventoryUtils::setUnstackingItems);
         Configs.Lists.UNSTACKING_ITEMS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setUnstackingItems(newValue));
 

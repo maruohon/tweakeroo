@@ -84,6 +84,7 @@ tweakeroo.config.comment.itemglintitemlist=The item type configs for the 'Disabl
 tweakeroo.config.comment.potionwarninglist=The effect type configs for the 'Potion Warning' tweak.
 tweakeroo.config.comment.repairmodeslots=The slots the repair mode should use\nValid values: mainhand, offhand, head, chest, legs, feet
 tweakeroo.config.comment.sounddisablelist=The sound type configs for the 'Disable Sounds List' tweak.\nSee https://pastebin.com/mLSYyLLM for a list of vanilla 1.12 sounds.\nUse the Generic -> 'Sound Name Output' option to get any played\nsound names printed to the game console to see the name.\n(Don't leave that option on afterwards!!)
+tweakeroo.config.comment.swapbrokentoolsslots=The slots that almost broken items will be swapped from.\nValid values: mainhand, offhand, head, chest, legs, feet
 tweakeroo.config.comment.unstackingitems=The items that should be considered for the\n'Item Unstacking Protection' tweak.
 
 
@@ -171,6 +172,7 @@ tweakeroo.config.name.itemglintitemlist=Item Glint Item List
 tweakeroo.config.name.potionwarninglist=Potion Warning List
 tweakeroo.config.name.repairmodeslots=Repair Mode Slots
 tweakeroo.config.name.sounddisablelist=Sound Disable List
+tweakeroo.config.name.swapbrokentoolsslots=Swap Almost Broken Items Slots
 tweakeroo.config.name.unstackingitems=Unstacking Items
 
 
