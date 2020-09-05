@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -10,6 +11,8 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ElytraItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -28,6 +31,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.util.Constants;
+import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -388,7 +392,43 @@ public class InventoryUtils
         return -1;
     }
 
+    public static void swapElytraWithChestPlate(@Nullable PlayerEntity player)
+    {
+        if (player == null || GuiUtils.getCurrentScreen() != null)
+        {
+            return;
+        }
+
+        ScreenHandler containerPlayer = player.currentScreenHandler;
+        ItemStack currentStack = player.getEquippedStack(EquipmentSlot.CHEST);
+
+        Predicate<ItemStack> stackFilterChestPlate = (s) -> s.getItem() instanceof ArmorItem && ((ArmorItem) s.getItem()).getSlotType() == EquipmentSlot.CHEST;
+        Predicate<ItemStack> stackFilterElytra = (s) -> s.getItem() instanceof ElytraItem && ElytraItem.isUsable(s);
+        Predicate<ItemStack> stackFilter = currentStack.isEmpty() || stackFilterChestPlate.test(currentStack) ? stackFilterElytra : stackFilterChestPlate;
+
+        List<Slot> targetSlots = new ArrayList<>();
+
+        for (Slot slot : containerPlayer.slots)
+        {
+            ItemStack stack = slot.getStack();
+
+            if (stack.isEmpty() == false &&
+                stackFilter.test(stack) &&
+                stack.getDamage() < stack.getMaxDamage() - 10)
+            {
+                targetSlots.add(slot);
+            }
+        }
+
+        if (targetSlots.isEmpty() == false)
+        {
+            //targetSlots.sort();
+            swapItemToEqupmentSlot(player, EquipmentSlot.CHEST, targetSlots.get(0).id);
+        }
+    }
+
     /**
+     * 
      * Finds a slot with an identical item than <b>stackReference</b>, ignoring the durability
      * of damageable items. Does not allow crafting or armor slots or the offhand slot
      * in the ContainerPlayer container.

@@ -86,6 +86,7 @@ public class Callbacks
         Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeybind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.SWAP_ELYTRA_CHESTPLATE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
         Hotkeys.ZOOM_ACTIVATE.getKeybind().setCallback(callbackGeneric);
@@ -381,6 +382,11 @@ public class Callbacks
             else if (key == Hotkeys.OPEN_CONFIG_GUI.getKeybind())
             {
                 GuiBase.openGui(new GuiConfigs());
+                return true;
+            }
+            else if (key == Hotkeys.SWAP_ELYTRA_CHESTPLATE.getKeybind())
+            {
+                InventoryUtils.swapElytraWithChestPlate(this.mc.player);
                 return true;
             }
             else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind())
