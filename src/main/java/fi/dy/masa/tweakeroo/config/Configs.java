@@ -1,7 +1,17 @@
 package fi.dy.masa.tweakeroo.config;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import fi.dy.masa.malilib.config.BaseConfigOptionCategory;
 import fi.dy.masa.malilib.config.ConfigOptionCategory;
 import fi.dy.masa.malilib.config.ModConfig;
@@ -10,9 +20,12 @@ import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.config.option.ColorConfig;
 import fi.dy.masa.malilib.config.option.ConfigOption;
 import fi.dy.masa.malilib.config.option.DoubleConfig;
+import fi.dy.masa.malilib.config.option.EquipmentSlotListConfig;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.config.option.HotkeyedBooleanConfig;
+import fi.dy.masa.malilib.config.option.IdentifierListConfig;
 import fi.dy.masa.malilib.config.option.IntegerConfig;
+import fi.dy.masa.malilib.config.option.ItemListConfig;
 import fi.dy.masa.malilib.config.option.OptionListConfig;
 import fi.dy.masa.malilib.config.option.StringConfig;
 import fi.dy.masa.malilib.config.option.StringListConfig;
@@ -194,16 +207,17 @@ public class Configs implements ModConfig
 
     public static class Lists
     {
-        public static final BlackWhiteListConfig FAST_PLACEMENT_ITEM_LIST       = new BlackWhiteListConfig("fastPlacementItemList", BlackWhiteList.of(ListType.BLACKLIST, ImmutableList.of("minecraft:ender_chest", "minecraft:white_shulker_box"), ImmutableList.of()));
-        public static final BlackWhiteListConfig FAST_RIGHT_CLICK_BLOCK_LIST    = new BlackWhiteListConfig("fastRightClickBlockList", BlackWhiteList.of(ListType.BLACKLIST, ImmutableList.of("minecraft:chest", "minecraft:ender_chest", "minecraft:trapped_chest", "minecraft:white_shulker_box"), ImmutableList.of()));
-        public static final BlackWhiteListConfig FAST_RIGHT_CLICK_ITEM_LIST     = new BlackWhiteListConfig("fastRightClickItemList", BlackWhiteList.of(ListType.BLACKLIST, ImmutableList.of("minecraft:fireworks"), ImmutableList.of("minecraft:bucket", "minecraft:water_bucket", "minecraft:lava_bucket", "minecraft:glass_bottle")));
         public static final StringListConfig FLAT_WORLD_PRESETS                 = new StringListConfig("flatWorldPresets", ImmutableList.of("White Glass;1*minecraft:stained_glass;minecraft:plains;;minecraft:stained_glass", "Glass;1*minecraft:glass;minecraft:plains;;minecraft:glass"));
-        public static final BlackWhiteListConfig ITEM_GLINT_ITEM_LIST           = new BlackWhiteListConfig("itemGlintItemList", BlackWhiteList.of(ListType.BLACKLIST, ImmutableList.of("minecraft:potion"), ImmutableList.of()));
-        public static final BlackWhiteListConfig POTION_WARNING_LIST            = new BlackWhiteListConfig("potionWarningList", BlackWhiteList.of(ListType.NONE, ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing")));
-        public static final StringListConfig REPAIR_MODE_SLOTS                  = new StringListConfig("repairModeSlots", ImmutableList.of("mainhand", "offhand"));
-        public static final BlackWhiteListConfig SOUND_DISABLE_LIST             = new BlackWhiteListConfig("soundDisableList", BlackWhiteList.of(ListType.NONE, ImmutableList.of(), ImmutableList.of()));
-        public static final StringListConfig SWAP_BROKEN_TOOLS_SLOTS            = new StringListConfig("swapBrokenToolsSlots", ImmutableList.of("mainhand", "offhand"));
-        public static final StringListConfig UNSTACKING_ITEMS                   = new StringListConfig("unstackingItems", ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle"));
+        public static final EquipmentSlotListConfig REPAIR_MODE_SLOTS           = EquipmentSlotListConfig.create("repairModeSlots", ImmutableList.of(EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND));
+        public static final EquipmentSlotListConfig SWAP_BROKEN_TOOLS_SLOTS     = EquipmentSlotListConfig.create("swapBrokenToolsSlots", ImmutableList.of(EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND), ImmutableList.of(EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND));
+        public static final ItemListConfig UNSTACKING_ITEMS                     = new ItemListConfig("unstackingItems", ImmutableList.of(Items.BUCKET, Items.GLASS_BOTTLE));
+
+        public static final BlackWhiteListConfig<Item>              FAST_PLACEMENT_ITEM_LIST        = new BlackWhiteListConfig<>("fastPlacementItemList", BlackWhiteList.itemNames(ListType.BLACKLIST, ImmutableList.of("minecraft:ender_chest", "minecraft:white_shulker_box"), ImmutableList.of()));
+        public static final BlackWhiteListConfig<Block>             FAST_RIGHT_CLICK_BLOCK_LIST     = new BlackWhiteListConfig<>("fastRightClickBlockList", BlackWhiteList.blocks(ListType.BLACKLIST, ImmutableList.of(Blocks.CHEST, Blocks.ENDER_CHEST, Blocks.TRAPPED_CHEST, Blocks.WHITE_SHULKER_BOX), ImmutableList.of()));
+        public static final BlackWhiteListConfig<Item>              FAST_RIGHT_CLICK_ITEM_LIST      = new BlackWhiteListConfig<>("fastRightClickItemList", BlackWhiteList.items(ListType.BLACKLIST, ImmutableList.of(Items.FIREWORKS), ImmutableList.of(Items.BUCKET, Items.WATER_BUCKET, Items.LAVA_BUCKET, Items.GLASS_BOTTLE)));
+        public static final BlackWhiteListConfig<Item>              ITEM_GLINT_ITEM_LIST            = new BlackWhiteListConfig<>("itemGlintItemList", BlackWhiteList.items(ListType.BLACKLIST, ImmutableList.of(Items.POTIONITEM, Items.SPLASH_POTION, Items.LINGERING_POTION), ImmutableList.of()));
+        public static final BlackWhiteListConfig<Potion>            POTION_WARNING_LIST             = new BlackWhiteListConfig<>("potionWarningList", BlackWhiteList.effects(ListType.NONE, ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing")));
+        public static final BlackWhiteListConfig<ResourceLocation>  SOUND_DISABLE_LIST              = new BlackWhiteListConfig<>("soundDisableList", new BlackWhiteList<>(ListType.NONE, IdentifierListConfig.create("malilib.label.list_type.blacklist", getSortedSoundNamesList()), IdentifierListConfig.create("malilib.label.list_type.whitelist", getSortedSoundNamesList())));
 
         public static final ImmutableList<ConfigOption<?>> OPTIONS = ImmutableList.of(
                 FAST_PLACEMENT_ITEM_LIST,
@@ -217,6 +231,13 @@ public class Configs implements ModConfig
                 SWAP_BROKEN_TOOLS_SLOTS,
                 UNSTACKING_ITEMS
         );
+
+        public static List<ResourceLocation> getSortedSoundNamesList()
+        {
+            List<ResourceLocation> names = new ArrayList<>(SoundEvent.REGISTRY.getKeys());
+            names.sort(Comparator.comparing(ResourceLocation::toString));
+            return names;
+        }
     }
 
     public static class Internal

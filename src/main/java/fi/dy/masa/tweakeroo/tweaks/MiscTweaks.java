@@ -10,11 +10,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.gen.FlatLayerInfo;
 import fi.dy.masa.malilib.config.value.BlackWhiteList;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.render.message.MessageUtils;
+import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.malilib.util.restriction.UsageRestriction;
+import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -22,13 +26,20 @@ import fi.dy.masa.tweakeroo.mixin.IMixinFlatGeneratorInfo;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.IMinecraftAccessor;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.SoundRestriction;
 
 public class MiscTweaks
 {
     private static final UsageRestriction<Item> ITEM_GLINT_RESTRICTION = new UsageRestriction<>();
     private static final UsageRestriction<Potion> POTION_RESTRICTION = new UsageRestriction<>();
-    private static final SoundRestriction SOUND_RESTRICTION = new SoundRestriction();
+    private static final UsageRestriction<ResourceLocation> SOUND_RESTRICTION = new UsageRestriction<>((rl) -> {
+        SoundEvent soundEvent = SoundEvent.REGISTRY.getObject(rl);
+         if (soundEvent != null && soundEvent.getSoundName() != null)
+         {
+             return true;
+         }
+         LiteModTweakeroo.logger.warn(StringUtils.translate("tweakeroo.error.invalid_sound_blacklist_entry", rl.toString()));
+         return false;
+    });
 
     private static int potionWarningTimer;
     private static int periodicAttackCounter;
@@ -134,17 +145,17 @@ public class MiscTweaks
         return IMixinFlatGeneratorInfo.getLayersFromStringInvoker(3, blockString).toArray(new FlatLayerInfo[0]);
     }
 
-    public static void updateItemGlintRestriction(BlackWhiteList list)
+    public static void updateItemGlintRestriction(BlackWhiteList<Item> list)
     {
-        ITEM_GLINT_RESTRICTION.setValuesBasedOnRegistry(list, Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
+        ITEM_GLINT_RESTRICTION.setListContents(list);
     }
 
-    public static void updatePotionRestrictionLists(BlackWhiteList list)
+    public static void updatePotionRestrictionLists(BlackWhiteList<Potion> list)
     {
-        POTION_RESTRICTION.setValuesBasedOnRegistry(list, Potion.REGISTRY, "tweakeroo.error.invalid_potion_blacklist_entry");
+        POTION_RESTRICTION.setListContents(list);
     }
 
-    public static void updateSoundRestrictionLists(BlackWhiteList list)
+    public static void updateSoundRestrictionLists(BlackWhiteList<ResourceLocation> list)
     {
         SOUND_RESTRICTION.setListContents(list);
     }

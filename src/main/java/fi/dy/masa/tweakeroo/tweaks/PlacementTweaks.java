@@ -1205,18 +1205,18 @@ public class PlacementTweaks
         return false;
     }
 
-    public static void updateFastRightClickBlockRestriction(BlackWhiteList list)
+    public static void updateFastRightClickBlockRestriction(BlackWhiteList<Block> list)
     {
-        FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setValuesBasedOnRegistry(list, Block.REGISTRY, "tweakeroo.error.invalid_block_blacklist_entry");
+        FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListContents(list);
     }
 
-    public static void updateFastRightClickItemRestriction(BlackWhiteList list)
+    public static void updateFastRightClickItemRestriction(BlackWhiteList<Item> list)
     {
-        FAST_RIGHT_CLICK_ITEM_RESTRICTION.setValuesBasedOnRegistry(list, Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
+        FAST_RIGHT_CLICK_ITEM_RESTRICTION.setListContents(list);
     }
 
-    public static void updateFastPlacementItemRestriction(BlackWhiteList list)
+    public static void updateFastPlacementItemRestriction(BlackWhiteList<Item> list)
     {
-        FAST_PLACEMENT_ITEM_RESTRICTION.setValuesBasedOnRegistry(list, Item.REGISTRY, "malilib.error.invalid_item_blacklist_entry");
+        FAST_PLACEMENT_ITEM_RESTRICTION.setListContents(list);
     }
 }

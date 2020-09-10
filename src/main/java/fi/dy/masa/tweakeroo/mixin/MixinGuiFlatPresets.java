@@ -10,14 +10,14 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import net.minecraft.client.gui.GuiFlatPresets;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.FlatLayerInfo;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 
 @Mixin(GuiFlatPresets.class)
 public abstract class MixinGuiFlatPresets
@@ -45,7 +45,7 @@ public abstract class MixinGuiFlatPresets
                 FLAT_WORLD_PRESETS.remove(0);
             }
 
-            List<String> presets = Configs.Lists.FLAT_WORLD_PRESETS.getStrings();
+            List<String> presets = Configs.Lists.FLAT_WORLD_PRESETS.getValues();
 
             for (int i = presets.size() - 1; i >= 0; --i)
             {

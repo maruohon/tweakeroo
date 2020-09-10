@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerPlayer;
@@ -20,13 +19,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import fi.dy.masa.malilib.util.data.Constants;
 import fi.dy.masa.malilib.render.message.MessageUtils;
+import fi.dy.masa.malilib.util.data.Constants;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
@@ -37,49 +35,36 @@ public class InventoryUtils
     private static final List<Integer> REPAIR_MODE_SLOT_NUMBERS = new ArrayList<>();
     private static final HashSet<Item> UNSTACKING_ITEMS = new HashSet<>();
 
-    public static void setUnstackingItems(List<String> names)
+    public static void setUnstackingItems(List<Item> items)
     {
         UNSTACKING_ITEMS.clear();
-
-        for (String name : names)
-        {
-            Item item = Item.REGISTRY.getObject(new ResourceLocation(name));
-
-            if (item != null && item != Items.AIR)
-            {
-                UNSTACKING_ITEMS.add(item);
-            }
-        }
+        UNSTACKING_ITEMS.addAll(items);
     }
 
-    public static void setRepairModeSlots(List<String> names)
+    public static void setRepairModeSlots(List<EntityEquipmentSlot> slots)
     {
         REPAIR_MODE_SLOTS.clear();
         REPAIR_MODE_SLOT_NUMBERS.clear();
 
-        for (String name : names)
+        for (EntityEquipmentSlot slot : slots)
         {
-            EntityEquipmentSlot type = getEquipmentSlotByName(name);
-
-            if (type != null)
+            if (slot != null)
             {
-                REPAIR_MODE_SLOTS.add(type);
-                REPAIR_MODE_SLOT_NUMBERS.add(getSlotNumberForEquipmentType(type, null));
+                REPAIR_MODE_SLOTS.add(slot);
+                REPAIR_MODE_SLOT_NUMBERS.add(getSlotNumberForEquipmentType(slot, null));
             }
         }
     }
 
-    public static void setSwapBrokenToolsSlots(List<String> names)
+    public static void setSwapBrokenToolsSlots(List<EntityEquipmentSlot> slots)
     {
         SWAP_BROKEN_TOOLS_SLOTS.clear();
 
-        for (String name : names)
+        for (EntityEquipmentSlot slot : slots)
         {
-            EntityEquipmentSlot type = getEquipmentSlotByName(name);
-
-            if (type != null)
+            if (slot != null)
             {
-                SWAP_BROKEN_TOOLS_SLOTS.add(type);
+                SWAP_BROKEN_TOOLS_SLOTS.add(slot);
             }
         }
     }

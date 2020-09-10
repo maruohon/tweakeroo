@@ -13,8 +13,8 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 public class ConfigScreen
 {
     private static final BaseConfigTab GENERIC         = new BaseConfigTab("tweakeroo.gui.button.config_gui.generic",           Reference.MOD_NAME, 160, Configs.Generic.OPTIONS);
-    private static final BaseConfigTab FIXES           = new BaseConfigTab("tweakeroo.gui.button.config_gui.fixes",             Reference.MOD_NAME,  -1, Configs.Fixes.OPTIONS);
     private static final BaseConfigTab LISTS           = new BaseConfigTab("tweakeroo.gui.button.config_gui.lists",             Reference.MOD_NAME, 200, Configs.Lists.OPTIONS);
+    private static final BaseConfigTab FIXES           = new BaseConfigTab("tweakeroo.gui.button.config_gui.fixes",             Reference.MOD_NAME,  -1, Configs.Fixes.OPTIONS);
     private static final BaseConfigTab TWEAK_TOGGLES   = new BaseConfigTab("tweakeroo.gui.button.config_gui.tweaks",            Reference.MOD_NAME, 200, FeatureToggle.VALUES);
     private static final BaseConfigTab DISABLE_TOGGLES = new BaseConfigTab("tweakeroo.gui.button.config_gui.disable_toggles",   Reference.MOD_NAME, 200, DisableToggle.VALUES);
     private static final BaseConfigTab GENERIC_HOTKEYS = new BaseConfigTab("tweakeroo.gui.button.config_gui.generic_hotkeys",   Reference.MOD_NAME, 160, Hotkeys.HOTKEY_LIST);
@@ -23,8 +23,8 @@ public class ConfigScreen
 
     private static final ImmutableList<ConfigTab> TABS = ImmutableList.of(
             GENERIC,
-            FIXES,
             LISTS,
+            FIXES,
             TWEAK_TOGGLES,
             DISABLE_TOGGLES,
             GENERIC_HOTKEYS,

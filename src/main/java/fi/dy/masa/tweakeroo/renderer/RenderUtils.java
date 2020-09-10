@@ -27,6 +27,7 @@ import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.config.value.HudAlignment;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
+import fi.dy.masa.malilib.render.ItemRenderUtils;
 import fi.dy.masa.malilib.render.overlay.InventoryOverlay;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
@@ -91,7 +92,7 @@ public class RenderUtils
 
                     if (stack.isEmpty() == false)
                     {
-                        InventoryOverlay.renderStackAt(stack, x, y, z, 1f, mc);
+                        ItemRenderUtils.renderStackAt(stack, x, y, z, 1f, mc);
                     }
 
                     x += 18;
