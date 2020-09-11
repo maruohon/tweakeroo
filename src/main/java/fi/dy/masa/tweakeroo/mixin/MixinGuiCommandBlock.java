@@ -111,7 +111,7 @@ public abstract class MixinGuiCommandBlock extends net.minecraft.client.gui.GuiS
         if (this.buttonUpdateExec != null && this.buttonUpdateExec.isMouseOver())
         {
             String hover = "tweakeroo.gui.button.misc.command_block.hover.update_execution";
-            RenderUtils.drawHoverText(mouseX, mouseY, 1, Arrays.asList(StringUtils.translate(hover)));
+            RenderUtils.renderHoverText(mouseX, mouseY, 1, Arrays.asList(StringUtils.translate(hover)));
         }
     }
 

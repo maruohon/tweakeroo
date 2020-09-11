@@ -80,7 +80,7 @@ public class RenderUtils
 
             fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
             fi.dy.masa.malilib.render.RenderUtils.bindTexture(GuiInventory.INVENTORY_BACKGROUND);
-            fi.dy.masa.malilib.render.RenderUtils.drawTexturedRect(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18, z);
+            fi.dy.masa.malilib.render.RenderUtils.renderTexturedRectangle(x - 1, y - 1, 7, 83, 9 * 18, 3 * 18, z);
 
             for (int row = 1; row <= 3; row++)
             {
@@ -210,7 +210,7 @@ public class RenderUtils
                 yInv = Math.min(yInv, yCenter - 92);
             }
 
-            fi.dy.masa.malilib.render.RenderUtils.setShulkerboxBackgroundTintColor(block, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue());
+            fi.dy.masa.malilib.render.RenderUtils.setShulkerBoxBackgroundTintColor(block, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue());
 
             if (isHorse)
             {
@@ -270,7 +270,7 @@ public class RenderUtils
         InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 78, zItems, 9, 0, 9, mc);
 
         int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-        fi.dy.masa.malilib.render.RenderUtils.drawOutline(x + 5, y + currentRow * 18 + 5, 9 * 18 + 4, 22, 2, 0xFFFF2020, z);
+        fi.dy.masa.malilib.render.RenderUtils.renderOutline(x + 5, y + currentRow * 18 + 5, 9 * 18 + 4, 22, 2, 0xFFFF2020, z);
     }
 
     public static float getLavaFog(Entity entity, float originalFog)
@@ -375,7 +375,7 @@ public class RenderUtils
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
 
         // Draw the main box
-        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
+        fi.dy.masa.malilib.render.RenderUtils.renderOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
 
         String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
         textRenderer.drawString(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
@@ -392,17 +392,17 @@ public class RenderUtils
             int snapThreshOffset = (int) (width * threshold / step);
 
             // Draw the middle region
-            fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - snapThreshOffset, y + 1, snapThreshOffset * 2, height - 2, 0x6050FF50, z);
+            fi.dy.masa.malilib.render.RenderUtils.renderRectangle(xCenter - snapThreshOffset, y + 1, snapThreshOffset * 2, height - 2, 0x6050FF50, z);
 
             if (threshold < (step / 2.0))
             {
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter - snapThreshOffset, y + 1, 2, height - 2, 0xFF20FF20, z);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(xCenter + snapThreshOffset, y + 1, 2, height - 2, 0xFF20FF20, z);
+                fi.dy.masa.malilib.render.RenderUtils.renderRectangle(xCenter - snapThreshOffset, y + 1, 2, height - 2, 0xFF20FF20, z);
+                fi.dy.masa.malilib.render.RenderUtils.renderRectangle(xCenter + snapThreshOffset, y + 1, 2, height - 2, 0xFF20FF20, z);
             }
         }
 
         // Draw the current angle indicator
-        fi.dy.masa.malilib.render.RenderUtils.drawRect(lineX, y, 2, height, 0xFFFFFFFF, z);
+        fi.dy.masa.malilib.render.RenderUtils.renderRectangle(lineX, y, 2, height, 0xFFFFFFFF, z);
     }
 
     private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height, Minecraft mc)
@@ -476,7 +476,7 @@ public class RenderUtils
 
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
         // Draw the main box
-        fi.dy.masa.malilib.render.RenderUtils.drawOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
+        fi.dy.masa.malilib.render.RenderUtils.renderOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
 
         int yCenter = y + height / 2 - 1;
 
@@ -486,20 +486,20 @@ public class RenderUtils
             double threshold = Configs.Generic.SNAP_AIM_THRESHOLD_PITCH.getDoubleValue();
             int snapThreshOffset = (int) ((double) height * threshold / indicatorRange);
 
-            fi.dy.masa.malilib.render.RenderUtils.drawRect(x + 1, yCenter - snapThreshOffset, width - 2, snapThreshOffset * 2, 0x6050FF50, z);
+            fi.dy.masa.malilib.render.RenderUtils.renderRectangle(x + 1, yCenter - snapThreshOffset, width - 2, snapThreshOffset * 2, 0x6050FF50, z);
 
             if (threshold < (step / 2.0))
             {
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(x + 1, yCenter - snapThreshOffset, width - 2, 2, 0xFF20FF20, z);
-                fi.dy.masa.malilib.render.RenderUtils.drawRect(x + 1, yCenter + snapThreshOffset, width - 2, 2, 0xFF20FF20, z);
+                fi.dy.masa.malilib.render.RenderUtils.renderRectangle(x + 1, yCenter - snapThreshOffset, width - 2, 2, 0xFF20FF20, z);
+                fi.dy.masa.malilib.render.RenderUtils.renderRectangle(x + 1, yCenter + snapThreshOffset, width - 2, 2, 0xFF20FF20, z);
             }
         }
         else if (isSnapRange == false)
         {
-            fi.dy.masa.malilib.render.RenderUtils.drawRect(x + 1, yCenter - 1, width - 2, 2, 0xFFC0C0C0, z);
+            fi.dy.masa.malilib.render.RenderUtils.renderRectangle(x + 1, yCenter - 1, width - 2, 2, 0xFFC0C0C0, z);
         }
 
         // Draw the current angle indicator
-        fi.dy.masa.malilib.render.RenderUtils.drawRect(x, lineY - 1, width, 2, 0xFFFFFFFF, z);
+        fi.dy.masa.malilib.render.RenderUtils.renderRectangle(x, lineY - 1, width, 2, 0xFFFFFFFF, z);
     }
 }
