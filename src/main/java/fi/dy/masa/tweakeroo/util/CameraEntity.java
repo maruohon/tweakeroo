@@ -194,4 +194,7 @@ public class CameraEntity extends ClientPlayerEntity
     {
         camera = null;
     }
+    
+    @Override
+    protected void autoJump(float dx, float dz) {}
 }
