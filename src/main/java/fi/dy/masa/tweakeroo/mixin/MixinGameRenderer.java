@@ -63,7 +63,7 @@ public abstract class MixinGameRenderer
 
     @Redirect(method = "updateTargetedEntity", at = @At(
                 value = "INVOKE",
-                target = "Lnet/minecraft/entity/projectile/ProjectileUtil;rayTrace(" +
+                target = "Lnet/minecraft/entity/projectile/ProjectileUtil;raycast(" +
                          "Lnet/minecraft/entity/Entity;" +
                          "Lnet/minecraft/util/math/Vec3d;" +
                          "Lnet/minecraft/util/math/Vec3d;" +
@@ -81,7 +81,7 @@ public abstract class MixinGameRenderer
             });
         }
 
-        return ProjectileUtil.rayTrace(entity, startVec, endVec, box, predicate, distance);
+        return ProjectileUtil.raycast(entity, startVec, endVec, box, predicate, distance);
     }
 
     @Inject(method = "renderWorld", at = @At(

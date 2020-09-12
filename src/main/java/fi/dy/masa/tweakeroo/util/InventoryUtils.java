@@ -663,7 +663,7 @@ public class InventoryUtils
         World world = mc.world;
         double reach = mc.interactionManager.getReachDistance();
         boolean isCreative = player.abilities.creativeMode;
-        HitResult trace = player.rayTrace(reach, mc.getTickDelta(), false);
+        HitResult trace = player.raycast(reach, mc.getTickDelta(), false);
 
         if (trace != null && trace.getType() == HitResult.Type.BLOCK)
         {

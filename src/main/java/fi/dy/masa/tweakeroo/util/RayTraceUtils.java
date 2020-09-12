@@ -10,7 +10,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RayTraceContext;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 public class RayTraceUtils
@@ -29,9 +29,9 @@ public class RayTraceUtils
         Vec3d rangedLookRot = entityIn.getRotationVec(1f).multiply(range);
         Vec3d lookVec = eyesVec.add(rangedLookRot);
 
-        RayTraceContext.FluidHandling fluidMode = useLiquids ? RayTraceContext.FluidHandling.SOURCE_ONLY : RayTraceContext.FluidHandling.NONE;
-        RayTraceContext context = new RayTraceContext(eyesVec, lookVec, RayTraceContext.ShapeType.COLLIDER, fluidMode, entityIn);
-        HitResult result = worldIn.rayTrace(context);
+        RaycastContext.FluidHandling fluidMode = useLiquids ? RaycastContext.FluidHandling.SOURCE_ONLY : RaycastContext.FluidHandling.NONE;
+        RaycastContext context = new RaycastContext(eyesVec, lookVec, RaycastContext.ShapeType.COLLIDER, fluidMode, entityIn);
+        HitResult result = worldIn.raycast(context);
 
         if (result == null)
         {
@@ -49,7 +49,7 @@ public class RayTraceUtils
         {
             Entity entity = list.get(i);
             bb = entity.getBoundingBox();
-            Optional<Vec3d> traceTmp = bb.rayTrace(lookVec, eyesVec);
+            Optional<Vec3d> traceTmp = bb.raycast(lookVec, eyesVec);
 
             if (traceTmp.isPresent())
             {
