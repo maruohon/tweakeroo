@@ -525,12 +525,13 @@ public class InventoryUtils
             else
             {
                 int armorSlot = getSlotNumberForEquipmentType(type, player);
-                // Pick up the new item
-                mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, 0, SlotActionType.PICKUP, mc.player);
-                // Swap it to the armor slot
-                mc.interactionManager.clickSlot(container.syncId, armorSlot, 0, SlotActionType.PICKUP, mc.player);
-                // Place down the old armor item
-                mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, 0, SlotActionType.PICKUP, mc.player);
+                int tempSlot = (player.inventory.selectedSlot + 1) % 9;
+                // Swap the requested slot's item with the temp hotbar slot
+                mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, tempSlot, SlotActionType.SWAP, mc.player);
+                // Swap the temp hotbar slot with the armor slot
+                mc.interactionManager.clickSlot(container.syncId, armorSlot, tempSlot, SlotActionType.SWAP, mc.player);
+                // Swap the original item back to the temp hotbar slot
+                mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, tempSlot, SlotActionType.SWAP, mc.player);
             }
         }
     }
