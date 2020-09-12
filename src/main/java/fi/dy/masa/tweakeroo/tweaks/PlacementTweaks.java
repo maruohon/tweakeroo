@@ -206,7 +206,7 @@ public class PlacementTweaks
             final double reach = mc.interactionManager.getReachDistance();
             final int maxCount = Configs.Generic.FAST_BLOCK_PLACEMENT_COUNT.getIntegerValue();
 
-            mc.crosshairTarget = player.rayTrace(reach, mc.getTickDelta(), false);
+            mc.crosshairTarget = player.raycast(reach, mc.getTickDelta(), false);
 
             for (int i = 0; i < maxCount; ++i)
             {
@@ -254,7 +254,7 @@ public class PlacementTweaks
                     if (result == ActionResult.SUCCESS)
                     {
                         posLast = posNew;
-                        mc.crosshairTarget = player.rayTrace(reach, mc.getTickDelta(), false);
+                        mc.crosshairTarget = player.raycast(reach, mc.getTickDelta(), false);
                     }
                     else
                     {
@@ -624,7 +624,7 @@ public class PlacementTweaks
             return false;
         }
 
-        HitResult trace = player.rayTrace(6, 0f, false);
+        HitResult trace = player.raycast(6, 0f, false);
 
         if (trace == null || trace.getType() != HitResult.Type.BLOCK)
         {
