@@ -106,8 +106,6 @@ public class InventoryUtils
     /**
      * Returns the equipment type for the given slot number,
      * assuming that the slot number is for the player's main inventory container
-     * @param slotNum
-     * @return
      */
     @Nullable
     private static EquipmentSlot getEquipmentTypeForSlot(int slotNum, PlayerEntity player)
@@ -133,8 +131,6 @@ public class InventoryUtils
     /**
      * Returns the slot number for the given equipment type
      * in the player's inventory container
-     * @param type
-     * @return
      */
     private static int getSlotNumberForEquipmentType(EquipmentSlot type, @Nullable PlayerEntity player)
     {
@@ -166,7 +162,7 @@ public class InventoryUtils
 
     public static void restockNewStackToHand(PlayerEntity player, Hand hand, ItemStack stackReference, boolean allowHotbar)
     {
-        int slotWithItem = -1;
+        int slotWithItem;
 
         if (stackReference.getItem().isDamageable())
         {
@@ -225,10 +221,11 @@ public class InventoryUtils
 
     public static void trySwapCurrentToolIfNearlyBroken()
     {
-        if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
+        MinecraftClient mc = MinecraftClient.getInstance();
+        PlayerEntity player = mc.player;
+
+        if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue() && player != null)
         {
-            MinecraftClient mc = MinecraftClient.getInstance();
-            PlayerEntity player = mc.player;
 
             for (Hand hand : Hand.values())
             {
@@ -249,10 +246,11 @@ public class InventoryUtils
 
     public static void trySwitchToEffectiveTool(BlockPos pos)
     {
-        if (FeatureToggle.TWEAK_TOOL_SWITCH.getBooleanValue())
+        MinecraftClient mc = MinecraftClient.getInstance();
+        PlayerEntity player = mc.player;
+
+        if (FeatureToggle.TWEAK_TOOL_SWITCH.getBooleanValue() && player != null && mc.world != null)
         {
-            MinecraftClient mc = MinecraftClient.getInstance();
-            PlayerEntity player = mc.player;
             BlockState state = mc.world.getBlockState(pos);
             ItemStack stack = player.getMainHandStack();
 
@@ -365,7 +363,7 @@ public class InventoryUtils
 
             if (slotRepairableItem != -1)
             {
-                swapItemToEqupmentSlot(player, type, slotRepairableItem);
+                swapItemToEquipmentSlot(player, type, slotRepairableItem);
                 InfoUtils.printActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_slot", type.getName());
             }
         }
@@ -423,7 +421,7 @@ public class InventoryUtils
         if (targetSlots.isEmpty() == false)
         {
             //targetSlots.sort();
-            swapItemToEqupmentSlot(player, EquipmentSlot.CHEST, targetSlots.get(0).id);
+            swapItemToEquipmentSlot(player, EquipmentSlot.CHEST, targetSlots.get(0).id);
         }
     }
 
@@ -432,9 +430,6 @@ public class InventoryUtils
      * Finds a slot with an identical item than <b>stackReference</b>, ignoring the durability
      * of damageable items. Does not allow crafting or armor slots or the offhand slot
      * in the ContainerPlayer container.
-     * @param container
-     * @param stackReference
-     * @param reverse
      * @return the slot number, or -1 if none were found
      */
     public static int findSlotWithItem(ScreenHandler container, ItemStack stackReference, boolean allowHotbar, boolean reverse)
@@ -501,7 +496,7 @@ public class InventoryUtils
         }
     }
 
-    private static void swapItemToEqupmentSlot(PlayerEntity player, EquipmentSlot type, int sourceSlotNumber)
+    private static void swapItemToEquipmentSlot(PlayerEntity player, EquipmentSlot type, int sourceSlotNumber)
     {
         if (sourceSlotNumber != -1 && player.currentScreenHandler == player.playerScreenHandler)
         {
@@ -517,7 +512,7 @@ public class InventoryUtils
             {
                 // Use a hotbar slot that isn't the current slot
                 int tempSlot = (player.inventory.selectedSlot + 1) % 9;
-                // Swap the requested slot to the current hotbar slot
+                // Swap the requested slot to the temp slot
                 mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, tempSlot, SlotActionType.SWAP, mc.player);
 
                 // Swap the requested item from the hotbar slot to the offhand
@@ -701,6 +696,12 @@ public class InventoryUtils
         MinecraftClient mc  = MinecraftClient.getInstance();
         PlayerEntity player = mc.player;
         World world = mc.world;
+
+        if (player == null || world == null)
+        {
+            return;
+        }
+
         double reach = mc.interactionManager.getReachDistance();
         boolean isCreative = player.abilities.creativeMode;
         HitResult trace = player.rayTrace(reach, mc.getTickDelta(), false);
