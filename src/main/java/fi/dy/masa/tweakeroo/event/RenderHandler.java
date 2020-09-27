@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.event;
 
+import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -20,11 +21,17 @@ import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
 public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRenderer, PostWorldRenderer
 {
-    @Override
-    public void onPostGameOverlayRender(float partialTicks)
-    {
-        Minecraft mc = Minecraft.getMinecraft();
+    private final Supplier<String> profilerSectionSupplier = () -> "Tweakeroo_RenderHandler";
 
+    @Override
+    public Supplier<String> getProfilerSectionSupplier()
+    {
+        return this.profilerSectionSupplier;
+    }
+
+    @Override
+    public void onPostGameOverlayRender(Minecraft mc, float partialTicks)
+    {
         if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
             Hotkeys.HOTBAR_SWAP_BASE.getKeyBind().isKeyBindHeld())
         {
@@ -66,7 +73,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     }
 
     @Override
-    public void onPostRenderItemTooltip(ItemStack stack, int x, int y)
+    public void onPostRenderItemTooltip(ItemStack stack, int x, int y, Minecraft mc)
     {
         if (stack.getItem() instanceof ItemMap)
         {
@@ -87,14 +94,9 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     }
 
     @Override
-    public void onPostWorldRender(float partialTicks)
+    public void onPostWorldRender(Minecraft mc, float partialTicks)
     {
-        Minecraft mc = Minecraft.getMinecraft();
-
-        if (mc.player != null)
-        {
-            this.renderOverlays(mc, partialTicks);
-        }
+        this.renderOverlays(mc, partialTicks);
     }
 
     private void renderOverlays(Minecraft mc, float partialTicks)
