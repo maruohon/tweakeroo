@@ -38,14 +38,14 @@ public class Callbacks
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanConfig().setValueLoadCallback((newValue) -> {
             // If the feature is enabled on game launch, apply it here. Note: This does require the Generic configs to be read first.
-            if (newValue) { Minecraft.getMinecraft().gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue(); }
+            if (newValue) { Minecraft.getMinecraft().gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getFloatValue(); }
         });
 
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> {
             Minecraft mc = Minecraft.getMinecraft();
             if (newValue) {
                 Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(mc.gameSettings.gammaSetting);
-                mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getIntegerValue();
+                mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getFloatValue();
             }
             else { mc.gameSettings.gammaSetting = Configs.Internal.GAMMA_VALUE_ORIGINAL.getFloatValue(); }
         });

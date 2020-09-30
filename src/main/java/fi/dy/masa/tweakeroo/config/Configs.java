@@ -67,7 +67,7 @@ public class Configs implements ModConfig
         public static final DoubleConfig FLY_SPEED_PRESET_4                             = new DoubleConfig("flySpeedPreset4", 0.32, 0, 4);
         public static final HotkeyedBooleanConfig FREE_CAMERA_PLAYER_INPUTS             = new HotkeyedBooleanConfig("freeCameraPlayerInputs", false, "");
         public static final HotkeyedBooleanConfig FREE_CAMERA_PLAYER_MOVEMENT           = new HotkeyedBooleanConfig("freeCameraPlayerMovement", false, "");
-        public static final IntegerConfig GAMMA_OVERRIDE_VALUE                          = new IntegerConfig("gammaOverrideValue", 16, 0, 1000);
+        public static final DoubleConfig GAMMA_OVERRIDE_VALUE                           = new DoubleConfig("gammaOverrideValue", 16, 0, 32);
         public static final BooleanConfig HAND_RESTOCK_CONTINUOUS                       = new BooleanConfig("handRestockContinuous", false);
         public static final BooleanConfig HAND_RESTOCK_PRE                              = new BooleanConfig("handRestockPre", true);
         public static final IntegerConfig HAND_RESTOCK_PRE_THRESHOLD                    = new IntegerConfig("handRestockPreThreshold", 6, 1, 64);
