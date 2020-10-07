@@ -9,10 +9,10 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandClone;
 import net.minecraft.command.CommandFill;
 
-@Mixin({CommandFill.class, CommandClone.class})
+@Mixin(value = {CommandFill.class, CommandClone.class}, priority = 999)
 public abstract class MixinCommandFillClone extends CommandBase
 {
-    @ModifyConstant(method = "execute", constant = @Constant(intValue = 32768))
+    @ModifyConstant(method = "execute", constant = @Constant(intValue = 32768), require = 0)
     private int getBlockCountLimit(int original)
     {
         if (FeatureToggle.TWEAK_FILL_CLONE_LIMIT.getBooleanValue())
