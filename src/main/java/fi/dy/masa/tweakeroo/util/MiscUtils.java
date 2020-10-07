@@ -1,12 +1,17 @@
 package fi.dy.masa.tweakeroo.util;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.world.ChunkTicketType;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -17,6 +22,8 @@ import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
 public class MiscUtils
 {
+    public static final ChunkTicketType<ChunkPos> ENDER_PEARL_TICKET = ChunkTicketType.create("ender_pearl", Comparator.comparingLong(ChunkPos::toLong), 2);
+
     private static net.minecraft.text.Text[] previousSignText;
     private static String previousChatText = "";
     private static final Date DATE = new Date();
@@ -288,5 +295,27 @@ public class MiscUtils
     {
         double offsetRealRotation = MathHelper.floorMod(realRotation, 360.0D) + (step / 2.0);
         return MathHelper.floorMod(((int) (offsetRealRotation / step)) * step, 360.0D);
+    }
+
+    public static void addEnderPearlChunkTicket(Entity entity)
+    {
+        Vec3d velocity = entity.getVelocity();
+
+        if (Math.abs(velocity.x) > 0.001 || Math.abs(velocity.z) > 0.001)
+        {
+            Vec3d pos = entity.getPos();
+            double x = pos.x;
+            double z = pos.z;
+            double nx = x + velocity.x;
+            double nz = z + velocity.z;
+            ChunkPos cp = new ChunkPos(MathHelper.floor(nx) >> 4, MathHelper.floor(nz) >> 4);
+            /*
+            int cx = MathHelper.floor(x) >> 4;
+            int cz = MathHelper.floor(z) >> 4;
+            System.out.printf("%d @ p: [%.4f, %.4f = %d, %d] v: [%.4f, %.4f] ticket: [%d, %d]\n",
+                              entity.getEntityWorld().getTime(), x, z, cx, cz, velocity.x, velocity.z, cp.x, cp.z);
+            */
+            ((ServerWorld) entity.getEntityWorld()).getChunkManager().addTicket(MiscUtils.ENDER_PEARL_TICKET, cp, 2, cp);
+        }
     }
 }

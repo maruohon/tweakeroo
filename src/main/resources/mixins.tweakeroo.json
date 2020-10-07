@@ -51,6 +51,7 @@
         "MixinStructureBlockBlockEntity",
         "MixinTeleportSpectatorMenu",
         "MixinTheNetherDimension",
+        "MixinThrownEntity",
         "MixinTradeOffer",
         "MixinUpdateStructureBlockC2SPacket",
         "MixinWorld",
