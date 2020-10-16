@@ -38,6 +38,7 @@
         "MixinGuiEditSign",
         "MixinGuiFlatPresets",
         "MixinGuiIngame",
+        "MixinGuiListWorldSelectionEntry",
         "MixinGuiNewChat",
         "MixinInventoryEffectRenderer",
         "MixinItem",

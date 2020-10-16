@@ -105,6 +105,7 @@ public class Configs implements ModConfig
         public static final DoubleConfig SNAP_AIM_YAW_STEP                              = new DoubleConfig("snapAimYawStep", 45, 0, 360);
         public static final BooleanConfig SOUND_NAME_OUTPUT                             = new BooleanConfig("soundNameOutput", false);
         public static final IntegerConfig STRUCTURE_BLOCK_MAX_SIZE                      = new IntegerConfig("structureBlockMaxSize", 128, 1, 256);
+        public static final StringConfig WORLD_LIST_DATE_FORMAT                         = new StringConfig("worldListDateFormat", "yyyy-MM-dd HH:mm:ss");
         public static final BooleanConfig ZOOM_ADJUST_MOUSE_SENSITIVITY                 = new BooleanConfig("zoomAdjustMouseSensitivity", true);
         public static final DoubleConfig ZOOM_FOV                                       = new DoubleConfig("zoomFov", 30, 0.01, 359.99);
 
@@ -183,6 +184,7 @@ public class Configs implements ModConfig
                 SNAP_AIM_YAW_STEP,
                 SOUND_NAME_OUTPUT,
                 STRUCTURE_BLOCK_MAX_SIZE,
+                WORLD_LIST_DATE_FORMAT,
                 ZOOM_ADJUST_MOUSE_SENSITIVITY,
                 ZOOM_FOV
         );

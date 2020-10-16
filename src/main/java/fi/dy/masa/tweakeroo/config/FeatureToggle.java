@@ -91,6 +91,7 @@ public enum FeatureToggle implements ConfigInfo
     TWEAK_TAB_COMPLETE_COORDINATE       ("tweakTabCompleteCoordinate",              false),
     TWEAK_TILE_RENDER_DISTANCE          ("tweakTileEntityRenderDistance",           false),
     TWEAK_TOOL_SWITCH                   ("tweakToolSwitch",                         false),
+    TWEAK_WORLD_LIST_DATE_FORMAT        ("tweakWorldListDateFormat",                false),
     TWEAK_ZOOM                          ("tweakZoom",                               false, KeyBindSettings.INGAME_BOTH);
 
     public static final ImmutableList<FeatureToggle> VALUES = ImmutableList.copyOf(values());

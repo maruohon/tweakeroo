@@ -68,6 +68,7 @@ tweakeroo.config.comment.snapaimthresholdyaw=The angle threshold inside which th
 tweakeroo.config.comment.snapaimyawstep=The yaw angle step of the snap aim tweak.
 tweakeroo.config.comment.soundnameoutput=This is meant for finding out the sound names you want to\ndisable with the 'Disable Sounds' tweak. It just prints any sound\nnames to the game console that start playing, while this is enabled.\n§cDon't leave this enabled normally, it will spam your log!!
 tweakeroo.config.comment.structureblockmaxsize=The maximum dimensions for a Structure Block's saved area,\nwhen the 'Structure Block Limit Override' tweak is enabled.
+tweakeroo.config.comment.worldlistdateformat=This is the date format to use in the single player world list,\nif the World List Date Format tweak is enabled. See the the Java\nSimpleDateFormat class documentation for the format patterns, if needed:\nhttps://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
 tweakeroo.config.comment.zoomadjustmousesensitivity=If enabled, then the mouse sensitivity is reduced\nwhile the zoom feature is enabled and the zoom key is active.
 tweakeroo.config.comment.zoomfov=The FoV value used for the zoom feature.\nThis can be quickly adjusted by scrolling while holding the\n'Zoom Activate' key or the tweak toggle key.
 
@@ -156,6 +157,7 @@ tweakeroo.config.name.snapaimthresholdyaw=Snap Aim Threshold Yaw
 tweakeroo.config.name.snapaimyawstep=Snap Aim Yaw Step
 tweakeroo.config.name.soundnameoutput=Sound Name Output
 tweakeroo.config.name.structureblockmaxsize=§6Structure Block Max Size
+tweakeroo.config.name.worldlistdateformat=World List Date Format
 tweakeroo.config.name.zoomadjustmousesensitivity=Zoom Adjust Mouse Sensitivity
 tweakeroo.config.name.zoomfov=Zoom FoV
 
@@ -254,6 +256,7 @@ tweakeroo.feature_toggle.comment.tweakswapalmostbrokentools=If enabled, then any
 tweakeroo.feature_toggle.comment.tweaktabcompletecoordinate=If enabled, then tab-completing coordinates while not looking\nat a block, will use the player's position instead of adding '~'.
 tweakeroo.feature_toggle.comment.tweaktileentityrenderdistance=Allows Tile Entities to be rendered from any distance,\nand not only from the usual 64 blocks away.
 tweakeroo.feature_toggle.comment.tweaktoolswitch=Enables automatically switching to an effective\ntool for the targeted block.
+tweakeroo.feature_toggle.comment.tweakworldlistdateformat=Allows overriding the date format used in the single player world list.\nSet the date format in Generic -> World List Date Format
 tweakeroo.feature_toggle.comment.tweakzoom=Enables using the Generic -> 'Zoom Activate' hotkey to zoom in.\nYou can quickly change the FoV (zoom factor) by scrolling\nwhile holding the key down.
 
 
@@ -335,6 +338,7 @@ tweakeroo.feature_toggle.name.tweakswapalmostbrokentools=Swap Almost Broken Tool
 tweakeroo.feature_toggle.name.tweaktabcompletecoordinate=Tab Complete Coordinate
 tweakeroo.feature_toggle.name.tweaktileentityrenderdistance=Tile Entity Render Distance Override
 tweakeroo.feature_toggle.name.tweaktoolswitch=Tool Switch
+tweakeroo.feature_toggle.name.tweakworldlistdateformat=World List Date Format
 tweakeroo.feature_toggle.name.tweakzoom=Zoom
 
 

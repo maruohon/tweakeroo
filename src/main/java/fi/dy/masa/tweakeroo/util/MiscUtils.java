@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -33,6 +34,8 @@ import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
 public class MiscUtils
 {
+    private static final HashMap<String, SimpleDateFormat> DATE_FORMATS = new HashMap<>();
+
     private static net.minecraft.util.text.ITextComponent[] previousSignText;
     private static String previousChatText = "";
     private static final Date DATE = new Date();
@@ -413,5 +416,10 @@ public class MiscUtils
     {
         double offsetRealRotation = MathHelper.positiveModulo(realRotation, 360.0D) + (step / 2.0);
         return MathHelper.positiveModulo(((int) (offsetRealRotation / step)) * step, 360.0D);
+    }
+
+    public static SimpleDateFormat getDateFormatFor(String format)
+    {
+        return DATE_FORMATS.computeIfAbsent(format, SimpleDateFormat::new);
     }
 }
