@@ -186,16 +186,12 @@ public class CameraEntity extends ClientPlayerEntity
 
     private static CameraEntity createCameraEntity(MinecraftClient mc)
     {
-        CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.networkHandler, mc.player.getStatHandler(), mc.player.getRecipeBook());
+        ClientPlayerEntity player = mc.player;
+        CameraEntity camera = new CameraEntity(mc, mc.world, player.networkHandler, player.getStatHandler(), player.getRecipeBook());
         camera.noClip = true;
 
-        ClientPlayerEntity player = mc.player;
-
-        if (player != null)
-        {
-            camera.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), player.yaw, player.pitch);
-            camera.setRotation(player.yaw, player.pitch);
-        }
+        camera.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), player.yaw, player.pitch);
+        camera.setRotation(player.yaw, player.pitch);
 
         return camera;
     }
@@ -210,13 +206,16 @@ public class CameraEntity extends ClientPlayerEntity
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (enabled)
+        if (mc.world != null && mc.player != null)
         {
-            createAndSetCamera(mc);
-        }
-        else
-        {
-            removeCamera(mc);
+            if (enabled)
+            {
+                createAndSetCamera(mc);
+            }
+            else
+            {
+                removeCamera(mc);
+            }
         }
     }
 
@@ -235,11 +234,10 @@ public class CameraEntity extends ClientPlayerEntity
 
     private static void removeCamera(MinecraftClient mc)
     {
-        mc.setCameraEntity(originalCameraEntity);
-        mc.chunkCullingEnabled = cullChunksOriginal;
-
         if (mc.world != null && camera != null)
         {
+            mc.setCameraEntity(originalCameraEntity);
+            mc.chunkCullingEnabled = cullChunksOriginal;
             CameraUtils.markChunksForRebuildOnDeactivation(camera.chunkX, camera.chunkZ);
         }
 
