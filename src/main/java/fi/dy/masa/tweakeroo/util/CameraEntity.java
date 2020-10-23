@@ -170,20 +170,16 @@ public class CameraEntity extends EntityPlayerSP
 
     private static CameraEntity createCameraEntity(Minecraft mc)
     {
-        CameraEntity camera = new CameraEntity(mc, mc.world, mc.player.connection, mc.player.getStatFileWriter(), mc.player.getRecipeBook());
+        EntityPlayerSP player = mc.player;
+        CameraEntity camera = new CameraEntity(mc, mc.world, player.connection, player.getStatFileWriter(), player.getRecipeBook());
+
         camera.noClip = true;
+        camera.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
 
-        Entity player = mc.player;
-
-        if (player != null)
-        {
-            camera.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-
-            camera.prevRotationYaw = camera.rotationYaw;
-            camera.prevRotationPitch = camera.rotationPitch;
-            camera.setRotationYawHead(camera.rotationYaw);
-            camera.setRenderYawOffset(camera.rotationYaw);
-        }
+        camera.prevRotationYaw = camera.rotationYaw;
+        camera.prevRotationPitch = camera.rotationPitch;
+        camera.setRotationYawHead(camera.rotationYaw);
+        camera.setRenderYawOffset(camera.rotationYaw);
 
         return camera;
     }
@@ -198,13 +194,16 @@ public class CameraEntity extends EntityPlayerSP
     {
         Minecraft mc = Minecraft.getMinecraft();
 
-        if (enabled)
+        if (mc.world != null && mc.player != null)
         {
-            createAndSetCamera(mc);
-        }
-        else
-        {
-            removeCamera(mc);
+            if (enabled)
+            {
+                createAndSetCamera(mc);
+            }
+            else
+            {
+                removeCamera(mc);
+            }
         }
     }
 
@@ -223,11 +222,10 @@ public class CameraEntity extends EntityPlayerSP
 
     private static void removeCamera(Minecraft mc)
     {
-        mc.setRenderViewEntity(originalRenderViewEntity);
-        mc.renderChunksMany = cullChunksOriginal;
-
         if (mc.world != null && camera != null)
         {
+            mc.setRenderViewEntity(originalRenderViewEntity);
+            mc.renderChunksMany = cullChunksOriginal;
             CameraUtils.markChunksForRebuildOnDeactivation(camera.chunkCoordX, camera.chunkCoordZ);
         }
 
