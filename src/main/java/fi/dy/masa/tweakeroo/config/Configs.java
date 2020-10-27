@@ -56,9 +56,9 @@ public class Configs implements ModConfig
         public static final DoubleConfig CLOUD_HEIGHT_OVERRIDE                          = new DoubleConfig("cloudHeightOverride", 128, -1024, 1024);
         public static final DoubleConfig DEBUG_PIE_CHART_SCALE                          = new DoubleConfig("debugPieChartScale", 1, 0, 10);
         public static final IntegerConfig FAST_BLOCK_PLACEMENT_COUNT                    = new IntegerConfig("fastBlockPlacementCount", 2, 1, 16);
-        public static final IntegerConfig FAST_LEFT_CLICK_COUNT                         = new IntegerConfig("fastLeftClickCount", 10, 1, 64);
+        public static final IntegerConfig FAST_LEFT_CLICK_COUNT                         = new IntegerConfig("fastLeftClickCount", 2, 1, 64);
         public static final BooleanConfig FAST_PLACEMENT_REMEMBER                       = new BooleanConfig("fastPlacementRememberOrientation", true);
-        public static final IntegerConfig FAST_RIGHT_CLICK_COUNT                        = new IntegerConfig("fastRightClickCount", 10, 1, 64);
+        public static final IntegerConfig FAST_RIGHT_CLICK_COUNT                        = new IntegerConfig("fastRightClickCount", 2, 1, 64);
         public static final IntegerConfig FILL_CLONE_LIMIT                              = new IntegerConfig("fillCloneLimit", 10000000, 1, 1000000000);
         public static final ColorConfig FLEXIBLE_PLACEMENT_OVERLAY_COLOR                = new ColorConfig("flexibleBlockPlacementOverlayColor", "#C03030F0");
         public static final DoubleConfig FLY_SPEED_PRESET_1                             = new DoubleConfig("flySpeedPreset1", 0.01, 0, 4);
