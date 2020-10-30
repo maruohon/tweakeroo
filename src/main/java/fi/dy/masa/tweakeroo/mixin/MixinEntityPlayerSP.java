@@ -99,6 +99,13 @@ public abstract class MixinEntityPlayerSP extends net.minecraft.client.entity.Ab
         {
             this.realInput = this.movementInput;
             this.movementInput = this.dummyMovementInput;
+            this.realInput.sneak = false;
+            this.realInput.jump = false;
+            this.realInput.moveForward = 0;
+            this.realInput.moveStrafe = 0;
+            this.moveStrafing = 0;
+            this.moveForward = 0;
+            this.isJumping = false;
         }
     }
 
