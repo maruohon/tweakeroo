@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
-import net.minecraft.server.command.CommandSource;
+import net.minecraft.command.CommandSource;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
