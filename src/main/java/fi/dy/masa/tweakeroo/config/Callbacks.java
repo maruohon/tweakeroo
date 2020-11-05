@@ -487,7 +487,7 @@ public class Callbacks
 
                     if (player != null)
                     {
-                        player.abilities.setFlySpeed(0.05f);
+                        player.method_31549().setFlySpeed(0.05f);
                     }
 
                     InfoUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);

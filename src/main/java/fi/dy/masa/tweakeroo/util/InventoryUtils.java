@@ -91,7 +91,7 @@ public class InventoryUtils
     private static boolean isConfiguredRepairSlot(int slotNum, PlayerEntity player)
     {
         if (REPAIR_MODE_SLOTS.contains(EquipmentSlot.MAINHAND) &&
-            (slotNum - 36) == player.inventory.selectedSlot)
+            (slotNum - 36) == player.method_31548().selectedSlot)
         {
             return true;
         }
@@ -109,7 +109,7 @@ public class InventoryUtils
     private static EquipmentSlot getEquipmentTypeForSlot(int slotNum, PlayerEntity player)
     {
         if (REPAIR_MODE_SLOTS.contains(EquipmentSlot.MAINHAND) &&
-            (slotNum - 36) == player.inventory.selectedSlot)
+            (slotNum - 36) == player.method_31548().selectedSlot)
         {
             return EquipmentSlot.MAINHAND;
         }
@@ -136,7 +136,7 @@ public class InventoryUtils
     {
         switch (type)
         {
-            case MAINHAND:  return player != null ? player.inventory.selectedSlot + 36 : -1;
+            case MAINHAND:  return player != null ? player.method_31548().selectedSlot + 36 : -1;
             case OFFHAND:   return 45;
             case HEAD:      return 5;
             case CHEST:     return 6;
@@ -186,12 +186,12 @@ public class InventoryUtils
 
         if (stackHand.isEmpty() == false && stackHand.getCount() <= 4 && stackHand.getMaxCount() > 4 &&
             FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue() &&
-            player.currentScreenHandler == player.playerScreenHandler && player.inventory.getCursorStack().isEmpty())
+            player.currentScreenHandler == player.playerScreenHandler && player.method_31548().getCursorStack().isEmpty())
         {
             MinecraftClient mc = MinecraftClient.getInstance();
             ScreenHandler container = player.playerScreenHandler;
             int endSlot = allowHotbar ? 44 : 35;
-            int currentMainHandSlot = player.inventory.selectedSlot + 36;
+            int currentMainHandSlot = player.method_31548().selectedSlot + 36;
             int currentSlot = hand == Hand.MAIN_HAND ? currentMainHandSlot : 45;
 
             for (int slotNum = 9; slotNum <= endSlot; ++slotNum)
@@ -257,7 +257,7 @@ public class InventoryUtils
                 ScreenHandler container = player.playerScreenHandler;
                 int slotNumber = findSlotWithEffectiveItemWithDurabilityLeft(container, state);
 
-                if (slotNumber != -1 && (slotNumber - 36) != player.inventory.selectedSlot)
+                if (slotNumber != -1 && (slotNumber - 36) != player.method_31548().selectedSlot)
                 {
                     swapItemToHand(player, Hand.MAIN_HAND, slotNumber);
                 }
@@ -433,13 +433,13 @@ public class InventoryUtils
 
             if (hand == Hand.MAIN_HAND)
             {
-                int currentHotbarSlot = player.inventory.selectedSlot;
+                int currentHotbarSlot = player.method_31548().selectedSlot;
                 Slot slot = container.getSlot(slotNumber);
 
                 if (slot != null && isHotbarSlot(slot))
                 {
-                    player.inventory.selectedSlot = slotNumber - 36;
-                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(player.inventory.selectedSlot));
+                    player.method_31548().selectedSlot = slotNumber - 36;
+                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(player.method_31548().selectedSlot));
                 }
                 else
                 {
@@ -448,7 +448,7 @@ public class InventoryUtils
             }
             else if (hand == Hand.OFF_HAND)
             {
-                int currentHotbarSlot = player.inventory.selectedSlot;
+                int currentHotbarSlot = player.method_31548().selectedSlot;
                 // Swap the requested slot to the current hotbar slot
                 mc.interactionManager.clickSlot(container.syncId, slotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
 
@@ -470,13 +470,13 @@ public class InventoryUtils
 
             if (type == EquipmentSlot.MAINHAND)
             {
-                int currentHotbarSlot = player.inventory.selectedSlot;
+                int currentHotbarSlot = player.method_31548().selectedSlot;
                 mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
             }
             else if (type == EquipmentSlot.OFFHAND)
             {
                 // Use a hotbar slot that isn't the current slot
-                int tempSlot = (player.inventory.selectedSlot + 1) % 9;
+                int tempSlot = (player.method_31548().selectedSlot + 1) % 9;
                 // Swap the requested slot to the current hotbar slot
                 mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, tempSlot, SlotActionType.SWAP, mc.player);
 
@@ -616,7 +616,7 @@ public class InventoryUtils
                     mc.interactionManager.clickSlot(container.syncId, slot2.id, 0, SlotActionType.PICKUP, player);
 
                     // If the items didn't all fit, return the rest
-                    if (player.inventory.getMainHandStack().isEmpty() == false)
+                    if (player.method_31548().getMainHandStack().isEmpty() == false)
                     {
                         mc.interactionManager.clickSlot(container.syncId, slot1.id, 0, SlotActionType.PICKUP, player);
                     }
@@ -662,7 +662,7 @@ public class InventoryUtils
         PlayerEntity player = mc.player;
         World world = mc.world;
         double reach = mc.interactionManager.getReachDistance();
-        boolean isCreative = player.abilities.creativeMode;
+        boolean isCreative = player.isCreative();
         HitResult trace = player.raycast(reach, mc.getTickDelta(), false);
 
         if (trace != null && trace.getType() == HitResult.Type.BLOCK)
@@ -687,22 +687,22 @@ public class InventoryUtils
 
                 if (isCreative)
                 {
-                    player.inventory.addPickBlock(stack);
-                    mc.interactionManager.clickCreativeStack(player.getStackInHand(Hand.MAIN_HAND), 36 + player.inventory.selectedSlot);
+                    player.method_31548().addPickBlock(stack);
+                    mc.interactionManager.clickCreativeStack(player.getStackInHand(Hand.MAIN_HAND), 36 + player.method_31548().selectedSlot);
                 }
                 else
                 {
-                    int slot = fi.dy.masa.malilib.util.InventoryUtils.findSlotWithItem(player.playerScreenHandler, stack, true); //player.inventory.getSlotFor(stack);
+                    int slot = fi.dy.masa.malilib.util.InventoryUtils.findSlotWithItem(player.playerScreenHandler, stack, true); //player.method_31548().getSlotFor(stack);
 
                     if (slot != -1)
                     {
-                        int currentHotbarSlot = player.inventory.selectedSlot;
+                        int currentHotbarSlot = player.method_31548().selectedSlot;
                         mc.interactionManager.clickSlot(player.playerScreenHandler.syncId, slot, currentHotbarSlot, SlotActionType.SWAP, mc.player);
 
                         /*
                         if (InventoryPlayer.isHotbar(slot))
                         {
-                            player.inventory.selectedSlot = slot;
+                            player.method_31548().selectedSlot = slot;
                         }
                         else
                         {

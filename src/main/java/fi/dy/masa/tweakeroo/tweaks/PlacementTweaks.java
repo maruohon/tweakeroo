@@ -9,6 +9,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -780,21 +781,23 @@ public class PlacementTweaks
 
         if (result == ActionResult.SUCCESS)
         {
+            PlayerInventory inv = player.method_31548();
+
             if (FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue())
             {
-                int newSlot = player.inventory.selectedSlot + 1;
+                int newSlot = inv.selectedSlot + 1;
 
                 if (newSlot >= 9 || newSlot >= Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue())
                 {
                     newSlot = 0;
                 }
 
-                player.inventory.selectedSlot = newSlot;
+                inv.selectedSlot = newSlot;
             }
             else if (FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue())
             {
                 int newSlot = player.getRandom().nextInt(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue());
-                player.inventory.selectedSlot = newSlot;
+                inv.selectedSlot = newSlot;
             }
         }
 
@@ -1127,7 +1130,7 @@ public class PlacementTweaks
         if (Configs.Generic.SLOT_SYNC_WORKAROUND.getBooleanValue() &&
             FeatureToggle.TWEAK_PICK_BEFORE_PLACE.getBooleanValue() == false &&
             container != null && container == player.playerScreenHandler &&
-            (slotNumber == 45 || (slotNumber - 36) == player.inventory.selectedSlot))
+            (slotNumber == 45 || (slotNumber - 36) == player.method_31548().selectedSlot))
         {
             boolean featRight = FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue();
             boolean featLeft = FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue();
