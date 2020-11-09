@@ -11,6 +11,7 @@ import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -28,6 +29,10 @@ public abstract class MixinEntityRenderDispatcher
         }
 
         if (entityIn instanceof FallingBlockEntity && Configs.Disable.DISABLE_FALLING_BLOCK_RENDER.getBooleanValue())
+        {
+            cir.setReturnValue(false);
+        }
+        else if (entityIn instanceof ArmorStandEntity && Configs.Disable.DISABLE_ARMOR_STAND_RENDERING.getBooleanValue())
         {
             cir.setReturnValue(false);
         }
