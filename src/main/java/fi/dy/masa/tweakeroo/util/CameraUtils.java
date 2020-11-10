@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.chunk.ChunkStatus;
 import fi.dy.masa.malilib.util.EntityUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -128,8 +129,8 @@ public class CameraUtils
         Entity entity = EntityUtils.getCameraEntity();
         MinecraftClient mc = MinecraftClient.getInstance();
         final int viewDistance = mc.options.viewDistance;
-        final int chunkX = entity.chunkX;
-        final int chunkZ = entity.chunkZ;
+        final int chunkX = MathHelper.floor(entity.getX() / 16.0) >> 4;
+        final int chunkZ = MathHelper.floor(entity.getZ() / 16.0) >> 4;
 
         final int minCameraCX = lastChunkX - viewDistance;
         final int maxCameraCX = lastChunkX + viewDistance;

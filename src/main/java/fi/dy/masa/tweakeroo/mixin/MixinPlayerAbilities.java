@@ -19,7 +19,7 @@ public abstract class MixinPlayerAbilities
         PlayerEntity player = MinecraftClient.getInstance().player;
 
         if (FeatureToggle.TWEAK_FLY_SPEED.getBooleanValue() &&
-            player != null && player.abilities.allowFlying)
+            player != null && player.getAbilities().allowFlying)
         {
             cir.setReturnValue((float) Configs.getActiveFlySpeedConfig().getDoubleValue());
             cir.cancel();

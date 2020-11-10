@@ -81,7 +81,7 @@ public class RenderUtils
 
                 for (int column = 0; column < 9; column++)
                 {
-                    ItemStack stack = player.inventory.getStack(row * 9 + column);
+                    ItemStack stack = player.getInventory().getStack(row * 9 + column);
 
                     if (stack.isEmpty() == false)
                     {
@@ -219,12 +219,12 @@ public class RenderUtils
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryBackground(type, x, y, 9, 27, mc);
-        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
+        fi.dy.masa.malilib.render.InventoryOverlay.renderInventoryStacks(type, mc.player.getInventory(), x + slotOffsetX, y + slotOffsetY, 9, 9, 27, mc);
     }
 
     public static void renderHotbarScrollOverlay(MinecraftClient mc)
     {
-        Inventory inv = mc.player.inventory;
+        Inventory inv = mc.player.getInventory();
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
         final int x = xCenter - 176 / 2;

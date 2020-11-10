@@ -140,10 +140,6 @@ public class CameraEntity extends ClientPlayerEntity
         this.setVelocity(new Vec3d(x, y, z));
 
         this.move(MovementType.SELF, this.getVelocity());
-
-        this.chunkX = (int) Math.floor(this.getX()) >> 4;
-        this.chunkY = (int) Math.floor(this.getY()) >> 4;
-        this.chunkZ = (int) Math.floor(this.getZ()) >> 4;
     }
 
     private void updateLastTickPosition()
@@ -240,7 +236,9 @@ public class CameraEntity extends ClientPlayerEntity
 
         if (mc.world != null && camera != null)
         {
-            CameraUtils.markChunksForRebuildOnDeactivation(camera.chunkX, camera.chunkZ);
+            final int chunkX = MathHelper.floor(camera.getX() / 16.0) >> 4;
+            final int chunkZ = MathHelper.floor(camera.getZ() / 16.0) >> 4;
+            CameraUtils.markChunksForRebuildOnDeactivation(chunkX, chunkZ);
         }
 
         originalCameraEntity = null;

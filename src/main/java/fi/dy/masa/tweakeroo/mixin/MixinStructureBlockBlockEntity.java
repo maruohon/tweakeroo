@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.StructureBlockBlockEntity;
@@ -23,9 +24,9 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 @Mixin(value = StructureBlockBlockEntity.class, priority = 999)
 public abstract class MixinStructureBlockBlockEntity extends BlockEntity
 {
-    public MixinStructureBlockBlockEntity(BlockEntityType<?> tileEntityTypeIn)
+    private MixinStructureBlockBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState)
     {
-        super(tileEntityTypeIn);
+        super(blockEntityType, blockPos, blockState);
     }
 
     @ModifyConstant(method = "fromTag",

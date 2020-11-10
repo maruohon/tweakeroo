@@ -3,9 +3,6 @@ package fi.dy.masa.tweakeroo.mixin;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +10,6 @@ import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.MutableWorldProperties;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.WorldChunk;
 import net.minecraft.world.dimension.DimensionType;
 import fi.dy.masa.tweakeroo.config.Configs;
 
@@ -26,7 +22,7 @@ public abstract class MixinClientWorld extends World
     }
 
     @Override
-    public void tickEntity(Consumer<Entity> consumer, Entity entity)
+    public <T extends Entity> void tickEntity(Consumer<T> consumer, T entity)
     {
         if (Configs.Disable.DISABLE_CLIENT_ENTITY_UPDATES.getBooleanValue() == false || entity instanceof PlayerEntity)
         {
@@ -34,6 +30,7 @@ public abstract class MixinClientWorld extends World
         }
     }
 
+    /* TODO 1.17 is this still needed?
     @Inject(method = "addEntitiesToChunk", at = @At("HEAD"), cancellable = true)
     private void fixChunkEntityLeak(WorldChunk chunk, CallbackInfo ci)
     {
@@ -52,4 +49,5 @@ public abstract class MixinClientWorld extends World
             }
         }
     }
+    */
 }

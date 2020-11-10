@@ -14,6 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IGuiEditSign;
 import fi.dy.masa.tweakeroo.util.ISignTextAccess;
@@ -24,13 +25,13 @@ public abstract class MixinSignBlockEntity extends BlockEntity implements ISignT
 {
     @Shadow @Final private Text[] text;
 
-    protected MixinSignBlockEntity(BlockEntityType<?> type)
+    private MixinSignBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState)
     {
-        super(type);
+        super(blockEntityType, blockPos, blockState);
     }
 
     @Inject(method = "fromTag", at = @At("RETURN"))
-    private void restoreCopiedText(BlockState state, CompoundTag nbt, CallbackInfo ci)
+    private void restoreCopiedText(CompoundTag nbt, CallbackInfo ci)
     {
         // Restore the copied/pasted text after the TileEntity sync overrides it with empty lines
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue() && this.getWorld() != null && this.getWorld().isClient)
