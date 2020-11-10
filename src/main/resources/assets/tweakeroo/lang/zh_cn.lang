@@ -50,7 +50,7 @@ tweakeroo.config.comment.hangableentitybypassinverse=若启用Hangable Entity Ta
 # tweakeroo.config.comment.playeronfirescale=A scaling factor for the player's on-fire effect.\nAccepted range: 0.0 - 10.0
 # tweakeroo.config.comment.potionwarningbeneficialonly=Only warn about potion effects running out\nthat are marked as "beneficial".
 # tweakeroo.config.comment.potionwarningthreshold=The remaining duration of potion effects (in ticks)\nafter which the Potion Warning will start showing.
-# tweakeroo.config.comment.rememberflexiblefromclick=If enabled, then the Flexible Block Placement status/rotation\nwill be remembered from the first placed block,\nas long as the use key (right click) is held down.
+tweakeroo.config.comment.rememberflexiblefromclick=若启用，则灵活方块放置状态/旋转\n会记忆为第一个放置的方块，\n只要按下了使用键（右键）。
 tweakeroo.config.comment.renderlimititem=每帧渲染物品实体的最大数量。\n-1代表正常行为，比如禁用限制。
 tweakeroo.config.comment.renderlimitxporb=每帧渲染经验球的最大数量。\n-1代表正常行为，比如禁用限制。
 tweakeroo.config.comment.shulkerdisplaybgcolor=允许将潜影盒的背景材质着色为盒子染料的颜色。
@@ -69,7 +69,7 @@ tweakeroo.config.comment.shulkerdisplayrequireshift=是否需要按住shift才�
 # tweakeroo.config.comment.soundnameoutput=This is meant for finding out the sound names you want to\ndisable with the 'Disable Sounds' tweak. It just prints any sound\nnames to the game console that start playing, while this is enabled.\n§cDon't leave this enabled normally, it will spam your log!!
 # tweakeroo.config.comment.structureblockmaxsize=The maximum dimensions for a Structure Block's saved area,\nwhen the 'Structure Block Limit Override' tweak is enabled.
 # tweakeroo.config.comment.worldlistdateformat=This is the date format to use in the single player world list,\nif the World List Date Format tweak is enabled. See the the Java\nSimpleDateFormat class documentation for the format patterns, if needed:\nhttps://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
-# tweakeroo.config.comment.zoomadjustmousesensitivity=If enabled, then the mouse sensitivity is reduced\nwhile the zoom feature is enabled and the zoom key is active.
+tweakeroo.config.comment.zoomadjustmousesensitivity=若启用，则启用放大模式且放大键被激活时，减低鼠标移动灵敏度。
 # tweakeroo.config.comment.zoomfov=The FoV value used for the zoom feature.\nThis can be quickly adjusted by scrolling while holding the\n'Zoom Activate' key or the tweak toggle key.
 
 
@@ -129,19 +129,19 @@ tweakeroo.config.name.hotbarslotcyclemax=快捷栏循环最大值
 # tweakeroo.config.name.itemswapdurabilitythreshold=Item Swap Durability Threshold
 # tweakeroo.config.name.lavavisibilityoptifinecompat=Lava Visibility Optifine Compat
 tweakeroo.config.name.mappreviewsize=地图预览最大尺寸
-# tweakeroo.config.name.periodicattackinterval=Periodic Attack Interval
-# tweakeroo.config.name.periodicuseinterval=Periodic Use Interval
+tweakeroo.config.name.periodicattackinterval=阶段性攻击间隔
+tweakeroo.config.name.periodicuseinterval=阶段性使用间隔
 # tweakeroo.config.name.permanentsneakallowinguis=Permanent Sneak Allow In GUIs
 # tweakeroo.config.name.placementgridsize=Placement Grid Size
-# tweakeroo.config.name.placementlimit=Placement Limit
-# tweakeroo.config.name.placementrestrictionmode=Placement Restriction Mode
+tweakeroo.config.name.placementlimit=放置限制
+tweakeroo.config.name.placementrestrictionmode=放置限制模式
 # tweakeroo.config.name.placementrestrictiontiedtofast=Placement Restriction Tied To Fast
-# tweakeroo.config.name.playeronfirescale=Player On Fire Scale
+tweakeroo.config.name.playeronfirescale=着火玩家尺寸
 # tweakeroo.config.name.potionwarningbeneficialonly=Potion Warning Beneficial Only
 # tweakeroo.config.name.potionwarningthreshold=Potion Warning Threshold
 # tweakeroo.config.name.rememberflexiblefromclick=Remember Flexible From Click
-# tweakeroo.config.name.renderlimititem=Render Limit Item
-# tweakeroo.config.name.renderlimitxporb=Render Limit XP-Orb
+tweakeroo.config.name.renderlimititem=渲染限制物品
+tweakeroo.config.name.renderlimitxporb=渲染限制经验球
 # tweakeroo.config.name.shulkerdisplaybgcolor=Shulker Display Background Color
 # tweakeroo.config.name.shulkerdisplayrequireshift=Shulker Display Require Shift
 # tweakeroo.config.name.slotsyncworkaround=Slot Sync Workaround
@@ -155,25 +155,25 @@ tweakeroo.config.name.mappreviewsize=地图预览最大尺寸
 # tweakeroo.config.name.snapaimthresholdpitch=Snap Aim Threshold Pitch
 # tweakeroo.config.name.snapaimthresholdyaw=Snap Aim Threshold Yaw
 # tweakeroo.config.name.snapaimyawstep=Snap Aim Yaw Step
-# tweakeroo.config.name.soundnameoutput=Sound Name Output
-# tweakeroo.config.name.structureblockmaxsize=§6Structure Block Max Size
-# tweakeroo.config.name.worldlistdateformat=World List Date Format
-# tweakeroo.config.name.zoomadjustmousesensitivity=Zoom Adjust Mouse Sensitivity
-# tweakeroo.config.name.zoomfov=Zoom FoV
+tweakeroo.config.name.soundnameoutput=声音名称输出
+tweakeroo.config.name.structureblockmaxsize=§6结构方块最大尺寸
+tweakeroo.config.name.worldlistdateformat=世界列表日期格式
+tweakeroo.config.name.zoomadjustmousesensitivity=放大调节鼠标灵敏度
+tweakeroo.config.name.zoomfov=放大角视场
 
 
 # tweakeroo.config.name.elytrafix=Elytra Fix
 # tweakeroo.config.name.tileentityunloadoptimization=Tile Entity Unload Optimization
 
 
-# tweakeroo.config.name.fastplacementitemlist=Fast Placement Item List
-# tweakeroo.config.name.fastrightclickblocklist=Fast Right Click Block List
-# tweakeroo.config.name.fastrightclickitemlist=Fast Right Click Item List
-# tweakeroo.config.name.flatworldpresets=Flat World Presets
-# tweakeroo.config.name.itemglintitemlist=Item Glint Item List
+tweakeroo.config.name.fastplacementitemlist=快速放置物品列表
+tweakeroo.config.name.fastrightclickblocklist=快速右键单击方块列表
+tweakeroo.config.name.fastrightclickitemlist=快速右键单击物品列表
+tweakeroo.config.name.flatworldpresets=平坦世界预设
+tweakeroo.config.name.itemglintitemlist=物品光亮物品列表
 # tweakeroo.config.name.potionwarninglist=Potion Warning List
-# tweakeroo.config.name.repairmodeslots=Repair Mode Slots
-# tweakeroo.config.name.sounddisablelist=Sound Disable List
+tweakeroo.config.name.repairmodeslots=修补模式物品格
+tweakeroo.config.name.sounddisablelist=声音禁用列表
 # tweakeroo.config.name.swapbrokentoolsslots=Swap Almost Broken Items Slots
 # tweakeroo.config.name.unstackingitems=Unstacking Items
 
@@ -260,10 +260,10 @@ tweakeroo.config.name.mappreviewsize=地图预览最大尺寸
 # tweakeroo.feature_toggle.comment.tweakzoom=Enables using the Generic -> 'Zoom Activate' hotkey to zoom in.\nYou can quickly change the FoV (zoom factor) by scrolling\nwhile holding the key down.
 
 
-# tweakeroo.feature_toggle.name.tweakaccurateblockplacement=Accurate Block Placement
+tweakeroo.feature_toggle.name.tweakaccurateblockplacement=精准方块放置
 # tweakeroo.feature_toggle.name.tweakafterclicker=After Clicker
-# tweakeroo.feature_toggle.name.tweakaimlock=Aim Lock
-# tweakeroo.feature_toggle.name.tweakangelblock=Angel Block
+tweakeroo.feature_toggle.name.tweakaimlock=准星锁定
+tweakeroo.feature_toggle.name.tweakangelblock=角落方块
 # tweakeroo.feature_toggle.name.tweakblockplacementymirror=Block Placement Y-Mirror
 # tweakeroo.feature_toggle.name.tweakblockbreakingparticletweaks=Block Breaking Particle Tweaks
 # tweakeroo.feature_toggle.name.tweakblockreachoverride=Block Reach Override
@@ -274,7 +274,7 @@ tweakeroo.config.name.mappreviewsize=地图预览最大尺寸
 # tweakeroo.feature_toggle.name.tweakchattimestamp=Chat Timestamp
 # tweakeroo.feature_toggle.name.tweakchunkrenderonmainthread=Chunk Render On Main Thread
 # tweakeroo.feature_toggle.name.tweakchunkrendertimeoutoverride=Chunk Render Timeout Override
-# tweakeroo.feature_toggle.name.tweakcloudheightoverride=Cloud Height Override
+tweakeroo.feature_toggle.name.tweakcloudheightoverride=云高度修改
 # tweakeroo.feature_toggle.name.tweakcommandblockextrafields=Command Block Extra Fields
 # tweakeroo.feature_toggle.name.tweakcustomflatpresets=Custom Flat Presets
 # tweakeroo.feature_toggle.name.tweakdebugpiechartscale=Debug Pie Chart Scale
@@ -282,17 +282,17 @@ tweakeroo.config.name.mappreviewsize=地图预览最大尺寸
 # tweakeroo.feature_toggle.name.tweakemptyshulkerboxesstack=§6Empty Shulker Boxes Stack
 # tweakeroo.feature_toggle.name.tweakemptyshulkerboxesstackonground=§6Empty Shulker Boxes Stack On Ground
 # tweakeroo.feature_toggle.name.tweakexplosionreducedparticles=Explosion Reduced Particles
-# tweakeroo.feature_toggle.name.tweakf3cursor=F3 Cursor
-# tweakeroo.feature_toggle.name.tweakfakesneaking=Fake Sneaking
-# tweakeroo.feature_toggle.name.tweakfastblockplacement=Fast Block Placement
-# tweakeroo.feature_toggle.name.tweakfastleftclick=Fast Left Click
-# tweakeroo.feature_toggle.name.tweakfastrightclick=Fast Right Click
-# tweakeroo.feature_toggle.name.tweakfillclonelimit=§6Fill/Clone Limit Override
-# tweakeroo.feature_toggle.name.tweakflyspeed=Fly Speed Override
-# tweakeroo.feature_toggle.name.tweakflexibleblockplacement=Flexible Block Placement
-# tweakeroo.feature_toggle.name.tweakfreecamera=Free Camera
-# tweakeroo.feature_toggle.name.tweakgammaoverride=Gamma Override
-# tweakeroo.feature_toggle.name.tweakhandrestock=Hand Restock
+tweakeroo.feature_toggle.name.tweakf3cursor=F3鼠标
+tweakeroo.feature_toggle.name.tweakfakesneaking=假潜行
+tweakeroo.feature_toggle.name.tweakfastblockplacement=快速方块放置
+tweakeroo.feature_toggle.name.tweakfastleftclick=快速左键单击
+tweakeroo.feature_toggle.name.tweakfastrightclick=快速右键单击
+tweakeroo.feature_toggle.name.tweakfillclonelimit=§6Fill/Clone指令限制修改
+tweakeroo.feature_toggle.name.tweakflyspeed=飞行速度修改
+tweakeroo.feature_toggle.name.tweakflexibleblockplacement=灵活方块放置
+tweakeroo.feature_toggle.name.tweakfreecamera=自由相机
+tweakeroo.feature_toggle.name.tweakgammaoverride=伽马修改
+tweakeroo.feature_toggle.name.tweakhandrestock=手持物品补充
 # tweakeroo.feature_toggle.name.tweakhangableentitybypass=Hangable Entity Bypass
 # tweakeroo.feature_toggle.name.tweakholdattack=Hold Attack
 # tweakeroo.feature_toggle.name.tweakholduse=Hold Use
@@ -338,8 +338,8 @@ tweakeroo.config.name.mappreviewsize=地图预览最大尺寸
 # tweakeroo.feature_toggle.name.tweaktabcompletecoordinate=Tab Complete Coordinate
 # tweakeroo.feature_toggle.name.tweaktileentityrenderdistance=Tile Entity Render Distance Override
 # tweakeroo.feature_toggle.name.tweaktoolswitch=Tool Switch
-# tweakeroo.feature_toggle.name.tweakworldlistdateformat=World List Date Format
-# tweakeroo.feature_toggle.name.tweakzoom=Zoom
+tweakeroo.feature_toggle.name.tweakworldlistdateformat=世界列表日期格式
+tweakeroo.feature_toggle.name.tweakzoom=放大
 
 
 # tweakeroo.disable_toggle.comment.disableblockbreakingparticles=Removes the block breaking particles.\n(This is originally from usefulmod by nessie.)\n§6Note: There is also the separate tweak\n§6'Reduced Block Breaking Particles' in Tweak Toggles,\n§6if you just want to reduce the amount of particles\n§6produced, but not disable them completely.
@@ -509,23 +509,23 @@ tweakeroo.hotkey.comment.flypreset4=调节到飞行速度预设4。
 # tweakeroo.error.invalid_sound_blacklist_entry=Invalid sound black- or whitelist entry: '%s'
 
 # tweakeroo.gui.button.config_gui.disable_toggles=Disable Toggles
-# tweakeroo.gui.button.config_gui.fixes=Fixes
-# tweakeroo.gui.button.config_gui.generic=Generic
-# tweakeroo.gui.button.config_gui.generic_hotkeys=Hotkeys
-# tweakeroo.gui.button.config_gui.lists=Lists
+tweakeroo.gui.button.config_gui.fixes=修复
+tweakeroo.gui.button.config_gui.generic=通用
+tweakeroo.gui.button.config_gui.generic_hotkeys=快捷键
+tweakeroo.gui.button.config_gui.lists=列表
 # tweakeroo.gui.button.config_gui.placement=Placement stuff
 # tweakeroo.gui.button.config_gui.tweaks=Tweaks
 
-# tweakeroo.gui.button.misc.command_block.set_name=Set name
-# tweakeroo.gui.button.misc.command_block.update_execution=Loops: %s
+tweakeroo.gui.button.misc.command_block.set_name=设置名称
+tweakeroo.gui.button.misc.command_block.update_execution=循环：%s
 
 # tweakeroo.gui.button.misc.command_block.hover.update_execution=Whether or not multiple triggers per game tick are allowed
 
 tweakeroo.gui.title.configs=Tweakeroo配置
 
 # tweakeroo.hotkeys.category.disable_toggle_hotkeys=Disable Toggle Hotkeys
-# tweakeroo.hotkeys.category.generic=Generic
-# tweakeroo.hotkeys.category.generic_hotkeys=Generic hotkeys
+tweakeroo.hotkeys.category.generic=通用
+tweakeroo.hotkeys.category.generic_hotkeys=通用快捷键
 # tweakeroo.hotkeys.category.tweak_toggle_hotkeys=Tweak Hotkeys
 
 # tweakeroo.label.placement_restriction_mode.column=Column
