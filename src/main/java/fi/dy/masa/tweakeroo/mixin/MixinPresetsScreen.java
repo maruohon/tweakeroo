@@ -2,7 +2,6 @@ package fi.dy.masa.tweakeroo.mixin;
 
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,16 +23,12 @@ import net.minecraft.world.gen.feature.StructureFeature;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(PresetsScreen.class)
 public abstract class MixinPresetsScreen
 {
-    // name;blocks;biome;options;iconitem
-    private static final Pattern PATTERN_PRESET = Pattern.compile("^(?<name>[a-zA-Z0-9_ -]+);(?<blocks>[a-z0-9_:\\.\\*-]+);(?<biome>[a-z0-9_:]+);(?<options>[a-z0-9_, \\(\\)=]*);(?<icon>[a-z0-9_:-]+)$");
-
-    @Shadow
-    @Final
-    private static List<Object> presets;
+    @Shadow @Final private static List<Object> PRESETS;
 
     @Shadow
     private static void addPreset(Text name, ItemConvertible itemIn, RegistryKey<Biome> biomeIn, List<StructureFeature<?>> structures, boolean b1, boolean b2, boolean b3, FlatChunkGeneratorLayer... layers) {};
@@ -44,11 +39,11 @@ public abstract class MixinPresetsScreen
         if (FeatureToggle.TWEAK_CUSTOM_FLAT_PRESETS.getBooleanValue())
         {
             int vanillaEntries = 9;
-            int toRemove = presets.size() - vanillaEntries;
+            int toRemove = PRESETS.size() - vanillaEntries;
 
             for (int i = 0; i < toRemove; ++i)
             {
-                presets.remove(0);
+                PRESETS.remove(0);
             }
 
             List<String> presetStrings = Configs.Lists.FLAT_WORLD_PRESETS.getStrings();
@@ -57,10 +52,10 @@ public abstract class MixinPresetsScreen
             {
                 String str = presetStrings.get(i);
 
-                if (this.registerPresetFromString(str) && presets.size() > vanillaEntries)
+                if (this.registerPresetFromString(str) && PRESETS.size() > vanillaEntries)
                 {
-                    Object o = presets.remove(presets.size() - 1);
-                    presets.add(0, o);
+                    Object o = PRESETS.remove(PRESETS.size() - 1);
+                    PRESETS.add(0, o);
                 }
             }
         }
@@ -68,7 +63,7 @@ public abstract class MixinPresetsScreen
 
     private boolean registerPresetFromString(String str)
     {
-        Matcher matcher = PATTERN_PRESET.matcher(str);
+        Matcher matcher = MiscUtils.PATTERN_WORLD_PRESET.matcher(str);
 
         if (matcher.matches())
         {
