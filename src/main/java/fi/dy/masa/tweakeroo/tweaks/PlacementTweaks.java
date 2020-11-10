@@ -781,7 +781,7 @@ public class PlacementTweaks
 
         if (result == ActionResult.SUCCESS)
         {
-            PlayerInventory inv = player.method_31548();
+            PlayerInventory inv = player.getInventory();
 
             if (FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue())
             {
@@ -1130,7 +1130,7 @@ public class PlacementTweaks
         if (Configs.Generic.SLOT_SYNC_WORKAROUND.getBooleanValue() &&
             FeatureToggle.TWEAK_PICK_BEFORE_PLACE.getBooleanValue() == false &&
             container != null && container == player.playerScreenHandler &&
-            (slotNumber == 45 || (slotNumber - 36) == player.method_31548().selectedSlot))
+            (slotNumber == 45 || (slotNumber - 36) == player.getInventory().selectedSlot))
         {
             boolean featRight = FeatureToggle.TWEAK_FAST_RIGHT_CLICK.getBooleanValue();
             boolean featLeft = FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue();
