@@ -217,6 +217,7 @@ public class Configs implements IConfigHandler
 
     public static class Disable
     {
+        public static final ConfigBooleanHotkeyed       DISABLE_ARMOR_STAND_RENDERING   = new ConfigBooleanHotkeyed("disableArmorStandRendering",           false, "", "Disabled all Armor Stand entity rendering");
         public static final ConfigBooleanHotkeyed       DISABLE_BLOCK_BREAK_PARTICLES   = new ConfigBooleanHotkeyed("disableBlockBreakingParticles",        false, "", "Removes the block breaking particles.\n(This is originally from usefulmod by nessie.)");
         public static final ConfigBooleanHotkeyed       DISABLE_DOUBLE_TAP_SPRINT       = new ConfigBooleanHotkeyed("disableDoubleTapSprint",               false, "", "Disables the double-tap-forward-key sprinting");
         public static final ConfigBooleanHotkeyed       DISABLE_BOSS_FOG                = new ConfigBooleanHotkeyed("disableBossFog",                       false, "", "Removes the fog that boss mobs cause");
@@ -244,6 +245,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_WALL_UNSPRINT           = new ConfigBooleanHotkeyed("disableWallUnsprint",                  false, "", "Touching a wall doesn't drop you out from sprint mode");
 
         public static final ImmutableList<IHotkeyTogglable> OPTIONS = ImmutableList.of(
+                DISABLE_ARMOR_STAND_RENDERING,
                 DISABLE_BLOCK_BREAK_PARTICLES,
                 DISABLE_DOUBLE_TAP_SPRINT,
                 DISABLE_BOSS_FOG,
