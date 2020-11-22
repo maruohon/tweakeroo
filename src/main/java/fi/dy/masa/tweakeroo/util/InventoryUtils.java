@@ -249,7 +249,7 @@ public class InventoryUtils
         MinecraftClient mc = MinecraftClient.getInstance();
         PlayerEntity player = mc.player;
 
-        if (FeatureToggle.TWEAK_TOOL_SWITCH.getBooleanValue() && player != null && mc.world != null)
+        if (player != null && mc.world != null)
         {
             BlockState state = mc.world.getBlockState(pos);
             ItemStack stack = player.getMainHandStack();
