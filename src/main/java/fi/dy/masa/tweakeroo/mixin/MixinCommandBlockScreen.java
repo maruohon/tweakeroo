@@ -1,6 +1,8 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import java.util.Arrays;
+
+import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -8,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
+import net.minecraft.block.entity.CommandBlockBlockEntity.Type;
 import net.minecraft.client.gui.screen.ingame.AbstractCommandBlockScreen;
 import net.minecraft.client.gui.screen.ingame.CommandBlockScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -29,12 +32,12 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
     @Final
     private CommandBlockBlockEntity blockEntity;
 
-    @Shadow private ButtonWidget modeButton;
-    @Shadow private ButtonWidget conditionalModeButton;
-    @Shadow private ButtonWidget redstoneTriggerButton;
+    @Shadow private CyclingButtonWidget<Type> modeButton;
+    @Shadow private CyclingButtonWidget<Boolean> conditionalModeButton;
+    @Shadow private CyclingButtonWidget<Boolean> redstoneTriggerButton;
 
     private TextFieldWidget textFieldName;
-    private ButtonWidget buttonUpdateExec;
+    private CyclingButtonWidget<Boolean> buttonUpdateExec;
     private boolean updateExecValue;
     private String lastName = "";
 
@@ -76,17 +79,18 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
 
             this.updateExecValue = MiscUtils.getUpdateExec(this.blockEntity);
 
-            str = getDisplayStringForCurrentStatus(this.updateExecValue);
-            width = this.textRenderer.getWidth(str) + 10;
+            Text strOn = new TranslatableText("tweakeroo.gui.button.misc.command_block.update_execution.on");
+            Text strOff = new TranslatableText("tweakeroo.gui.button.misc.command_block.update_execution.off");
+            width = this.textRenderer.getWidth(strOff) + 10;
 
-            this.buttonUpdateExec = new ButtonWidget(x2 + widthBtn + 4, y, width, 20, str, (button) ->
+            this.buttonUpdateExec = CyclingButtonWidget.method_32607(strOn, strOff).method_32616().value(this.updateExecValue).build(x2 + widthBtn + 4, y, width, 20, new TranslatableText("tweakeroo.gui.button.misc.command_block.update_execution.looping"), (button, boolean_) ->
             {
-                this.updateExecValue = ! this.updateExecValue;
+                this.updateExecValue = boolean_;
                 MiscUtils.setUpdateExec(this.blockEntity, this.updateExecValue);
 
-                Text strBtn = getDisplayStringForCurrentStatus(this.updateExecValue);
-                button.setMessage(strBtn);
-                button.setWidth(this.textRenderer.getWidth(strBtn) + 10);
+                //Text strBtn = getDisplayStringForCurrentStatus(this.updateExecValue);
+                //button.setMessage(strBtn);
+                //button.setWidth(this.textRenderer.getWidth(strBtn) + 10);
 
                 String cmd = String.format("/data merge block %d %d %d {\"UpdateLastExecution\":%s}",
                         pos.getX(), pos.getY(), pos.getZ(), this.updateExecValue ? "1b" : "0b");
