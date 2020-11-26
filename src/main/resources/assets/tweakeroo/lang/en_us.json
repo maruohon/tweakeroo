@@ -10,7 +10,9 @@
     "tweakeroo.gui.button.config_gui.tweak_toggles": "Tweak Toggles",
 
     "tweakeroo.gui.button.misc.command_block.set_name": "Set name",
-    "tweakeroo.gui.button.misc.command_block.update_execution": "Loops: %s",
+    "tweakeroo.gui.button.misc.command_block.update_execution.on": "Loops: §aON",
+    "tweakeroo.gui.button.misc.command_block.update_execution.off": "Loops: §cOFF",
+    "tweakeroo.gui.button.misc.command_block.update_execution.looping": "Looping",
 
     "tweakeroo.gui.button.misc.command_block.hover.update_execution": "Whether or not multiple triggers per game tick are allowed",
 
