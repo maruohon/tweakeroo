@@ -45,6 +45,7 @@
         "MixinPlayerEntity",
         "MixinPresetsScreen",
         "MixinRavagerEntity",
+        "MixinSculkSensor",
         "MixinSignBlockEntity",
         "MixinSignEditScreen",
         "MixinSkyProperties_Nether",
