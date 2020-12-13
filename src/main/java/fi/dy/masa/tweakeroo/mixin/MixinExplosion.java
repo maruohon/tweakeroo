@@ -2,7 +2,6 @@ package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import net.minecraft.particle.DefaultParticleType;
@@ -28,11 +27,5 @@ public abstract class MixinExplosion
         }
 
         return ParticleTypes.EXPLOSION_EMITTER;
-    }
-
-    @ModifyVariable(method = "affectWorld", at = @At("HEAD"), argsOnly = true)
-    private boolean shouldSpawnparticles(boolean spawnParticles)
-    {
-        return spawnParticles && FeatureToggle.TWEAK_EXPLOSION_REDUCED_PARTICLES.getBooleanValue() == false;
     }
 }
