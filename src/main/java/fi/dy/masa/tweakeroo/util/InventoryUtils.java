@@ -734,13 +734,13 @@ public class InventoryUtils
                     changed = true;
                 }
 
-                if (tag.method_33133()) // isEmpty
+                if (tag.isEmpty())
                 {
                     nbt.remove("BlockEntityTag");
                 }
             }
 
-            if (nbt.method_33133()) // isEmpty
+            if (nbt.isEmpty())
             {
                 stack.setTag(null);
                 changed = true;
