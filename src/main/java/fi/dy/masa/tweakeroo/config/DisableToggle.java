@@ -4,8 +4,8 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
+import fi.dy.masa.malilib.config.ConfigInfo;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
-import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.KeyBindSettings;
@@ -100,23 +100,23 @@ public enum DisableToggle implements ConfigInfo
     }
 
     @Override
-    public String getConfigNameTranslationKey()
+    public String getDisplayName()
     {
-        return this.toggleStatus.getConfigNameTranslationKey();
+        return this.toggleStatus.getDisplayName();
     }
 
     @Nullable
     @Override
-    public String getCommentTranslationKey()
+    public String getComment()
     {
-        return this.toggleStatus.getCommentTranslationKey();
+        return this.toggleStatus.getComment();
     }
 
     @Override
     public boolean isModified()
     {
         return this.toggleStatus.isModified() ||
-                       this.toggleHotkey.isModified();
+               this.toggleHotkey.isModified();
     }
 
     @Override
