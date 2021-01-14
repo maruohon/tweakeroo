@@ -52,7 +52,7 @@ public class RenderUtils
             int startX = offX;
             int startY = offY;
 
-            HudAlignment align = Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getOptionListValue();
+            HudAlignment align = Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getValue();
 
             switch (align)
             {
@@ -344,7 +344,7 @@ public class RenderUtils
             Minecraft mc = Minecraft.getMinecraft();
             final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
             final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
-            SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+            SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
 
             if (mode != SnapAimMode.PITCH)
             {

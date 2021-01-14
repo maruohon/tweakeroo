@@ -44,7 +44,7 @@ public class Callbacks
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> {
             Minecraft mc = Minecraft.getMinecraft();
             if (newValue) {
-                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(mc.gameSettings.gammaSetting);
+                Configs.Internal.GAMMA_VALUE_ORIGINAL.setValue((double) mc.gameSettings.gammaSetting);
                 mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getFloatValue();
             }
             else { mc.gameSettings.gammaSetting = Configs.Internal.GAMMA_VALUE_ORIGINAL.getFloatValue(); }
@@ -57,8 +57,8 @@ public class Callbacks
         });
 
         Minecraft mc = Minecraft.getMinecraft();
-        Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(mc.gameSettings.gammaSetting);
-        Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setDoubleValue(Blocks.SLIME_BLOCK.slipperiness);
+        Configs.Internal.GAMMA_VALUE_ORIGINAL.setValue((double) mc.gameSettings.gammaSetting);
+        Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setValue((double) Blocks.SLIME_BLOCK.slipperiness);
 
         Configs.Lists.REPAIR_MODE_SLOTS.setValueLoadCallback(InventoryUtils::setRepairModeSlots);
         Configs.Lists.REPAIR_MODE_SLOTS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setRepairModeSlots(newValue));
@@ -89,7 +89,7 @@ public class Callbacks
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> {
             if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
             {
-                FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanConfig().setBooleanValue(newValue);
+                FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanConfig().setValue(newValue);
             }
         });
         FeatureToggle.TWEAK_FREE_CAMERA.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> CameraEntity.setCameraState(newValue));
@@ -413,7 +413,7 @@ public class Callbacks
 
         private void setFlySpeedPreset(int preset)
         {
-            Configs.Internal.FLY_SPEED_PRESET.setIntegerValue(preset);
+            Configs.Internal.FLY_SPEED_PRESET.setValue(preset);
 
             float speed = (float) Configs.getActiveFlySpeedConfig().getDoubleValue();
             String strPreset = BaseScreen.TXT_GREEN + (preset + 1) + BaseScreen.TXT_RST;
@@ -423,7 +423,7 @@ public class Callbacks
 
         private void setBreakingRestrictionMode(PlacementRestrictionMode mode)
         {
-            Configs.Generic.BREAKING_RESTRICTION_MODE.setOptionListValue(mode);
+            Configs.Generic.BREAKING_RESTRICTION_MODE.setValue(mode);
 
             String str = BaseScreen.TXT_GREEN + mode.name() + BaseScreen.TXT_RST;
             MessageUtils.printActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", str);
@@ -431,7 +431,7 @@ public class Callbacks
 
         private void setPlacementRestrictionMode(PlacementRestrictionMode mode)
         {
-            Configs.Generic.PLACEMENT_RESTRICTION_MODE.setOptionListValue(mode);
+            Configs.Generic.PLACEMENT_RESTRICTION_MODE.setValue(mode);
 
             String str = BaseScreen.TXT_GREEN + mode.name() + BaseScreen.TXT_RST;
             MessageUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
@@ -509,7 +509,7 @@ public class Callbacks
 
                 if (key == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind())
                 {
-                    String strMode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue().name();
+                    String strMode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue().name();
                     MessageUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
                 }
                 else if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeyBind())
@@ -549,7 +549,7 @@ public class Callbacks
                 }
                 else if (key == FeatureToggle.TWEAK_SNAP_AIM.getKeyBind())
                 {
-                    SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+                    SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
 
                     if (mode == SnapAimMode.YAW)
                     {

@@ -313,7 +313,7 @@ public class MiscUtils
 
     public static float getSnappedPitch(double realPitch)
     {
-        if (Configs.Generic.SNAP_AIM_MODE.getOptionListValue() != SnapAimMode.YAW)
+        if (Configs.Generic.SNAP_AIM_MODE.getValue() != SnapAimMode.YAW)
         {
             if (lastRealPitch != realPitch)
             {
@@ -357,7 +357,7 @@ public class MiscUtils
 
                     MessageUtils.printActionbarMessage("tweakeroo.message.snapped_to_pitch", str);
 
-                    Configs.Internal.SNAP_AIM_LAST_PITCH.setDoubleValue(snappedPitch);
+                    Configs.Internal.SNAP_AIM_LAST_PITCH.setValue(snappedPitch);
                 }
 
                 return MathHelper.wrapDegrees((float) snappedPitch);
@@ -365,14 +365,14 @@ public class MiscUtils
         }
 
         // This causes the snap message to also get shown when re-snapping to the same snap angle, when using the threshold
-        Configs.Internal.SNAP_AIM_LAST_PITCH.setDoubleValue(realPitch);
+        Configs.Internal.SNAP_AIM_LAST_PITCH.setValue(realPitch);
 
         return (float) realPitch;
     }
 
     public static float getSnappedYaw(double realYaw)
     {
-        if (Configs.Generic.SNAP_AIM_MODE.getOptionListValue() != SnapAimMode.PITCH)
+        if (Configs.Generic.SNAP_AIM_MODE.getValue() != SnapAimMode.PITCH)
         {
             if (lastRealYaw != realYaw)
             {
@@ -399,7 +399,7 @@ public class MiscUtils
 
                     MessageUtils.printActionbarMessage("tweakeroo.message.snapped_to_yaw", str);
 
-                    Configs.Internal.SNAP_AIM_LAST_YAW.setDoubleValue(snappedYaw);
+                    Configs.Internal.SNAP_AIM_LAST_YAW.setValue(snappedYaw);
                 }
 
                 return MathHelper.wrapDegrees((float) snappedYaw);
@@ -407,7 +407,7 @@ public class MiscUtils
         }
 
         // This causes the snap message to also get shown when re-snapping to the same snap angle, when using the threshold
-        Configs.Internal.SNAP_AIM_LAST_YAW.setDoubleValue(realYaw);
+        Configs.Internal.SNAP_AIM_LAST_YAW.setValue(realYaw);
 
         return (float) realYaw;
     }

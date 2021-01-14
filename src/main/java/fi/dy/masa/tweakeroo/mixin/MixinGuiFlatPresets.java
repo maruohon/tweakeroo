@@ -45,7 +45,7 @@ public abstract class MixinGuiFlatPresets
                 FLAT_WORLD_PRESETS.remove(0);
             }
 
-            List<String> presets = Configs.Lists.FLAT_WORLD_PRESETS.getValues();
+            List<String> presets = Configs.Lists.FLAT_WORLD_PRESETS.getValue();
 
             for (int i = presets.size() - 1; i >= 0; --i)
             {

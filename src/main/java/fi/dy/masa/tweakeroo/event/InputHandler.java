@@ -136,14 +136,14 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
                 if      (newRow < 0) { newRow = max; }
                 else if (newRow > max) { newRow = 0; }
 
-                Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.setIntegerValue(newRow);
+                Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.setValue(newRow);
 
                 return true;
             }
             else if (FeatureToggle.TWEAK_AFTER_CLICKER.getKeyBind().isKeyBindHeld())
             {
                 int newValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setIntegerValue(newValue);
+                Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setValue(newValue);
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + rst;
@@ -154,7 +154,7 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
             else if (FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeyBind().isKeyBindHeld())
             {
                 int newValue = Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.PLACEMENT_LIMIT.setIntegerValue(newValue);
+                Configs.Generic.PLACEMENT_LIMIT.setValue(newValue);
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + rst;
@@ -165,7 +165,7 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
             else if (FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeyBind().isKeyBindHeld())
             {
                 int newValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.setIntegerValue(newValue);
+                Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.setValue(newValue);
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + rst;
@@ -176,7 +176,7 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
             else if (FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeyBind().isKeyBindHeld())
             {
                 int newValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.setIntegerValue(newValue);
+                Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.setValue(newValue);
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + rst;
@@ -187,7 +187,7 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
             else if (FeatureToggle.TWEAK_BREAKING_GRID.getKeyBind().isKeyBindHeld())
             {
                 int newValue = Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.BREAKING_GRID_SIZE.setIntegerValue(newValue);
+                Configs.Generic.BREAKING_GRID_SIZE.setValue(newValue);
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + rst;
@@ -198,7 +198,7 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
             else if (FeatureToggle.TWEAK_PLACEMENT_GRID.getKeyBind().isKeyBindHeld())
             {
                 int newValue = Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.PLACEMENT_GRID_SIZE.setIntegerValue(newValue);
+                Configs.Generic.PLACEMENT_GRID_SIZE.setValue(newValue);
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + rst;
@@ -208,11 +208,11 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
             }
             else if (FeatureToggle.TWEAK_SNAP_AIM.getKeyBind().isKeyBindHeld())
             {
-                SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getOptionListValue();
+                SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
                 DoubleConfig config = mode == SnapAimMode.PITCH ? Configs.Generic.SNAP_AIM_PITCH_STEP : Configs.Generic.SNAP_AIM_YAW_STEP;
 
                 double newValue = config.getDoubleValue() * (wheelDelta > 0 ? 2 : 0.5);
-                config.setDoubleValue(newValue);
+                config.setValue(newValue);
                 AdjustableKeyCallback.setValueChanged();
 
                 String val = preGreen + config.getDoubleValue() + rst;
@@ -227,7 +227,7 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
             {
                 double diff = BaseScreen.isCtrlDown() ? 5 : 1;
                 double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (wheelDelta < 0 ? diff : -diff);
-                Configs.Generic.ZOOM_FOV.setDoubleValue(newValue);
+                Configs.Generic.ZOOM_FOV.setValue(newValue);
 
                 // Only prevent the next trigger when adjusting the value with the actual toggle key held
                 if (FeatureToggle.TWEAK_ZOOM.getKeyBind().isKeyBindHeld())
@@ -254,7 +254,7 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
                 {
                     DoubleConfig config = Configs.getFlySpeedConfig(i);
                     double newValue = config.getDoubleValue() + (wheelDelta > 0 ? 0.005 : -0.005);
-                    config.setDoubleValue(newValue);
+                    config.setValue(newValue);
                     AdjustableKeyCallback.setValueChanged();
 
                     String strIndex = preGreen + (i + 1) + rst;

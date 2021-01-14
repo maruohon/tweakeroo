@@ -217,7 +217,7 @@ public class CameraEntity extends EntityPlayerSP
         mc.renderChunksMany = false; // Disable chunk culling
 
         // Disable the motion option when entering camera mode
-        Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.setBooleanValue(false);
+        Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.setValue(false);
     }
 
     private static void removeCamera(Minecraft mc)

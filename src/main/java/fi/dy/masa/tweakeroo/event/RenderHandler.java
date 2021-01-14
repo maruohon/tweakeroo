@@ -63,7 +63,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
 
         if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue())
         {
-            ActiveMode mode = Configs.Generic.ELYTRA_CAMERA_INDICATOR.getOptionListValue();
+            ActiveMode mode = Configs.Generic.ELYTRA_CAMERA_INDICATOR.getValue();
 
             if (mode == ActiveMode.ALWAYS || (mode == ActiveMode.WITH_KEY && Hotkeys.ELYTRA_CAMERA.getKeyBind().isKeyBindHeld()))
             {

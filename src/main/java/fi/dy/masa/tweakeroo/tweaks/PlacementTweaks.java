@@ -958,7 +958,7 @@ public class PlacementTweaks
         }
 
         int gridSize = Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue();
-        PlacementRestrictionMode mode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getOptionListValue();
+        PlacementRestrictionMode mode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue();
 
         return isPositionAllowedByRestrictions(pos, side, posFirst, sideFirst, restrictionEnabled, mode, gridEnabled, gridSize);
     }
@@ -974,7 +974,7 @@ public class PlacementTweaks
         }
 
         int gridSize = Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue();
-        PlacementRestrictionMode mode = Configs.Generic.BREAKING_RESTRICTION_MODE.getOptionListValue();
+        PlacementRestrictionMode mode = Configs.Generic.BREAKING_RESTRICTION_MODE.getValue();
 
         return posFirstBreaking == null || isPositionAllowedByRestrictions(pos, side, posFirstBreaking, sideFirstBreaking, restrictionEnabled, mode, gridEnabled, gridSize);
     }
