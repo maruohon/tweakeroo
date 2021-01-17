@@ -136,10 +136,4 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
             ci.cancel();
         }
     }
-
-    @Override
-    public boolean isSpectator()
-    {
-        return super.isSpectator() || CameraUtils.getFreeCameraSpectator();
-    }
 }

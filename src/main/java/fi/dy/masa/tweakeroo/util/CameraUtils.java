@@ -13,17 +13,6 @@ public class CameraUtils
 {
     private static float cameraYaw;
     private static float cameraPitch;
-    private static boolean freeCameraSpectator;
-
-    public static void setFreeCameraSpectator(boolean isSpectator)
-    {
-        freeCameraSpectator = isSpectator;
-    }
-
-    public static boolean getFreeCameraSpectator()
-    {
-        return freeCameraSpectator;
-    }
 
     public static boolean shouldPreventPlayerInputs()
     {
