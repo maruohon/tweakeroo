@@ -8,13 +8,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Frustum;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix4f;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
@@ -46,16 +47,23 @@ public abstract class MixinWorldRenderer
         }
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE",
-              target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSpectator()Z"))
-    private boolean overrideIsSpectator(ClientPlayerEntity player)
+    @Inject(method = "render", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSpectator()Z"))
+    private void preSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
         {
-            return true;
+            CameraUtils.setFreeCameraSpectator(true);
         }
+    }
 
-        return player.isSpectator();
+    @Inject(method = "render", at = @At(value = "INVOKE", shift = At.Shift.AFTER,
+            target = "Lnet/minecraft/client/render/WorldRenderer;setupTerrain(" +
+                     "Lnet/minecraft/client/render/Camera;" +
+                     "Lnet/minecraft/client/render/Frustum;ZIZ)V"))
+    private void postSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
+    {
+        CameraUtils.setFreeCameraSpectator(false);
     }
 
     // Allow rendering the client player entity by spoofing one of the entity rendering conditions while in Free Camera mode
