@@ -66,6 +66,12 @@ public abstract class MixinWorldRenderer
         CameraUtils.setFreeCameraSpectator(false);
     }
 
+    @Inject(method = "render", at = @At("RETURN"))
+    private void postSetupTerrainOptifineFallback(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
+    {
+        CameraUtils.setFreeCameraSpectator(false);
+    }
+
     // Allow rendering the client player entity by spoofing one of the entity rendering conditions while in Free Camera mode
     @Redirect(method = "render", require = 0, at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/render/Camera;getFocusedEntity()Lnet/minecraft/entity/Entity;", ordinal = 3))
