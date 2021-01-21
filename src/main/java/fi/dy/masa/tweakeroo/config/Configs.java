@@ -236,6 +236,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_PARTICLES               = new ConfigBooleanHotkeyed("disableParticles",                     false, "", "Disables all particles");
         public static final ConfigBooleanHotkeyed       DISABLE_PORTAL_GUI_CLOSING      = new ConfigBooleanHotkeyed("disablePortalGuiClosing",              false, "", "If enabled, then you can still open GUIs while in a Nether Portal");
         public static final ConfigBooleanHotkeyed       DISABLE_RAIN_EFFECTS            = new ConfigBooleanHotkeyed("disableRainEffects",                   false, "", "Disables rain rendering and sounds");
+        public static final ConfigBooleanHotkeyed       DISABLE_RANDOM_MODEL_OFFSET     = new ConfigBooleanHotkeyed("disableRandomModelOffset",             false, "", "Prevent blocks such as flowers rendering with random offset\n(Use F3+A to reload chunks after toggling.)");
         public static final ConfigBooleanHotkeyed       DISABLE_RENDER_DISTANCE_FOG     = new ConfigBooleanHotkeyed("disableRenderDistanceFog",             false, "", "Disables the fog that increases around the render distance");
         public static final ConfigBooleanHotkeyed       DISABLE_SIGN_GUI                = new ConfigBooleanHotkeyed("disableSignGui",                       false, "", "Prevent the Sign edit GUI from opening");
         public static final ConfigBooleanHotkeyed       DISABLE_SLIME_BLOCK_SLOWDOWN    = new ConfigBooleanHotkeyed("disableSlimeBlockSlowdown",            false, "", "Removes the slowdown from walking on Slime Blocks.\n(This is originally from usefulmod by nessie.)");
@@ -243,6 +244,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_TILE_ENTITY_TICKING     = new ConfigBooleanClient  ("disableTileEntityTicking",             false, "", "Prevent all TileEntities from getting ticked");
         public static final ConfigBooleanHotkeyed       DISABLE_VILLAGER_TRADE_LOCKING  = new ConfigBooleanClient  ("disableVillagerTradeLocking",          false, "", "Prevents villager trades from ever locking, by always incrementing\nthe max uses as well when the recipe uses is incremented");
         public static final ConfigBooleanHotkeyed       DISABLE_WALL_UNSPRINT           = new ConfigBooleanHotkeyed("disableWallUnsprint",                  false, "", "Touching a wall doesn't drop you out from sprint mode");
+
 
         public static final ImmutableList<IHotkeyTogglable> OPTIONS = ImmutableList.of(
                 DISABLE_ARMOR_STAND_RENDERING,
@@ -264,6 +266,7 @@ public class Configs implements IConfigHandler
                 DISABLE_PARTICLES,
                 DISABLE_PORTAL_GUI_CLOSING,
                 DISABLE_RAIN_EFFECTS,
+                DISABLE_RANDOM_MODEL_OFFSET,
                 DISABLE_RENDER_DISTANCE_FOG,
                 DISABLE_SIGN_GUI,
                 DISABLE_SLIME_BLOCK_SLOWDOWN,
