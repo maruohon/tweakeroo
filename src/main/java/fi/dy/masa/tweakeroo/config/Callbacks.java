@@ -37,6 +37,7 @@ public class Callbacks
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
         Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN));
+        Configs.Disable.DISABLE_RANDOM_MODEL_OFFSET.setValueChangeCallback(new FeatureCallbackOffset(mc));
 
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback((cfg) -> {
@@ -190,6 +191,22 @@ public class Callbacks
             {
                 ((IMixinAbstractBlock) Blocks.SLIME_BLOCK).setFriction((float) Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getDoubleValue());
             }
+        }
+    }
+
+    public static class FeatureCallbackOffset implements IValueChangeCallback<ConfigBoolean>
+    {
+        private final MinecraftClient mc;
+
+        public FeatureCallbackOffset(MinecraftClient mc)
+        {
+            this.mc = mc;
+        }
+
+        @Override
+        public void onValueChanged(ConfigBoolean config)
+        {
+            mc.worldRenderer.reload();
         }
     }
 
