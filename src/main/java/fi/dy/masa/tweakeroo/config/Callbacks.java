@@ -115,13 +115,13 @@ public class Callbacks
         Hotkeys.FREE_CAMERA_PLAYER_INPUTS.getKeyBind().setCallback((action, key) -> {
             BooleanConfig config = Configs.Generic.FREE_CAMERA_PLAYER_INPUTS;
             config.toggleBooleanValue();
-            MessageUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
+            MessageUtils.printBooleanConfigToggleMessage(config);
             return true;
         });
         Hotkeys.FREE_CAMERA_PLAYER_MOVEMENT.getKeyBind().setCallback((action, key) -> {
             BooleanConfig config = Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT;
             config.toggleBooleanValue();
-            MessageUtils.printBooleanConfigToggleMessage(config.getPrettyName(), config.getBooleanValue());
+            MessageUtils.printBooleanConfigToggleMessage(config);
             return true;
         });
         Hotkeys.GHOST_BLOCK_REMOVER.getKeyBind().setCallback(callbackGeneric);
@@ -503,7 +503,7 @@ public class Callbacks
             {
                 if (enabled == false)
                 {
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
+                    MessageUtils.printBooleanConfigToggleMessage(this.config);
                     return true;
                 }
 

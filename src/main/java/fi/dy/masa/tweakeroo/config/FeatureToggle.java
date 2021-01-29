@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.ConfigInfo;
+import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.input.KeyBind;
@@ -114,6 +114,7 @@ public enum FeatureToggle implements ConfigInfo
 
         String nameLower = name.toLowerCase(Locale.ROOT);
         String nameKey = "tweakeroo.feature_toggle.name." + nameLower;
+        this.toggleHotkey.setNameTranslationKey(nameKey).setPrettyNameTranslationKey(nameKey);
         this.toggleStatus.setNameTranslationKey(nameKey).setPrettyNameTranslationKey(nameKey);
         this.toggleStatus.setCommentTranslationKey("tweakeroo.feature_toggle.comment." + nameLower);
     }

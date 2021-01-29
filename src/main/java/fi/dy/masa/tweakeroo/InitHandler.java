@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo;
 
 import fi.dy.masa.malilib.config.ConfigManager;
+import fi.dy.masa.malilib.config.JsonModConfig;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.event.dispatch.ClientWorldChangeEventDispatcher;
 import fi.dy.masa.malilib.event.dispatch.InputDispatcher;
@@ -8,7 +9,7 @@ import fi.dy.masa.malilib.event.dispatch.KeyBindManager;
 import fi.dy.masa.malilib.event.dispatch.RenderEventDispatcher;
 import fi.dy.masa.malilib.gui.config.ConfigSearchInfo;
 import fi.dy.masa.malilib.gui.config.ConfigTabRegistry;
-import fi.dy.masa.malilib.gui.config.ConfigTypeRegistry;
+import fi.dy.masa.malilib.gui.config.ConfigWidgetRegistry;
 import fi.dy.masa.malilib.systems.BlockPlacementPositionHandler;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -27,14 +28,14 @@ public class InitHandler implements InitializationHandler
     @Override
     public void registerModHandlers()
     {
-        ConfigManager.INSTANCE.registerConfigHandler(new Configs());
+        ConfigManager.INSTANCE.registerConfigHandler(new JsonModConfig(Reference.MOD_ID, Reference.MOD_NAME, Configs.CATEGORIES, 1));
         ConfigTabRegistry.INSTANCE.registerConfigTabProvider(Reference.MOD_ID, ConfigScreen::getConfigTabs);
 
-        ConfigTypeRegistry.INSTANCE.registerWidgetFactory(FeatureToggle.class, FeatureToggleConfigWidget::new);
-        ConfigTypeRegistry.INSTANCE.registerWidgetFactory(DisableToggle.class, DisableToggleConfigWidget::new);
+        ConfigWidgetRegistry.INSTANCE.registerWidgetFactory(FeatureToggle.class, FeatureToggleConfigWidget::new);
+        ConfigWidgetRegistry.INSTANCE.registerWidgetFactory(DisableToggle.class, DisableToggleConfigWidget::new);
 
-        ConfigTypeRegistry.INSTANCE.registerConfigSearchInfo(FeatureToggle.class, new ConfigSearchInfo<FeatureToggle>(true, true).setBooleanConfigGetter(FeatureToggle::getBooleanConfig).setKeyBindGetter(FeatureToggle::getKeyBind));
-        ConfigTypeRegistry.INSTANCE.registerConfigSearchInfo(DisableToggle.class, new ConfigSearchInfo<DisableToggle>(true, true).setBooleanConfigGetter(DisableToggle::getBooleanConfig).setKeyBindGetter(DisableToggle::getKeyBind));
+        ConfigWidgetRegistry.INSTANCE.registerConfigSearchInfo(FeatureToggle.class, new ConfigSearchInfo<FeatureToggle>(true, true).setBooleanConfigGetter(FeatureToggle::getBooleanConfig).setKeyBindGetter(FeatureToggle::getKeyBind));
+        ConfigWidgetRegistry.INSTANCE.registerConfigSearchInfo(DisableToggle.class, new ConfigSearchInfo<DisableToggle>(true, true).setBooleanConfigGetter(DisableToggle::getBooleanConfig).setKeyBindGetter(DisableToggle::getKeyBind));
 
         KeyBindManager.INSTANCE.registerKeyBindProvider(InputHandler.getInstance());
         InputDispatcher.INSTANCE.registerKeyboardInputHandler(InputHandler.getInstance());

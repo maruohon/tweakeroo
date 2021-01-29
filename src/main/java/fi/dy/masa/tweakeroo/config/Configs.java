@@ -12,33 +12,31 @@ import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import fi.dy.masa.malilib.config.option.ConfigOption;
 import fi.dy.masa.malilib.config.category.BaseConfigOptionCategory;
 import fi.dy.masa.malilib.config.category.ConfigOptionCategory;
-import fi.dy.masa.malilib.config.ModConfig;
-import fi.dy.masa.malilib.config.option.list.BlackWhiteListConfig;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.config.option.ColorConfig;
-import fi.dy.masa.malilib.config.ConfigOption;
 import fi.dy.masa.malilib.config.option.DoubleConfig;
-import fi.dy.masa.malilib.config.option.list.EquipmentSlotListConfig;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.config.option.HotkeyedBooleanConfig;
-import fi.dy.masa.malilib.config.option.list.IdentifierListConfig;
 import fi.dy.masa.malilib.config.option.IntegerConfig;
-import fi.dy.masa.malilib.config.option.list.ItemListConfig;
 import fi.dy.masa.malilib.config.option.OptionListConfig;
 import fi.dy.masa.malilib.config.option.StringConfig;
+import fi.dy.masa.malilib.config.option.list.BlackWhiteListConfig;
+import fi.dy.masa.malilib.config.option.list.EquipmentSlotListConfig;
+import fi.dy.masa.malilib.config.option.list.IdentifierListConfig;
+import fi.dy.masa.malilib.config.option.list.ItemListConfig;
 import fi.dy.masa.malilib.config.option.list.StringListConfig;
 import fi.dy.masa.malilib.config.value.ActiveMode;
 import fi.dy.masa.malilib.config.value.BlackWhiteList;
 import fi.dy.masa.malilib.config.value.HudAlignment;
 import fi.dy.masa.malilib.input.Hotkey;
 import fi.dy.masa.malilib.util.restriction.UsageRestriction.ListType;
-import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
-public class Configs implements ModConfig
+public class Configs
 {
     public static class Generic
     {
@@ -260,7 +258,7 @@ public class Configs implements ModConfig
         );
     }
 
-    private static final List<ConfigOptionCategory> CATEGORIES = ImmutableList.of(
+    public static final List<ConfigOptionCategory> CATEGORIES = ImmutableList.of(
             BaseConfigOptionCategory.normal("Generic",          Generic.OPTIONS),
             BaseConfigOptionCategory.normal("Fixes",            Fixes.OPTIONS),
             BaseConfigOptionCategory.normal("Lists",            Lists.OPTIONS),
@@ -271,30 +269,6 @@ public class Configs implements ModConfig
             BaseConfigOptionCategory.normal("DisableHotkeys",   DisableToggle.TOGGLE_HOTKEYS),
             BaseConfigOptionCategory.normal("Internal",         Internal.OPTIONS)
     );
-
-    @Override
-    public String getModId()
-    {
-        return Reference.MOD_ID;
-    }
-
-    @Override
-    public String getModName()
-    {
-        return Reference.MOD_NAME;
-    }
-
-    @Override
-    public String getConfigFileName()
-    {
-        return Reference.MOD_ID + ".json";
-    }
-
-    @Override
-    public List<ConfigOptionCategory> getConfigOptionCategories()
-    {
-        return CATEGORIES;
-    }
 
     public static DoubleConfig getActiveFlySpeedConfig()
     {
