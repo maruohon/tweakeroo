@@ -55,7 +55,8 @@
         "MixinTradeOffer",
         "MixinUpdateStructureBlockC2SPacket",
         "MixinWorld",
-        "MixinWorldRenderer"
+        "MixinWorldRenderer",
+        "MixinScaffoldingBlock"
     ],
     "injectors": {
         "defaultRequire": 1
