@@ -105,6 +105,8 @@ public class Callbacks
         FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_PLACEMENT_LIMIT));
         FeatureToggle.TWEAK_SNAP_AIM.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_SNAP_AIM));
         FeatureToggle.TWEAK_ZOOM.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_ZOOM));
+
+        Configs.Disable.DISABLE_RENDERING_SCAFFOLDING.setValueChangeCallback((cfg) -> mc.worldRenderer.reload());
     }
 
     public static class FeatureCallbackHold implements IValueChangeCallback<IConfigBoolean>

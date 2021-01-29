@@ -48,6 +48,7 @@
         "MixinPlayerEntity",
         "MixinPresetsScreen",
         "MixinRavagerEntity",
+        "MixinScaffoldingBlock",
         "MixinSignBlockEntity",
         "MixinSignEditScreen",
         "MixinSkyProperties_Nether",
