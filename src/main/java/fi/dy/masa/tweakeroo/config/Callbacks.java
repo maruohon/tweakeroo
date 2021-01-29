@@ -425,7 +425,7 @@ public class Callbacks
         {
             Configs.Generic.BREAKING_RESTRICTION_MODE.setValue(mode);
 
-            String str = BaseScreen.TXT_GREEN + mode.name() + BaseScreen.TXT_RST;
+            String str = BaseScreen.TXT_GREEN + mode.getDisplayName() + BaseScreen.TXT_RST;
             MessageUtils.printActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", str);
         }
 
@@ -433,7 +433,7 @@ public class Callbacks
         {
             Configs.Generic.PLACEMENT_RESTRICTION_MODE.setValue(mode);
 
-            String str = BaseScreen.TXT_GREEN + mode.name() + BaseScreen.TXT_RST;
+            String str = BaseScreen.TXT_GREEN + mode.getDisplayName() + BaseScreen.TXT_RST;
             MessageUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
         }
 
@@ -509,7 +509,7 @@ public class Callbacks
 
                 if (key == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind())
                 {
-                    String strMode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue().name();
+                    String strMode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue().getDisplayName();
                     MessageUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
                 }
                 else if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeyBind())

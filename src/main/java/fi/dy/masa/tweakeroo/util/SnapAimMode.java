@@ -1,48 +1,18 @@
 package fi.dy.masa.tweakeroo.util;
 
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.value.BaseConfigOptionListEntry;
-import fi.dy.masa.malilib.config.value.ConfigOptionListEntry;
-import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.malilib.config.value.BaseOptionListConfigValue;
 
-public enum SnapAimMode implements ConfigOptionListEntry<SnapAimMode>
+public class SnapAimMode extends BaseOptionListConfigValue
 {
-    YAW     ("yaw",     "tweakeroo.label.snap_aim_mode.yaw"),
-    PITCH   ("pitch",   "tweakeroo.label.snap_aim_mode.pitch"),
-    BOTH    ("both",    "tweakeroo.label.snap_aim_mode.both");
+    public static final SnapAimMode YAW   = new SnapAimMode("yaw",     "tweakeroo.label.snap_aim_mode.yaw");
+    public static final SnapAimMode PITCH = new SnapAimMode("pitch",   "tweakeroo.label.snap_aim_mode.pitch");
+    public static final SnapAimMode BOTH  = new SnapAimMode("both",    "tweakeroo.label.snap_aim_mode.both");
 
-    public static final ImmutableList<SnapAimMode> VALUES = ImmutableList.copyOf(values());
+    public static final ImmutableList<SnapAimMode> VALUES = ImmutableList.of(YAW, PITCH, BOTH);
 
-    private final String configString;
-    private final String translationKey;
-
-    SnapAimMode(String configString, String translationKey)
+    private SnapAimMode(String name, String translationKey)
     {
-        this.configString = configString;
-        this.translationKey = translationKey;
-    }
-
-    @Override
-    public String getStringValue()
-    {
-        return this.configString;
-    }
-
-    @Override
-    public String getDisplayName()
-    {
-        return StringUtils.translate(this.translationKey);
-    }
-
-    @Override
-    public SnapAimMode cycle(boolean forward)
-    {
-        return BaseConfigOptionListEntry.cycleValue(VALUES, this.ordinal(), forward);
-    }
-
-    @Override
-    public SnapAimMode fromString(String name)
-    {
-        return BaseConfigOptionListEntry.findValueByName(name, VALUES);
+        super(name, translationKey);
     }
 }

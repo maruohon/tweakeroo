@@ -1,51 +1,33 @@
 package fi.dy.masa.tweakeroo.util;
 
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.value.BaseConfigOptionListEntry;
-import fi.dy.masa.malilib.config.value.ConfigOptionListEntry;
-import fi.dy.masa.malilib.util.StringUtils;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import fi.dy.masa.malilib.config.value.BaseOptionListConfigValue;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 
-public enum PlacementRestrictionMode implements ConfigOptionListEntry<PlacementRestrictionMode>
+public class PlacementRestrictionMode extends BaseOptionListConfigValue
 {
-    PLANE       ("plane",       "tweakeroo.label.placement_restriction_mode.plane"),
-    FACE        ("face",        "tweakeroo.label.placement_restriction_mode.face"),
-    COLUMN      ("column",      "tweakeroo.label.placement_restriction_mode.column"),
-    LINE        ("line",        "tweakeroo.label.placement_restriction_mode.line"),
-    LAYER       ("layer",       "tweakeroo.label.placement_restriction_mode.layer"),
-    DIAGONAL    ("diagonal",    "tweakeroo.label.placement_restriction_mode.diagonal");
+    public static final PlacementRestrictionMode FACE     = new PlacementRestrictionMode("face",     "tweakeroo.label.placement_restriction_mode.face", PlacementTweaks::isNewPositionValidForFaceMode);
+    public static final PlacementRestrictionMode LAYER    = new PlacementRestrictionMode("layer",    "tweakeroo.label.placement_restriction_mode.layer", PlacementTweaks::isNewPositionValidForLayerMode);
+    public static final PlacementRestrictionMode DIAGONAL = new PlacementRestrictionMode("diagonal", "tweakeroo.label.placement_restriction_mode.diagonal", PlacementTweaks::isNewPositionValidForDiagonalMode);
+    public static final PlacementRestrictionMode LINE     = new PlacementRestrictionMode("line",     "tweakeroo.label.placement_restriction_mode.line", PlacementTweaks::isNewPositionValidForLineMode);
+    public static final PlacementRestrictionMode COLUMN   = new PlacementRestrictionMode("column",   "tweakeroo.label.placement_restriction_mode.column", PlacementTweaks::isNewPositionValidForColumnMode);
+    public static final PlacementRestrictionMode PLANE    = new PlacementRestrictionMode("plane",    "tweakeroo.label.placement_restriction_mode.plane", PlacementTweaks::isNewPositionValidForPlaneMode);
 
-    public static final ImmutableList<PlacementRestrictionMode> VALUES = ImmutableList.copyOf(values());
+    public static final ImmutableList<PlacementRestrictionMode> VALUES = ImmutableList.of(FACE, LAYER, DIAGONAL, LINE, COLUMN, PLANE);
 
-    private final String configString;
-    private final String translationKey;
+    private final PlacementTweaks.PlacementRestrictionCheck check;
 
-    PlacementRestrictionMode(String configString, String translationKey)
+    private PlacementRestrictionMode(String name, String translationKey, PlacementTweaks.PlacementRestrictionCheck check)
     {
-        this.configString = configString;
-        this.translationKey = translationKey;
+        super(name, translationKey);
+
+        this.check = check;
     }
 
-    @Override
-    public String getStringValue()
+    public boolean isPositionValid(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
     {
-        return this.configString;
-    }
-
-    @Override
-    public String getDisplayName()
-    {
-        return StringUtils.translate(this.translationKey);
-    }
-
-    @Override
-    public PlacementRestrictionMode cycle(boolean forward)
-    {
-        return BaseConfigOptionListEntry.cycleValue(VALUES, this.ordinal(), forward);
-    }
-
-    @Override
-    public PlacementRestrictionMode fromString(String name)
-    {
-        return BaseConfigOptionListEntry.findValueByName(name, VALUES);
+        return this.check.isPositionValid(posNew, side, posFirst, sideFirst);
     }
 }

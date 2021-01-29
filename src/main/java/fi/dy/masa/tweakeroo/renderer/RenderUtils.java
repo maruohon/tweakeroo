@@ -52,25 +52,25 @@ public class RenderUtils
             int startX = offX;
             int startY = offY;
 
-            HudAlignment align = Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getValue();
+            HudAlignment alignment = Configs.Generic.HOTBAR_SWAP_OVERLAY_ALIGNMENT.getValue();
 
-            switch (align)
+            if (alignment == HudAlignment.TOP_RIGHT)
             {
-                case TOP_RIGHT:
-                    startX = (int) scaledWidth - offX - 9 * 18;
-                    break;
-                case BOTTOM_LEFT:
-                    startY = (int) scaledHeight - offY - 3 * 18;
-                    break;
-                case BOTTOM_RIGHT:
-                    startX = (int) scaledWidth - offX - 9 * 18;
-                    startY = (int) scaledHeight - offY - 3 * 18;
-                    break;
-                case CENTER:
-                    startX = (int) scaledWidth / 2 - offX - 9 * 18 / 2;
-                    startY = (int) scaledHeight / 2 - offY - 3 * 18 / 2;
-                    break;
-                default:
+                startX = scaledWidth - offX - 9 * 18;
+            }
+            else if (alignment == HudAlignment.BOTTOM_LEFT)
+            {
+                startY = scaledHeight - offY - 3 * 18;
+            }
+            else if (alignment == HudAlignment.BOTTOM_RIGHT)
+            {
+                startX = scaledWidth - offX - 9 * 18;
+                startY = scaledHeight - offY - 3 * 18;
+            }
+            else if (alignment == HudAlignment.CENTER)
+            {
+                startX = scaledWidth / 2 - offX - 9 * 18 / 2;
+                startY = scaledHeight / 2 - offY - 3 * 18 / 2;
             }
 
             int x = startX;
@@ -143,7 +143,7 @@ public class RenderUtils
 
                     if (cont instanceof InventoryLargeChest)
                     {
-                        inv = (InventoryLargeChest) cont;
+                        inv = cont;
                     }
                 }
 
@@ -193,7 +193,7 @@ public class RenderUtils
 
             final InventoryOverlay.InventoryRenderType type = (entityLivingBase instanceof EntityVillager) ? InventoryOverlay.InventoryRenderType.VILLAGER : InventoryOverlay.getInventoryType(inv);
             final InventoryOverlay.InventoryProperties props = InventoryOverlay.getInventoryPropsTemp(type, totalSlots);
-            final int rows = (int) Math.ceil(totalSlots / props.slotsPerRow);
+            final int rows = (int) Math.ceil((double) totalSlots / props.slotsPerRow);
             int xInv = xCenter - (props.width / 2);
             int yInv = yCenter - props.height - 6;
 
@@ -377,13 +377,13 @@ public class RenderUtils
         // Draw the main box
         fi.dy.masa.malilib.render.RenderUtils.renderOutlinedBox(x, y, width, height, bgColor, 0xFFFFFFFF, z);
 
-        String str = String.valueOf(MathHelper.wrapDegrees(snappedYaw)) + "°";
+        String str = MathHelper.wrapDegrees(snappedYaw) + "°";
         textRenderer.drawString(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
-        str = "<  " + String.valueOf(MathHelper.wrapDegrees(snappedYaw - step)) + "°";
+        str = "<  " + MathHelper.wrapDegrees(snappedYaw - step) + "°";
         textRenderer.drawString(str, x - textRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
 
-        str = String.valueOf(MathHelper.wrapDegrees(snappedYaw + step)) + "°  >";
+        str = MathHelper.wrapDegrees(snappedYaw + step) + "°  >";
         textRenderer.drawString(str, x + width, y + height + 2, 0xFFFFFFFF);
 
         if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())

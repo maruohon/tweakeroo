@@ -992,23 +992,7 @@ public class PlacementTweaks
             }
         }
 
-        if (restrictionEnabled)
-        {
-            switch (mode)
-            {
-                case COLUMN:    return isNewPositionValidForColumnMode(pos, posFirst, sideFirst);
-                case DIAGONAL:  return isNewPositionValidForDiagonalMode(pos, posFirst, sideFirst);
-                case FACE:      return isNewPositionValidForFaceMode(pos, side, sideFirst);
-                case LAYER:     return isNewPositionValidForLayerMode(pos, posFirst, sideFirst);
-                case LINE:      return isNewPositionValidForLineMode(pos, posFirst, sideFirst);
-                case PLANE:     return isNewPositionValidForPlaneMode(pos, posFirst, sideFirst);
-                default:        return true;
-            }
-        }
-        else
-        {
-            return true;
-        }
+        return restrictionEnabled == false || mode.isPositionValid(pos, side, posFirst, sideFirst);
     }
 
     private static boolean isFacingValidFor(EnumFacing facing, ItemStack stack)
@@ -1048,7 +1032,7 @@ public class PlacementTweaks
         return state.getBlock().isReplaceable(world, pos) || state.getMaterial().isLiquid() || state.getMaterial().isReplaceable();
     }
 
-    private static boolean isNewPositionValidForColumnMode(BlockPos posNew, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForColumnMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
     {
         EnumFacing.Axis axis = sideFirst.getAxis();
 
@@ -1063,7 +1047,7 @@ public class PlacementTweaks
         }
     }
 
-    private static boolean isNewPositionValidForDiagonalMode(BlockPos posNew, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForDiagonalMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
     {
         EnumFacing.Axis axis = sideFirst.getAxis();
         BlockPos relativePos = posNew.subtract(posFirst);
@@ -1079,17 +1063,17 @@ public class PlacementTweaks
         }
     }
 
-    private static boolean isNewPositionValidForFaceMode(BlockPos posNew, EnumFacing side, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForFaceMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
     {
         return side == sideFirst;
     }
 
-    private static boolean isNewPositionValidForLayerMode(BlockPos posNew, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForLayerMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
     {
         return posNew.getY() == posFirst.getY();
     }
 
-    private static boolean isNewPositionValidForLineMode(BlockPos posNew, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForLineMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
     {
         EnumFacing.Axis axis = sideFirst.getAxis();
 
@@ -1104,7 +1088,7 @@ public class PlacementTweaks
         }
     }
 
-    private static boolean isNewPositionValidForPlaneMode(BlockPos posNew, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForPlaneMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
     {
         EnumFacing.Axis axis = sideFirst.getAxis();
 
@@ -1218,5 +1202,10 @@ public class PlacementTweaks
     public static void updateFastPlacementItemRestriction(BlackWhiteList<Item> list)
     {
         FAST_PLACEMENT_ITEM_RESTRICTION.setListContents(list);
+    }
+
+    public interface PlacementRestrictionCheck
+    {
+        boolean isPositionValid(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst);
     }
 }
