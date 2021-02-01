@@ -17,6 +17,7 @@ import fi.dy.masa.malilib.input.KeyAction;
 import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
 import fi.dy.masa.malilib.input.callback.HotkeyCallback;
+import fi.dy.masa.malilib.render.message.MessageType;
 import fi.dy.masa.malilib.render.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.RayTraceFluidHandling;
@@ -136,6 +137,7 @@ public class Callbacks
         Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.RELOAD_LANGUAGE_PACKS.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.ZOOM_ACTIVATE.getKeyBind().setCallback(callbackGeneric);
@@ -381,6 +383,12 @@ public class Callbacks
             else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
+                return true;
+            }
+            else if (key == Hotkeys.RELOAD_LANGUAGE_PACKS.getKeyBind())
+            {
+                this.mc.getLanguageManager().onResourceManagerReload(this.mc.getResourceManager());
+                MessageUtils.showGuiOrInGameMessage(MessageType.SUCCESS, "tweakeroo.message.language_packs_reloaded");
                 return true;
             }
             else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind())

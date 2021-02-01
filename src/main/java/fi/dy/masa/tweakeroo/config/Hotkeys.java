@@ -46,6 +46,7 @@ public class Hotkeys
     public static final HotkeyConfig PLACEMENT_RESTRICTION_MODE_LAYER   = new HotkeyConfig("placementRestrictionModeLayer",     "Z,6");
     public static final HotkeyConfig PLACEMENT_RESTRICTION_MODE_LINE    = new HotkeyConfig("placementRestrictionModeLine",      "Z,4");
     public static final HotkeyConfig PLACEMENT_RESTRICTION_MODE_PLANE   = new HotkeyConfig("placementRestrictionModePlane",     "Z,1");
+    public static final HotkeyConfig RELOAD_LANGUAGE_PACKS              = new HotkeyConfig("reloadLanguagePacks",               "");
     public static final HotkeyConfig SKIP_ALL_RENDERING                 = new HotkeyConfig("skipAllRendering",                  "");
     public static final HotkeyConfig SKIP_WORLD_RENDERING               = new HotkeyConfig("skipWorldRendering",                "");
     public static final HotkeyConfig TOGGLE_GRAB_CURSOR                 = new HotkeyConfig("toggleGrabCursor",                  "");
@@ -90,6 +91,7 @@ public class Hotkeys
             PLACEMENT_RESTRICTION_MODE_LAYER,
             PLACEMENT_RESTRICTION_MODE_LINE,
             PLACEMENT_RESTRICTION_MODE_PLANE,
+            RELOAD_LANGUAGE_PACKS,
             SKIP_ALL_RENDERING,
             SKIP_WORLD_RENDERING,
             TOGGLE_GRAB_CURSOR,
