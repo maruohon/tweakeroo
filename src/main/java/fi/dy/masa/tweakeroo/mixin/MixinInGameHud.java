@@ -24,7 +24,7 @@ public abstract class MixinInGameHud extends DrawableHelper
     @Shadow private int scaledWidth;
 
     @Inject(method = "renderCrosshair", at = @At(value = "FIELD",
-                target = "Lnet/minecraft/client/options/GameOptions;debugEnabled:Z", ordinal = 0), cancellable = true)
+                target = "Lnet/minecraft/client/option/GameOptions;debugEnabled:Z", ordinal = 0), cancellable = true)
     private void overrideCursorRender(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_F3_CURSOR.getBooleanValue())
