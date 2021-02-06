@@ -379,7 +379,9 @@ public class InventoryUtils
             {
                 ItemStack stack = slot.getStack();
 
-                if (stack.isDamageable() && stack.isDamaged() && targetSlot.canInsert(stack) &&
+                // Don't take items from the current hotbar slot
+                if ((slot.id - 36) != player.inventory.selectedSlot &&
+                    stack.isDamageable() && stack.isDamaged() && targetSlot.canInsert(stack) &&
                     EnchantmentHelper.getLevel(Enchantments.MENDING, stack) > 0)
                 {
                     return slot.id;
