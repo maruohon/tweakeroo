@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -16,8 +17,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.tweakeroo.config.Callbacks;
@@ -77,30 +76,30 @@ public abstract class MixinGameRenderer
         return mc.getCameraEntity();
     }
 
-    @Redirect(method = "updateTargetedEntity", at = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/entity/projectile/ProjectileUtil;raycast(" +
-                         "Lnet/minecraft/entity/Entity;" +
-                         "Lnet/minecraft/util/math/Vec3d;" +
-                         "Lnet/minecraft/util/math/Vec3d;" +
-                         "Lnet/minecraft/util/math/Box;" +
-                         "Ljava/util/function/Predicate;D)" +
-                         "Lnet/minecraft/util/hit/EntityHitResult;"))
-    private EntityHitResult ignoreDeadEntities(Entity entity, Vec3d startVec, Vec3d endVec,
-            Box box, Predicate<Entity> predicate, double distance)
+    @ModifyArg(method = "updateTargetedEntity",
+               at = @At(value = "INVOKE",
+                        target = "Lnet/minecraft/entity/projectile/ProjectileUtil;raycast(" +
+                                 "Lnet/minecraft/entity/Entity;" +
+                                 "Lnet/minecraft/util/math/Vec3d;" +
+                                 "Lnet/minecraft/util/math/Vec3d;" +
+                                 "Lnet/minecraft/util/math/Box;" +
+                                 "Ljava/util/function/Predicate;D)" +
+                                 "Lnet/minecraft/util/hit/EntityHitResult;"))
+    private Predicate<Entity> overrideTargetedEntityCheck(Entity entity, Vec3d startVec, Vec3d endVec,
+                                                          Box box, Predicate<Entity> predicate, double distance)
     {
         if (Configs.Disable.DISABLE_DEAD_MOB_TARGETING.getBooleanValue())
         {
             predicate = predicate.and((entityIn) -> (entityIn instanceof LivingEntity) == false || ((LivingEntity) entityIn).getHealth() > 0f);
         }
 
-        if ((FeatureToggle.TWEAK_HANGABLE_ENTITY_BYPASS.getBooleanValue()
+        if ((FeatureToggle.TWEAK_HANGABLE_ENTITY_BYPASS.getBooleanValue() && this.client.player != null
              && this.client.player.isSneaking() == Configs.Generic.HANGABLE_ENTITY_BYPASS_INVERSE.getBooleanValue()))
         {
             predicate = predicate.and((entityIn) -> (entityIn instanceof AbstractDecorationEntity) == false);
         }
 
-        return ProjectileUtil.raycast(entity, startVec, endVec, box, predicate, distance);
+        return predicate;
     }
 
     @Inject(method = "renderWorld", at = @At(
