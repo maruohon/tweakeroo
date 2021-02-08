@@ -183,9 +183,10 @@ public class InventoryUtils
     public static void preRestockHand(PlayerEntity player, Hand hand, boolean allowHotbar)
     {
         ItemStack stackHand = player.getStackInHand(hand);
+        int threshold = Configs.Generic.HAND_RESTOCK_PRE_THRESHOLD.getIntegerValue();
 
-        if (stackHand.isEmpty() == false && stackHand.getCount() <= 4 && stackHand.getMaxCount() > 4 &&
-            FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue() &&
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue() &&
+            stackHand.isEmpty() == false && stackHand.getCount() <= threshold && stackHand.getMaxCount() > threshold &&
             player.currentScreenHandler == player.playerScreenHandler && player.inventory.getCursorStack().isEmpty())
         {
             MinecraftClient mc = MinecraftClient.getInstance();
