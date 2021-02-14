@@ -277,11 +277,12 @@ public class InventoryUtils
     {
         int minDurability = Configs.Generic.ITEM_SWAP_DURABILITY_THRESHOLD.getIntegerValue();
 
-        // For items with low maximum durability, use 5% as the threshold,
+        // For items with low maximum durability, use 8% as the threshold,
         // if the configured durability threshold is over that.
-        if ((double) minDurability / (double) stack.getMaxDamage() >= 0.05D)
+        if (stack.getMaxDamage() <= 100 && minDurability <= 20 &&
+            (double) minDurability / (double) stack.getMaxDamage() > 0.08)
         {
-            minDurability = (int) (stack.getMaxDamage() * 0.05);
+            minDurability = (int) (stack.getMaxDamage() * 0.08);
         }
 
         return minDurability;
