@@ -245,6 +245,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_TILE_ENTITY_TICKING     = new ConfigBooleanClient  ("disableTileEntityTicking",             false, "", "Prevent all TileEntities from getting ticked");
         public static final ConfigBooleanHotkeyed       DISABLE_VILLAGER_TRADE_LOCKING  = new ConfigBooleanClient  ("disableVillagerTradeLocking",          false, "", "Prevents villager trades from ever locking, by always incrementing\nthe max uses as well when the recipe uses is incremented");
         public static final ConfigBooleanHotkeyed       DISABLE_WALL_UNSPRINT           = new ConfigBooleanHotkeyed("disableWallUnsprint",                  false, "", "Touching a wall doesn't drop you out from sprint mode");
+        public static final ConfigBooleanHotkeyed       DISABLE_WORLD_VIEW_BOB          = new ConfigBooleanHotkeyed("disableWorldViewBob",                  false, "", "Disables the view bob wobble effect of the world, but not the hand");
 
         public static final ImmutableList<IHotkeyTogglable> OPTIONS = ImmutableList.of(
                 DISABLE_ARMOR_STAND_RENDERING,
@@ -272,7 +273,8 @@ public class Configs implements IConfigHandler
                 DISABLE_TILE_ENTITY_RENDERING,
                 DISABLE_TILE_ENTITY_TICKING,
                 DISABLE_VILLAGER_TRADE_LOCKING,
-                DISABLE_WALL_UNSPRINT
+                DISABLE_WALL_UNSPRINT,
+                DISABLE_WORLD_VIEW_BOB
         );
     }
 
