@@ -118,7 +118,10 @@ public class MiscTweaks
             InventoryUtils.repairModeSwapItems(player);
         }
 
-        CameraEntity.movementTick(player.input.sneaking, player.input.jumping);
+        if (player.input != null)
+        {
+            CameraEntity.movementTick(player.input.sneaking, player.input.jumping);
+        }
     }
 
     public static void onGameLoop()
