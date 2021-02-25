@@ -5,6 +5,7 @@
     "compatibilityLevel": "JAVA_8",
     "client": [
         "IMixinAbstractBlock",
+        "IMixinAxeItem",
         "IMixinCommandBlockExecutor",
         "IMixinHorseBaseEntity",
         "MixinAbstractClientPlayerEntity",
