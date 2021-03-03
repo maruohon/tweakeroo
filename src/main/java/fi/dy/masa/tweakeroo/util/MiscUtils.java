@@ -25,7 +25,7 @@ import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 public class MiscUtils
 {
     // name;blocks;biome;options;iconitem
-    public static final Pattern PATTERN_WORLD_PRESET = Pattern.compile("^(?<name>[a-zA-Z0-9_ -]+);(?<blocks>[a-z0-9_:\\.\\*-]+);(?<biome>[a-z0-9_:]+);(?<options>[a-z0-9_, \\(\\)=]*);(?<icon>[a-z0-9_:-]+)$");
+    public static final Pattern PATTERN_WORLD_PRESET = Pattern.compile("^(?<name>[a-zA-Z0-9_/&*#!=()\\[\\]{} -]+);(?<blocks>[a-z0-9_:.*,-]+);(?<biome>[a-z0-9_:.-]+);(?<options>[a-z0-9_, ()=]*);(?<icon>[a-z0-9_:.-]+)$");
 
     private static net.minecraft.text.Text[] previousSignText;
     private static String previousChatText = "";

@@ -20,6 +20,7 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
 import net.minecraft.world.gen.feature.StructureFeature;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
@@ -79,12 +80,13 @@ public abstract class MixinPresetsScreen
             {
                 biome = RegistryKey.of(Registry.BIOME_KEY, new Identifier(biomeName));
             }
-            catch (Exception e2)
+            catch (Exception ignore)
             {
             }
 
             if (biome == null)
             {
+                Tweakeroo.logger.error("Invalid biome while parsing flat world string: '{}'", biomeName);
                 return false;
             }
 
@@ -94,12 +96,13 @@ public abstract class MixinPresetsScreen
             {
                 item = Registry.ITEM.get(new Identifier(iconItemName));
             }
-            catch (Exception e)
+            catch (Exception ignore)
             {
             }
 
             if (item == null)
             {
+                Tweakeroo.logger.error("Invalid item for icon while parsing flat world string: '{}'", iconItemName);
                 return false;
             }
 
@@ -107,12 +110,17 @@ public abstract class MixinPresetsScreen
 
             if (layers == null)
             {
+                Tweakeroo.logger.error("Failed to get the layers for the flat world preset");
                 return false;
             }
 
             addPreset(new TranslatableText(name), item, biome, ImmutableList.of(), false, false, false, layers);
 
             return true;
+        }
+        else
+        {
+            Tweakeroo.logger.error("Flat world preset string did not match the regex");
         }
 
         return false;
