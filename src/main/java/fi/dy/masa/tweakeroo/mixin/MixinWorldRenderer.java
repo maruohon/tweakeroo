@@ -47,8 +47,8 @@ public abstract class MixinWorldRenderer
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSpectator()Z"))
+    @Inject(method = "render", at = @At(value = "INVOKE_STRING",
+            target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=terrain_setup"))
     private void preSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
@@ -57,17 +57,9 @@ public abstract class MixinWorldRenderer
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/render/WorldRenderer;setupTerrain(" +
-                     "Lnet/minecraft/client/render/Camera;" +
-                     "Lnet/minecraft/client/render/Frustum;ZIZ)V"))
+    @Inject(method = "render", at = @At(value = "INVOKE_STRING",
+            target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=updatechunks"))
     private void postSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
-    {
-        CameraUtils.setFreeCameraSpectator(false);
-    }
-
-    @Inject(method = "render", at = @At("RETURN"))
-    private void postSetupTerrainOptifineFallback(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
     {
         CameraUtils.setFreeCameraSpectator(false);
     }
