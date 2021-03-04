@@ -309,18 +309,28 @@ public class InventoryUtils
     private static void repairModeHandleSlot(EntityPlayer player, EntityEquipmentSlot type)
     {
         int slotNum = getSlotNumberForEquipmentType(type, player);
+        ItemStack stack = player.getItemStackFromSlot(type);
 
-        if (slotNum == -1)
+        if (slotNum == -1 || stack.isEmpty())
         {
             return;
         }
 
-        ItemStack stack = player.getItemStackFromSlot(type);
+        boolean shouldSwap;
 
-        if (stack.isEmpty() == false &&
-            (stack.isItemStackDamageable() == false ||
-             stack.isItemDamaged() == false ||
-             EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, stack) <= 0))
+        if (Configs.Generic.REPAIR_MODE_MENDING_ONLY.getBooleanValue())
+        {
+            shouldSwap = stack.isItemDamaged() == false &&
+                         EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, stack) > 0;
+        }
+        else
+        {
+            shouldSwap = stack.isItemStackDamageable() == false ||
+                         stack.isItemDamaged() == false ||
+                         EnchantmentHelper.getEnchantmentLevel(Enchantments.MENDING, stack) <= 0;
+        }
+
+        if (shouldSwap)
         {
             Slot slot = player.openContainer.getSlot(slotNum);
             int slotRepairableItem = findRepairableItemNotInRepairableSlot(slot, player);

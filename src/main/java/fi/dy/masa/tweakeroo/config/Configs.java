@@ -87,6 +87,7 @@ public class Configs
         public static final BooleanConfig POTION_WARNING_BENEFICIAL_ONLY                = new BooleanConfig("potionWarningBeneficialOnly", true);
         public static final IntegerConfig POTION_WARNING_THRESHOLD                      = new IntegerConfig("potionWarningThreshold", 600, 1, 1000000);
         public static final BooleanConfig REMEMBER_FLEXIBLE                             = new BooleanConfig("rememberFlexibleFromClick", true);
+        public static final BooleanConfig REPAIR_MODE_MENDING_ONLY                      = new BooleanConfig("repairModeMendingOnly", true);
         public static final IntegerConfig RENDER_LIMIT_ITEM                             = new IntegerConfig("renderLimitItem", -1, -1, 10000);
         public static final IntegerConfig RENDER_LIMIT_XP_ORB                           = new IntegerConfig("renderLimitXPOrb", -1, -1, 10000);
         public static final BooleanConfig SHULKER_DISPLAY_BACKGROUND_COLOR              = new BooleanConfig("shulkerDisplayBgColor", true);
@@ -167,6 +168,7 @@ public class Configs
                 REMEMBER_FLEXIBLE,
                 RENDER_LIMIT_ITEM,
                 RENDER_LIMIT_XP_ORB,
+                REPAIR_MODE_MENDING_ONLY,
                 SHULKER_DISPLAY_BACKGROUND_COLOR,
                 SHULKER_DISPLAY_REQUIRE_SHIFT,
                 SLOT_SYNC_WORKAROUND,
