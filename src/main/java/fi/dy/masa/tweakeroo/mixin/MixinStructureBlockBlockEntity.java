@@ -29,18 +29,18 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
         super(blockEntityType, blockPos, blockState);
     }
 
-    @ModifyConstant(method = "fromTag",
+    @ModifyConstant(method = "readNbt",
                     slice = @Slice(from = @At(value = "FIELD",
                                               target = "Lnet/minecraft/block/entity/StructureBlockBlockEntity;metadata:Ljava/lang/String;"),
                                    to = @At(value = "FIELD",
                                             target = "Lnet/minecraft/block/entity/StructureBlockBlockEntity;size:Lnet/minecraft/util/math/BlockPos;")),
-                    constant = { @Constant(intValue = -32), @Constant(intValue = 32) }, require = 0)
+                    constant = { @Constant(intValue = -48), @Constant(intValue = 48) }, require = 0)
     private int overrideMaxSize(int original)
     {
         if (FeatureToggle.TWEAK_STRUCTURE_BLOCK_LIMIT.getBooleanValue())
         {
             int overridden = Configs.Generic.STRUCTURE_BLOCK_MAX_SIZE.getIntegerValue();
-            return original == -32 ? -overridden : overridden;
+            return original == -48 ? -overridden : overridden;
         }
 
         return original;
@@ -56,15 +56,16 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
             World world = this.getWorld();
             String name = ((StructureBlockBlockEntity) (Object) this).getStructureName();
             int maxSize = Configs.Generic.STRUCTURE_BLOCK_MAX_SIZE.getIntegerValue();
+            int maxOffset = 48;
 
             // Expand by the maximum position/offset and a bit of margin
-            final int minX = pos.getX() - maxSize - 32 - 2;
-            final int minZ = pos.getZ() - maxSize - 32 - 2;
-            final int maxX = pos.getX() + maxSize + 32 + 2;
-            final int maxZ = pos.getZ() + maxSize + 32 + 2;
+            final int minX = pos.getX() - maxSize - maxOffset - 2;
+            final int minZ = pos.getZ() - maxSize - maxOffset - 2;
+            final int maxX = pos.getX() + maxSize + maxOffset + 2;
+            final int maxZ = pos.getZ() + maxSize + maxOffset + 2;
 
-            final int minY = Math.max(  0, pos.getY() - maxSize - 32 - 2);
-            final int maxY = Math.min(255, pos.getY() + maxSize + 32 + 2);
+            final int minY = Math.max(world.getBottomY(), pos.getY() - maxSize - maxOffset - 2);
+            final int maxY = Math.min(world.getTopY()   , pos.getY() + maxSize + maxOffset + 2);
 
             for (int cz = minZ >> 4; cz <= (maxZ >> 4); ++cz)
             {
@@ -100,15 +101,6 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
             }
 
             cir.setReturnValue(structureBlocks);
-        }
-    }
-
-    @Inject(method = "getSquaredRenderDistance", at = @At("HEAD"), cancellable = true)
-    private void overrideRenderDistance(CallbackInfoReturnable<Double> cir)
-    {
-        if (FeatureToggle.TWEAK_STRUCTURE_BLOCK_LIMIT.getBooleanValue())
-        {
-            cir.setReturnValue(65536.0D);
         }
     }
 }

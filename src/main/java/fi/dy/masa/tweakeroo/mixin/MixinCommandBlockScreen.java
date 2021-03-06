@@ -82,8 +82,8 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             Text strLooping = new TranslatableText("tweakeroo.gui.button.misc.command_block.update_execution.looping");
             width = this.textRenderer.getWidth(strOff) + 10;
 
-            this.buttonUpdateExec = CyclingButtonWidget.method_32607(strOn, strOff)
-                                    .method_32616().value(this.updateExecValue)
+            this.buttonUpdateExec = CyclingButtonWidget.onOffBuilder(strOn, strOff)
+                                    .omitKeyText().initially(this.updateExecValue)
                                     .build(x2 + widthBtn + 4, y, width, 20, strLooping, (button, val) ->
             {
                 this.updateExecValue = val;

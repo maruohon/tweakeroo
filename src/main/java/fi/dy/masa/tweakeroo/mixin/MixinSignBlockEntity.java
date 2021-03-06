@@ -23,14 +23,14 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 @Mixin(SignBlockEntity.class)
 public abstract class MixinSignBlockEntity extends BlockEntity implements ISignTextAccess
 {
-    @Shadow @Final private Text[] text;
+    @Shadow @Final private Text[] texts;
 
     private MixinSignBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState)
     {
         super(blockEntityType, blockPos, blockState);
     }
 
-    @Inject(method = "fromTag", at = @At("RETURN"))
+    @Inject(method = "readNbt", at = @At("RETURN"))
     private void restoreCopiedText(CompoundTag nbt, CallbackInfo ci)
     {
         // Restore the copied/pasted text after the TileEntity sync overrides it with empty lines
@@ -48,6 +48,6 @@ public abstract class MixinSignBlockEntity extends BlockEntity implements ISignT
     @Override
     public Text[] getText()
     {
-        return this.text;
+        return this.texts;
     }
 }
