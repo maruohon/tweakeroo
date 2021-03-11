@@ -10,7 +10,7 @@ import fi.dy.masa.malilib.event.dispatch.RenderEventDispatcher;
 import fi.dy.masa.malilib.gui.config.ConfigSearchInfo;
 import fi.dy.masa.malilib.gui.config.ConfigTabRegistry;
 import fi.dy.masa.malilib.gui.config.ConfigWidgetRegistry;
-import fi.dy.masa.malilib.systems.BlockPlacementPositionHandler;
+import fi.dy.masa.malilib.interoperation.BlockPlacementPositionHandler;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;

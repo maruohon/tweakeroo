@@ -103,7 +103,7 @@ public enum FeatureToggle implements ConfigInfo
 
     FeatureToggle(String name, boolean defaultValue)
     {
-        this(name, defaultValue, KeyBindSettings.DEFAULT);
+        this(name, defaultValue, KeyBindSettings.INGAME_DEFAULT);
     }
 
     FeatureToggle(String name, boolean defaultValue, KeyBindSettings settings)

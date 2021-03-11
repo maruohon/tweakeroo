@@ -22,7 +22,7 @@ import fi.dy.masa.malilib.input.KeyBindProvider;
 import fi.dy.masa.malilib.input.KeyboardInputHandler;
 import fi.dy.masa.malilib.input.MouseInputHandler;
 import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
-import fi.dy.masa.malilib.render.message.MessageUtils;
+import fi.dy.masa.malilib.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;

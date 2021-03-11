@@ -1,13 +1,12 @@
 package fi.dy.masa.tweakeroo.mixin;
 
-import java.util.Arrays;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import fi.dy.masa.malilib.render.RenderUtils;
+import fi.dy.masa.malilib.render.TextRenderUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -111,7 +110,7 @@ public abstract class MixinGuiCommandBlock extends net.minecraft.client.gui.GuiS
         if (this.buttonUpdateExec != null && this.buttonUpdateExec.isMouseOver())
         {
             String hover = "tweakeroo.gui.button.misc.command_block.hover.update_execution";
-            RenderUtils.renderHoverText(mouseX, mouseY, 1, Arrays.asList(StringUtils.translate(hover)));
+            TextRenderUtils.renderHoverText(mouseX, mouseY, 1, StringUtils.translate(hover));
         }
     }
 

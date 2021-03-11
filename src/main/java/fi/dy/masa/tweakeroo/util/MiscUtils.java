@@ -22,7 +22,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.BaseScreen;
-import fi.dy.masa.malilib.render.message.MessageUtils;
+import fi.dy.masa.malilib.message.MessageUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.IRayPositionHandler;
 import fi.dy.masa.malilib.util.inventory.InventoryUtils;

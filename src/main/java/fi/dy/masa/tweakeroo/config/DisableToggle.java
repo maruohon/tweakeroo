@@ -58,7 +58,7 @@ public enum DisableToggle implements ConfigInfo
 
     DisableToggle(String name, boolean defaultValue)
     {
-        this(name, defaultValue, KeyBindSettings.DEFAULT);
+        this(name, defaultValue, KeyBindSettings.INGAME_DEFAULT);
     }
 
     DisableToggle(String name, boolean defaultValue, KeyBindSettings settings)
