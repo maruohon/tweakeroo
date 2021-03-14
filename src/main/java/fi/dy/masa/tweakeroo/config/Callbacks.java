@@ -130,7 +130,7 @@ public class Callbacks
         Hotkeys.HOTBAR_SWAP_2.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_3.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SCROLL.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.OPEN_CONFIG_GUI.getKeyBind().setCallback((a, k) -> BaseScreen.openGui(ConfigScreen.create()));
+        Hotkeys.OPEN_CONFIG_GUI.getKeyBind().setCallback((a, k) -> BaseScreen.openScreen(ConfigScreen.create(null)));
         Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeyBind().setCallback(callbackGeneric);

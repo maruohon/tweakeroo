@@ -42,7 +42,7 @@ public abstract class MixinGuiEditSign
 
         if (DisableToggle.DISABLE_SIGN_GUI.getBooleanValue())
         {
-            BaseScreen.openGui(null);
+            BaseScreen.openScreen(null);
 
             // Update the keybind state, because opening a GUI resets them all.
             // Also, KeyBinding.updateKeyBindState() only works for keyboard keys
