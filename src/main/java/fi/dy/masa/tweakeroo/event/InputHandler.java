@@ -17,8 +17,8 @@ import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.Hotkey;
-import fi.dy.masa.malilib.input.KeyBindCategory;
-import fi.dy.masa.malilib.input.KeyBindProvider;
+import fi.dy.masa.malilib.input.HotkeyCategory;
+import fi.dy.masa.malilib.input.HotkeyProvider;
 import fi.dy.masa.malilib.input.KeyboardInputHandler;
 import fi.dy.masa.malilib.input.MouseInputHandler;
 import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
@@ -32,7 +32,7 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
-public class InputHandler implements KeyBindProvider, KeyboardInputHandler, MouseInputHandler
+public class InputHandler implements HotkeyProvider, KeyboardInputHandler, MouseInputHandler
 {
     private static final InputHandler INSTANCE = new InputHandler();
     private LeftRight lastSidewaysInput = LeftRight.NONE;
@@ -62,13 +62,13 @@ public class InputHandler implements KeyBindProvider, KeyboardInputHandler, Mous
     }
 
     @Override
-    public List<KeyBindCategory> getHotkeyCategoriesForCombinedView()
+    public List<HotkeyCategory> getHotkeysByCategories()
     {
         return ImmutableList.of(
-                new KeyBindCategory(Reference.MOD_ID, Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic", Configs.Generic.HOTKEY_LIST),
-                new KeyBindCategory(Reference.MOD_ID, Reference.MOD_NAME, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.HOTKEY_LIST),
-                new KeyBindCategory(Reference.MOD_ID, Reference.MOD_NAME, "tweakeroo.hotkeys.category.disable_toggle_hotkeys", DisableToggle.TOGGLE_HOTKEYS),
-                new KeyBindCategory(Reference.MOD_ID, Reference.MOD_NAME, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", FeatureToggle.TOGGLE_HOTKEYS)
+                new HotkeyCategory(Reference.MOD_INFO, "tweakeroo.hotkeys.category.generic", Configs.Generic.HOTKEY_LIST),
+                new HotkeyCategory(Reference.MOD_INFO, "tweakeroo.hotkeys.category.generic_hotkeys", Hotkeys.HOTKEY_LIST),
+                new HotkeyCategory(Reference.MOD_INFO, "tweakeroo.hotkeys.category.disable_toggle_hotkeys", DisableToggle.TOGGLE_HOTKEYS),
+                new HotkeyCategory(Reference.MOD_INFO, "tweakeroo.hotkeys.category.tweak_toggle_hotkeys", FeatureToggle.TOGGLE_HOTKEYS)
         );
     }
 

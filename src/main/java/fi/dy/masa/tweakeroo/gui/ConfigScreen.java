@@ -7,6 +7,7 @@ import fi.dy.masa.malilib.gui.ScreenTab;
 import fi.dy.masa.malilib.gui.config.BaseConfigScreen;
 import fi.dy.masa.malilib.gui.config.BaseConfigTab;
 import fi.dy.masa.malilib.gui.config.ConfigTab;
+import fi.dy.masa.malilib.util.data.ModInfo;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
@@ -15,12 +16,14 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 
 public class ConfigScreen
 {
-    private static final BaseConfigTab GENERIC         = new BaseConfigTab("tweakeroo.gui.button.config_gui.generic",           Reference.MOD_NAME, 160, Configs.Generic.OPTIONS, ConfigScreen::create);
-    private static final BaseConfigTab LISTS           = new BaseConfigTab("tweakeroo.gui.button.config_gui.lists",             Reference.MOD_NAME, 200, Configs.Lists.OPTIONS, ConfigScreen::create);
-    private static final BaseConfigTab FIXES           = new BaseConfigTab("tweakeroo.gui.button.config_gui.fixes",             Reference.MOD_NAME,  -1, Configs.Fixes.OPTIONS, ConfigScreen::create);
-    private static final BaseConfigTab TWEAK_TOGGLES   = new BaseConfigTab("tweakeroo.gui.button.config_gui.tweaks",            Reference.MOD_NAME, 200, FeatureToggle.VALUES, ConfigScreen::create);
-    private static final BaseConfigTab DISABLE_TOGGLES = new BaseConfigTab("tweakeroo.gui.button.config_gui.disable_toggles",   Reference.MOD_NAME, 200, DisableToggle.VALUES, ConfigScreen::create);
-    private static final BaseConfigTab GENERIC_HOTKEYS = new BaseConfigTab("tweakeroo.gui.button.config_gui.generic_hotkeys",   Reference.MOD_NAME, 160, Hotkeys.HOTKEY_LIST, ConfigScreen::create);
+    public static final ModInfo MOD_INFO = Reference.MOD_INFO;
+
+    private static final BaseConfigTab GENERIC         = new BaseConfigTab(MOD_INFO, "generic",         160, Configs.Generic.OPTIONS, ConfigScreen::create);
+    private static final BaseConfigTab LISTS           = new BaseConfigTab(MOD_INFO, "lists",           200, Configs.Lists.OPTIONS,   ConfigScreen::create);
+    private static final BaseConfigTab FIXES           = new BaseConfigTab(MOD_INFO, "fixes",            -1, Configs.Fixes.OPTIONS,   ConfigScreen::create);
+    private static final BaseConfigTab TWEAK_TOGGLES   = new BaseConfigTab(MOD_INFO, "tweaks",          200, FeatureToggle.VALUES,    ConfigScreen::create);
+    private static final BaseConfigTab DISABLE_TOGGLES = new BaseConfigTab(MOD_INFO, "disable_toggles", 200, DisableToggle.VALUES,    ConfigScreen::create);
+    private static final BaseConfigTab GENERIC_HOTKEYS = new BaseConfigTab(MOD_INFO, "generic_hotkeys", 160, Hotkeys.HOTKEY_LIST,     ConfigScreen::create);
     //private static final BaseScreenTab PLACEMENT       = new BaseScreenTab("tweakeroo.gui.button.config_gui.placement", null, ConfigScreen::openPlacementStuffScreen);
 
     private static final ImmutableList<ConfigTab> CONFIG_TABS = ImmutableList.of(
@@ -43,7 +46,7 @@ public class ConfigScreen
 
     public static BaseConfigScreen create(@Nullable GuiScreen currentScreen)
     {
-        return new BaseConfigScreen(Reference.MOD_ID, null, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.gui.title.configs");
+        return new BaseConfigScreen(MOD_INFO, null, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.gui.title.configs");
     }
 
 

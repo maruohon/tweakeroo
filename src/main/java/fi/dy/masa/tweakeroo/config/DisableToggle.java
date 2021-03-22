@@ -10,6 +10,8 @@ import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.KeyBindSettings;
 import fi.dy.masa.malilib.input.callback.ToggleBooleanWithMessageKeyCallback;
+import fi.dy.masa.malilib.util.data.ModInfo;
+import fi.dy.masa.tweakeroo.Reference;
 
 public enum DisableToggle implements ConfigInfo
 {
@@ -92,6 +94,12 @@ public enum DisableToggle implements ConfigInfo
     public KeyBind getKeyBind()
     {
         return this.toggleHotkey.getKeyBind();
+    }
+
+    @Override
+    public ModInfo getModInfo()
+    {
+        return Reference.MOD_INFO;
     }
 
     @Override

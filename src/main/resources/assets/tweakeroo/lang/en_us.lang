@@ -507,22 +507,12 @@ tweakeroo.hotkey.name.togglegrabcursor=Toggle Grab Cursor
 tweakeroo.hotkey.name.toolpick=Tool Pick
 tweakeroo.hotkey.name.zoomactivate=Zoom Activate
 
-
 tweakeroo.error.invalid_block_blacklist_entry=Invalid block black- or whitelist entry: '%s'
 tweakeroo.error.invalid_potion_blacklist_entry=Invalid potion black- or whitelist entry: '%s'
 tweakeroo.error.invalid_sound_blacklist_entry=Invalid sound black- or whitelist entry: '%s'
 
-tweakeroo.gui.button.config_gui.disable_toggles=Disable Toggles
-tweakeroo.gui.button.config_gui.fixes=Fixes
-tweakeroo.gui.button.config_gui.generic=Generic
-tweakeroo.gui.button.config_gui.generic_hotkeys=Hotkeys
-tweakeroo.gui.button.config_gui.lists=Lists
-tweakeroo.gui.button.config_gui.placement=Placement stuff
-tweakeroo.gui.button.config_gui.tweaks=Tweaks
-
 tweakeroo.gui.button.misc.command_block.set_name=Set name
 tweakeroo.gui.button.misc.command_block.update_execution=Loops: %s
-
 tweakeroo.gui.button.misc.command_block.hover.update_execution=Whether or not multiple triggers per game tick are allowed
 
 tweakeroo.gui.title.configs=Tweakeroo Configs
@@ -532,14 +522,22 @@ tweakeroo.hotkeys.category.generic=Generic
 tweakeroo.hotkeys.category.generic_hotkeys=Generic hotkeys
 tweakeroo.hotkeys.category.tweak_toggle_hotkeys=Tweak Hotkeys
 
+tweakeroo.label.config_comment.single_player_only=§6Note: This feature works either at all or\nat least fully only in single player
+
+tweakeroo.label.config_tab.disable_toggles=Disable Toggles
+tweakeroo.label.config_tab.fixes=Fixes
+tweakeroo.label.config_tab.generic=Generic
+tweakeroo.label.config_tab.generic_hotkeys=Hotkeys
+tweakeroo.label.config_tab.lists=Lists
+tweakeroo.label.config_tab.placement=Placement stuff
+tweakeroo.label.config_tab.tweaks=Tweaks
+
 tweakeroo.label.placement_restriction_mode.column=Column
 tweakeroo.label.placement_restriction_mode.diagonal=Diagonal
 tweakeroo.label.placement_restriction_mode.face=Face
 tweakeroo.label.placement_restriction_mode.layer=Layer
 tweakeroo.label.placement_restriction_mode.line=Line
 tweakeroo.label.placement_restriction_mode.plane=Plane
-
-tweakeroo.label.config_comment.single_player_only=§6Note: This feature works either at all or§r\n§6at least fully only in single player§r
 
 tweakeroo.label.snap_aim_mode.both=Yaw & Pitch
 tweakeroo.label.snap_aim_mode.pitch=Pitch
