@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
-@Mixin(net.minecraft.client.gui.hud.ChatHud.class)
+@Mixin(value = net.minecraft.client.gui.hud.ChatHud.class, priority = 1100)
 public abstract class MixinChatHud extends net.minecraft.client.gui.DrawableHelper
 {
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"), argsOnly = true)
