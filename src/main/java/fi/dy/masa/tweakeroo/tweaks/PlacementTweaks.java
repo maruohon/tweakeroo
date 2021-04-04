@@ -850,13 +850,13 @@ public class PlacementTweaks
         }
 
         player.yaw = facing.asRotation();
-        player.networkHandler.sendPacket(new PlayerMoveC2SPacket.LookOnly(player.yaw, player.pitch, player.isOnGround()));
+        player.networkHandler.sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(player.yaw, player.pitch, player.isOnGround()));
 
         //System.out.printf("handleFlexibleBlockPlacement() pos: %s, side: %s, facing orig: %s facing new: %s\n", pos, side, facingOrig, facing);
         ActionResult result = processRightClickBlockWrapper(controller, player, world, pos, side, hitVec, hand);
 
         player.yaw = yawOrig;
-        player.networkHandler.sendPacket(new PlayerMoveC2SPacket.LookOnly(player.yaw, player.pitch, player.isOnGround()));
+        player.networkHandler.sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(player.yaw, player.pitch, player.isOnGround()));
 
         return result;
     }

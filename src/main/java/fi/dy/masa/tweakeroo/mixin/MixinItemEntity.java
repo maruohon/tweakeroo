@@ -20,7 +20,7 @@ import fi.dy.masa.tweakeroo.util.InventoryUtils;
 @Mixin(ItemEntity.class)
 public abstract class MixinItemEntity extends Entity implements IEntityItem
 {
-    @Shadow private int age;
+    @Shadow private int itemAge;
     @Shadow private int pickupDelay;
 
     @Shadow public abstract ItemStack getStack();
@@ -62,8 +62,8 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
             {
                 boolean canMerge = this.isAlive()
                                     && this.pickupDelay != 32767
-                                    && this.age != -32768
-                                    && this.age < 6000
+                                    && this.itemAge != -32768
+                                    && this.itemAge < 6000
                                     && stack.getCount() < 64;
 
                 cir.setReturnValue(canMerge);
@@ -92,7 +92,7 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
                 stackSelf.increment(amount);
                 self.setStack(stackSelf);
                 this.pickupDelay = Math.max(((IEntityItem) other).getPickupDelay(), this.pickupDelay);
-                this.age = Math.min(other.getAge(), this.age);
+                this.itemAge = Math.min(other.getItemAge(), this.itemAge);
 
                 if (amount >= stackOther.getCount())
                 {

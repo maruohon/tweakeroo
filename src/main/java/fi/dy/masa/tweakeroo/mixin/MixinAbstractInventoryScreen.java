@@ -26,7 +26,7 @@ public abstract class MixinAbstractInventoryScreen<T extends net.minecraft.scree
     {
         if (Configs.Disable.DISABLE_INVENTORY_EFFECTS.getBooleanValue())
         {
-            this.x = (this.width - this.backgroundWidth) / 2;
+            this.field_2776 = (this.width - this.backgroundWidth) / 2; // x
             this.drawStatusEffects = false;
             ci.cancel();
         }

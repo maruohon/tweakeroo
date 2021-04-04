@@ -3,6 +3,8 @@ package fi.dy.masa.tweakeroo.mixin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -33,7 +35,7 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
                     slice = @Slice(from = @At(value = "FIELD",
                                               target = "Lnet/minecraft/block/entity/StructureBlockBlockEntity;metadata:Ljava/lang/String;"),
                                    to = @At(value = "FIELD",
-                                            target = "Lnet/minecraft/block/entity/StructureBlockBlockEntity;size:Lnet/minecraft/util/math/BlockPos;")),
+                                            target = "Lnet/minecraft/block/entity/StructureBlockBlockEntity;size:Lnet/minecraft/util/math/Vec3i;")),
                     constant = { @Constant(intValue = -48), @Constant(intValue = 48) }, require = 0)
     private int overrideMaxSize(int original)
     {
@@ -46,12 +48,11 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
         return original;
     }
 
-    @Inject(method = "findStructureBlockEntities", at = @At("HEAD"), cancellable = true)
-    private void overrideCornerBlockScan(BlockPos start, BlockPos end, CallbackInfoReturnable<List<StructureBlockBlockEntity>> cir)
+    @Inject(method = "streamCornerPos", at = @At("HEAD"), cancellable = true)
+    private void overrideCornerBlockScan(BlockPos start, BlockPos end, CallbackInfoReturnable<Stream<BlockPos>> cir)
     {
         if (FeatureToggle.TWEAK_STRUCTURE_BLOCK_LIMIT.getBooleanValue())
         {
-            List<StructureBlockBlockEntity> structureBlocks = new ArrayList<>();
             BlockPos pos = this.getPos();
             World world = this.getWorld();
             String name = ((StructureBlockBlockEntity) (Object) this).getStructureName();
@@ -64,8 +65,9 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
             final int maxX = pos.getX() + maxSize + maxOffset + 2;
             final int maxZ = pos.getZ() + maxSize + maxOffset + 2;
 
-            final int minY = Math.max(world.getBottomY(), pos.getY() - maxSize - maxOffset - 2);
-            final int maxY = Math.min(world.getTopY()   , pos.getY() + maxSize + maxOffset + 2);
+            final int minY = Math.max(world.getBottomY() , pos.getY() - maxSize - maxOffset - 2);
+            final int maxY = Math.min(world.getTopY() - 1, pos.getY() + maxSize + maxOffset + 2);
+            List<BlockPos> positions = new ArrayList<>();
 
             for (int cz = minZ >> 4; cz <= (maxZ >> 4); ++cz)
             {
@@ -88,19 +90,19 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
                             BlockPos p = te.getPos();
 
                             if (tes.getMode() == StructureBlockMode.CORNER &&
-                                tes.getStructureName().equals(name) &&
+                                Objects.equals(tes.getStructureName(), name) &&
                                 p.getX() >= minX && p.getX() <= maxX &&
                                 p.getY() >= minY && p.getY() <= maxY &&
                                 p.getZ() >= minZ && p.getZ() <= maxZ)
                             {
-                                structureBlocks.add((StructureBlockBlockEntity) te);
+                                positions.add(p);
                             }
                         }
                     }
                 }
             }
 
-            cir.setReturnValue(structureBlocks);
+            cir.setReturnValue(positions.stream());
         }
     }
 }

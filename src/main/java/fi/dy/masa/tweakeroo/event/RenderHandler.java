@@ -110,7 +110,6 @@ public class RenderHandler implements IRenderer
         {
             BlockHitResult hitResult = (BlockHitResult) mc.crosshairTarget;
             RenderSystem.depthMask(false);
-            RenderSystem.disableLighting();
             RenderSystem.disableCull();
             RenderSystem.disableTexture();
             RenderSystem.disableDepthTest();

@@ -299,7 +299,8 @@ public class MiscTweaks
         else
         {
             FlatChunkGeneratorLayer layer = new FlatChunkGeneratorLayer(finalThickness, block);
-            layer.setStartY(startY);
+            // FIXME 1.17 is this just not needed anymore?
+            //layer.setStartY(startY);
             return layer;
         }
     }

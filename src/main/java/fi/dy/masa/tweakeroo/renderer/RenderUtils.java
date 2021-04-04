@@ -6,6 +6,7 @@ import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -21,6 +22,7 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -276,30 +278,34 @@ public class RenderUtils
 
     public static void overrideLavaFog(Entity entity)
     {
+        // FIXME 1.17
+        /*
         float fog = getLavaFog(entity, 2.0F);
 
         if (fog < 2.0F)
         {
             RenderSystem.fogDensity(fog);
         }
+        */
     }
 
     public static void renderDirectionsCursor(float zLevel, float partialTicks)
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        RenderSystem.pushMatrix();
-
         int width = GuiUtils.getScaledWindowWidth();
         int height = GuiUtils.getScaledWindowHeight();
-        RenderSystem.translated(width / 2, height / 2, zLevel);
-        Entity entity = mc.getCameraEntity();
-        RenderSystem.rotatef(entity.prevPitch + (entity.pitch - entity.prevPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
-        RenderSystem.rotatef(entity.prevYaw + (entity.yaw - entity.prevYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
-        RenderSystem.scalef(-1.0F, -1.0F, -1.0F);
+        Camera camera = mc.gameRenderer.getCamera();
+        MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        matrixStack.push();
+        matrixStack.translate(width / 2.0, height / 2.0, zLevel);
+        matrixStack.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(camera.getPitch()));
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(camera.getYaw()));
+        matrixStack.scale(-1.0F, -1.0F, -1.0F);
+        RenderSystem.applyModelViewMatrix();
         RenderSystem.renderCrosshair(10);
-
-        RenderSystem.popMatrix();
+        matrixStack.pop();
+        RenderSystem.applyModelViewMatrix();
     }
 
     public static void notifyRotationChanged()

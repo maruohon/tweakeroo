@@ -4,7 +4,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.class_5892;
+import net.minecraft.network.packet.s2c.play.DeathMessageS2CPacket;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
@@ -24,9 +24,9 @@ public abstract class MixinClientPlayNetworkHandler
         }
     }
 
-    @Inject(method = "method_34075", at = @At(value = "INVOKE", // onCombatEvent
+    @Inject(method = "onDeathMessage", at = @At(value = "INVOKE", // onCombatEvent
             target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V"))
-    private void onPlayerDeath(class_5892 packetIn, CallbackInfo ci)
+    private void onPlayerDeath(DeathMessageS2CPacket packetIn, CallbackInfo ci)
     {
         net.minecraft.client.MinecraftClient mc = net.minecraft.client.MinecraftClient.getInstance();
 
