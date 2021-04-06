@@ -161,7 +161,7 @@ public class InventoryUtils
 
     public static void restockNewStackToHand(EntityPlayer player, EnumHand hand, ItemStack stackReference, boolean allowHotbar)
     {
-        int slotWithItem = -1;
+        int slotWithItem;
 
         if (stackReference.getItem().isDamageable())
         {
@@ -257,7 +257,7 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            MessageUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_better_durability");
+            MessageUtils.printCustomActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_better_durability");
             return;
         }
 
@@ -266,7 +266,7 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            MessageUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_off_players_hand");
+            MessageUtils.printCustomActionbarMessage("tweakeroo.message.swapped_low_durability_item_off_players_hand");
             return;
         }
 
@@ -291,7 +291,7 @@ public class InventoryUtils
         if (slotWithItem != -1)
         {
             swapItemToHand(player, hand, slotWithItem);
-            MessageUtils.printActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_dummy_item");
+            MessageUtils.printCustomActionbarMessage("tweakeroo.message.swapped_low_durability_item_for_dummy_item");
         }
     }
 
@@ -338,7 +338,7 @@ public class InventoryUtils
             if (slotRepairableItem != -1)
             {
                 swapItemToEqupmentSlot(player, type, slotRepairableItem);
-                MessageUtils.printActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_slot", type.getName());
+                MessageUtils.printCustomActionbarMessage("tweakeroo.message.repair_mode.swapped_repairable_item_to_slot", type.getName());
             }
         }
     }
@@ -622,10 +622,7 @@ public class InventoryUtils
             {
                 tryCombineStacksInInventory(player, stack);
 
-                if (fi.dy.masa.malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1)
-                {
-                    return true;
-                }
+                return fi.dy.masa.malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1;
             }
         }
 

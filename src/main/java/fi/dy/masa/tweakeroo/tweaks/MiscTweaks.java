@@ -114,8 +114,8 @@ public class MiscTweaks
 
                 if (count > 0)
                 {
-                    MessageUtils.printActionbarMessage("tweakeroo.message.potion_effects_running_out",
-                                                       Integer.valueOf(count), Integer.valueOf(minDuration / 20));
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.potion_effects_running_out",
+                                                             count, minDuration / 20);
                 }
             }
         }

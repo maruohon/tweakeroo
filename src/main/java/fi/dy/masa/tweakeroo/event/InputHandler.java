@@ -147,7 +147,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + rst;
-                MessageUtils.printActionbarMessage("tweakeroo.message.set_after_clicker_count_to", strValue);
+                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_after_clicker_count_to", strValue);
 
                 return true;
             }
@@ -158,7 +158,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + rst;
-                MessageUtils.printActionbarMessage("tweakeroo.message.set_placement_limit_to", strValue);
+                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_placement_limit_to", strValue);
 
                 return true;
             }
@@ -169,7 +169,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + rst;
-                MessageUtils.printActionbarMessage("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue);
+                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue);
 
                 return true;
             }
@@ -180,7 +180,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + rst;
-                MessageUtils.printActionbarMessage("tweakeroo.message.set_hotbar_slot_randomizer_max_to", strValue);
+                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_hotbar_slot_randomizer_max_to", strValue);
 
                 return true;
             }
@@ -191,7 +191,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + rst;
-                MessageUtils.printActionbarMessage("tweakeroo.message.set_breaking_grid_size_to", strValue);
+                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_breaking_grid_size_to", strValue);
 
                 return true;
             }
@@ -202,7 +202,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
                 AdjustableKeyCallback.setValueChanged();
 
                 String strValue = preGreen + Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + rst;
-                MessageUtils.printActionbarMessage("tweakeroo.message.set_placement_grid_size_to", strValue);
+                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_placement_grid_size_to", strValue);
 
                 return true;
             }
@@ -218,7 +218,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
                 String val = preGreen + config.getDoubleValue() + rst;
                 String key = mode == SnapAimMode.PITCH ? "tweakeroo.message.set_snap_aim_pitch_step_to" : "tweakeroo.message.set_snap_aim_yaw_step_to";
 
-                MessageUtils.printActionbarMessage(key, val);
+                MessageUtils.printCustomActionbarMessage(key, val);
 
                 return true;
             }
@@ -241,7 +241,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
                 }
 
                 String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
-                MessageUtils.printActionbarMessage("tweakeroo.message.set_zoom_fov_to", strValue);
+                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to", strValue);
 
                 return true;
             }
@@ -259,7 +259,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
 
                     String strIndex = preGreen + (i + 1) + rst;
                     String strValue = preGreen + String.format("%.3f", config.getDoubleValue()) + rst;
-                    MessageUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_to", strIndex, strValue);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", strIndex, strValue);
 
                     return true;
                 }

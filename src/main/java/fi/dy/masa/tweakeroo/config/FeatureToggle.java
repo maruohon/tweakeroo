@@ -116,8 +116,10 @@ public enum FeatureToggle implements ConfigInfo
 
         String nameLower = name.toLowerCase(Locale.ROOT);
         String nameKey = "tweakeroo.feature_toggle.name." + nameLower;
-        this.toggleHotkey.setNameTranslationKey(nameKey).setPrettyNameTranslationKey(nameKey);
-        this.toggleStatus.setNameTranslationKey(nameKey).setPrettyNameTranslationKey(nameKey);
+        this.toggleHotkey.setNameTranslationKey(nameKey);
+        this.toggleHotkey.setPrettyNameTranslationKey(nameKey);
+        this.toggleStatus.setNameTranslationKey(nameKey);
+        this.toggleStatus.setPrettyNameTranslationKey(nameKey);
         this.toggleStatus.setCommentTranslationKey("tweakeroo.feature_toggle.comment." + nameLower);
     }
 

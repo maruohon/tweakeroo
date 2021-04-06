@@ -71,8 +71,10 @@ public enum DisableToggle implements ConfigInfo
 
         String nameLower = name.toLowerCase(Locale.ROOT);
         String nameKey = "tweakeroo.disable_toggle.name." + nameLower;
-        this.toggleHotkey.setNameTranslationKey(nameKey).setPrettyNameTranslationKey(nameKey);
-        this.toggleStatus.setNameTranslationKey(nameKey).setPrettyNameTranslationKey(nameKey);
+        this.toggleHotkey.setNameTranslationKey(nameKey);
+        this.toggleHotkey.setPrettyNameTranslationKey(nameKey);
+        this.toggleStatus.setNameTranslationKey(nameKey);
+        this.toggleStatus.setPrettyNameTranslationKey(nameKey);
         this.toggleStatus.setCommentTranslationKey("tweakeroo.disable_toggle.comment." + nameLower);
     }
 

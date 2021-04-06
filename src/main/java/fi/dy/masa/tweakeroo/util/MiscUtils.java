@@ -266,11 +266,7 @@ public class MiscUtils
     {
         int size = te.signText.length;
         previousSignText = new net.minecraft.util.text.ITextComponent[size];
-
-        for (int i = 0; i < size; ++i)
-        {
-            previousSignText[i] = te.signText[i];
-        }
+        System.arraycopy(te.signText, 0, previousSignText, 0, size);
     }
 
     public static void applyPreviousTextToSign(TileEntitySign te)
@@ -278,11 +274,7 @@ public class MiscUtils
         if (previousSignText != null)
         {
             int size = Math.min(te.signText.length, previousSignText.length);
-
-            for (int i = 0; i < size; ++i)
-            {
-                te.signText[i] = previousSignText[i];
-            }
+            System.arraycopy(previousSignText, 0, te.signText, 0, size);
         }
     }
 
@@ -353,9 +345,9 @@ public class MiscUtils
                 {
                     String g = BaseScreen.TXT_GREEN;
                     String r = BaseScreen.TXT_RST;
-                    String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedPitch)), r, g, String.valueOf(step), r);
+                    String str = String.format("%s%s%s (step %s%s%s)", g, MathHelper.wrapDegrees(snappedPitch), r, g, step, r);
 
-                    MessageUtils.printActionbarMessage("tweakeroo.message.snapped_to_pitch", str);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.snapped_to_pitch", str);
 
                     Configs.Internal.SNAP_AIM_LAST_PITCH.setValue(snappedPitch);
                 }
@@ -395,9 +387,9 @@ public class MiscUtils
                 {
                     String g = BaseScreen.TXT_GREEN;
                     String r = BaseScreen.TXT_RST;
-                    String str = String.format("%s%s%s (step %s%s%s)", g, String.valueOf(MathHelper.wrapDegrees(snappedYaw)), r, g, String.valueOf(step), r);
+                    String str = String.format("%s%s%s (step %s%s%s)", g, MathHelper.wrapDegrees(snappedYaw), r, g, step, r);
 
-                    MessageUtils.printActionbarMessage("tweakeroo.message.snapped_to_yaw", str);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.snapped_to_yaw", str);
 
                     Configs.Internal.SNAP_AIM_LAST_YAW.setValue(snappedYaw);
                 }

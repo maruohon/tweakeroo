@@ -17,7 +17,6 @@ import fi.dy.masa.malilib.input.KeyAction;
 import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
 import fi.dy.masa.malilib.input.callback.HotkeyCallback;
-import fi.dy.masa.malilib.overlay.message.MessageType;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.RayTraceFluidHandling;
@@ -200,10 +199,10 @@ public class Callbacks
             {
                 this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
 
-                String pre = mc.skipRenderWorld ? BaseScreen.TXT_GREEN : BaseScreen.TXT_RED;
+                String pre = this.mc.skipRenderWorld ? BaseScreen.TXT_GREEN : BaseScreen.TXT_RED;
                 String status = StringUtils.translate("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
                 String message = StringUtils.translate("tweakeroo.message.toggled", "Skip All Rendering", pre + status + BaseScreen.TXT_RST);
-                MessageUtils.printActionbarMessage(message);
+                MessageUtils.printCustomActionbarMessage(message);
             }
             else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeyBind())
             {
@@ -213,7 +212,7 @@ public class Callbacks
                 String pre = enabled ? BaseScreen.TXT_GREEN : BaseScreen.TXT_RED;
                 String status = StringUtils.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
                 String message = StringUtils.translate("tweakeroo.message.toggled", "Skip World Rendering", pre + status + BaseScreen.TXT_RST);
-                MessageUtils.printActionbarMessage(message);
+                MessageUtils.printCustomActionbarMessage(message);
             }
 
             return true;
@@ -262,7 +261,7 @@ public class Callbacks
                     if (te instanceof TileEntitySign)
                     {
                         MiscUtils.copyTextFromSign((TileEntitySign) te);
-                        MessageUtils.printActionbarMessage("tweakeroo.message.sign_text_copied");
+                        MessageUtils.printCustomActionbarMessage("tweakeroo.message.sign_text_copied");
                     }
                 }
                 return true;
@@ -321,7 +320,7 @@ public class Callbacks
                 if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue())
                 {
                     int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-                    InventoryUtils.swapHotbarWithInventoryRow(mc.player, currentRow);
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, currentRow);
                     return true;
                 }
             }
@@ -388,7 +387,7 @@ public class Callbacks
             else if (key == Hotkeys.RELOAD_LANGUAGE_PACKS.getKeyBind())
             {
                 this.mc.getLanguageManager().onResourceManagerReload(this.mc.getResourceManager());
-                MessageUtils.showGuiOrInGameMessage(MessageType.SUCCESS, "tweakeroo.message.language_packs_reloaded");
+                MessageUtils.success("tweakeroo.message.language_packs_reloaded");
                 return true;
             }
             else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind())
@@ -396,12 +395,12 @@ public class Callbacks
                 if (this.mc.inGameHasFocus)
                 {
                     this.mc.setIngameNotInFocus();
-                    MessageUtils.printActionbarMessage("tweakeroo.message.unfocusing_game");
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.unfocusing_game");
                 }
                 else
                 {
                     this.mc.setIngameFocus();
-                    MessageUtils.printActionbarMessage("tweakeroo.message.focusing_game");
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.focusing_game");
                 }
             }
             else if (key == Hotkeys.ZOOM_ACTIVATE.getKeyBind())
@@ -426,7 +425,7 @@ public class Callbacks
             float speed = (float) Configs.getActiveFlySpeedConfig().getDoubleValue();
             String strPreset = BaseScreen.TXT_GREEN + (preset + 1) + BaseScreen.TXT_RST;
             String strSpeed = String.format("%s%.3f%s", BaseScreen.TXT_GREEN, speed, BaseScreen.TXT_RST);
-            MessageUtils.printActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
+            MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
         }
 
         private void setBreakingRestrictionMode(PlacementRestrictionMode mode)
@@ -434,7 +433,7 @@ public class Callbacks
             Configs.Generic.BREAKING_RESTRICTION_MODE.setValue(mode);
 
             String str = BaseScreen.TXT_GREEN + mode.getDisplayName() + BaseScreen.TXT_RST;
-            MessageUtils.printActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", str);
+            MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", str);
         }
 
         private void setPlacementRestrictionMode(PlacementRestrictionMode mode)
@@ -442,7 +441,7 @@ public class Callbacks
             Configs.Generic.PLACEMENT_RESTRICTION_MODE.setValue(mode);
 
             String str = BaseScreen.TXT_GREEN + mode.getDisplayName() + BaseScreen.TXT_RST;
-            MessageUtils.printActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
+            MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
         }
 
         private void blinkDriveTeleport(boolean maintainY)
@@ -493,7 +492,7 @@ public class Callbacks
                 {
                     String strPreset = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
                     String strSpeed = String.format("%s%.3f%s", preGreen, Configs.getActiveFlySpeedConfig().getDoubleValue(), rst);
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_fly_speed_on", strStatus, strPreset, strSpeed);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_fly_speed_on", strStatus, strPreset, strSpeed);
                 }
                 else
                 {
@@ -504,7 +503,7 @@ public class Callbacks
                         player.capabilities.setFlySpeed(0.05f);
                     }
 
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
                 }
             }
             else
@@ -518,42 +517,42 @@ public class Callbacks
                 if (key == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind())
                 {
                     String strMode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue().getDisplayName();
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
                 }
                 else if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeyBind())
                 {
                     String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
                 }
                 else if (key == FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeyBind())
                 {
                     String strValue = Configs.Generic.PLACEMENT_LIMIT.getStringValue();
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
                 }
                 else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeyBind())
                 {
                     String strValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getStringValue();
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
                 }
                 else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeyBind())
                 {
                     String strValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getStringValue();
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_slot_randomizer_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_slot_randomizer_on", strStatus, preGreen + strValue + rst);
                 }
                 else if (key == FeatureToggle.TWEAK_PLACEMENT_GRID.getKeyBind())
                 {
                     String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
                 }
                 else if (key == FeatureToggle.TWEAK_BREAKING_GRID.getKeyBind())
                 {
                     String strValue = Configs.Generic.BREAKING_GRID_SIZE.getStringValue();
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_breaking_grid_on", strStatus, preGreen + strValue + rst);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_breaking_grid_on", strStatus, preGreen + strValue + rst);
                 }
                 else if (key == FeatureToggle.TWEAK_ZOOM.getKeyBind())
                 {
                     String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
-                    MessageUtils.printActionbarMessage("tweakeroo.message.toggled_zoom_on", strStatus, strValue);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_zoom_on", strStatus, strValue);
                 }
                 else if (key == FeatureToggle.TWEAK_SNAP_AIM.getKeyBind())
                 {
@@ -562,18 +561,18 @@ public class Callbacks
                     if (mode == SnapAimMode.YAW)
                     {
                         String yaw = String.valueOf(Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue());
-                        MessageUtils.printActionbarMessage("tweakeroo.message.toggled_snap_aim_on_yaw", strStatus, preGreen + yaw + rst);
+                        MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_snap_aim_on_yaw", strStatus, preGreen + yaw + rst);
                     }
                     else if (mode == SnapAimMode.PITCH)
                     {
                         String pitch = String.valueOf(Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue());
-                        MessageUtils.printActionbarMessage("tweakeroo.message.toggled_snap_aim_on_pitch", strStatus, preGreen + pitch + rst);
+                        MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_snap_aim_on_pitch", strStatus, preGreen + pitch + rst);
                     }
                     else
                     {
                         String yaw = String.valueOf(Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue());
                         String pitch = String.valueOf(Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue());
-                        MessageUtils.printActionbarMessage("tweakeroo.message.toggled_snap_aim_on_both", strStatus, preGreen + yaw + rst, preGreen + pitch + rst);
+                        MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_snap_aim_on_both", strStatus, preGreen + yaw + rst, preGreen + pitch + rst);
                     }
                 }
             }
