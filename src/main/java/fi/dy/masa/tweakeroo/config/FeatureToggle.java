@@ -43,7 +43,7 @@ public enum FeatureToggle implements ConfigInfo
     TWEAK_FAST_LEFT_CLICK               ("tweakFastLeftClick",                      false),
     TWEAK_FAST_RIGHT_CLICK              ("tweakFastRightClick",                     false),
     TWEAK_FILL_CLONE_LIMIT              ("tweakFillCloneLimit",                     false),
-    TWEAK_FLY_SPEED                     ("tweakFlySpeed",                           false),
+    TWEAK_FLY_SPEED                     ("tweakFlySpeed",                           false, KeyBindSettings.INGAME_BOTH),
     TWEAK_FLEXIBLE_BLOCK_PLACEMENT      ("tweakFlexibleBlockPlacement",             false),
     TWEAK_FREE_CAMERA                   ("tweakFreeCamera",                         false),
     TWEAK_GAMMA_OVERRIDE                ("tweakGammaOverride",                      false),

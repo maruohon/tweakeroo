@@ -11,7 +11,7 @@ import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.tileentity.TileEntitySign;
 import fi.dy.masa.malilib.gui.BaseScreen;
-import fi.dy.masa.malilib.input.KeyBindImpl;
+import fi.dy.masa.malilib.input.Keys;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -47,7 +47,7 @@ public abstract class MixinGuiEditSign
             // Update the keybind state, because opening a GUI resets them all.
             // Also, KeyBinding.updateKeyBindState() only works for keyboard keys
             int keyCode = Minecraft.getMinecraft().gameSettings.keyBindUseItem.getKeyCode();
-            KeyBinding.setKeyBindState(keyCode, KeyBindImpl.isKeyDown(keyCode));
+            KeyBinding.setKeyBindState(keyCode, Keys.isKeyDown(keyCode));
 
             ci.cancel();
         }
