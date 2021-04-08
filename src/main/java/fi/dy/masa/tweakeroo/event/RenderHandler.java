@@ -123,7 +123,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
             Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
             if(Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld())
             {
-                Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_ADJACENT_OVERLAY_COLOR.getColor();
+                color = Configs.Generic.FLEXIBLE_PLACEMENT_ADJACENT_OVERLAY_COLOR.getColor();
             }
             
 
