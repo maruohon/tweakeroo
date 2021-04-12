@@ -13,6 +13,7 @@ import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.malilib.config.ValueChangeCallback;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.gui.BaseScreen;
+import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.input.KeyAction;
 import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
@@ -116,20 +117,20 @@ public class Callbacks
             BooleanConfig config = Configs.Generic.FREE_CAMERA_PLAYER_INPUTS;
             config.toggleBooleanValue();
             MessageUtils.printBooleanConfigToggleMessage(config);
-            return true;
+            return ActionResult.SUCCESS;
         });
         Hotkeys.FREE_CAMERA_PLAYER_MOVEMENT.getKeyBind().setCallback((action, key) -> {
             BooleanConfig config = Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT;
             config.toggleBooleanValue();
             MessageUtils.printBooleanConfigToggleMessage(config);
-            return true;
+            return ActionResult.SUCCESS;
         });
         Hotkeys.GHOST_BLOCK_REMOVER.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_1.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_2.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SWAP_3.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.HOTBAR_SCROLL.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.OPEN_CONFIG_GUI.getKeyBind().setCallback((a, k) -> BaseScreen.openScreen(ConfigScreen.create(null)));
+        Hotkeys.OPEN_CONFIG_GUI.getKeyBind().setCallback((a, k) -> { BaseScreen.openScreen(ConfigScreen.create(null)); return ActionResult.SUCCESS; });
         Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeyBind().setCallback(callbackGeneric);
         Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeyBind().setCallback(callbackGeneric);
@@ -193,7 +194,7 @@ public class Callbacks
         }
 
         @Override
-        public boolean onKeyAction(KeyAction action, KeyBind key)
+        public ActionResult onKeyAction(KeyAction action, KeyBind key)
         {
             if (key == Hotkeys.SKIP_ALL_RENDERING.getKeyBind())
             {
@@ -215,7 +216,7 @@ public class Callbacks
                 MessageUtils.printCustomActionbarMessage(message);
             }
 
-            return true;
+            return ActionResult.SUCCESS;
         }
     }
 
@@ -229,25 +230,17 @@ public class Callbacks
         }
 
         @Override
-        public boolean onKeyAction(KeyAction action, KeyBind key)
+        public ActionResult onKeyAction(KeyAction action, KeyBind key)
         {
             if (key == Hotkeys.TOOL_PICK.getKeyBind())
             {
                 if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
                 {
                     InventoryUtils.trySwitchToEffectiveTool(this.mc.objectMouseOver.getBlockPos());
-                    return true;
+                    return ActionResult.SUCCESS;
                 }
-            }
-            else if (key == Hotkeys.BLINK_DRIVE.getKeyBind())
-            {
-                this.blinkDriveTeleport(false);
-                return true;
-            }
-            else if (key == Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeyBind())
-            {
-                this.blinkDriveTeleport(true);
-                return true;
+
+                return ActionResult.FAIL;
             }
             else if (key == Hotkeys.COPY_SIGN_TEXT.getKeyBind())
             {
@@ -262,58 +255,10 @@ public class Callbacks
                     {
                         MiscUtils.copyTextFromSign((TileEntitySign) te);
                         MessageUtils.printCustomActionbarMessage("tweakeroo.message.sign_text_copied");
+                        return ActionResult.SUCCESS;
                     }
                 }
-                return true;
-            }
-            else if (key == Hotkeys.GHOST_BLOCK_REMOVER.getKeyBind())
-            {
-                MiscUtils.antiGhostBlock(this.mc);
-                return true;
-            }
-            else if (key == Hotkeys.HOTBAR_SWAP_1.getKeyBind())
-            {
-                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
-                {
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 0);
-                    return true;
-                }
-            }
-            else if (key == Hotkeys.HOTBAR_SWAP_2.getKeyBind())
-            {
-                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
-                {
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 1);
-                    return true;
-                }
-            }
-            else if (key == Hotkeys.HOTBAR_SWAP_3.getKeyBind())
-            {
-                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
-                {
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 2);
-                    return true;
-                }
-            }
-            else if (key == Hotkeys.FLY_PRESET_1.getKeyBind())
-            {
-                this.setFlySpeedPreset(0);
-                return true;
-            }
-            else if (key == Hotkeys.FLY_PRESET_2.getKeyBind())
-            {
-                this.setFlySpeedPreset(1);
-                return true;
-            }
-            else if (key == Hotkeys.FLY_PRESET_3.getKeyBind())
-            {
-                this.setFlySpeedPreset(2);
-                return true;
-            }
-            else if (key == Hotkeys.FLY_PRESET_4.getKeyBind())
-            {
-                this.setFlySpeedPreset(3);
-                return true;
+                return ActionResult.FAIL;
             }
             else if (key == Hotkeys.HOTBAR_SCROLL.getKeyBind())
             {
@@ -321,74 +266,117 @@ public class Callbacks
                 {
                     int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
                     InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, currentRow);
-                    return true;
+                    return ActionResult.SUCCESS;
                 }
+                return ActionResult.PASS;
+            }
+            else if (key == Hotkeys.HOTBAR_SWAP_1.getKeyBind())
+            {
+                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
+                {
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 0);
+                    return ActionResult.SUCCESS;
+                }
+                return ActionResult.PASS;
+            }
+            else if (key == Hotkeys.HOTBAR_SWAP_2.getKeyBind())
+            {
+                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
+                {
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 1);
+                    return ActionResult.SUCCESS;
+                }
+                return ActionResult.PASS;
+            }
+            else if (key == Hotkeys.HOTBAR_SWAP_3.getKeyBind())
+            {
+                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
+                {
+                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 2);
+                    return ActionResult.SUCCESS;
+                }
+                return ActionResult.PASS;
+            }
+            else if (key == Hotkeys.BLINK_DRIVE.getKeyBind())
+            {
+                this.blinkDriveTeleport(false);
+            }
+            else if (key == Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeyBind())
+            {
+                this.blinkDriveTeleport(true);
+            }
+            else if (key == Hotkeys.GHOST_BLOCK_REMOVER.getKeyBind())
+            {
+                MiscUtils.antiGhostBlock(this.mc);
+            }
+            else if (key == Hotkeys.FLY_PRESET_1.getKeyBind())
+            {
+                this.setFlySpeedPreset(0);
+            }
+            else if (key == Hotkeys.FLY_PRESET_2.getKeyBind())
+            {
+                this.setFlySpeedPreset(1);
+            }
+            else if (key == Hotkeys.FLY_PRESET_3.getKeyBind())
+            {
+                this.setFlySpeedPreset(2);
+            }
+            else if (key == Hotkeys.FLY_PRESET_4.getKeyBind())
+            {
+                this.setFlySpeedPreset(3);
             }
             else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.COLUMN);
-                return true;
             }
             else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.DIAGONAL);
-                return true;
             }
             else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.FACE);
-                return true;
             }
             else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.LAYER);
-                return true;
             }
             else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.LINE);
-                return true;
             }
             else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeyBind())
             {
                 this.setBreakingRestrictionMode(PlacementRestrictionMode.PLANE);
-                return true;
             }
             else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
-                return true;
             }
             else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
-                return true;
             }
             else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
-                return true;
             }
             else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.LAYER);
-                return true;
             }
             else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
-                return true;
             }
             else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeyBind())
             {
                 this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
-                return true;
             }
             else if (key == Hotkeys.RELOAD_LANGUAGE_PACKS.getKeyBind())
             {
                 this.mc.getLanguageManager().onResourceManagerReload(this.mc.getResourceManager());
                 MessageUtils.success("tweakeroo.message.language_packs_reloaded");
-                return true;
             }
             else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind())
             {
@@ -415,7 +403,7 @@ public class Callbacks
                 }
             }
 
-            return false;
+            return ActionResult.SUCCESS;
         }
 
         private void setFlySpeedPreset(int preset)
@@ -474,7 +462,7 @@ public class Callbacks
         }
 
         @Override
-        public boolean onKeyAction(KeyAction action, KeyBind key)
+        public ActionResult onKeyAction(KeyAction action, KeyBind key)
         {
             this.config.toggleBooleanValue();
 
@@ -511,7 +499,7 @@ public class Callbacks
                 if (enabled == false)
                 {
                     MessageUtils.printBooleanConfigToggleMessage(this.config);
-                    return true;
+                    return ActionResult.SUCCESS;
                 }
 
                 if (key == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind())
@@ -577,7 +565,7 @@ public class Callbacks
                 }
             }
 
-            return true;
+            return ActionResult.SUCCESS;
         }
     }
 }
