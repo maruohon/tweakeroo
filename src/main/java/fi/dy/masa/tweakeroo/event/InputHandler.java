@@ -12,17 +12,12 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import fi.dy.masa.malilib.config.option.DoubleConfig;
-import fi.dy.masa.malilib.config.option.HotkeyConfig;
-import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.Hotkey;
 import fi.dy.masa.malilib.input.HotkeyCategory;
 import fi.dy.masa.malilib.input.HotkeyProvider;
 import fi.dy.masa.malilib.input.KeyboardInputHandler;
 import fi.dy.masa.malilib.input.MouseInputHandler;
-import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
-import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -30,7 +25,6 @@ import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
-import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 public class InputHandler implements HotkeyProvider, KeyboardInputHandler, MouseInputHandler
 {
@@ -117,150 +111,6 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
                 if (stack.isEmpty() == false && stack.getItem() instanceof ItemBlock)
                 {
                     mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.OFF_HAND);
-                    return true;
-                }
-            }
-        }
-        // Not in a GUI
-        else if (GuiUtils.getCurrentScreen() == null && wheelDelta != 0)
-        {
-            String preGreen = BaseScreen.TXT_GREEN;
-            String rst = BaseScreen.TXT_RST;
-
-            if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() && Hotkeys.HOTBAR_SCROLL.getKeyBind().isKeyBindHeld())
-            {
-                int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-
-                int newRow = currentRow + (wheelDelta < 0 ? 1 : -1);
-                int max = 2;
-                if      (newRow < 0) { newRow = max; }
-                else if (newRow > max) { newRow = 0; }
-
-                Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.setValue(newRow);
-
-                return true;
-            }
-            else if (FeatureToggle.TWEAK_AFTER_CLICKER.getKeyBind().isKeyBindHeld())
-            {
-                int newValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.AFTER_CLICKER_CLICK_COUNT.setValue(newValue);
-                AdjustableKeyCallback.setValueChanged();
-
-                String strValue = preGreen + Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue() + rst;
-                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_after_clicker_count_to", strValue);
-
-                return true;
-            }
-            else if (FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeyBind().isKeyBindHeld())
-            {
-                int newValue = Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.PLACEMENT_LIMIT.setValue(newValue);
-                AdjustableKeyCallback.setValueChanged();
-
-                String strValue = preGreen + Configs.Generic.PLACEMENT_LIMIT.getIntegerValue() + rst;
-                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_placement_limit_to", strValue);
-
-                return true;
-            }
-            else if (FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeyBind().isKeyBindHeld())
-            {
-                int newValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.setValue(newValue);
-                AdjustableKeyCallback.setValueChanged();
-
-                String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getIntegerValue() + rst;
-                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_hotbar_slot_cycle_max_to", strValue);
-
-                return true;
-            }
-            else if (FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeyBind().isKeyBindHeld())
-            {
-                int newValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.setValue(newValue);
-                AdjustableKeyCallback.setValueChanged();
-
-                String strValue = preGreen + Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getIntegerValue() + rst;
-                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_hotbar_slot_randomizer_max_to", strValue);
-
-                return true;
-            }
-            else if (FeatureToggle.TWEAK_BREAKING_GRID.getKeyBind().isKeyBindHeld())
-            {
-                int newValue = Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.BREAKING_GRID_SIZE.setValue(newValue);
-                AdjustableKeyCallback.setValueChanged();
-
-                String strValue = preGreen + Configs.Generic.BREAKING_GRID_SIZE.getIntegerValue() + rst;
-                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_breaking_grid_size_to", strValue);
-
-                return true;
-            }
-            else if (FeatureToggle.TWEAK_PLACEMENT_GRID.getKeyBind().isKeyBindHeld())
-            {
-                int newValue = Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + (wheelDelta > 0 ? 1 : -1);
-                Configs.Generic.PLACEMENT_GRID_SIZE.setValue(newValue);
-                AdjustableKeyCallback.setValueChanged();
-
-                String strValue = preGreen + Configs.Generic.PLACEMENT_GRID_SIZE.getIntegerValue() + rst;
-                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_placement_grid_size_to", strValue);
-
-                return true;
-            }
-            else if (FeatureToggle.TWEAK_SNAP_AIM.getKeyBind().isKeyBindHeld())
-            {
-                SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
-                DoubleConfig config = mode == SnapAimMode.PITCH ? Configs.Generic.SNAP_AIM_PITCH_STEP : Configs.Generic.SNAP_AIM_YAW_STEP;
-
-                double newValue = config.getDoubleValue() * (wheelDelta > 0 ? 2 : 0.5);
-                config.setValue(newValue);
-                AdjustableKeyCallback.setValueChanged();
-
-                String val = preGreen + config.getDoubleValue() + rst;
-                String key = mode == SnapAimMode.PITCH ? "tweakeroo.message.set_snap_aim_pitch_step_to" : "tweakeroo.message.set_snap_aim_yaw_step_to";
-
-                MessageUtils.printCustomActionbarMessage(key, val);
-
-                return true;
-            }
-            else if (FeatureToggle.TWEAK_ZOOM.getKeyBind().isKeyBindHeld() ||
-                     (FeatureToggle.TWEAK_ZOOM.getBooleanValue() && Hotkeys.ZOOM_ACTIVATE.getKeyBind().isKeyBindHeld()))
-            {
-                double diff = BaseScreen.isCtrlDown() ? 5 : 1;
-                double newValue = Configs.Generic.ZOOM_FOV.getDoubleValue() + (wheelDelta < 0 ? diff : -diff);
-                Configs.Generic.ZOOM_FOV.setValue(newValue);
-
-                // Only prevent the next trigger when adjusting the value with the actual toggle key held
-                if (FeatureToggle.TWEAK_ZOOM.getKeyBind().isKeyBindHeld())
-                {
-                    AdjustableKeyCallback.setValueChanged();
-                }
-
-                if (FeatureToggle.TWEAK_ZOOM.getBooleanValue())
-                {
-                    MiscUtils.onZoomActivated();
-                }
-
-                String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
-                MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to", strValue);
-
-                return true;
-            }
-
-            for (int i = 0; i < 4; ++i)
-            {
-                HotkeyConfig hotkey = Configs.getFlySpeedHotkey(i);
-
-                if (hotkey.getKeyBind().isKeyBindHeld())
-                {
-                    DoubleConfig config = Configs.getFlySpeedConfig(i);
-                    double newValue = config.getDoubleValue() + (wheelDelta > 0 ? 0.005 : -0.005);
-                    config.setValue(newValue);
-                    AdjustableKeyCallback.setValueChanged();
-
-                    String strIndex = preGreen + (i + 1) + rst;
-                    String strValue = preGreen + String.format("%.3f", config.getDoubleValue()) + rst;
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", strIndex, strValue);
-
                     return true;
                 }
             }

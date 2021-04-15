@@ -12,13 +12,12 @@ import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import fi.dy.masa.malilib.config.option.ConfigOption;
 import fi.dy.masa.malilib.config.category.BaseConfigOptionCategory;
 import fi.dy.masa.malilib.config.category.ConfigOptionCategory;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.config.option.ColorConfig;
+import fi.dy.masa.malilib.config.option.ConfigOption;
 import fi.dy.masa.malilib.config.option.DoubleConfig;
-import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.config.option.HotkeyedBooleanConfig;
 import fi.dy.masa.malilib.config.option.IntegerConfig;
 import fi.dy.masa.malilib.config.option.OptionListConfig;
@@ -40,7 +39,7 @@ public class Configs
 {
     public static class Generic
     {
-        public static final IntegerConfig AFTER_CLICKER_CLICK_COUNT                     = new IntegerConfig("afterClickerClickCount", 1, 1, 32);
+        public static final IntegerConfig AFTER_CLICKER_CLICK_COUNT                     = new IntegerConfig("afterClickerClickCount", 1, 1, 64);
         public static final DoubleConfig BLOCK_REACH_DISTANCE                           = new DoubleConfig("blockReachDistance", 4.5, 0, 8);
         public static final IntegerConfig BLOCK_BREAKING_PARTICLE_LIMIT                 = new IntegerConfig("blockBreakingParticleLimit", 8, 1, 1024);
         public static final DoubleConfig BLOCK_BREAKING_PARTICLE_SCALE                  = new DoubleConfig("blockBreakingParticleScale", 1.0, 0, 10D);
@@ -286,18 +285,6 @@ public class Configs
             case 3:  return Configs.Generic.FLY_SPEED_PRESET_4;
             case 0:
             default: return Configs.Generic.FLY_SPEED_PRESET_1;
-        }
-    }
-
-    public static HotkeyConfig getFlySpeedHotkey(int preset)
-    {
-        switch (preset)
-        {
-            case 1:  return Hotkeys.FLY_PRESET_2;
-            case 2:  return Hotkeys.FLY_PRESET_3;
-            case 3:  return Hotkeys.FLY_PRESET_4;
-            case 0:
-            default: return Hotkeys.FLY_PRESET_1;
         }
     }
 }

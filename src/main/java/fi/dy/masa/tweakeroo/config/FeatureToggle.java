@@ -1,15 +1,18 @@
 package fi.dy.masa.tweakeroo.config;
 
 import java.util.Locale;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
+import fi.dy.masa.malilib.action.Action;
+import fi.dy.masa.malilib.action.BooleanToggleAction;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.KeyBindSettings;
-import fi.dy.masa.malilib.input.callback.ToggleBooleanWithMessageKeyCallback;
+import fi.dy.masa.malilib.input.callback.HotkeyCallback;
 import fi.dy.masa.malilib.util.data.ModInfo;
 import fi.dy.masa.tweakeroo.Reference;
 
@@ -102,6 +105,7 @@ public enum FeatureToggle implements ConfigInfo
 
     private final BooleanConfig toggleStatus;
     private final HotkeyConfig toggleHotkey;
+    protected Action toggleAction;
 
     FeatureToggle(String name, boolean defaultValue)
     {
@@ -112,15 +116,32 @@ public enum FeatureToggle implements ConfigInfo
     {
         this.toggleStatus = new BooleanConfig(name, defaultValue);
         this.toggleHotkey = new HotkeyConfig(name, "", settings);
-        this.toggleHotkey.getKeyBind().setCallback(new ToggleBooleanWithMessageKeyCallback(this.toggleStatus));
 
         String nameLower = name.toLowerCase(Locale.ROOT);
         String nameKey = "tweakeroo.feature_toggle.name." + nameLower;
         this.toggleHotkey.setNameTranslationKey(nameKey);
         this.toggleHotkey.setPrettyNameTranslationKey(nameKey);
+
         this.toggleStatus.setNameTranslationKey(nameKey);
         this.toggleStatus.setPrettyNameTranslationKey(nameKey);
         this.toggleStatus.setCommentTranslationKey("tweakeroo.feature_toggle.comment." + nameLower);
+
+        this.setSpecialToggleMessageFactory(null);
+    }
+
+    /**
+     * This will replace the default hotkey callback with the ToggleBooleanWithMessageKeyCallback
+     * variant that takes in the message factory
+     */
+    public void setSpecialToggleMessageFactory(@Nullable Function<BooleanConfig, String> messageFactory)
+    {
+        this.toggleAction = new BooleanToggleAction(this.toggleStatus, messageFactory);
+        this.toggleHotkey.getKeyBind().setCallback(HotkeyCallback.of(this.toggleAction));
+    }
+
+    public void setHotkeyCallback(HotkeyCallback callback)
+    {
+        this.toggleHotkey.getKeyBind().setCallback(callback);
     }
 
     public boolean getBooleanValue()

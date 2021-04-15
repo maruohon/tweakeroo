@@ -26,8 +26,6 @@ public class Hotkeys
     public static final HotkeyConfig FLY_PRESET_2                       = new HotkeyConfig("flyPreset2",                        "", KeyBindSettings.INGAME_BOTH);
     public static final HotkeyConfig FLY_PRESET_3                       = new HotkeyConfig("flyPreset3",                        "", KeyBindSettings.INGAME_BOTH);
     public static final HotkeyConfig FLY_PRESET_4                       = new HotkeyConfig("flyPreset4",                        "", KeyBindSettings.INGAME_BOTH);
-    public static final HotkeyConfig FREE_CAMERA_PLAYER_INPUTS          = new HotkeyConfig("freeCameraPlayerInputs",            "");
-    public static final HotkeyConfig FREE_CAMERA_PLAYER_MOVEMENT        = new HotkeyConfig("freeCameraPlayerMovement",          "");
     public static final HotkeyConfig GHOST_BLOCK_REMOVER                = new HotkeyConfig("ghostBlockRemover",                 "");
     public static final HotkeyConfig HOTBAR_SCROLL                      = new HotkeyConfig("hotbarScroll",                      "", KeyBindSettings.INGAME_RELEASE);
     public static final HotkeyConfig HOTBAR_SWAP_BASE                   = new HotkeyConfig("hotbarSwapBase",                    "");
@@ -71,8 +69,6 @@ public class Hotkeys
             FLY_PRESET_2,
             FLY_PRESET_3,
             FLY_PRESET_4,
-            FREE_CAMERA_PLAYER_INPUTS,
-            FREE_CAMERA_PLAYER_MOVEMENT,
             GHOST_BLOCK_REMOVER,
             HOTBAR_SCROLL,
             HOTBAR_SWAP_BASE,

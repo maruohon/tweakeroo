@@ -1,40 +1,31 @@
 package fi.dy.masa.tweakeroo.config;
 
+import java.util.function.Function;
+import java.util.function.IntSupplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import fi.dy.masa.malilib.action.Action;
 import fi.dy.masa.malilib.config.ValueChangeCallback;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
+import fi.dy.masa.malilib.config.option.DoubleConfig;
+import fi.dy.masa.malilib.config.option.IntegerConfig;
 import fi.dy.masa.malilib.gui.BaseScreen;
-import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.input.KeyAction;
-import fi.dy.masa.malilib.input.KeyBind;
-import fi.dy.masa.malilib.input.callback.AdjustableKeyCallback;
+import fi.dy.masa.malilib.input.callback.AdjustableValueHotkeyCallback;
 import fi.dy.masa.malilib.input.callback.HotkeyCallback;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
-import fi.dy.masa.malilib.util.PositionUtils;
-import fi.dy.masa.malilib.util.RayTraceUtils.RayTraceFluidHandling;
 import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.tweakeroo.gui.ConfigScreen;
+import fi.dy.masa.tweakeroo.feature.Actions;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
-import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 public class Callbacks
 {
-    public static boolean skipWorldRendering;
-
     public static void init()
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanConfig().setValueLoadCallback((newValue) -> {
@@ -51,7 +42,9 @@ public class Callbacks
             else { mc.gameSettings.gammaSetting = Configs.Internal.GAMMA_VALUE_ORIGINAL.getFloatValue(); }
         });
 
-        DisableToggle.DISABLE_SLIME_BLOCK_SLOWDOWN.getBooleanConfig().setValueLoadCallback((newValue) -> { if (newValue) { Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness; } });
+        DisableToggle.DISABLE_SLIME_BLOCK_SLOWDOWN.getBooleanConfig().setValueLoadCallback((newValue) -> {
+            if (newValue) { Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness; }
+        });
         DisableToggle.DISABLE_SLIME_BLOCK_SLOWDOWN.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> {
             if (newValue) { Blocks.SLIME_BLOCK.slipperiness = Blocks.STONE.slipperiness; }
             else { Blocks.SLIME_BLOCK.slipperiness = Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getFloatValue(); }
@@ -63,8 +56,10 @@ public class Callbacks
 
         Configs.Lists.REPAIR_MODE_SLOTS.setValueLoadCallback(InventoryUtils::setRepairModeSlots);
         Configs.Lists.REPAIR_MODE_SLOTS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setRepairModeSlots(newValue));
+
         Configs.Lists.SWAP_BROKEN_TOOLS_SLOTS.setValueLoadCallback(InventoryUtils::setSwapBrokenToolsSlots);
         Configs.Lists.SWAP_BROKEN_TOOLS_SLOTS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setSwapBrokenToolsSlots(newValue));
+
         Configs.Lists.UNSTACKING_ITEMS.setValueLoadCallback(InventoryUtils::setUnstackingItems);
         Configs.Lists.UNSTACKING_ITEMS.setValueChangeCallback((newValue, oldValue) -> InventoryUtils.setUnstackingItems(newValue));
 
@@ -86,7 +81,6 @@ public class Callbacks
         Configs.Lists.SOUND_DISABLE_LIST.setValueLoadCallback(MiscTweaks::updateSoundRestrictionLists);
         Configs.Lists.SOUND_DISABLE_LIST.setValueChangeCallback((newValue, oldValue) -> MiscTweaks.updateSoundRestrictionLists(newValue));
 
-        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind().setCallback(new KeyCallbackToggleWithSpecialMessage(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanConfig()));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> {
             if (Configs.Generic.PLACEMENT_RESTRICTION_TIED_TO_FAST.getBooleanValue())
             {
@@ -94,77 +88,97 @@ public class Callbacks
             }
         });
         FeatureToggle.TWEAK_FREE_CAMERA.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> CameraEntity.setCameraState(newValue));
-        FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanConfig().setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindAttack.getKeyCode()));
-        FeatureToggle.TWEAK_HOLD_USE.getBooleanConfig().setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindUseItem.getKeyCode()));
+        FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanConfig().setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindAttack::getKeyCode));
+        FeatureToggle.TWEAK_HOLD_USE.getBooleanConfig().setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindUseItem::getKeyCode));
 
-        HotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
-        HotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
+        Hotkeys.BLINK_DRIVE.setHotkeyCallback(HotkeyCallback.of(Actions.BLINK_DRIVE_TELEPORT_GROUND));
+        Hotkeys.BLINK_DRIVE_Y_LEVEL.setHotkeyCallback(HotkeyCallback.of(Actions.BLINK_DRIVE_TELEPORT_SAME_Y));
+        Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_COLUMN));
+        Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_DIAGONAL));
+        Hotkeys.BREAKING_RESTRICTION_MODE_FACE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_FACE));
+        Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_LAYER));
+        Hotkeys.BREAKING_RESTRICTION_MODE_LINE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_LINE));
+        Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_PLANE));
+        Hotkeys.COPY_SIGN_TEXT.setHotkeyCallback(HotkeyCallback.of(Actions.COPY_SIGN_TEXT));
+        Hotkeys.FLY_PRESET_1.setHotkeyCallback(createFlySpeedAdjustCallback(1, Configs.Generic.FLY_SPEED_PRESET_1, Actions.SET_FLY_SPEED_PRESET_1.getAction()));
+        Hotkeys.FLY_PRESET_2.setHotkeyCallback(createFlySpeedAdjustCallback(2, Configs.Generic.FLY_SPEED_PRESET_2, Actions.SET_FLY_SPEED_PRESET_2.getAction()));
+        Hotkeys.FLY_PRESET_3.setHotkeyCallback(createFlySpeedAdjustCallback(3, Configs.Generic.FLY_SPEED_PRESET_3, Actions.SET_FLY_SPEED_PRESET_3.getAction()));
+        Hotkeys.FLY_PRESET_4.setHotkeyCallback(createFlySpeedAdjustCallback(4, Configs.Generic.FLY_SPEED_PRESET_4, Actions.SET_FLY_SPEED_PRESET_4.getAction()));
+        Hotkeys.GHOST_BLOCK_REMOVER.setHotkeyCallback(HotkeyCallback.of(Actions.GHOST_BLOCK_REMOVER_MANUAL));
+        Hotkeys.HOTBAR_SWAP_1.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_1));
+        Hotkeys.HOTBAR_SWAP_2.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_2));
+        Hotkeys.HOTBAR_SWAP_3.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_3));
+        Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SCROLL));
+        Hotkeys.OPEN_CONFIG_GUI.setHotkeyCallback(HotkeyCallback.of(Actions.OPEN_CONFIG_SCREEN));
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_COLUMN));
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_DIAGONAL));
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_FACE));
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_LAYER));
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_LINE));
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_PLANE));
+        Hotkeys.RELOAD_LANGUAGE_PACKS.setHotkeyCallback(HotkeyCallback.of(Actions.RELOAD_LANGUAGE_PACKS));
+        Hotkeys.TOGGLE_GRAB_CURSOR.setHotkeyCallback(HotkeyCallback.of(Actions.TOGGLE_GRAB_CURSOR));
+        Hotkeys.TOOL_PICK.setHotkeyCallback(HotkeyCallback.of(Actions.TOOL_PICK));
+        Hotkeys.ZOOM_ACTIVATE.setHotkeyCallback((a, k) -> Actions.zoomActivate(a == KeyAction.PRESS));
 
-        Hotkeys.BLINK_DRIVE.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.COPY_SIGN_TEXT.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.FLY_PRESET_1.getKeyBind().setCallback(new AdjustableKeyCallback(null, callbackGeneric));
-        Hotkeys.FLY_PRESET_2.getKeyBind().setCallback(new AdjustableKeyCallback(null, callbackGeneric));
-        Hotkeys.FLY_PRESET_3.getKeyBind().setCallback(new AdjustableKeyCallback(null, callbackGeneric));
-        Hotkeys.FLY_PRESET_4.getKeyBind().setCallback(new AdjustableKeyCallback(null, callbackGeneric));
-        Hotkeys.FREE_CAMERA_PLAYER_INPUTS.getKeyBind().setCallback((action, key) -> {
-            BooleanConfig config = Configs.Generic.FREE_CAMERA_PLAYER_INPUTS;
-            config.toggleBooleanValue();
-            MessageUtils.printBooleanConfigToggleMessage(config);
-            return ActionResult.SUCCESS;
-        });
-        Hotkeys.FREE_CAMERA_PLAYER_MOVEMENT.getKeyBind().setCallback((action, key) -> {
-            BooleanConfig config = Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT;
-            config.toggleBooleanValue();
-            MessageUtils.printBooleanConfigToggleMessage(config);
-            return ActionResult.SUCCESS;
-        });
-        Hotkeys.GHOST_BLOCK_REMOVER.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.HOTBAR_SWAP_1.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.HOTBAR_SWAP_2.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.HOTBAR_SWAP_3.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.HOTBAR_SCROLL.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.OPEN_CONFIG_GUI.getKeyBind().setCallback((a, k) -> { BaseScreen.openScreen(ConfigScreen.create(null)); return ActionResult.SUCCESS; });
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.RELOAD_LANGUAGE_PACKS.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.TOOL_PICK.getKeyBind().setCallback(callbackGeneric);
-        Hotkeys.ZOOM_ACTIVATE.getKeyBind().setCallback(callbackGeneric);
+        Hotkeys.SKIP_ALL_RENDERING.setHotkeyCallback(HotkeyCallback.of(Actions.TOGGLE_SKIP_ALL_RENDERING));
+        Hotkeys.SKIP_WORLD_RENDERING.setHotkeyCallback(HotkeyCallback.of(Actions.TOGGLE_SKIP_WORLD_RENDERING));
 
-        Hotkeys.SKIP_ALL_RENDERING.getKeyBind().setCallback(callbackMessage);
-        Hotkeys.SKIP_WORLD_RENDERING.getKeyBind().setCallback(callbackMessage);
+        addAdjustableCallback(FeatureToggle.TWEAK_AFTER_CLICKER,            Configs.Generic.AFTER_CLICKER_CLICK_COUNT,  Callbacks::getAfterClickerToggleMessage,            "tweakeroo.message.set_after_clicker_count_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_GRID,            Configs.Generic.BREAKING_GRID_SIZE,         Callbacks::getBreakingGridToggleMessage,            "tweakeroo.message.set_breaking_grid_size_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE,        Configs.Generic.HOTBAR_SLOT_CYCLE_MAX,      Callbacks::getHotbarSlotCycleToggleMessage,         "tweakeroo.message.set_hotbar_slot_cycle_max_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER,   Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX, Callbacks::getHotbarSlotRandomizerToggleMessage,  "tweakeroo.message.set_hotbar_slot_randomizer_max_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_GRID,           Configs.Generic.PLACEMENT_GRID_SIZE,        Callbacks::getPlacementGridToggleMessage,           "tweakeroo.message.set_placement_grid_size_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_LIMIT,          Configs.Generic.PLACEMENT_LIMIT,            Callbacks::getPlacementLimitToggleMessage,          "tweakeroo.message.set_placement_limit_to");
 
-        createAdjustableCallbackFor(FeatureToggle.TWEAK_AFTER_CLICKER);
-        createAdjustableCallbackFor(FeatureToggle.TWEAK_BREAKING_GRID);
-        createAdjustableCallbackFor(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE);
-        createAdjustableCallbackFor(FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER);
-        createAdjustableCallbackFor(FeatureToggle.TWEAK_PLACEMENT_GRID);
-        createAdjustableCallbackFor(FeatureToggle.TWEAK_PLACEMENT_LIMIT);
-        createAdjustableCallbackFor(FeatureToggle.TWEAK_SNAP_AIM);
-        createAdjustableCallbackFor(FeatureToggle.TWEAK_ZOOM);
-    }
+        Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(AdjustableValueHotkeyCallback.createWrapping(null, Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW, 0, 2)
+                    .setAdjustmentEnabledCondition(FeatureToggle.TWEAK_HOTBAR_SCROLL::getBooleanValue));
 
-    private static void createAdjustableCallbackFor(FeatureToggle feature)
-    {
-        feature.getKeyBind().setCallback(new AdjustableKeyCallback(null, new KeyCallbackToggleWithSpecialMessage(feature.getBooleanConfig())));
+        FeatureToggle.TWEAK_BREAKING_RESTRICTION.setHotkeyCallback(AdjustableValueHotkeyCallback.create(
+                FeatureToggle.TWEAK_BREAKING_RESTRICTION.getBooleanConfig(), Configs.Generic.BREAKING_RESTRICTION_MODE)
+                   .setToggleMessageFactory(Callbacks::getBreakingRestrictionToggleMessage)
+                   .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", Configs.Generic.BREAKING_RESTRICTION_MODE.getValue().getDisplayName())));
+
+        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setHotkeyCallback(AdjustableValueHotkeyCallback.create(
+                FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanConfig(), Configs.Generic.PLACEMENT_RESTRICTION_MODE)
+                   .setToggleMessageFactory(Callbacks::getFastBlockPlacementToggleMessage)
+                   .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue().getDisplayName())));
+
+        FeatureToggle.TWEAK_FLY_SPEED.setHotkeyCallback(AdjustableValueHotkeyCallback.createClampedDoubleDelegate(
+                FeatureToggle.TWEAK_FLY_SPEED.getBooleanConfig(), Configs::getActiveFlySpeedConfig, 0, 4.0, () -> BaseScreen.isCtrlDown() ? 0.02 : 0.005)
+                    .setToggleMessageFactory(Callbacks::getFlySpeedToggleMessage)
+                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", String.format("%.4f", Configs.getActiveFlySpeedConfig().getDoubleValue()))));
+
+        FeatureToggle.TWEAK_SNAP_AIM.setHotkeyCallback(AdjustableValueHotkeyCallback.createClampedDoubleDelegate(
+                FeatureToggle.TWEAK_SNAP_AIM.getBooleanConfig(),
+                () -> Configs.Generic.SNAP_AIM_MODE.getValue() == SnapAimMode.PITCH ? Configs.Generic.SNAP_AIM_PITCH_STEP : Configs.Generic.SNAP_AIM_YAW_STEP, 0, 360.0,
+                (wheel) -> wheel > 0 ? 2.0 : 0.5)
+                .setToggleMessageFactory(Callbacks::getSnapAimToggleMessage)
+                .addAdjustListener(() -> {
+                    SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
+                    DoubleConfig config = mode == SnapAimMode.PITCH ? Configs.Generic.SNAP_AIM_PITCH_STEP : Configs.Generic.SNAP_AIM_YAW_STEP;
+                    String key = mode == SnapAimMode.PITCH ? "tweakeroo.message.set_snap_aim_pitch_step_to" : "tweakeroo.message.set_snap_aim_yaw_step_to";
+                    MessageUtils.printCustomActionbarMessage(key, config.getStringValue());
+                }));
+
+        FeatureToggle.TWEAK_ZOOM.setHotkeyCallback(AdjustableValueHotkeyCallback.createClamped(
+                FeatureToggle.TWEAK_ZOOM.getBooleanConfig(), Configs.Generic.ZOOM_FOV, () -> BaseScreen.isCtrlDown() ? 5.0 : 1.0)
+                    .setToggleMessageFactory(Callbacks::getZoomToggleMessage)
+                    .addAdjustListener(MiscUtils::onZoomActivated)
+                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to", String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
+
+        Hotkeys.ZOOM_ACTIVATE.setHotkeyCallback(AdjustableValueHotkeyCallback.createClamped(
+                null, Configs.Generic.ZOOM_FOV, () -> BaseScreen.isCtrlDown() ? 5.0 : 1.0)
+                    .setToggleMessageFactory(Callbacks::getZoomToggleMessage)
+                    .addAdjustListener(MiscUtils::onZoomActivated)
+                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to", String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
     }
 
     public static class FeatureCallbackHold implements ValueChangeCallback<Boolean>
     {
-        private final int keyCode;
+        private final IntSupplier keyCode;
 
-        public FeatureCallbackHold(int keyCode)
+        public FeatureCallbackHold(IntSupplier keyCode)
         {
             this.keyCode = keyCode;
         }
@@ -172,400 +186,196 @@ public class Callbacks
         @Override
         public void onValueChanged(Boolean newValue, Boolean oldValue)
         {
+            int keyCode = this.keyCode.getAsInt();
+
             if (newValue)
             {
-                KeyBinding.setKeyBindState(this.keyCode, true);
-                KeyBinding.onTick(this.keyCode);
+                KeyBinding.setKeyBindState(keyCode, true);
+                KeyBinding.onTick(keyCode);
             }
             else
             {
-                KeyBinding.setKeyBindState(this.keyCode, false);
+                KeyBinding.setKeyBindState(keyCode, false);
             }
         }
     }
 
-    public static class KeyCallbackHotkeyWithMessage implements HotkeyCallback
+    private static AdjustableValueHotkeyCallback addAdjustableCallback(FeatureToggle feature,
+                                                                       IntegerConfig intConfig,
+                                                                       Function<BooleanConfig, String> toggleMessageFactory,
+                                                                       String adjustMessageKey)
     {
-        private final Minecraft mc;
+        AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.createClamped(feature.getBooleanConfig(), intConfig)
+                .setToggleMessageFactory(toggleMessageFactory)
+                .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, intConfig.getStringValue()));
+        feature.setHotkeyCallback(callback);
+        return callback;
+    }
 
-        public KeyCallbackHotkeyWithMessage(Minecraft mc)
+    private static AdjustableValueHotkeyCallback createFlySpeedAdjustCallback(int preset, DoubleConfig config, Action action)
+    {
+        return AdjustableValueHotkeyCallback.createClamped(null, config, 0, 4.0, () -> BaseScreen.isCtrlDown() ? 0.1 : 0.005)
+                .setToggleAction(action)
+                .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", preset, String.format("%.4f", config.getDoubleValue())));
+    }
+
+    private static String getAfterClickerToggleMessage(BooleanConfig config)
+    {
+        if (config.getBooleanValue())
         {
-            this.mc = mc;
+            String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
+            return StringUtils.translate("tweakeroo.message.toggled_after_clicker_on", strValue);
         }
-
-        @Override
-        public ActionResult onKeyAction(KeyAction action, KeyBind key)
+        else
         {
-            if (key == Hotkeys.SKIP_ALL_RENDERING.getKeyBind())
-            {
-                this.mc.skipRenderWorld = ! this.mc.skipRenderWorld;
-
-                String pre = this.mc.skipRenderWorld ? BaseScreen.TXT_GREEN : BaseScreen.TXT_RED;
-                String status = StringUtils.translate("tweakeroo.message.value." + (this.mc.skipRenderWorld ? "on" : "off"));
-                String message = StringUtils.translate("tweakeroo.message.toggled", "Skip All Rendering", pre + status + BaseScreen.TXT_RST);
-                MessageUtils.printCustomActionbarMessage(message);
-            }
-            else if (key == Hotkeys.SKIP_WORLD_RENDERING.getKeyBind())
-            {
-                skipWorldRendering = ! skipWorldRendering;
-
-                boolean enabled = skipWorldRendering;
-                String pre = enabled ? BaseScreen.TXT_GREEN : BaseScreen.TXT_RED;
-                String status = StringUtils.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
-                String message = StringUtils.translate("tweakeroo.message.toggled", "Skip World Rendering", pre + status + BaseScreen.TXT_RST);
-                MessageUtils.printCustomActionbarMessage(message);
-            }
-
-            return ActionResult.SUCCESS;
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
         }
     }
 
-    private static class KeyCallbackHotkeysGeneric implements HotkeyCallback
+    private static String getBreakingGridToggleMessage(BooleanConfig config)
     {
-        private final Minecraft mc;
-
-        public KeyCallbackHotkeysGeneric(Minecraft mc)
+        if (config.getBooleanValue())
         {
-            this.mc = mc;
+            String strValue = Configs.Generic.BREAKING_GRID_SIZE.getStringValue();
+            return StringUtils.translate("tweakeroo.message.toggled_breaking_grid_on", strValue);
         }
-
-        @Override
-        public ActionResult onKeyAction(KeyAction action, KeyBind key)
+        else
         {
-            if (key == Hotkeys.TOOL_PICK.getKeyBind())
-            {
-                if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
-                {
-                    InventoryUtils.trySwitchToEffectiveTool(this.mc.objectMouseOver.getBlockPos());
-                    return ActionResult.SUCCESS;
-                }
-
-                return ActionResult.FAIL;
-            }
-            else if (key == Hotkeys.COPY_SIGN_TEXT.getKeyBind())
-            {
-                RayTraceResult trace = this.mc.objectMouseOver;
-
-                if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
-                {
-                    BlockPos pos = trace.getBlockPos();
-                    TileEntity te = this.mc.world.getTileEntity(pos);
-
-                    if (te instanceof TileEntitySign)
-                    {
-                        MiscUtils.copyTextFromSign((TileEntitySign) te);
-                        MessageUtils.printCustomActionbarMessage("tweakeroo.message.sign_text_copied");
-                        return ActionResult.SUCCESS;
-                    }
-                }
-                return ActionResult.FAIL;
-            }
-            else if (key == Hotkeys.HOTBAR_SCROLL.getKeyBind())
-            {
-                if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue())
-                {
-                    int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, currentRow);
-                    return ActionResult.SUCCESS;
-                }
-                return ActionResult.PASS;
-            }
-            else if (key == Hotkeys.HOTBAR_SWAP_1.getKeyBind())
-            {
-                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
-                {
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 0);
-                    return ActionResult.SUCCESS;
-                }
-                return ActionResult.PASS;
-            }
-            else if (key == Hotkeys.HOTBAR_SWAP_2.getKeyBind())
-            {
-                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
-                {
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 1);
-                    return ActionResult.SUCCESS;
-                }
-                return ActionResult.PASS;
-            }
-            else if (key == Hotkeys.HOTBAR_SWAP_3.getKeyBind())
-            {
-                if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue())
-                {
-                    InventoryUtils.swapHotbarWithInventoryRow(this.mc.player, 2);
-                    return ActionResult.SUCCESS;
-                }
-                return ActionResult.PASS;
-            }
-            else if (key == Hotkeys.BLINK_DRIVE.getKeyBind())
-            {
-                this.blinkDriveTeleport(false);
-            }
-            else if (key == Hotkeys.BLINK_DRIVE_Y_LEVEL.getKeyBind())
-            {
-                this.blinkDriveTeleport(true);
-            }
-            else if (key == Hotkeys.GHOST_BLOCK_REMOVER.getKeyBind())
-            {
-                MiscUtils.antiGhostBlock(this.mc);
-            }
-            else if (key == Hotkeys.FLY_PRESET_1.getKeyBind())
-            {
-                this.setFlySpeedPreset(0);
-            }
-            else if (key == Hotkeys.FLY_PRESET_2.getKeyBind())
-            {
-                this.setFlySpeedPreset(1);
-            }
-            else if (key == Hotkeys.FLY_PRESET_3.getKeyBind())
-            {
-                this.setFlySpeedPreset(2);
-            }
-            else if (key == Hotkeys.FLY_PRESET_4.getKeyBind())
-            {
-                this.setFlySpeedPreset(3);
-            }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.getKeyBind())
-            {
-                this.setBreakingRestrictionMode(PlacementRestrictionMode.COLUMN);
-            }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.getKeyBind())
-            {
-                this.setBreakingRestrictionMode(PlacementRestrictionMode.DIAGONAL);
-            }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_FACE.getKeyBind())
-            {
-                this.setBreakingRestrictionMode(PlacementRestrictionMode.FACE);
-            }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.getKeyBind())
-            {
-                this.setBreakingRestrictionMode(PlacementRestrictionMode.LAYER);
-            }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_LINE.getKeyBind())
-            {
-                this.setBreakingRestrictionMode(PlacementRestrictionMode.LINE);
-            }
-            else if (key == Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.getKeyBind())
-            {
-                this.setBreakingRestrictionMode(PlacementRestrictionMode.PLANE);
-            }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.getKeyBind())
-            {
-                this.setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN);
-            }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.getKeyBind())
-            {
-                this.setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL);
-            }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.getKeyBind())
-            {
-                this.setPlacementRestrictionMode(PlacementRestrictionMode.FACE);
-            }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.getKeyBind())
-            {
-                this.setPlacementRestrictionMode(PlacementRestrictionMode.LAYER);
-            }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.getKeyBind())
-            {
-                this.setPlacementRestrictionMode(PlacementRestrictionMode.LINE);
-            }
-            else if (key == Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.getKeyBind())
-            {
-                this.setPlacementRestrictionMode(PlacementRestrictionMode.PLANE);
-            }
-            else if (key == Hotkeys.RELOAD_LANGUAGE_PACKS.getKeyBind())
-            {
-                this.mc.getLanguageManager().onResourceManagerReload(this.mc.getResourceManager());
-                MessageUtils.success("tweakeroo.message.language_packs_reloaded");
-            }
-            else if (key == Hotkeys.TOGGLE_GRAB_CURSOR.getKeyBind())
-            {
-                if (this.mc.inGameHasFocus)
-                {
-                    this.mc.setIngameNotInFocus();
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.unfocusing_game");
-                }
-                else
-                {
-                    this.mc.setIngameFocus();
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.focusing_game");
-                }
-            }
-            else if (key == Hotkeys.ZOOM_ACTIVATE.getKeyBind())
-            {
-                if (action == KeyAction.PRESS)
-                {
-                    MiscUtils.onZoomActivated();
-                }
-                else
-                {
-                    MiscUtils.onZoomDeactivated();
-                }
-            }
-
-            return ActionResult.SUCCESS;
-        }
-
-        private void setFlySpeedPreset(int preset)
-        {
-            Configs.Internal.FLY_SPEED_PRESET.setValue(preset);
-
-            float speed = (float) Configs.getActiveFlySpeedConfig().getDoubleValue();
-            String strPreset = BaseScreen.TXT_GREEN + (preset + 1) + BaseScreen.TXT_RST;
-            String strSpeed = String.format("%s%.3f%s", BaseScreen.TXT_GREEN, speed, BaseScreen.TXT_RST);
-            MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", strPreset, strSpeed);
-        }
-
-        private void setBreakingRestrictionMode(PlacementRestrictionMode mode)
-        {
-            Configs.Generic.BREAKING_RESTRICTION_MODE.setValue(mode);
-
-            String str = BaseScreen.TXT_GREEN + mode.getDisplayName() + BaseScreen.TXT_RST;
-            MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", str);
-        }
-
-        private void setPlacementRestrictionMode(PlacementRestrictionMode mode)
-        {
-            Configs.Generic.PLACEMENT_RESTRICTION_MODE.setValue(mode);
-
-            String str = BaseScreen.TXT_GREEN + mode.getDisplayName() + BaseScreen.TXT_RST;
-            MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", str);
-        }
-
-        private void blinkDriveTeleport(boolean maintainY)
-        {
-            if (this.mc.player.capabilities.isCreativeMode)
-            {
-                Entity entity = fi.dy.masa.malilib.util.EntityUtils.getCameraEntity();
-                RayTraceResult trace = fi.dy.masa.malilib.util.RayTraceUtils
-                        .getRayTraceFromEntity(this.mc.world, entity, RayTraceFluidHandling.SOURCE_ONLY,
-                                false, this.mc.gameSettings.renderDistanceChunks * 16 + 200);
-
-                if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
-                {
-                    Vec3d pos = trace.hitVec;
-                    pos = PositionUtils.adjustPositionToSideOfEntity(pos, this.mc.player, trace.sideHit);
-
-                    this.mc.player.sendChatMessage(String.format("/tp @p %.6f %.6f %.6f", pos.x, maintainY ? this.mc.player.posY : pos.y, pos.z));
-                }
-            }
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
         }
     }
 
-    private static class KeyCallbackToggleWithSpecialMessage implements HotkeyCallback
+    private static String getBreakingRestrictionToggleMessage(BooleanConfig config)
     {
-        private final BooleanConfig config;
-
-        private KeyCallbackToggleWithSpecialMessage(BooleanConfig config)
+        if (config.getBooleanValue())
         {
-            this.config = config;
+            String strMode = Configs.Generic.BREAKING_RESTRICTION_MODE.getValue().getDisplayName();
+            return StringUtils.translate("tweakeroo.message.toggled_breaking_restriction_on", strMode);
         }
-
-        @Override
-        public ActionResult onKeyAction(KeyAction action, KeyBind key)
+        else
         {
-            this.config.toggleBooleanValue();
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+        }
+    }
 
-            boolean enabled = this.config.getBooleanValue();
-            String strStatus = StringUtils.translate("tweakeroo.message.value." + (enabled ? "on" : "off"));
-            String preGreen = BaseScreen.TXT_GREEN;
-            String preRed = BaseScreen.TXT_RED;
-            String rst = BaseScreen.TXT_RST;
-            String prettyName = this.config.getPrettyName();
-            strStatus = (enabled ? preGreen : preRed) + strStatus + rst;
+    private static String getFastBlockPlacementToggleMessage(BooleanConfig config)
+    {
+        if (config.getBooleanValue())
+        {
+            String strMode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue().getDisplayName();
+            return StringUtils.translate("tweakeroo.message.toggled_fast_placement_mode_on", strMode);
+        }
+        else
+        {
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+        }
+    }
 
-            if (key == FeatureToggle.TWEAK_FLY_SPEED.getKeyBind())
+    private static String getFlySpeedToggleMessage(BooleanConfig config)
+    {
+        if (config.getBooleanValue())
+        {
+            int preset = Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1;
+            String strSpeed = String.format("%.3f", Configs.getActiveFlySpeedConfig().getDoubleValue());
+            return StringUtils.translate("tweakeroo.message.toggled_fly_speed_on", preset, strSpeed);
+        }
+        else
+        {
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+        }
+    }
+
+    private static String getHotbarSlotCycleToggleMessage(BooleanConfig config)
+    {
+        if (config.getBooleanValue())
+        {
+            String strValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getStringValue();
+            return StringUtils.translate("tweakeroo.message.toggled_slot_cycle_on", strValue);
+        }
+        else
+        {
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+        }
+    }
+
+    private static String getHotbarSlotRandomizerToggleMessage(BooleanConfig config)
+    {
+        if (config.getBooleanValue())
+        {
+            String strValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getStringValue();
+            return StringUtils.translate("tweakeroo.message.toggled_slot_randomizer_on", strValue);
+        }
+        else
+        {
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+        }
+    }
+
+    private static String getPlacementGridToggleMessage(BooleanConfig config)
+    {
+        if (config.getBooleanValue())
+        {
+            String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
+            return StringUtils.translate("tweakeroo.message.toggled_placement_grid_on", strValue);
+        }
+        else
+        {
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+        }
+    }
+
+    private static String getPlacementLimitToggleMessage(BooleanConfig config)
+    {
+        if (config.getBooleanValue())
+        {
+            String strValue = Configs.Generic.PLACEMENT_LIMIT.getStringValue();
+            return StringUtils.translate("tweakeroo.message.toggled_placement_limit_on", strValue);
+        }
+        else
+        {
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+        }
+    }
+
+    private static String getSnapAimToggleMessage(BooleanConfig config)
+    {
+        if (config.getBooleanValue())
+        {
+            SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
+
+            if (mode == SnapAimMode.YAW)
             {
-                if (enabled)
-                {
-                    String strPreset = preGreen + (Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1) + rst;
-                    String strSpeed = String.format("%s%.3f%s", preGreen, Configs.getActiveFlySpeedConfig().getDoubleValue(), rst);
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_fly_speed_on", strStatus, strPreset, strSpeed);
-                }
-                else
-                {
-                    EntityPlayer player = Minecraft.getMinecraft().player;
-
-                    if (player != null)
-                    {
-                        player.capabilities.setFlySpeed(0.05f);
-                    }
-
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled", prettyName, strStatus);
-                }
+                String yaw = Configs.Generic.SNAP_AIM_YAW_STEP.getStringValue();
+                return StringUtils.translate("tweakeroo.message.toggled_snap_aim_on_yaw", yaw);
+            }
+            else if (mode == SnapAimMode.PITCH)
+            {
+                String pitch = Configs.Generic.SNAP_AIM_PITCH_STEP.getStringValue();
+                return StringUtils.translate("tweakeroo.message.toggled_snap_aim_on_pitch", pitch);
             }
             else
             {
-                if (enabled == false)
-                {
-                    MessageUtils.printBooleanConfigToggleMessage(this.config);
-                    return ActionResult.SUCCESS;
-                }
-
-                if (key == FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeyBind())
-                {
-                    String strMode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue().getDisplayName();
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_fast_placement_mode_on", strStatus, preGreen + strMode + rst);
-                }
-                else if (key == FeatureToggle.TWEAK_AFTER_CLICKER.getKeyBind())
-                {
-                    String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_after_clicker_on", strStatus, preGreen + strValue + rst);
-                }
-                else if (key == FeatureToggle.TWEAK_PLACEMENT_LIMIT.getKeyBind())
-                {
-                    String strValue = Configs.Generic.PLACEMENT_LIMIT.getStringValue();
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_placement_limit_on", strStatus, preGreen + strValue + rst);
-                }
-                else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getKeyBind())
-                {
-                    String strValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getStringValue();
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_slot_cycle_on", strStatus, preGreen + strValue + rst);
-                }
-                else if (key == FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getKeyBind())
-                {
-                    String strValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getStringValue();
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_slot_randomizer_on", strStatus, preGreen + strValue + rst);
-                }
-                else if (key == FeatureToggle.TWEAK_PLACEMENT_GRID.getKeyBind())
-                {
-                    String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_placement_grid_on", strStatus, preGreen + strValue + rst);
-                }
-                else if (key == FeatureToggle.TWEAK_BREAKING_GRID.getKeyBind())
-                {
-                    String strValue = Configs.Generic.BREAKING_GRID_SIZE.getStringValue();
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_breaking_grid_on", strStatus, preGreen + strValue + rst);
-                }
-                else if (key == FeatureToggle.TWEAK_ZOOM.getKeyBind())
-                {
-                    String strValue = String.format("%s%.1f%s", preGreen, Configs.Generic.ZOOM_FOV.getDoubleValue(), rst);
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_zoom_on", strStatus, strValue);
-                }
-                else if (key == FeatureToggle.TWEAK_SNAP_AIM.getKeyBind())
-                {
-                    SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
-
-                    if (mode == SnapAimMode.YAW)
-                    {
-                        String yaw = String.valueOf(Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue());
-                        MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_snap_aim_on_yaw", strStatus, preGreen + yaw + rst);
-                    }
-                    else if (mode == SnapAimMode.PITCH)
-                    {
-                        String pitch = String.valueOf(Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue());
-                        MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_snap_aim_on_pitch", strStatus, preGreen + pitch + rst);
-                    }
-                    else
-                    {
-                        String yaw = String.valueOf(Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue());
-                        String pitch = String.valueOf(Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue());
-                        MessageUtils.printCustomActionbarMessage("tweakeroo.message.toggled_snap_aim_on_both", strStatus, preGreen + yaw + rst, preGreen + pitch + rst);
-                    }
-                }
+                String yaw = Configs.Generic.SNAP_AIM_YAW_STEP.getStringValue();
+                String pitch = Configs.Generic.SNAP_AIM_PITCH_STEP.getStringValue();
+                return StringUtils.translate("tweakeroo.message.toggled_snap_aim_on_both", yaw, pitch);
             }
+        }
+        else
+        {
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+        }
+    }
 
-            return ActionResult.SUCCESS;
+    private static String getZoomToggleMessage(BooleanConfig config)
+    {
+        if (config.getBooleanValue())
+        {
+            String strValue = String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue());
+            return StringUtils.translate("tweakeroo.message.toggled_zoom_on", strValue);
+        }
+        else
+        {
+            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
         }
     }
 }

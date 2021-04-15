@@ -22,6 +22,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.BaseScreen;
+import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.IRayPositionHandler;
@@ -36,6 +37,7 @@ public class MiscUtils
 {
     private static final HashMap<String, SimpleDateFormat> DATE_FORMATS = new HashMap<>();
 
+    public static boolean skipWorldRendering;
     private static net.minecraft.util.text.ITextComponent[] previousSignText;
     private static String previousChatText = "";
     private static final Date DATE = new Date();
@@ -130,7 +132,7 @@ public class MiscUtils
         }
     }
 
-    public static void antiGhostBlock(Minecraft mc)
+    public static ActionResult antiGhostBlock(Minecraft mc)
     {
         double range = mc.playerController.getBlockReachDistance();
         EntityPlayer player = mc.player;
@@ -196,6 +198,8 @@ public class MiscUtils
         {
             InventoryUtils.swapSlots(container, swappedSlotMain, hotbarSlot);
         }
+
+        return ActionResult.SUCCESS;
     }
 
     public static void addCustomBlockBreakingParticles(ParticleManager manager, World world, Random rand, BlockPos pos, IBlockState state)
