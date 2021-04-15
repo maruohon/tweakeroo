@@ -209,24 +209,20 @@ public class InventoryUtils
         }
     }
 
-    public static void trySwitchToEffectiveTool(BlockPos pos)
+    public static void trySwitchToEffectiveTool(Minecraft mc, BlockPos pos)
     {
-        if (FeatureToggle.TWEAK_TOOL_SWITCH.getBooleanValue())
+        EntityPlayer player = mc.player;
+        IBlockState state = mc.world.getBlockState(pos);
+        ItemStack stack = player.getHeldItemMainhand();
+
+        if (stack.isEmpty() || stack.getDestroySpeed(state) <= 1f)
         {
-            Minecraft mc = Minecraft.getMinecraft();
-            EntityPlayer player = mc.player;
-            IBlockState state = mc.world.getBlockState(pos);
-            ItemStack stack = player.getHeldItemMainhand();
+            Container container = player.inventoryContainer;
+            int slotNumber = findSlotWithEffectiveItemWithDurabilityLeft(container, state);
 
-            if (stack.isEmpty() || stack.getDestroySpeed(state) <= 1f)
+            if (slotNumber != -1 && (slotNumber - 36) != player.inventory.currentItem)
             {
-                Container container = player.inventoryContainer;
-                int slotNumber = findSlotWithEffectiveItemWithDurabilityLeft(container, state);
-
-                if (slotNumber != -1 && (slotNumber - 36) != player.inventory.currentItem)
-                {
-                    swapItemToHand(player, EnumHand.MAIN_HAND, slotNumber);
-                }
+                swapItemToHand(player, EnumHand.MAIN_HAND, slotNumber);
             }
         }
     }

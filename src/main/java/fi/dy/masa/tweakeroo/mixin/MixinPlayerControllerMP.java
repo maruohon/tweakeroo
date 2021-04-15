@@ -1,11 +1,14 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,6 +27,8 @@ import fi.dy.masa.tweakeroo.util.InventoryUtils;
 @Mixin(PlayerControllerMP.class)
 public abstract class MixinPlayerControllerMP
 {
+    @Shadow @Final private Minecraft mc;
+
     @Inject(method = "processRightClick", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/multiplayer/PlayerControllerMP;syncCurrentPlayItem()V"),
@@ -73,7 +78,11 @@ public abstract class MixinPlayerControllerMP
                                                 ")Lnet/minecraft/block/state/IBlockState;", ordinal = 0))
     private void onClickBlockPre(BlockPos pos, EnumFacing face, CallbackInfoReturnable<Boolean> cir)
     {
-        InventoryUtils.trySwitchToEffectiveTool(pos);
+        if (FeatureToggle.TWEAK_TOOL_SWITCH.getBooleanValue())
+        {
+            InventoryUtils.trySwitchToEffectiveTool(this.mc, pos);
+        }
+
         PlacementTweaks.cacheStackInHand(EnumHand.MAIN_HAND);
     }
 

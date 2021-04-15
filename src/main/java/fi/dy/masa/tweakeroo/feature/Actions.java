@@ -212,7 +212,7 @@ public class Actions
     {
         if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
         {
-            InventoryUtils.trySwitchToEffectiveTool(mc.objectMouseOver.getBlockPos());
+            InventoryUtils.trySwitchToEffectiveTool(mc, mc.objectMouseOver.getBlockPos());
             return ActionResult.SUCCESS;
         }
 
