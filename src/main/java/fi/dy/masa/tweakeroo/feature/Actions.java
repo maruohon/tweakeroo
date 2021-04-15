@@ -27,8 +27,8 @@ import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 
 public class Actions
 {
-    public static final NamedAction BLINK_DRIVE_TELEPORT_GROUND             = register("blockDriveTeleportGround", (ctx) -> blinkDriveTeleport(ctx.mc, false));
-    public static final NamedAction BLINK_DRIVE_TELEPORT_SAME_Y             = register("blockDriveTeleportSameY", (ctx) -> blinkDriveTeleport(ctx.mc, true));
+    public static final NamedAction BLINK_DRIVE_TELEPORT_GROUND             = register("blinkDriveTeleportGround", (ctx) -> blinkDriveTeleport(ctx.mc, false));
+    public static final NamedAction BLINK_DRIVE_TELEPORT_SAME_Y             = register("blinkDriveTeleportSameY", (ctx) -> blinkDriveTeleport(ctx.mc, true));
     public static final NamedAction COPY_SIGN_TEXT                          = register("copySignText", (ctx) -> copySignText(ctx.mc));
     public static final NamedAction GHOST_BLOCK_REMOVER_MANUAL              = register("ghostBlockRemoverManual", (ctx) -> MiscUtils.antiGhostBlock(ctx.mc));
     public static final NamedAction HOTBAR_SCROLL                           = register("hotbarScroll", (ctx) -> hotbarScroll(ctx.mc));

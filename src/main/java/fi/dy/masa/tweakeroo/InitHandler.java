@@ -18,6 +18,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.event.ClientWorldChangeHandler;
 import fi.dy.masa.tweakeroo.event.InputHandler;
 import fi.dy.masa.tweakeroo.event.RenderHandler;
+import fi.dy.masa.tweakeroo.feature.Actions;
 import fi.dy.masa.tweakeroo.gui.ConfigScreen;
 import fi.dy.masa.tweakeroo.gui.widget.DisableToggleConfigWidget;
 import fi.dy.masa.tweakeroo.gui.widget.FeatureToggleConfigWidget;
@@ -49,6 +50,7 @@ public class InitHandler implements InitializationHandler
         BlockPlacementPositionHandler.INSTANCE.registerPositionProvider(PlacementTweaks::getOverriddenPlacementPosition);
         ClientWorldChangeEventDispatcher.INSTANCE.registerClientWorldChangeHandler(new ClientWorldChangeHandler());
 
+        Actions.init();
         Callbacks.init();
     }
 }
