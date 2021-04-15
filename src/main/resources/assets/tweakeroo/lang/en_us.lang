@@ -550,10 +550,14 @@ tweakeroo.message.repair_mode.swapped_repairable_item_to_slot=Swapped a repairab
 tweakeroo.message.set_after_clicker_count_to=Set After Clicker click count to §a%s
 tweakeroo.message.set_breaking_grid_size_to=Set Breaking Grid size to §a%s
 tweakeroo.message.set_breaking_restriction_mode_to=Set Breaking Restriction mode to §a%s
+tweakeroo.message.set_fast_left_click_count_to=Set Fast Left Click count to §a%s clicks per tick
+tweakeroo.message.set_fast_right_click_count_to=Set Fast Right Click count to §a%s clicks per tick
 tweakeroo.message.set_fly_speed_preset_to=Switched to fly speed preset §a%s§r, speed: §a%s
 tweakeroo.message.set_fly_speed_to=Set fly speed of preset §a%s§r to §a%s
 tweakeroo.message.set_hotbar_slot_cycle_max_to=Set Hotbar Slot Cycle max slot to §a%s
 tweakeroo.message.set_hotbar_slot_randomizer_max_to=Set Hotbar Slot Randomizer max slot to §a%s
+tweakeroo.message.set_periodic_attack_interval_to=Set Periodic Attack interval to §a%s§r ticks
+tweakeroo.message.set_periodic_use_interval_to=Set Periodic Use interval to §a%s§r ticks
 tweakeroo.message.set_placement_grid_size_to=Set Placement Grid size to §a%s
 tweakeroo.message.set_placement_limit_to=Set Placement Limit to §a%s
 tweakeroo.message.set_placement_restriction_mode_to=Set Placement Restriction mode to §a%s
@@ -569,8 +573,12 @@ tweakeroo.message.swapped_low_durability_item_off_players_hand=Swapped a low dur
 tweakeroo.message.toggled_after_clicker_on=Toggled After Clicker §aON§r, clicks: §a%s
 tweakeroo.message.toggled_breaking_grid_on=Toggled Breaking Grid §aON§r, grid size: §a%s
 tweakeroo.message.toggled_breaking_restriction_on=Toggled Breaking Restriciton §aON§r, mode: §a%s
+tweakeroo.message.toggled_fast_left_click_on=Toggled Fast Left Click §aON§r, §a%s§r clicks per tick
+tweakeroo.message.toggled_fast_right_click_on=Toggled Fast Right Click §aON§r, §a%s§r clicks per tick
 tweakeroo.message.toggled_fly_speed_on=Toggled Fly Speed §aON§r, preset: §a%s§r, speed: §a%s
 tweakeroo.message.toggled_fast_block_placement_on=Toggled Fast Block Placement §aON§r, mode: §a%s
+tweakeroo.message.toggled_periodic_attack_on=Toggled Periodic Attack §aON§r, interval = §a%s§r ticks
+tweakeroo.message.toggled_periodic_use_on=Toggled Periodic Use §aON§r, interval = §a%s§r ticks
 tweakeroo.message.toggled_placement_grid_on=Toggled Placement Grid §aON§r, grid size: §a%s
 tweakeroo.message.toggled_placement_limit_on=Toggled Placement Limit §aON§r, limit: §a%s
 tweakeroo.message.toggled_slot_cycle_on=Toggled Hotbar Slot Cycle §aON§r, max slot: §a%s

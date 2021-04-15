@@ -132,8 +132,12 @@ public class Callbacks
 
         addAdjustableCallback(FeatureToggle.TWEAK_AFTER_CLICKER,            Configs.Generic.AFTER_CLICKER_CLICK_COUNT,  "tweakeroo.message.toggled_after_clicker_on",   "tweakeroo.message.set_after_clicker_count_to");
         addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_GRID,            Configs.Generic.BREAKING_GRID_SIZE,         "tweakeroo.message.toggled_breaking_grid_on",   "tweakeroo.message.set_breaking_grid_size_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_FAST_LEFT_CLICK,          Configs.Generic.FAST_LEFT_CLICK_COUNT,      "tweakeroo.message.toggled_fast_left_click_on", "tweakeroo.message.set_fast_left_click_count_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_FAST_RIGHT_CLICK,         Configs.Generic.FAST_RIGHT_CLICK_COUNT,     "tweakeroo.message.toggled_fast_right_click_on","tweakeroo.message.set_fast_right_click_count_to");
         addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE,        Configs.Generic.HOTBAR_SLOT_CYCLE_MAX,      "tweakeroo.message.toggled_slot_cycle_on",      "tweakeroo.message.set_hotbar_slot_cycle_max_to");
         addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER,   Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX, "tweakeroo.message.toggled_slot_randomizer_on", "tweakeroo.message.set_hotbar_slot_randomizer_max_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PERIODIC_ATTACK,          Configs.Generic.PERIODIC_ATTACK_INTERVAL,   "tweakeroo.message.toggled_periodic_attack_on", "tweakeroo.message.set_periodic_attack_interval_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PERIODIC_USE,             Configs.Generic.PERIODIC_USE_INTERVAL,      "tweakeroo.message.toggled_periodic_use_on",    "tweakeroo.message.set_periodic_use_interval_to");
         addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_GRID,           Configs.Generic.PLACEMENT_GRID_SIZE,        "tweakeroo.message.toggled_placement_grid_on",  "tweakeroo.message.set_placement_grid_size_to");
         addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_LIMIT,          Configs.Generic.PLACEMENT_LIMIT,            "tweakeroo.message.toggled_placement_limit_on", "tweakeroo.message.set_placement_limit_to");
 
