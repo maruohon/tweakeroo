@@ -245,7 +245,7 @@ public class Configs
     {
         public static final IntegerConfig FLY_SPEED_PRESET                  = new IntegerConfig("flySpeedPreset", 0, 0, 3);
         public static final DoubleConfig GAMMA_VALUE_ORIGINAL               = new DoubleConfig("gammaValueOriginal", -1, -1, 1000);
-        public static final IntegerConfig HOTBAR_SCROLL_CURRENT_ROW         = new IntegerConfig("hotbarScrollCurrentRow", 3, 0, 3);
+        public static final IntegerConfig HOTBAR_SCROLL_CURRENT_ROW         = new IntegerConfig("hotbarScrollCurrentRow", 2, 0, 2);
         public static final DoubleConfig SLIME_BLOCK_SLIPPERINESS_ORIGINAL  = new DoubleConfig("slimeBlockSlipperinessOriginal", 0.8, 0, 1);
         public static final DoubleConfig SNAP_AIM_LAST_PITCH                = new DoubleConfig("snapAimLastPitch", 0, -135, 135);
         public static final DoubleConfig SNAP_AIM_LAST_YAW                  = new DoubleConfig("snapAimLastYaw", 0, 0, 360);

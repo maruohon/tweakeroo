@@ -1,6 +1,5 @@
 package fi.dy.masa.tweakeroo.config;
 
-import java.util.function.Function;
 import java.util.function.IntSupplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -10,6 +9,7 @@ import fi.dy.masa.malilib.config.ValueChangeCallback;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.config.option.DoubleConfig;
 import fi.dy.masa.malilib.config.option.IntegerConfig;
+import fi.dy.masa.malilib.config.option.OptionListConfig;
 import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.input.KeyAction;
 import fi.dy.masa.malilib.input.callback.AdjustableValueHotkeyCallback;
@@ -105,10 +105,12 @@ public class Callbacks
         Hotkeys.FLY_PRESET_3.setHotkeyCallback(createFlySpeedAdjustCallback(3, Configs.Generic.FLY_SPEED_PRESET_3, Actions.SET_FLY_SPEED_PRESET_3.getAction()));
         Hotkeys.FLY_PRESET_4.setHotkeyCallback(createFlySpeedAdjustCallback(4, Configs.Generic.FLY_SPEED_PRESET_4, Actions.SET_FLY_SPEED_PRESET_4.getAction()));
         Hotkeys.GHOST_BLOCK_REMOVER.setHotkeyCallback(HotkeyCallback.of(Actions.GHOST_BLOCK_REMOVER_MANUAL));
+        Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(AdjustableValueHotkeyCallback.createWrapping(null, Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW, 0, 2)
+                                                    .setAdjustmentEnabledCondition(FeatureToggle.TWEAK_HOTBAR_SCROLL::getBooleanValue)
+                                                    .setToggleAction(Actions.HOTBAR_SCROLL.getAction()).setReverseDirection(true).setTriggerAlwaysOnRelease(true));
         Hotkeys.HOTBAR_SWAP_1.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_1));
         Hotkeys.HOTBAR_SWAP_2.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_2));
         Hotkeys.HOTBAR_SWAP_3.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_3));
-        Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SCROLL));
         Hotkeys.OPEN_CONFIG_GUI.setHotkeyCallback(HotkeyCallback.of(Actions.OPEN_CONFIG_SCREEN));
         Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_COLUMN));
         Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_DIAGONAL));
@@ -119,30 +121,24 @@ public class Callbacks
         Hotkeys.RELOAD_LANGUAGE_PACKS.setHotkeyCallback(HotkeyCallback.of(Actions.RELOAD_LANGUAGE_PACKS));
         Hotkeys.TOGGLE_GRAB_CURSOR.setHotkeyCallback(HotkeyCallback.of(Actions.TOGGLE_GRAB_CURSOR));
         Hotkeys.TOOL_PICK.setHotkeyCallback(HotkeyCallback.of(Actions.TOOL_PICK));
-        Hotkeys.ZOOM_ACTIVATE.setHotkeyCallback((a, k) -> Actions.zoomActivate(a == KeyAction.PRESS));
-
+        Hotkeys.ZOOM_ACTIVATE.setHotkeyCallback(AdjustableValueHotkeyCallback.createClamped(null, Configs.Generic.ZOOM_FOV, () -> BaseScreen.isCtrlDown() ? 5.0 : 1.0)
+                                                    .setToggleMessageFactory(Callbacks::getZoomToggleMessage)
+                                                    .setHotkeyCallback((a, k) -> Actions.zoomActivate(a == KeyAction.PRESS))
+                                                    .addAdjustListener(MiscUtils::onZoomActivated)
+                                                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to",
+                                                                                                                      String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
         Hotkeys.SKIP_ALL_RENDERING.setHotkeyCallback(HotkeyCallback.of(Actions.TOGGLE_SKIP_ALL_RENDERING));
         Hotkeys.SKIP_WORLD_RENDERING.setHotkeyCallback(HotkeyCallback.of(Actions.TOGGLE_SKIP_WORLD_RENDERING));
 
-        addAdjustableCallback(FeatureToggle.TWEAK_AFTER_CLICKER,            Configs.Generic.AFTER_CLICKER_CLICK_COUNT,  Callbacks::getAfterClickerToggleMessage,            "tweakeroo.message.set_after_clicker_count_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_GRID,            Configs.Generic.BREAKING_GRID_SIZE,         Callbacks::getBreakingGridToggleMessage,            "tweakeroo.message.set_breaking_grid_size_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE,        Configs.Generic.HOTBAR_SLOT_CYCLE_MAX,      Callbacks::getHotbarSlotCycleToggleMessage,         "tweakeroo.message.set_hotbar_slot_cycle_max_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER,   Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX, Callbacks::getHotbarSlotRandomizerToggleMessage,  "tweakeroo.message.set_hotbar_slot_randomizer_max_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_GRID,           Configs.Generic.PLACEMENT_GRID_SIZE,        Callbacks::getPlacementGridToggleMessage,           "tweakeroo.message.set_placement_grid_size_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_LIMIT,          Configs.Generic.PLACEMENT_LIMIT,            Callbacks::getPlacementLimitToggleMessage,          "tweakeroo.message.set_placement_limit_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_AFTER_CLICKER,            Configs.Generic.AFTER_CLICKER_CLICK_COUNT,  "tweakeroo.message.toggled_after_clicker_on",   "tweakeroo.message.set_after_clicker_count_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_GRID,            Configs.Generic.BREAKING_GRID_SIZE,         "tweakeroo.message.toggled_breaking_grid_on",   "tweakeroo.message.set_breaking_grid_size_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE,        Configs.Generic.HOTBAR_SLOT_CYCLE_MAX,      "tweakeroo.message.toggled_slot_cycle_on",      "tweakeroo.message.set_hotbar_slot_cycle_max_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER,   Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX, "tweakeroo.message.toggled_slot_randomizer_on", "tweakeroo.message.set_hotbar_slot_randomizer_max_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_GRID,           Configs.Generic.PLACEMENT_GRID_SIZE,        "tweakeroo.message.toggled_placement_grid_on",  "tweakeroo.message.set_placement_grid_size_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_LIMIT,          Configs.Generic.PLACEMENT_LIMIT,            "tweakeroo.message.toggled_placement_limit_on", "tweakeroo.message.set_placement_limit_to");
 
-        Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(AdjustableValueHotkeyCallback.createWrapping(null, Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW, 0, 2)
-                    .setAdjustmentEnabledCondition(FeatureToggle.TWEAK_HOTBAR_SCROLL::getBooleanValue));
-
-        FeatureToggle.TWEAK_BREAKING_RESTRICTION.setHotkeyCallback(AdjustableValueHotkeyCallback.create(
-                FeatureToggle.TWEAK_BREAKING_RESTRICTION.getBooleanConfig(), Configs.Generic.BREAKING_RESTRICTION_MODE)
-                   .setToggleMessageFactory(Callbacks::getBreakingRestrictionToggleMessage)
-                   .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_breaking_restriction_mode_to", Configs.Generic.BREAKING_RESTRICTION_MODE.getValue().getDisplayName())));
-
-        FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setHotkeyCallback(AdjustableValueHotkeyCallback.create(
-                FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanConfig(), Configs.Generic.PLACEMENT_RESTRICTION_MODE)
-                   .setToggleMessageFactory(Callbacks::getFastBlockPlacementToggleMessage)
-                   .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_placement_restriction_mode_to", Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue().getDisplayName())));
+        addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_RESTRICTION,     Configs.Generic.BREAKING_RESTRICTION_MODE,  "tweakeroo.message.toggled_breaking_restriction_on", "tweakeroo.message.set_breaking_restriction_mode_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT,     Configs.Generic.PLACEMENT_RESTRICTION_MODE, "tweakeroo.message.toggled_fast_block_placement_on", "tweakeroo.message.set_placement_restriction_mode_to");
 
         FeatureToggle.TWEAK_FLY_SPEED.setHotkeyCallback(AdjustableValueHotkeyCallback.createClampedDoubleDelegate(
                 FeatureToggle.TWEAK_FLY_SPEED.getBooleanConfig(), Configs::getActiveFlySpeedConfig, 0, 4.0, () -> BaseScreen.isCtrlDown() ? 0.02 : 0.005)
@@ -166,48 +162,34 @@ public class Callbacks
                     .setToggleMessageFactory(Callbacks::getZoomToggleMessage)
                     .addAdjustListener(MiscUtils::onZoomActivated)
                     .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to", String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
-
-        Hotkeys.ZOOM_ACTIVATE.setHotkeyCallback(AdjustableValueHotkeyCallback.createClamped(
-                null, Configs.Generic.ZOOM_FOV, () -> BaseScreen.isCtrlDown() ? 5.0 : 1.0)
-                    .setToggleMessageFactory(Callbacks::getZoomToggleMessage)
-                    .addAdjustListener(MiscUtils::onZoomActivated)
-                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to", String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
-    }
-
-    public static class FeatureCallbackHold implements ValueChangeCallback<Boolean>
-    {
-        private final IntSupplier keyCode;
-
-        public FeatureCallbackHold(IntSupplier keyCode)
-        {
-            this.keyCode = keyCode;
-        }
-
-        @Override
-        public void onValueChanged(Boolean newValue, Boolean oldValue)
-        {
-            int keyCode = this.keyCode.getAsInt();
-
-            if (newValue)
-            {
-                KeyBinding.setKeyBindState(keyCode, true);
-                KeyBinding.onTick(keyCode);
-            }
-            else
-            {
-                KeyBinding.setKeyBindState(keyCode, false);
-            }
-        }
     }
 
     private static AdjustableValueHotkeyCallback addAdjustableCallback(FeatureToggle feature,
                                                                        IntegerConfig intConfig,
-                                                                       Function<BooleanConfig, String> toggleMessageFactory,
+                                                                       String toggleMessageKey,
                                                                        String adjustMessageKey)
     {
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.createClamped(feature.getBooleanConfig(), intConfig)
-                .setToggleMessageFactory(toggleMessageFactory)
-                .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, intConfig.getStringValue()));
+                 .setToggleMessageFactory((cfg) -> {
+                     if (cfg.getBooleanValue()) { return StringUtils.translate(toggleMessageKey, intConfig.getStringValue()); }
+                     else { return MessageUtils.getBasicBooleanConfigToggleMessage(cfg); }
+                 })
+                 .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, intConfig.getStringValue()));
+        feature.setHotkeyCallback(callback);
+        return callback;
+    }
+
+    private static AdjustableValueHotkeyCallback addAdjustableCallback(FeatureToggle feature,
+                                                                       OptionListConfig<?> config,
+                                                                       String toggleMessageKey,
+                                                                       String adjustMessageKey)
+    {
+        AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.create(feature.getBooleanConfig(), config)
+                 .setToggleMessageFactory((cfg) -> {
+                     if (cfg.getBooleanValue()) { return StringUtils.translate(toggleMessageKey, config.getValue().getDisplayName()); }
+                     else { return MessageUtils.getBasicBooleanConfigToggleMessage(cfg); }
+                 })
+                 .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, config.getValue().getDisplayName()));
         feature.setHotkeyCallback(callback);
         return callback;
     }
@@ -219,58 +201,6 @@ public class Callbacks
                 .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", preset, String.format("%.4f", config.getDoubleValue())));
     }
 
-    private static String getAfterClickerToggleMessage(BooleanConfig config)
-    {
-        if (config.getBooleanValue())
-        {
-            String strValue = Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getStringValue();
-            return StringUtils.translate("tweakeroo.message.toggled_after_clicker_on", strValue);
-        }
-        else
-        {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
-        }
-    }
-
-    private static String getBreakingGridToggleMessage(BooleanConfig config)
-    {
-        if (config.getBooleanValue())
-        {
-            String strValue = Configs.Generic.BREAKING_GRID_SIZE.getStringValue();
-            return StringUtils.translate("tweakeroo.message.toggled_breaking_grid_on", strValue);
-        }
-        else
-        {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
-        }
-    }
-
-    private static String getBreakingRestrictionToggleMessage(BooleanConfig config)
-    {
-        if (config.getBooleanValue())
-        {
-            String strMode = Configs.Generic.BREAKING_RESTRICTION_MODE.getValue().getDisplayName();
-            return StringUtils.translate("tweakeroo.message.toggled_breaking_restriction_on", strMode);
-        }
-        else
-        {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
-        }
-    }
-
-    private static String getFastBlockPlacementToggleMessage(BooleanConfig config)
-    {
-        if (config.getBooleanValue())
-        {
-            String strMode = Configs.Generic.PLACEMENT_RESTRICTION_MODE.getValue().getDisplayName();
-            return StringUtils.translate("tweakeroo.message.toggled_fast_placement_mode_on", strMode);
-        }
-        else
-        {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
-        }
-    }
-
     private static String getFlySpeedToggleMessage(BooleanConfig config)
     {
         if (config.getBooleanValue())
@@ -278,58 +208,6 @@ public class Callbacks
             int preset = Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1;
             String strSpeed = String.format("%.3f", Configs.getActiveFlySpeedConfig().getDoubleValue());
             return StringUtils.translate("tweakeroo.message.toggled_fly_speed_on", preset, strSpeed);
-        }
-        else
-        {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
-        }
-    }
-
-    private static String getHotbarSlotCycleToggleMessage(BooleanConfig config)
-    {
-        if (config.getBooleanValue())
-        {
-            String strValue = Configs.Generic.HOTBAR_SLOT_CYCLE_MAX.getStringValue();
-            return StringUtils.translate("tweakeroo.message.toggled_slot_cycle_on", strValue);
-        }
-        else
-        {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
-        }
-    }
-
-    private static String getHotbarSlotRandomizerToggleMessage(BooleanConfig config)
-    {
-        if (config.getBooleanValue())
-        {
-            String strValue = Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX.getStringValue();
-            return StringUtils.translate("tweakeroo.message.toggled_slot_randomizer_on", strValue);
-        }
-        else
-        {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
-        }
-    }
-
-    private static String getPlacementGridToggleMessage(BooleanConfig config)
-    {
-        if (config.getBooleanValue())
-        {
-            String strValue = Configs.Generic.PLACEMENT_GRID_SIZE.getStringValue();
-            return StringUtils.translate("tweakeroo.message.toggled_placement_grid_on", strValue);
-        }
-        else
-        {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
-        }
-    }
-
-    private static String getPlacementLimitToggleMessage(BooleanConfig config)
-    {
-        if (config.getBooleanValue())
-        {
-            String strValue = Configs.Generic.PLACEMENT_LIMIT.getStringValue();
-            return StringUtils.translate("tweakeroo.message.toggled_placement_limit_on", strValue);
         }
         else
         {
@@ -376,6 +254,32 @@ public class Callbacks
         else
         {
             return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+        }
+    }
+
+    public static class FeatureCallbackHold implements ValueChangeCallback<Boolean>
+    {
+        private final IntSupplier keyCode;
+
+        public FeatureCallbackHold(IntSupplier keyCode)
+        {
+            this.keyCode = keyCode;
+        }
+
+        @Override
+        public void onValueChanged(Boolean newValue, Boolean oldValue)
+        {
+            int keyCode = this.keyCode.getAsInt();
+
+            if (newValue)
+            {
+                KeyBinding.setKeyBindState(keyCode, true);
+                KeyBinding.onTick(keyCode);
+            }
+            else
+            {
+                KeyBinding.setKeyBindState(keyCode, false);
+            }
         }
     }
 }
