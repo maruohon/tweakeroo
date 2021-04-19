@@ -6,9 +6,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.MutableWorldProperties;
@@ -50,6 +52,33 @@ public abstract class MixinClientWorld extends World
                     return;
                 }
             }
+        }
+    }
+
+    @Inject(method = "scheduleBlockRerenderIfNeeded", at = @At("HEAD"), cancellable = true)
+    private void disableChunkReRenders(BlockPos pos, BlockState old, BlockState updated, CallbackInfo ci)
+    {
+        if (Configs.Disable.DISABLE_CHUNK_RENDERING.getBooleanValue())
+        {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "scheduleBlockRenders", at = @At("HEAD"), cancellable = true)
+    private void disableChunkReRenders(int x, int y, int z, CallbackInfo ci)
+    {
+        if (Configs.Disable.DISABLE_CHUNK_RENDERING.getBooleanValue())
+        {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "updateListeners", at = @At("HEAD"), cancellable = true)
+    private void disableChunkReRenders(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci)
+    {
+        if (Configs.Disable.DISABLE_CHUNK_RENDERING.getBooleanValue())
+        {
+            ci.cancel();
         }
     }
 }
