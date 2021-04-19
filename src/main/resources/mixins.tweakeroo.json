@@ -6,6 +6,7 @@
     "client": [
         "IMixinAbstractBlock",
         "IMixinAxeItem",
+        "IMixinChunkLightProvider",
         "IMixinCommandBlockExecutor",
         "IMixinHorseBaseEntity",
         "MixinAbstractClientPlayerEntity",
@@ -38,6 +39,7 @@
         "MixinItemGroup",
         "MixinItemStack",
         "MixinKeyboardInput",
+        "MixinLightingProvider",
         "MixinLivingEntity",
         "MixinMinecraftClient",
         "MixinMobSpawnerBlockEntityRenderer",
