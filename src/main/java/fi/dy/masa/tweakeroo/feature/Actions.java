@@ -8,7 +8,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.malilib.action.Action;
+import fi.dy.masa.malilib.action.ActionUtils;
 import fi.dy.masa.malilib.action.NamedAction;
+import fi.dy.masa.malilib.action.NamedParameterizedAction;
+import fi.dy.masa.malilib.action.ParameterizedAction;
 import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.listener.EventListener;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
@@ -57,8 +60,6 @@ public class Actions
     public static final NamedAction TOGGLE_SKIP_ALL_RENDERING               = register("toggleSkipAllRendering", (ctx) -> toggleSkipAllRendering(ctx.mc));
     public static final NamedAction TOGGLE_SKIP_WORLD_RENDERING             = register("toggleSkipWorldRendering", Actions::toggleSkipWorldRendering);
     public static final NamedAction TOOL_PICK                               = register("toolPick", (ctx) -> toolPick(ctx.mc));
-    public static final NamedAction ZOOM_ACTIVATE                           = register("zoomActivate", (ctx) -> zoomActivate(true));
-    public static final NamedAction ZOOM_DEACTIVATE                         = register("zoomDeactivate", (ctx) -> zoomActivate(false));
 
     public static void init()
     {
@@ -71,6 +72,26 @@ public class Actions
         {
             NamedAction.registerToggle(Reference.MOD_INFO, feature.getName(), feature.getBooleanConfig());
         }
+
+        register("zoomActivate", (ctx) -> zoomActivate(true));
+        register("zoomDeactivate", (ctx) -> zoomActivate(false));
+
+        register("setAfterClickerCount",        ActionUtils.setIntValue(Configs.Generic.AFTER_CLICKER_CLICK_COUNT));
+        register("setBreakingGridSize",         ActionUtils.setIntValue(Configs.Generic.BREAKING_GRID_SIZE));
+        register("setFastLeftClickCount",       ActionUtils.setIntValue(Configs.Generic.FAST_LEFT_CLICK_COUNT));
+        register("setFastRightClickCount",      ActionUtils.setIntValue(Configs.Generic.FAST_RIGHT_CLICK_COUNT));
+        register("setHotbarSlotCycleMax",       ActionUtils.setIntValue(Configs.Generic.HOTBAR_SLOT_CYCLE_MAX));
+        register("setHotbarSlotRandomizerMax",  ActionUtils.setIntValue(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX));
+        register("setPeriodicAttackInterval",   ActionUtils.setIntValue(Configs.Generic.PERIODIC_ATTACK_INTERVAL));
+        register("setPeriodicUseInterval",      ActionUtils.setIntValue(Configs.Generic.PERIODIC_USE_INTERVAL));
+        register("setPlacementGridSize",        ActionUtils.setIntValue(Configs.Generic.PLACEMENT_GRID_SIZE));
+        register("setPlacementLimit",           ActionUtils.setIntValue(Configs.Generic.PLACEMENT_LIMIT));
+        register("setRenderLimitItem",          ActionUtils.setIntValue(Configs.Generic.RENDER_LIMIT_ITEM));
+        register("setRenderLimitXP",            ActionUtils.setIntValue(Configs.Generic.RENDER_LIMIT_XP_ORB));
+
+        register("setSnapAimPitchStep",         ActionUtils.setDoubleValue(Configs.Generic.SNAP_AIM_PITCH_STEP));
+        register("setSnapAimYawStep",           ActionUtils.setDoubleValue(Configs.Generic.SNAP_AIM_YAW_STEP));
+        register("setZoomFoV",                  ActionUtils.setDoubleValue(Configs.Generic.ZOOM_FOV));
     }
 
     private static NamedAction register(String name, EventListener action)
@@ -81,6 +102,11 @@ public class Actions
     private static NamedAction register(String name, Action action)
     {
         return NamedAction.register(Reference.MOD_INFO, name, action);
+    }
+
+    private static NamedAction register(String name, ParameterizedAction action)
+    {
+        return NamedParameterizedAction.register(Reference.MOD_INFO, name, action);
     }
 
     private static ActionResult blinkDriveTeleport(Minecraft mc, boolean maintainY)
