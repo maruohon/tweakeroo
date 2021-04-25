@@ -248,6 +248,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_RENDER_DISTANCE_FOG     = new ConfigBooleanHotkeyed("disableRenderDistanceFog",             false, "", "Disables the fog that increases around the render distance");
         public static final ConfigBooleanHotkeyed       DISABLE_SIGN_GUI                = new ConfigBooleanHotkeyed("disableSignGui",                       false, "", "Prevent the Sign edit GUI from opening");
         public static final ConfigBooleanHotkeyed       DISABLE_SLIME_BLOCK_SLOWDOWN    = new ConfigBooleanHotkeyed("disableSlimeBlockSlowdown",            false, "", "Removes the slowdown from walking on Slime Blocks.\n(This is originally from usefulmod by nessie.)");
+        public static final ConfigBooleanHotkeyed       DISABLE_HONEY_BLOCK_SLOWDOWN    = new ConfigBooleanHotkeyed("disableHoneyBlockSlowdown",            false, "", "Removes the slowdown from walking on Honey Blocks.");
         public static final ConfigBooleanHotkeyed       DISABLE_TILE_ENTITY_RENDERING   = new ConfigBooleanHotkeyed("disableTileEntityRendering",           false, "", "Prevents all TileEntity renderers from rendering");
         public static final ConfigBooleanHotkeyed       DISABLE_TILE_ENTITY_TICKING     = new ConfigBooleanClient  ("disableTileEntityTicking",             false, "", "Prevent all TileEntities from getting ticked");
         public static final ConfigBooleanHotkeyed       DISABLE_VILLAGER_TRADE_LOCKING  = new ConfigBooleanClient  ("disableVillagerTradeLocking",          false, "", "Prevents villager trades from ever locking, by always incrementing\nthe max uses as well when the recipe uses is incremented");
@@ -282,6 +283,7 @@ public class Configs implements IConfigHandler
                 DISABLE_RENDER_DISTANCE_FOG,
                 DISABLE_SIGN_GUI,
                 DISABLE_SLIME_BLOCK_SLOWDOWN,
+                DISABLE_HONEY_BLOCK_SLOWDOWN,
                 DISABLE_TILE_ENTITY_RENDERING,
                 DISABLE_TILE_ENTITY_TICKING,
                 DISABLE_VILLAGER_TRADE_LOCKING,
@@ -296,6 +298,8 @@ public class Configs implements IConfigHandler
         public static final ConfigDouble        GAMMA_VALUE_ORIGINAL                = new ConfigDouble      ("gammaValueOriginal", 0, 0, 1, "The original gamma value, before the gamma override was enabled");
         public static final ConfigInteger       HOTBAR_SCROLL_CURRENT_ROW           = new ConfigInteger     ("hotbarScrollCurrentRow", 3, 0, 3, "This is just for the mod internally to track the\n\"current hotbar row\" for the hotbar scrolling feature");
         public static final ConfigDouble        SLIME_BLOCK_SLIPPERINESS_ORIGINAL   = new ConfigDouble      ("slimeBlockSlipperinessOriginal", 0.8, 0, 1, "The original slipperiness value of Slime Blocks");
+        public static final ConfigDouble        HONEY_BLOCK_VELOCITY_ORIGINAL       = new ConfigDouble      ("honeyBlockVelocityOriginal", 0.4, 0, 1, "The original velocity value of Honey Blocks");
+        public static final ConfigDouble        HONEY_BLOCK_JUMP_ORIGINAL           = new ConfigDouble      ("honeyBlockJumpOriginal", 0.5, 0, 1, "The original jump velocity value of Honey Blocks");
         public static final ConfigDouble        SNAP_AIM_LAST_PITCH                 = new ConfigDouble      ("snapAimLastPitch", 0, -135, 135, "The last snapped-to pitch value");
         public static final ConfigDouble        SNAP_AIM_LAST_YAW                   = new ConfigDouble      ("snapAimLastYaw", 0, 0, 360, "The last snapped-to yaw value");
 

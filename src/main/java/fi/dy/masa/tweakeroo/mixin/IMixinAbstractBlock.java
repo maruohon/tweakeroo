@@ -8,4 +8,10 @@ public interface IMixinAbstractBlock
 {
     @Accessor("slipperiness")
     void setFriction(float friction);
+
+    @Accessor("velocityMultiplier")
+    void setVelocity(float friction);
+
+    @Accessor("jumpVelocityMultiplier")
+    void setJumpVelocity(float friction);
 }
