@@ -37,7 +37,8 @@ public class Callbacks
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
         Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN));
-        Configs.Disable.DISABLE_HONEY_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackHoney(Configs.Disable.DISABLE_HONEY_BLOCK_SLOWDOWN));
+        Configs.Disable.DISABLE_HONEY_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackHoneyVelocity(Configs.Disable.DISABLE_HONEY_BLOCK_SLOWDOWN));
+        Configs.Disable.DISABLE_HONEY_BLOCK_JUMP.setValueChangeCallback(new FeatureCallbackHoneyJump(Configs.Disable.DISABLE_HONEY_BLOCK_JUMP));
 
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.setValueChangeCallback((cfg) -> {
@@ -196,17 +197,42 @@ public class Callbacks
         }
     }
 
-    public static class FeatureCallbackHoney implements IValueChangeCallback<ConfigBoolean>
+    public static class FeatureCallbackHoneyVelocity implements IValueChangeCallback<ConfigBoolean>
     {
-        public FeatureCallbackHoney(ConfigBoolean feature)
+        public FeatureCallbackHoneyVelocity(ConfigBoolean feature)
         {
             Configs.Internal.HONEY_BLOCK_VELOCITY_ORIGINAL.setDoubleValue(Blocks.HONEY_BLOCK.getVelocityMultiplier());
-            Configs.Internal.HONEY_BLOCK_JUMP_ORIGINAL.setDoubleValue(Blocks.HONEY_BLOCK.getJumpVelocityMultiplier());
 
             // If the feature is enabled on game launch, apply the overridden value here
             if (feature.getBooleanValue())
             {
                 ((IMixinAbstractBlock) Blocks.HONEY_BLOCK).setVelocity(Blocks.STONE.getVelocityMultiplier());
+            }
+        }
+
+        @Override
+        public void onValueChanged(ConfigBoolean config)
+        {
+            if (config.getBooleanValue())
+            {
+                ((IMixinAbstractBlock) Blocks.HONEY_BLOCK).setVelocity(Blocks.STONE.getVelocityMultiplier());
+            }
+            else
+            {
+                ((IMixinAbstractBlock) Blocks.HONEY_BLOCK).setVelocity((float) Configs.Internal.HONEY_BLOCK_VELOCITY_ORIGINAL.getDoubleValue());
+            }
+        }
+    }
+
+    public static class FeatureCallbackHoneyJump implements IValueChangeCallback<ConfigBoolean>
+    {
+        public FeatureCallbackHoneyJump(ConfigBoolean feature)
+        {
+            Configs.Internal.HONEY_BLOCK_JUMP_ORIGINAL.setDoubleValue(Blocks.HONEY_BLOCK.getJumpVelocityMultiplier());
+
+            // If the feature is enabled on game launch, apply the overridden value here
+            if (feature.getBooleanValue())
+            {
                 ((IMixinAbstractBlock) Blocks.HONEY_BLOCK).setJumpVelocity(Blocks.STONE.getJumpVelocityMultiplier());
             }
         }
@@ -214,16 +240,13 @@ public class Callbacks
         @Override
         public void onValueChanged(ConfigBoolean config)
         {
-            IMixinAbstractBlock honey = ((IMixinAbstractBlock) Blocks.HONEY_BLOCK);
             if (config.getBooleanValue())
             {
-                honey.setVelocity(Blocks.STONE.getVelocityMultiplier());
-                honey.setJumpVelocity(Blocks.STONE.getJumpVelocityMultiplier());
+                ((IMixinAbstractBlock) Blocks.HONEY_BLOCK).setJumpVelocity(Blocks.STONE.getJumpVelocityMultiplier());
             }
             else
             {
-                honey.setVelocity((float) Configs.Internal.HONEY_BLOCK_VELOCITY_ORIGINAL.getDoubleValue());
-                honey.setJumpVelocity((float) Configs.Internal.HONEY_BLOCK_JUMP_ORIGINAL.getDoubleValue());
+                ((IMixinAbstractBlock) Blocks.HONEY_BLOCK).setJumpVelocity((float) Configs.Internal.HONEY_BLOCK_JUMP_ORIGINAL.getDoubleValue());
             }
         }
     }
