@@ -13,6 +13,7 @@ import fi.dy.masa.malilib.event.PostGameOverlayRenderer;
 import fi.dy.masa.malilib.event.PostItemTooltipRenderer;
 import fi.dy.masa.malilib.event.PostWorldRenderer;
 import fi.dy.masa.malilib.gui.BaseScreen;
+import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
 import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -46,13 +47,13 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
         if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
             Hotkeys.INVENTORY_PREVIEW.getKeyBind().isKeyBindHeld())
         {
-            RenderUtils.renderInventoryOverlay(mc);
+            RenderUtils.renderPointedInventoryOverlay(mc);
         }
 
         if (FeatureToggle.TWEAK_PLAYER_INVENTORY_PEEK.getBooleanValue() &&
             Hotkeys.PLAYER_INVENTORY_PEEK.getKeyBind().isKeyBindHeld())
         {
-            RenderUtils.renderPlayerInventoryOverlay(mc);
+            RenderUtils.renderPlayerInventoryPeekOverlay(mc);
         }
 
         if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue() &&
@@ -88,7 +89,10 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
 
             if (render)
             {
-                fi.dy.masa.malilib.render.RenderUtils.renderShulkerBoxPreview(stack, x, y, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue());
+                boolean background = Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue();
+                x += 8;
+                y -= 10;
+                InventoryRenderUtils.renderItemInventoryPreview(stack, x, y, 300, background);
             }
         }
     }

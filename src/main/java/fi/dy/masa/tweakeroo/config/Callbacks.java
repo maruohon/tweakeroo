@@ -107,7 +107,7 @@ public class Callbacks
         Hotkeys.GHOST_BLOCK_REMOVER.setHotkeyCallback(HotkeyCallback.of(Actions.GHOST_BLOCK_REMOVER_MANUAL));
         Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(AdjustableValueHotkeyCallback.createWrapping(null, Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW, 0, 2)
                                                     .setAdjustmentEnabledCondition(FeatureToggle.TWEAK_HOTBAR_SCROLL::getBooleanValue)
-                                                    .setToggleAction(Actions.HOTBAR_SCROLL.getAction()).setReverseDirection(true).setTriggerAlwaysOnRelease(true));
+                                                    .setKeyAction(Actions.HOTBAR_SCROLL.getAction()).setReverseDirection(true).setTriggerAlwaysOnRelease(true));
         Hotkeys.HOTBAR_SWAP_1.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_1));
         Hotkeys.HOTBAR_SWAP_2.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_2));
         Hotkeys.HOTBAR_SWAP_3.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_3));
@@ -201,7 +201,7 @@ public class Callbacks
     private static AdjustableValueHotkeyCallback createFlySpeedAdjustCallback(int preset, DoubleConfig config, Action action)
     {
         return AdjustableValueHotkeyCallback.createClamped(null, config, 0, 4.0, () -> BaseScreen.isCtrlDown() ? 0.1 : 0.005)
-                .setToggleAction(action)
+                .setKeyAction(action)
                 .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", preset, String.format("%.4f", config.getDoubleValue())));
     }
 

@@ -1,9 +1,6 @@
 package fi.dy.masa.tweakeroo.renderer;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockShulkerBox;
-import net.minecraft.block.state.IBlockState;
+import org.apache.commons.lang3.tuple.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -12,28 +9,24 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.AbstractHorse;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.ILockableContainer;
-import net.minecraft.world.World;
 import fi.dy.masa.malilib.config.value.HudAlignment;
+import fi.dy.masa.malilib.gui.position.HorizontalAlignment;
+import fi.dy.masa.malilib.gui.position.VerticalAlignment;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.render.ItemRenderUtils;
 import fi.dy.masa.malilib.render.ShapeRenderUtils;
-import fi.dy.masa.malilib.render.overlay.InventoryOverlay;
+import fi.dy.masa.malilib.render.inventory.BuiltinInventoryRenderDefinitions;
+import fi.dy.masa.malilib.render.inventory.InventoryRenderDefinition;
+import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
+import fi.dy.masa.malilib.util.inventory.InventoryView;
+import fi.dy.masa.malilib.util.inventory.SlicedInventoryView;
+import fi.dy.masa.malilib.util.inventory.VanillaInventoryView;
 import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorse;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
-import fi.dy.masa.tweakeroo.util.RayTraceUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 public class RenderUtils
@@ -81,7 +74,7 @@ public class RenderUtils
 
             fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
             fi.dy.masa.malilib.render.RenderUtils.bindTexture(GuiInventory.INVENTORY_BACKGROUND);
-            ShapeRenderUtils.renderTexturedRectangle(x - 1, y - 1, z, 7, 83, 9 * 18, 3 * 18);
+            ShapeRenderUtils.renderTexturedRectangle256(x - 1, y - 1, z, 7, 83, 9 * 18, 3 * 18);
 
             for (int row = 1; row <= 3; row++)
             {
@@ -105,173 +98,48 @@ public class RenderUtils
         }
     }
 
-    public static void renderInventoryOverlay(Minecraft mc)
+    public static void renderPointedInventoryOverlay(Minecraft mc)
     {
-        World world = fi.dy.masa.malilib.util.WorldUtils.getBestWorld(mc);
+        Pair<InventoryView, InventoryRenderDefinition> pair = InventoryRenderUtils.getPointedInventory(mc);
 
-        // We need to get the player from the server world, so that the player itself won't be included in the ray trace
-        EntityPlayer player = world.getPlayerEntityByUUID(mc.player.getUniqueID());
-
-        if (player == null)
+        if (pair != null)
         {
-            player = mc.player;
-        }
-
-        RayTraceResult trace = RayTraceUtils.getRayTraceFromEntity(world, player, false);
-
-        if (trace == null)
-        {
-            return;
-        }
-
-        IInventory inv = null;
-        BlockShulkerBox block = null;
-        EntityLivingBase entityLivingBase = null;
-
-        if (trace.typeOfHit == RayTraceResult.Type.BLOCK)
-        {
-            BlockPos pos = trace.getBlockPos();
-            TileEntity te = world.getTileEntity(pos);
-
-            if (te instanceof IInventory)
-            {
-                inv = (IInventory) te;
-                IBlockState state = world.getBlockState(pos);
-
-                if (state.getBlock() instanceof BlockChest)
-                {
-                    ILockableContainer cont = ((BlockChest) state.getBlock()).getLockableContainer(world, pos);
-
-                    if (cont instanceof InventoryLargeChest)
-                    {
-                        inv = cont;
-                    }
-                }
-
-                Block blockTmp = world.getBlockState(pos).getBlock();
-
-                if (blockTmp instanceof BlockShulkerBox)
-                {
-                    block = (BlockShulkerBox) blockTmp;
-                }
-            }
-        }
-        else if (trace.typeOfHit == RayTraceResult.Type.ENTITY)
-        {
-            Entity entity = trace.entityHit;
-
-            if (entity instanceof EntityLivingBase)
-            {
-                entityLivingBase = (EntityLivingBase) entity;
-            }
-
-            if (entity instanceof IInventory)
-            {
-                inv = (IInventory) entity;
-            }
-            else if (entity instanceof EntityVillager)
-            {
-                inv = ((EntityVillager) entity).getVillagerInventory();
-            }
-            else if (entity instanceof AbstractHorse)
-            {
-                inv = ((IMixinAbstractHorse) entity).getHorseChest();
-            }
-        }
-
-        final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
-        final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
-        int x = xCenter - 52 / 2;
-        int y = yCenter - 92;
-        int z = 0;
-        int zItems = z + 1;
-
-        if (inv != null && inv.getSizeInventory() > 0)
-        {
-            final boolean isHorse = (entityLivingBase instanceof AbstractHorse);
-            final int totalSlots = isHorse ? inv.getSizeInventory() - 2 : inv.getSizeInventory();
-            final int firstSlot = isHorse ? 2 : 0;
-
-            final InventoryOverlay.InventoryRenderType type = (entityLivingBase instanceof EntityVillager) ? InventoryOverlay.InventoryRenderType.VILLAGER : InventoryOverlay.getInventoryType(inv);
-            final InventoryOverlay.InventoryProperties props = InventoryOverlay.getInventoryPropsTemp(type, totalSlots);
-            final int rows = (int) Math.ceil((double) totalSlots / props.slotsPerRow);
-            int xInv = xCenter - (props.width / 2);
-            int yInv = yCenter - props.height - 6;
-
-            if (rows > 6)
-            {
-                yInv -= (rows - 6) * 18;
-                y -= (rows - 6) * 18;
-            }
-
-            if (entityLivingBase != null)
-            {
-                x = xCenter - 55;
-                xInv = xCenter + 2;
-                yInv = Math.min(yInv, yCenter - 92);
-            }
-
-            fi.dy.masa.malilib.render.RenderUtils.setShulkerBoxBackgroundTintColor(block, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue());
-
-            if (isHorse)
-            {
-                InventoryOverlay.renderInventoryBackground(type, xInv, yInv, z, 1, 2, mc);
-                InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, zItems, 1, 0, 2, mc);
-                xInv += 32 + 4;
-            }
-
-            if (totalSlots > 0)
-            {
-                InventoryOverlay.renderInventoryBackground(type, xInv, yInv, z, props.slotsPerRow, totalSlots, mc);
-                InventoryOverlay.renderInventoryStacks(type, inv, xInv + props.slotOffsetX, yInv + props.slotOffsetY, zItems, props.slotsPerRow, firstSlot, totalSlots, mc);
-            }
-        }
-
-        if (entityLivingBase != null)
-        {
-            InventoryOverlay.renderEquipmentOverlayBackground(x, y, z, entityLivingBase);
-            InventoryOverlay.renderEquipmentStacks(entityLivingBase, x, y, zItems, mc);
+            final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
+            final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
+            InventoryView inv = pair.getLeft();
+            InventoryRenderDefinition renderer = pair.getRight();
+            InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, yCenter, 300, 0xFFFFFFFF,
+                                                        HorizontalAlignment.CENTER, VerticalAlignment.TOP);
         }
     }
 
-    public static void renderPlayerInventoryOverlay(Minecraft mc)
+    public static void renderPlayerInventoryPeekOverlay(Minecraft mc)
     {
-        int x = GuiUtils.getScaledWindowWidth() / 2 - 176 / 2;
-        int y = GuiUtils.getScaledWindowHeight() / 2 + 10;
-        int z = 0;
-        int slotOffsetX = 8;
-        int slotOffsetY = 8;
-        InventoryOverlay.InventoryRenderType type = InventoryOverlay.InventoryRenderType.GENERIC;
+        final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
+        final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
+        InventoryView inv = new SlicedInventoryView(new VanillaInventoryView(mc.player.inventory), 9, 27);
 
-        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
-
-        InventoryOverlay.renderInventoryBackground(type, x, y, z, 9, 27, mc);
-        InventoryOverlay.renderInventoryStacks(type, mc.player.inventory, x + slotOffsetX, y + slotOffsetY, z + 1, 9, 9, 27, mc);
+        InventoryRenderDefinition renderer = BuiltinInventoryRenderDefinitions.GENERIC_27;
+        InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, yCenter, 300, 0xFFFFFFFF,
+                                                    HorizontalAlignment.CENTER, VerticalAlignment.TOP);
     }
 
     public static void renderHotbarScrollOverlay(Minecraft mc)
     {
-        IInventory inv = mc.player.inventory;
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
         final int x = xCenter - 176 / 2;
         final int y = yCenter + 6;
-        final int z = 0;
-        final int zItems = z + 1;
-        InventoryOverlay.InventoryRenderType type = InventoryOverlay.InventoryRenderType.GENERIC;
+        final int z = 300;
 
-        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
+        InventoryView inv = new VanillaInventoryView(mc.player.inventory);
 
-        InventoryOverlay.renderInventoryBackground(type, x, y     , z, 9, 27, mc);
-        InventoryOverlay.renderInventoryBackground(type, x, y + 70, z, 9, 9, mc);
-
-        // Main inventory
-        InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y +  8, zItems, 9, 9, 27, mc);
-        // Hotbar
-        InventoryOverlay.renderInventoryStacks(type, inv, x + 8, y + 78, zItems, 9, 0, 9, mc);
+        InventoryRenderDefinition renderer = BuiltinInventoryRenderDefinitions.PLAYER_INVENTORY;
+        InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, y, z, 0xFFFFFFFF,
+                                                    HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM);
 
         int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-        ShapeRenderUtils.renderOutline(x + 5, y + currentRow * 18 + 5, z, 9 * 18 + 4, 22, 2, 0xFFFF2020);
+        ShapeRenderUtils.renderOutline(x + 5, y + currentRow * 18 + 5, z + 1f, 9 * 18 + 4, 22, 2, 0xFFFF2020);
     }
 
     public static float getLavaFog(Entity entity, float originalFog)
@@ -321,7 +189,7 @@ public class RenderUtils
 
         int width = GuiUtils.getScaledWindowWidth();
         int height = GuiUtils.getScaledWindowHeight();
-        GlStateManager.translate(width / 2, height / 2, zLevel);
+        GlStateManager.translate(width / 2.0F, height / 2.0F, zLevel);
         Entity entity = mc.getRenderViewEntity();
         GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);

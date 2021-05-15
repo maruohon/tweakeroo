@@ -5,14 +5,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.action.Action;
-import fi.dy.masa.malilib.action.BooleanToggleAction;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
 import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.KeyBindSettings;
 import fi.dy.masa.malilib.input.callback.HotkeyCallback;
+import fi.dy.masa.malilib.input.callback.ToggleBooleanWithMessageKeyCallback;
 import fi.dy.masa.malilib.util.data.ModInfo;
 import fi.dy.masa.tweakeroo.Reference;
 
@@ -105,7 +104,6 @@ public enum FeatureToggle implements ConfigInfo
 
     private final BooleanConfig toggleStatus;
     private final HotkeyConfig toggleHotkey;
-    protected Action toggleAction;
 
     FeatureToggle(String name, boolean defaultValue)
     {
@@ -135,8 +133,8 @@ public enum FeatureToggle implements ConfigInfo
      */
     public void setSpecialToggleMessageFactory(@Nullable Function<BooleanConfig, String> messageFactory)
     {
-        this.toggleAction = new BooleanToggleAction(this.toggleStatus, messageFactory);
-        this.toggleHotkey.getKeyBind().setCallback(HotkeyCallback.of(this.toggleAction));
+        HotkeyCallback callback = new ToggleBooleanWithMessageKeyCallback(this.toggleStatus, messageFactory);
+        this.toggleHotkey.getKeyBind().setCallback(callback);
     }
 
     public void setHotkeyCallback(HotkeyCallback callback)

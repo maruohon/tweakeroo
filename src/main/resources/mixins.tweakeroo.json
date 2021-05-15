@@ -4,7 +4,6 @@
     "refmap": "mixins.tweakeroo.refmap.json",
     "minVersion": "0.6",
     "client": [
-        "IMixinAbstractHorse",
         "IMixinChunkRenderWorker",
         "IMixinCommandBlockBaseLogic",
         "IMixinFlatGeneratorInfo",
