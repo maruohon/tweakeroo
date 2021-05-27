@@ -65,12 +65,16 @@ public class Actions
     {
         for (FeatureToggle feature : FeatureToggle.VALUES)
         {
-            NamedAction.registerToggle(Reference.MOD_INFO, feature.getName(), feature.getBooleanConfig());
+            NamedAction.registerToggle(Reference.MOD_INFO, feature.getName(),
+                                       feature.getBooleanConfig(), null,
+                                       () -> feature.getKeyBind().getSettings().getMessageType());
         }
 
         for (DisableToggle feature : DisableToggle.VALUES)
         {
-            NamedAction.registerToggle(Reference.MOD_INFO, feature.getName(), feature.getBooleanConfig());
+            NamedAction.registerToggle(Reference.MOD_INFO, feature.getName(),
+                                       feature.getBooleanConfig(), null,
+                                       () -> feature.getKeyBind().getSettings().getMessageType());
         }
 
         register("zoomActivate", (ctx) -> zoomActivate(true));

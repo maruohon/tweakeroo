@@ -519,7 +519,7 @@ tweakeroo.gui.title.configs=Tweakeroo Configs
 
 tweakeroo.hotkeys.category.disable_toggle_hotkeys=Disable Toggle Hotkeys
 tweakeroo.hotkeys.category.generic=Generic
-tweakeroo.hotkeys.category.generic_hotkeys=Generic hotkeys
+tweakeroo.hotkeys.category.generic_hotkeys=Hotkeys
 tweakeroo.hotkeys.category.tweak_toggle_hotkeys=Tweak Hotkeys
 
 tweakeroo.label.config_comment.single_player_only=§6Note: This feature works either at all or\nat least fully only in single player
@@ -565,8 +565,8 @@ tweakeroo.message.set_snap_aim_pitch_step_to=Set Snap Aim pitch step to §a%s
 tweakeroo.message.set_snap_aim_yaw_step_to=Set Snap Aim yaw step to §a%s
 tweakeroo.message.set_zoom_fov_to=Set zoom FoV to §a%s
 tweakeroo.message.sign_text_copied=Sign text copied
-tweakeroo.message.snapped_to_pitch=Snapped to pitch §a%s
-tweakeroo.message.snapped_to_yaw=Snapped to yaw §a%s
+tweakeroo.message.snapped_to_pitch=Snapped to pitch §a%s§r (step §a%s§r)
+tweakeroo.message.snapped_to_yaw=Snapped to yaw §a%s§r (step a%s§r)
 tweakeroo.message.swapped_low_durability_item_for_better_durability=Swapped a low durability item for one with more durability
 tweakeroo.message.swapped_low_durability_item_for_dummy_item=Swapped a low durability item for a dummy item
 tweakeroo.message.swapped_low_durability_item_off_players_hand=Swapped a low durability item off the player's hand

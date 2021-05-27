@@ -21,7 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils;
@@ -319,7 +318,7 @@ public class MiscUtils
 
             if (FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue())
             {
-                return (float) Configs.Internal.SNAP_AIM_LAST_PITCH.getDoubleValue();
+                return Configs.Internal.SNAP_AIM_LAST_PITCH.getFloatValue();
             }
 
             double step = Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue();
@@ -338,25 +337,20 @@ public class MiscUtils
             }
 
             double offset = Math.abs(MathHelper.wrapDegrees((float) (snappedPitch - realPitch)));
-            if (BaseScreen.isCtrlDown()) System.out.printf("real: %.2f, snapped: %.2f, offset: %.2f\n", realPitch, snappedPitch, offset);
 
             if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue() == false ||
                 offset <= Configs.Generic.SNAP_AIM_THRESHOLD_PITCH.getDoubleValue())
             {
                 snappedPitch = MathHelper.clamp(MathHelper.wrapDegrees(snappedPitch), -limit, limit);
+                float wrappedPitch = MathHelper.wrapDegrees((float) snappedPitch);
 
                 if (Configs.Internal.SNAP_AIM_LAST_PITCH.getDoubleValue() != snappedPitch)
                 {
-                    String g = BaseScreen.TXT_GREEN;
-                    String r = BaseScreen.TXT_RST;
-                    String str = String.format("%s%s%s (step %s%s%s)", g, MathHelper.wrapDegrees(snappedPitch), r, g, step, r);
-
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.snapped_to_pitch", str);
-
                     Configs.Internal.SNAP_AIM_LAST_PITCH.setValue(snappedPitch);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.snapped_to_pitch", wrappedPitch, step);
                 }
 
-                return MathHelper.wrapDegrees((float) snappedPitch);
+                return wrappedPitch;
             }
         }
 
@@ -378,7 +372,7 @@ public class MiscUtils
 
             if (FeatureToggle.TWEAK_SNAP_AIM_LOCK.getBooleanValue())
             {
-                return (float) Configs.Internal.SNAP_AIM_LAST_YAW.getDoubleValue();
+                return Configs.Internal.SNAP_AIM_LAST_YAW.getFloatValue();
             }
 
             double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
@@ -387,18 +381,15 @@ public class MiscUtils
             if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue() == false ||
                 Math.abs(MathHelper.wrapDegrees((float) (snappedYaw - realYaw))) <= Configs.Generic.SNAP_AIM_THRESHOLD_YAW.getDoubleValue())
             {
+                float wrappedYaw = MathHelper.wrapDegrees((float) snappedYaw);
+
                 if (Configs.Internal.SNAP_AIM_LAST_YAW.getDoubleValue() != snappedYaw)
                 {
-                    String g = BaseScreen.TXT_GREEN;
-                    String r = BaseScreen.TXT_RST;
-                    String str = String.format("%s%s%s (step %s%s%s)", g, MathHelper.wrapDegrees(snappedYaw), r, g, step, r);
-
-                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.snapped_to_yaw", str);
-
                     Configs.Internal.SNAP_AIM_LAST_YAW.setValue(snappedYaw);
+                    MessageUtils.printCustomActionbarMessage("tweakeroo.message.snapped_to_yaw", wrappedYaw, step);
                 }
 
-                return MathHelper.wrapDegrees((float) snappedYaw);
+                return wrappedYaw;
             }
         }
 

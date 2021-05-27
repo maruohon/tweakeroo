@@ -168,10 +168,10 @@ public class Callbacks
                     .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to", String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
     }
 
-    private static AdjustableValueHotkeyCallback addAdjustableCallback(FeatureToggle feature,
-                                                                       IntegerConfig intConfig,
-                                                                       String toggleMessageKey,
-                                                                       String adjustMessageKey)
+    private static void addAdjustableCallback(FeatureToggle feature,
+                                              IntegerConfig intConfig,
+                                              String toggleMessageKey,
+                                              String adjustMessageKey)
     {
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.createClamped(feature.getBooleanConfig(), intConfig)
                  .setToggleMessageFactory((cfg) -> {
@@ -180,13 +180,12 @@ public class Callbacks
                  })
                  .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, intConfig.getStringValue()));
         feature.setHotkeyCallback(callback);
-        return callback;
     }
 
-    private static AdjustableValueHotkeyCallback addAdjustableCallback(FeatureToggle feature,
-                                                                       OptionListConfig<?> config,
-                                                                       String toggleMessageKey,
-                                                                       String adjustMessageKey)
+    private static void addAdjustableCallback(FeatureToggle feature,
+                                              OptionListConfig<?> config,
+                                              String toggleMessageKey,
+                                              String adjustMessageKey)
     {
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.create(feature.getBooleanConfig(), config)
                  .setToggleMessageFactory((cfg) -> {
@@ -195,7 +194,6 @@ public class Callbacks
                  })
                  .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, config.getValue().getDisplayName()));
         feature.setHotkeyCallback(callback);
-        return callback;
     }
 
     private static AdjustableValueHotkeyCallback createFlySpeedAdjustCallback(int preset, DoubleConfig config, Action action)
