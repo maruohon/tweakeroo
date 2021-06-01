@@ -29,7 +29,9 @@ public abstract class MixinBackgroundRenderer
     */
 
     @Inject(method = "applyFog(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/BackgroundRenderer$FogType;FZ)V", require = 0,
-            at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderFogEnd(F)V", shift = At.Shift.AFTER))
+            at = @At(value = "INVOKE", remap = false,
+                     target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderFogEnd(F)V",
+                     shift = At.Shift.AFTER))
     private static void disableRenderDistanceFog(
             net.minecraft.client.render.Camera camera,
             net.minecraft.client.render.BackgroundRenderer.FogType fogType,

@@ -114,8 +114,8 @@ public abstract class MixinGameRenderer
 
             if (entity != null)
             {
-                this.realYaw = entity.yaw;
-                this.realPitch = entity.pitch;
+                this.realYaw = entity.getYaw();
+                this.realPitch = entity.getPitch();
                 MiscUtils.setEntityRotations(entity, CameraUtils.getCameraYaw(), CameraUtils.getCameraPitch());
             }
         }

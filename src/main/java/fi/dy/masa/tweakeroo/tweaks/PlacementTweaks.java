@@ -306,6 +306,7 @@ public class PlacementTweaks
         Direction playerFacingH = player.getHorizontalFacing();
         HitPart hitPart = PositionUtils.getHitPart(sideIn, playerFacingH, posIn, hitVec);
         Direction sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
+        float yaw = player.getYaw();
 
         cacheStackInHand(hand);
 
@@ -322,7 +323,7 @@ public class PlacementTweaks
         }
 
         //System.out.printf("onProcessRightClickBlock() pos: %s, side: %s, part: %s, hitVec: %s\n", posIn, sideIn, hitPart, hitVec);
-        ActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, player.yaw, hitVec, hand, hitPart, true);
+        ActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, yaw, hitVec, hand, hitPart, true);
 
         // Store the initial click data for the fast placement mode
         if (posFirst == null && result == ActionResult.SUCCESS && restricted)
@@ -345,7 +346,7 @@ public class PlacementTweaks
             hitVecFirst = hitVec.subtract(posFirst.getX(), posFirst.getY(), posFirst.getZ());
             sideFirst = sideIn;
             sideRotatedFirst = sideRotated;
-            playerYawFirst = player.yaw;
+            playerYawFirst = yaw;
             stackBeforeUse[hand.ordinal()] = stackPre;
             //System.out.printf("plop store @ %s\n", posFirst);
         }
@@ -834,7 +835,7 @@ public class PlacementTweaks
             @Nullable HitPart hitPart)
     {
         Direction facing = Direction.fromHorizontal(MathHelper.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3);
-        float yawOrig = player.yaw;
+        float yawOrig = player.getYaw();
 
         if (hitPart == HitPart.CENTER)
         {
@@ -849,14 +850,16 @@ public class PlacementTweaks
             facing = facing.rotateYClockwise();
         }
 
-        player.yaw = facing.asRotation();
-        player.networkHandler.sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(player.yaw, player.pitch, player.isOnGround()));
+        float yaw = facing.asRotation();
+        float pitch = player.getPitch();
+        player.setYaw(yaw);
+        player.networkHandler.sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(yaw, pitch, player.isOnGround()));
 
         //System.out.printf("handleFlexibleBlockPlacement() pos: %s, side: %s, facing orig: %s facing new: %s\n", pos, side, facingOrig, facing);
         ActionResult result = processRightClickBlockWrapper(controller, player, world, pos, side, hitVec, hand);
 
-        player.yaw = yawOrig;
-        player.networkHandler.sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(player.yaw, player.pitch, player.isOnGround()));
+        player.setYaw(yawOrig);
+        player.networkHandler.sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(yawOrig, pitch, player.isOnGround()));
 
         return result;
     }

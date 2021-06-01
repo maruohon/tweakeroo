@@ -174,8 +174,8 @@ public class MiscUtils
 
     public static void setEntityRotations(Entity entity, float yaw, float pitch)
     {
-        entity.yaw = yaw;
-        entity.pitch = pitch;
+        entity.setYaw(yaw);
+        entity.setPitch(pitch);
         entity.prevYaw = yaw;
         entity.prevPitch = pitch;
 
