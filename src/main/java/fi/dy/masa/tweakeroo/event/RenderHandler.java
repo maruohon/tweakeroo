@@ -8,6 +8,7 @@ import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Matrix4f;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.interfaces.IRenderer;
 import fi.dy.masa.malilib.util.ActiveMode;
@@ -20,7 +21,7 @@ import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 public class RenderHandler implements IRenderer
 {
     @Override
-    public void onRenderGameOverlayPost(float partialTicks, MatrixStack matrixStack)
+    public void onRenderGameOverlayPost(MatrixStack matrixStack)
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -86,7 +87,7 @@ public class RenderHandler implements IRenderer
     }
 
     @Override
-    public void onRenderWorldLast(float partialTicks, net.minecraft.client.util.math.MatrixStack matrixStack)
+    public void onRenderWorldLast(MatrixStack matrixStack, Matrix4f projMatrix)
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -96,7 +97,7 @@ public class RenderHandler implements IRenderer
         }
     }
 
-    private void renderOverlays(net.minecraft.client.util.math.MatrixStack matrixStack, MinecraftClient mc)
+    private void renderOverlays(MatrixStack matrixStack, MinecraftClient mc)
     {
         Entity entity = mc.getCameraEntity();
 
