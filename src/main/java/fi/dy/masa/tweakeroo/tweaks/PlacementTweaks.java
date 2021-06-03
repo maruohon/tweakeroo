@@ -168,7 +168,7 @@ public class PlacementTweaks
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
         {
             stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
-            hotbarSlot = player.inventory.selectedSlot;
+            hotbarSlot = player.getInventory().selectedSlot;
         }
     }
 
@@ -657,7 +657,7 @@ public class PlacementTweaks
         {
             ItemStack stackCurrent = player.getStackInHand(hand);
 
-            if (stackOriginal.isEmpty() == false && player.inventory.selectedSlot == hotbarSlot &&
+            if (stackOriginal.isEmpty() == false && player.getInventory().selectedSlot == hotbarSlot &&
                 (stackCurrent.isEmpty() || stackCurrent.isItemEqualIgnoreDamage(stackOriginal) == false))
             {
                 // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on

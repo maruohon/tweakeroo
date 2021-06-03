@@ -17,6 +17,7 @@ public abstract class MixinScaffoldingBlock extends Block
         super(settings);
     }
 
+    @Deprecated
     @Override
     public BlockRenderType getRenderType(BlockState state)
     {
