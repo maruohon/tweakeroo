@@ -1,11 +1,14 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,6 +27,8 @@ import fi.dy.masa.tweakeroo.util.InventoryUtils;
 @Mixin(ClientPlayerInteractionManager.class)
 public abstract class MixinClientPlayerInteractionManager
 {
+    @Shadow @Final private MinecraftClient client;
+
     @Inject(method = "interactItem", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;syncSelectedSlot()V"),
@@ -101,8 +106,15 @@ public abstract class MixinClientPlayerInteractionManager
                                                 ")Lnet/minecraft/block/BlockState;", ordinal = 0))
     private void onClickBlockPre(BlockPos pos, Direction face, CallbackInfoReturnable<Boolean> cir)
     {
-        InventoryUtils.trySwitchToEffectiveTool(pos);
-        PlacementTweaks.cacheStackInHand(Hand.MAIN_HAND);
+        if (this.client.player != null && this.client.world != null)
+        {
+            if (FeatureToggle.TWEAK_TOOL_SWITCH.getBooleanValue())
+            {
+                InventoryUtils.trySwitchToEffectiveTool(pos);
+            }
+
+            PlacementTweaks.cacheStackInHand(Hand.MAIN_HAND);
+        }
     }
 
     @Inject(method = "attackBlock", at = @At("HEAD"), cancellable = true)

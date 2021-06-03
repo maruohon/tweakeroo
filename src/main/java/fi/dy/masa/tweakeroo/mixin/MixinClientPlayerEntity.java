@@ -19,6 +19,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.Hand;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.DummyMovementInput;
 
@@ -28,8 +29,12 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     @Shadow public Input input;
     @Shadow protected int ticksLeftToDoubleTapSprint;
 
+    @Shadow public float lastNauseaStrength;
+    @Shadow public float nextNauseaStrength;
+
     private final DummyMovementInput dummyMovementInput = new DummyMovementInput(null);
     private Input realInput;
+    private float realNextNauseaStrength;
 
     public MixinClientPlayerEntity(ClientWorld worldIn, GameProfile playerProfile)
     {
@@ -48,6 +53,29 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         }
 
         return gui.isPauseScreen();
+    }
+
+    @Inject(method = "updateNausea", at = @At("HEAD"))
+    private void disableNauseaEffectPre(CallbackInfo ci)
+    {
+        if (Configs.Disable.DISABLE_NAUSEA_EFFECT.getBooleanValue())
+        {
+            this.nextNauseaStrength = this.realNextNauseaStrength;
+        }
+    }
+
+    @Inject(method = "updateNausea", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/network/ClientPlayerEntity;tickNetherPortalCooldown()V"))
+    private void disableNauseaEffectPost(CallbackInfo ci)
+    {
+        if (Configs.Disable.DISABLE_NAUSEA_EFFECT.getBooleanValue())
+        {
+            // This is used to set the value to the correct value for the duration of the
+            // updateNausea() method, so that the portal sound plays correctly only once.
+            this.realNextNauseaStrength = this.nextNauseaStrength;
+            this.lastNauseaStrength = 0.0f;
+            this.nextNauseaStrength = 0.0f;
+        }
     }
 
     @Inject(method = "tickMovement", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
@@ -122,7 +150,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     @Inject(method = "isCamera", at = @At("HEAD"), cancellable = true)
     private void allowPlayerMovementInFreeCameraMode(CallbackInfoReturnable<Boolean> cir)
     {
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue())
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && CameraEntity.originalCameraWasPlayer())
         {
             cir.setReturnValue(true);
         }
@@ -135,11 +163,5 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         {
             ci.cancel();
         }
-    }
-
-    @Override
-    public boolean isSpectator()
-    {
-        return super.isSpectator() || CameraUtils.getFreeCameraSpectator();
     }
 }

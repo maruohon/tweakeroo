@@ -183,9 +183,10 @@ public class InventoryUtils
     public static void preRestockHand(PlayerEntity player, Hand hand, boolean allowHotbar)
     {
         ItemStack stackHand = player.getStackInHand(hand);
+        int threshold = Configs.Generic.HAND_RESTOCK_PRE_THRESHOLD.getIntegerValue();
 
-        if (stackHand.isEmpty() == false && stackHand.getCount() <= 4 && stackHand.getMaxCount() > 4 &&
-            FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue() &&
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue() &&
+            stackHand.isEmpty() == false && stackHand.getCount() <= threshold && stackHand.getMaxCount() > threshold &&
             player.currentScreenHandler == player.playerScreenHandler &&
             player.currentScreenHandler.getCursorStack().isEmpty())
         {
@@ -250,7 +251,7 @@ public class InventoryUtils
         MinecraftClient mc = MinecraftClient.getInstance();
         PlayerEntity player = mc.player;
 
-        if (FeatureToggle.TWEAK_TOOL_SWITCH.getBooleanValue() && player != null && mc.world != null)
+        if (player != null && mc.world != null)
         {
             BlockState state = mc.world.getBlockState(pos);
             ItemStack stack = player.getMainHandStack();
@@ -277,11 +278,12 @@ public class InventoryUtils
     {
         int minDurability = Configs.Generic.ITEM_SWAP_DURABILITY_THRESHOLD.getIntegerValue();
 
-        // For items with low maximum durability, use 5% as the threshold,
+        // For items with low maximum durability, use 8% as the threshold,
         // if the configured durability threshold is over that.
-        if ((double) minDurability / (double) stack.getMaxDamage() >= 0.05D)
+        if (stack.getMaxDamage() <= 100 && minDurability <= 20 &&
+            (double) minDurability / (double) stack.getMaxDamage() > 0.08)
         {
-            minDurability = (int) (stack.getMaxDamage() * 0.05);
+            minDurability = (int) (stack.getMaxDamage() * 0.08);
         }
 
         return minDurability;
@@ -380,7 +382,9 @@ public class InventoryUtils
             {
                 ItemStack stack = slot.getStack();
 
-                if (stack.isDamageable() && stack.isDamaged() && targetSlot.canInsert(stack) &&
+                // Don't take items from the current hotbar slot
+                if ((slot.id - 36) != player.inventory.selectedSlot &&
+                    stack.isDamageable() && stack.isDamaged() && targetSlot.canInsert(stack) &&
                     EnchantmentHelper.getLevel(Enchantments.MENDING, stack) > 0)
                 {
                     return slot.id;

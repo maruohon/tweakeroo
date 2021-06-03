@@ -5,12 +5,16 @@
     "compatibilityLevel": "JAVA_16",
     "client": [
         "IMixinAbstractBlock",
+        "IMixinAxeItem",
+        "IMixinChunkLightProvider",
         "IMixinCommandBlockExecutor",
         "IMixinHorseBaseEntity",
+        "MixinAbstractClientPlayerEntity",
         "MixinAbstractInventoryScreen",
         "MixinBackgroundRenderer",
         "MixinBlockEntityRenderDispatcher",
         "MixinBlockItem",
+        "MixinBuiltChunk",
         "MixinChatHud",
         "MixinChatScreen",
         "MixinChunkBuilder_BuiltChunk",
@@ -35,16 +39,19 @@
         "MixinItemGroup",
         "MixinItemStack",
         "MixinKeyboardInput",
+        "MixinLightingProvider",
         "MixinLivingEntity",
         "MixinMinecraftClient",
         "MixinMobSpawnerBlockEntityRenderer",
         "MixinMobSpawnerLogic",
+        "MixinMouse",
         "MixinObserverBlock",
         "MixinParticleManager",
         "MixinPlayerAbilities",
         "MixinPlayerEntity",
         "MixinPresetsScreen",
         "MixinRavagerEntity",
+        "MixinScaffoldingBlock",
         "MixinSculkSensor",
         "MixinSignBlockEntity",
         "MixinSignEditScreen",
@@ -57,7 +64,8 @@
         "MixinWorld",
         "MixinWorldRenderer"
     ],
+    "mixinPriority": 990,
     "injectors": {
-        "defaultRequire": 1
+        "defaultRequire": 0
     }
 }

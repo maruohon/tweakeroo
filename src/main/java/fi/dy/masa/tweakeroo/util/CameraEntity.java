@@ -24,10 +24,11 @@ public class CameraEntity extends ClientPlayerEntity
     private static float strafeRamped;
     private static float verticalRamped;
     private static boolean sprinting;
+    private static boolean originalCameraWasPlayer;
 
     public CameraEntity(MinecraftClient mc, ClientWorld world,
-            ClientPlayNetworkHandler nethandler, StatHandler stats,
-            ClientRecipeBook recipeBook)
+                        ClientPlayNetworkHandler nethandler, StatHandler stats,
+                        ClientRecipeBook recipeBook)
     {
         super(mc, world, nethandler, stats, recipeBook, false, false);
     }
@@ -221,10 +222,16 @@ public class CameraEntity extends ClientPlayerEntity
         }
     }
 
+    public static boolean originalCameraWasPlayer()
+    {
+        return originalCameraWasPlayer;
+    }
+
     private static void createAndSetCamera(MinecraftClient mc)
     {
         camera = createCameraEntity(mc);
         originalCameraEntity = mc.getCameraEntity();
+        originalCameraWasPlayer = originalCameraEntity == mc.player;
         cullChunksOriginal = mc.chunkCullingEnabled;
 
         mc.setCameraEntity(camera);
@@ -238,10 +245,12 @@ public class CameraEntity extends ClientPlayerEntity
     {
         if (mc.world != null && camera != null)
         {
+            // Re-fetch the player entity, in case the player died while in Free Camera mode and the instance changed
+            mc.setCameraEntity(originalCameraWasPlayer ? mc.player : originalCameraEntity);
+            mc.chunkCullingEnabled = cullChunksOriginal;
+
             final int chunkX = MathHelper.floor(camera.getX() / 16.0) >> 4;
             final int chunkZ = MathHelper.floor(camera.getZ() / 16.0) >> 4;
-            mc.setCameraEntity(originalCameraEntity);
-            mc.chunkCullingEnabled = cullChunksOriginal;
             CameraUtils.markChunksForRebuildOnDeactivation(chunkX, chunkZ);
         }
 

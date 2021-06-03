@@ -43,11 +43,7 @@ public abstract class MixinEntity
     {
         if ((Object) this instanceof net.minecraft.client.network.ClientPlayerEntity)
         {
-            if (CameraUtils.shouldPreventPlayerMovement())
-            {
-                ci.cancel();
-            }
-            else if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
+            if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
             {
                 double speed = motion.lengthSquared();
 
@@ -73,9 +69,6 @@ public abstract class MixinEntity
         {
             if (CameraUtils.shouldPreventPlayerMovement())
             {
-                this.yaw = this.prevYaw;
-                this.pitch = this.prevPitch;
-
                 CameraUtils.updateCameraRotations((float) yawChange, (float) pitchChange);
                 ci.cancel();
 

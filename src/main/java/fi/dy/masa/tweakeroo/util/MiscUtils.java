@@ -4,24 +4,28 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
+import fi.dy.masa.tweakeroo.mixin.IMixinAxeItem;
 import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockExecutor;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
 public class MiscUtils
 {
     // name;blocks;biome;options;iconitem
-    public static final Pattern PATTERN_WORLD_PRESET = Pattern.compile("^(?<name>[a-zA-Z0-9_ -]+);(?<blocks>[a-z0-9_:\\.\\*-]+);(?<biome>[a-z0-9_:]+);(?<options>[a-z0-9_, \\(\\)=]*);(?<icon>[a-z0-9_:-]+)$");
+    public static final Pattern PATTERN_WORLD_PRESET = Pattern.compile("^(?<name>[a-zA-Z0-9_/&*#!=()\\[\\]{} -]+);(?<blocks>[a-z0-9_:.*,-]+);(?<biome>[a-z0-9_:.-]+);(?<options>[a-z0-9_, ()=]*);(?<icon>[a-z0-9_:.-]+)$");
 
     private static net.minecraft.text.Text[] previousSignText;
     private static String previousChatText = "";
@@ -96,6 +100,12 @@ public class MiscUtils
             MinecraftClient.getInstance().options.mouseSensitivity = mouseSensitivity;
             mouseSensitivity = -1.0;
         }
+    }
+
+    public static boolean isStrippableLog(World world, BlockPos pos)
+    {
+        BlockState state = world.getBlockState(pos);
+        return IMixinAxeItem.tweakeroo_getStrippedBlocks().containsKey(state.getBlock());
     }
 
     public static boolean getUpdateExec(CommandBlockBlockEntity te)

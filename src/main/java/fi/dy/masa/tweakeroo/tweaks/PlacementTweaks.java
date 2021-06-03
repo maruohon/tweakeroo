@@ -10,6 +10,7 @@ import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.AxeItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -40,6 +41,7 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 
 public class PlacementTweaks
@@ -60,6 +62,7 @@ public class PlacementTweaks
     private static boolean firstWasRotation;
     private static boolean firstWasOffset;
     private static int placementCount;
+    private static int hotbarSlot = -1;
     private static ItemStack stackClickedOn = ItemStack.EMPTY;
     @Nullable private static BlockState stateClickedOn = null;
     public static final BlockRestriction FAST_RIGHT_CLICK_BLOCK_RESTRICTION = new BlockRestriction();
@@ -165,6 +168,7 @@ public class PlacementTweaks
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
         {
             stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
+            hotbarSlot = player.inventory.selectedSlot;
         }
     }
 
@@ -298,8 +302,17 @@ public class PlacementTweaks
             return ActionResult.PASS;
         }
 
+        ItemStack stackPre = player.getStackInHand(hand);
+
+        if (Configs.Disable.DISABLE_AXE_STRIPPING.getBooleanValue() &&
+            stackPre.getItem() instanceof AxeItem &&
+            MiscUtils.isStrippableLog(world, hitResult.getBlockPos()))
+        {
+            return ActionResult.PASS;
+        }
+
+        stackPre = stackPre.copy();
         boolean restricted = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() || FeatureToggle.TWEAK_PLACEMENT_GRID.getBooleanValue();
-        ItemStack stackPre = player.getStackInHand(hand).copy();
         Direction sideIn = hitResult.getSide();
         BlockPos posIn = hitResult.getBlockPos();
         Vec3d hitVec = hitResult.getPos();
@@ -644,7 +657,7 @@ public class PlacementTweaks
         {
             ItemStack stackCurrent = player.getStackInHand(hand);
 
-            if (stackOriginal.isEmpty() == false &&
+            if (stackOriginal.isEmpty() == false && player.inventory.selectedSlot == hotbarSlot &&
                 (stackCurrent.isEmpty() || stackCurrent.isItemEqualIgnoreDamage(stackOriginal) == false))
             {
                 // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
