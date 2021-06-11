@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -26,12 +27,13 @@ public abstract class MixinClientWorld extends World
         super(properties, registryKey, dimensionType, supplier, bl, bl2, l);
     }
 
-    @Override
-    public <T extends Entity> void tickEntity(Consumer<T> consumer, T entity)
+    @Inject(method = "tickEntity", at = @At("HEAD"), cancellable = true)
+    private void disableClientEntityTicking(Entity entity, CallbackInfo ci)
     {
-        if (Configs.Disable.DISABLE_CLIENT_ENTITY_UPDATES.getBooleanValue() == false || entity instanceof PlayerEntity)
+        if (Configs.Disable.DISABLE_CLIENT_ENTITY_UPDATES.getBooleanValue() &&
+            (entity instanceof PlayerEntity) == false)
         {
-            super.tickEntity(consumer, entity);
+            ci.cancel();
         }
     }
 

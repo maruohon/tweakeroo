@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.network.ClientPlayerEntity;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -18,8 +19,8 @@ public abstract class MixinEntity
 {
     @Shadow public net.minecraft.world.World world;
 
-    @Shadow public float yaw;
-    @Shadow public float pitch;
+    @Shadow private float yaw;
+    @Shadow private float pitch;
     @Shadow public float prevYaw;
     @Shadow public float prevPitch;
 
@@ -41,7 +42,7 @@ public abstract class MixinEntity
     @Inject(method = "updateVelocity", at = @At("HEAD"), cancellable = true)
     private void moreAccurateMoveRelative(float float_1, net.minecraft.util.math.Vec3d motion, CallbackInfo ci)
     {
-        if ((Object) this instanceof net.minecraft.client.network.ClientPlayerEntity)
+        if ((Object) this instanceof ClientPlayerEntity)
         {
             if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
             {
@@ -65,14 +66,11 @@ public abstract class MixinEntity
     @Inject(method = "changeLookDirection", at = @At("HEAD"), cancellable = true)
     private void overrideYaw(double yawChange, double pitchChange, CallbackInfo ci)
     {
-        if ((Object) this instanceof net.minecraft.client.network.ClientPlayerEntity)
+        if ((Object) this instanceof ClientPlayerEntity)
         {
             if (CameraUtils.shouldPreventPlayerMovement())
             {
                 CameraUtils.updateCameraRotations((float) yawChange, (float) pitchChange);
-                ci.cancel();
-
-                return;
             }
 
             if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue())
@@ -105,6 +103,12 @@ public abstract class MixinEntity
                 this.prevPitch = this.pitch;
                 ci.cancel();
 
+                return;
+            }
+
+            if (CameraUtils.shouldPreventPlayerMovement())
+            {
+                ci.cancel();
                 return;
             }
 

@@ -29,7 +29,7 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 @Mixin(PresetsScreen.class)
 public abstract class MixinPresetsScreen
 {
-    @Shadow @Final private static List<Object> PRESETS;
+    @Shadow @Final static List<Object> PRESETS;
 
     @Shadow
     private static void addPreset(Text name, ItemConvertible itemIn, RegistryKey<Biome> biomeIn, List<StructureFeature<?>> structures, boolean b1, boolean b2, boolean b3, FlatChunkGeneratorLayer... layers) {};
