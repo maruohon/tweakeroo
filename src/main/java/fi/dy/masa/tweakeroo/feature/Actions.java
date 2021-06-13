@@ -14,6 +14,7 @@ import fi.dy.masa.malilib.action.NamedParameterizedAction;
 import fi.dy.masa.malilib.action.ParameterizedAction;
 import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.listener.EventListener;
+import fi.dy.masa.malilib.overlay.message.MessageDispatcher;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.EntityUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
@@ -178,7 +179,7 @@ public class Actions
     private static ActionResult reloadLanguagePacks(Minecraft mc)
     {
         mc.getLanguageManager().onResourceManagerReload(mc.getResourceManager());
-        MessageUtils.success("tweakeroo.message.language_packs_reloaded");
+        MessageDispatcher.success("tweakeroo.message.language_packs_reloaded");
         return ActionResult.SUCCESS;
     }
 

@@ -14,6 +14,7 @@ import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.input.KeyAction;
 import fi.dy.masa.malilib.input.callback.AdjustableValueHotkeyCallback;
 import fi.dy.masa.malilib.input.callback.HotkeyCallback;
+import fi.dy.masa.malilib.overlay.message.MessageHelpers;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.feature.Actions;
@@ -176,7 +177,7 @@ public class Callbacks
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.createClamped(feature.getBooleanConfig(), intConfig)
                  .setToggleMessageFactory((cfg) -> {
                      if (cfg.getBooleanValue()) { return StringUtils.translate(toggleMessageKey, intConfig.getStringValue()); }
-                     else { return MessageUtils.getBasicBooleanConfigToggleMessage(cfg); }
+                     else { return MessageHelpers.getBasicBooleanConfigToggleMessage(cfg); }
                  })
                  .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, intConfig.getStringValue()));
         feature.setHotkeyCallback(callback);
@@ -190,7 +191,7 @@ public class Callbacks
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.create(feature.getBooleanConfig(), config)
                  .setToggleMessageFactory((cfg) -> {
                      if (cfg.getBooleanValue()) { return StringUtils.translate(toggleMessageKey, config.getValue().getDisplayName()); }
-                     else { return MessageUtils.getBasicBooleanConfigToggleMessage(cfg); }
+                     else { return MessageHelpers.getBasicBooleanConfigToggleMessage(cfg); }
                  })
                  .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, config.getValue().getDisplayName()));
         feature.setHotkeyCallback(callback);
@@ -213,7 +214,7 @@ public class Callbacks
         }
         else
         {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+            return MessageHelpers.getBasicBooleanConfigToggleMessage(config);
         }
     }
 
@@ -242,7 +243,7 @@ public class Callbacks
         }
         else
         {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+            return MessageHelpers.getBasicBooleanConfigToggleMessage(config);
         }
     }
 
@@ -255,7 +256,7 @@ public class Callbacks
         }
         else
         {
-            return MessageUtils.getBasicBooleanConfigToggleMessage(config);
+            return MessageHelpers.getBasicBooleanConfigToggleMessage(config);
         }
     }
 
