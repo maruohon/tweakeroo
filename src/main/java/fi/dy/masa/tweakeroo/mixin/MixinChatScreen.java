@@ -1,6 +1,8 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
@@ -21,8 +23,9 @@ public abstract class MixinChatScreen
 {
     @Shadow
     protected TextFieldWidget chatField;
-    @Shadow
-    private String originalChatText;
+
+    @Mutable
+    @Shadow @Final private String originalChatText;
 
     @Inject(method = "removed", at = @At("HEAD"))
     private void storeChatText(CallbackInfo ci)
