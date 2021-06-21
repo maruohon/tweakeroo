@@ -94,6 +94,7 @@ public class Callbacks
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
 
+        Configs.Generic.TOOL_SWITCHABLE_SLOTS.setValueChangeCallback((cfg) -> InventoryUtils.setToolSwitchableSlots(cfg.getStringValue()));
         Configs.Lists.CREATIVE_EXTRA_ITEMS.setValueChangeCallback((cfg) -> CreativeExtraItems.setCreativeExtraItems(cfg.getStrings()));
 
         FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_AFTER_CLICKER));

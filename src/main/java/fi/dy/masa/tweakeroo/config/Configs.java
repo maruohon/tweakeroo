@@ -93,6 +93,7 @@ public class Configs implements IConfigHandler
         public static final ConfigDouble        SNAP_AIM_PITCH_STEP                 = new ConfigDouble      ("snapAimPitchStep", 12.5, 0, 90, "The pitch angle step of the snap aim tweak");
         public static final ConfigDouble        SNAP_AIM_YAW_STEP                   = new ConfigDouble      ("snapAimYawStep", 45, 0, 360, "The yaw angle step of the snap aim tweak");
         public static final ConfigInteger       STRUCTURE_BLOCK_MAX_SIZE            = new ConfigInteger     ("structureBlockMaxSize", 128, 1, 256, "The maximum dimensions for a Structure Block's saved area");
+        public static final ConfigString        TOOL_SWITCHABLE_SLOTS               = new ConfigString      ("toolSwitchableSlots", "1-9", "The slots that the Tool Switch tweak is allowed to put tools to.\nNote that Tool Switch can also switch to other slots in the hotbar,\nif they already have the preferred tool, but it will only\nswap new tools to these slots");
         public static final ConfigBoolean       ZOOM_ADJUST_MOUSE_SENSITIVITY       = new ConfigBoolean     ("zoomAdjustMouseSensitivity", true, "If enabled, then the mouse sensitivity is reduced\nwhile the zoom feature is enabled and the zoom key is active");
         public static final ConfigDouble        ZOOM_FOV                            = new ConfigDouble      ("zoomFov", 30, 0.01, 359.99, "The FOV value used for the zoom feature");
 
@@ -159,6 +160,7 @@ public class Configs implements IConfigHandler
                 SNAP_AIM_PITCH_STEP,
                 SNAP_AIM_YAW_STEP,
                 STRUCTURE_BLOCK_MAX_SIZE,
+                TOOL_SWITCHABLE_SLOTS,
                 ZOOM_FOV
         );
     }
@@ -342,6 +344,7 @@ public class Configs implements IConfigHandler
 
         CreativeExtraItems.setCreativeExtraItems(Lists.CREATIVE_EXTRA_ITEMS.getStrings());
 
+        InventoryUtils.setToolSwitchableSlots(Generic.TOOL_SWITCHABLE_SLOTS.getStringValue());
         InventoryUtils.setRepairModeSlots(Lists.REPAIR_MODE_SLOTS.getStrings());
         InventoryUtils.setUnstackingItems(Lists.UNSTACKING_ITEMS.getStrings());
 

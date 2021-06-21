@@ -1,9 +1,12 @@
 package fi.dy.masa.tweakeroo.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -11,11 +14,13 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ElytraItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -28,8 +33,10 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.gui.Message;
 import fi.dy.masa.malilib.util.Constants;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
@@ -40,8 +47,62 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 public class InventoryUtils
 {
     private static final List<EquipmentSlot> REPAIR_MODE_SLOTS = new ArrayList<>();
-    private static final List<Integer> REPAIR_MODE_SLOT_NUMBES = new ArrayList<>();
+    private static final List<Integer> REPAIR_MODE_SLOT_NUMBERS = new ArrayList<>();
     private static final HashSet<Item> UNSTACKING_ITEMS = new HashSet<>();
+    private static final List<Integer> TOOL_SWITCHABLE_SLOTS = new ArrayList<>();
+
+    public static void setToolSwitchableSlots(String configStr)
+    {
+        parseSlotsFromString(configStr, TOOL_SWITCHABLE_SLOTS);
+    }
+
+    public static void parseSlotsFromString(String configStr, Collection<Integer> output)
+    {
+        String[] parts = configStr.split(",");
+        Pattern patternRange = Pattern.compile("^(?<start>[0-9])-(?<end>[0-9])$");
+
+        output.clear();
+
+        for (String str : parts)
+        {
+            try
+            {
+                Matcher matcher = patternRange.matcher(str);
+
+                if (matcher.matches())
+                {
+                    int slotStart = Integer.parseInt(matcher.group("start")) - 1;
+                    int slotEnd = Integer.parseInt(matcher.group("end")) - 1;
+
+                    if (slotStart <= slotEnd &&
+                        PlayerInventory.isValidHotbarIndex(slotStart) &&
+                        PlayerInventory.isValidHotbarIndex(slotEnd))
+                    {
+                        for (int slotNum = slotStart; slotNum <= slotEnd; ++slotNum)
+                        {
+                            if (output.contains(slotNum) == false)
+                            {
+                                output.add(slotNum);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    int slotNum = Integer.parseInt(str) - 1;
+
+                    if (PlayerInventory.isValidHotbarIndex(slotNum) && output.contains(slotNum) == false)
+                    {
+                        output.add(slotNum);
+                    }
+                }
+            }
+            catch (NumberFormatException ignore)
+            {
+                InfoUtils.showGuiOrInGameMessage(Message.MessageType.ERROR, "Failed to parse slots from string %s", configStr);
+            }
+        }
+    }
 
     public static void setUnstackingItems(List<String> names)
     {
@@ -68,7 +129,7 @@ public class InventoryUtils
     public static void setRepairModeSlots(List<String> names)
     {
         REPAIR_MODE_SLOTS.clear();
-        REPAIR_MODE_SLOT_NUMBES.clear();
+        REPAIR_MODE_SLOT_NUMBERS.clear();
 
         for (String name : names)
         {
@@ -87,7 +148,7 @@ public class InventoryUtils
             if (type != null)
             {
                 REPAIR_MODE_SLOTS.add(type);
-                REPAIR_MODE_SLOT_NUMBES.add(getSlotNumberForEquipmentType(type, null));
+                REPAIR_MODE_SLOT_NUMBERS.add(getSlotNumberForEquipmentType(type, null));
             }
         }
     }
@@ -100,7 +161,7 @@ public class InventoryUtils
             return true;
         }
 
-        return REPAIR_MODE_SLOT_NUMBES.contains(slotNum);
+        return REPAIR_MODE_SLOT_NUMBERS.contains(slotNum);
     }
 
     /**
@@ -256,17 +317,131 @@ public class InventoryUtils
             BlockState state = mc.world.getBlockState(pos);
             ItemStack stack = player.getMainHandStack();
 
-            if (stack.isEmpty() || stack.getMiningSpeedMultiplier(state) <= 1f)
+            if (isEffectiveToolWithDurability(stack, state) == false)
             {
                 ScreenHandler container = player.playerScreenHandler;
-                int slotNumber = findSlotWithEffectiveItemWithDurabilityLeft(container, state);
+                ItemPickerTest test = (currentStack, previous) -> InventoryUtils.isBetterTool(currentStack, previous, state);
+                int slotNumber = findSlotWithBestItemMatch(container, test, UniformIntProvider.create(36, 44), UniformIntProvider.create(9, 35));
 
                 if (slotNumber != -1 && (slotNumber - 36) != player.getInventory().selectedSlot)
                 {
-                    swapItemToHand(player, Hand.MAIN_HAND, slotNumber);
+                    swapToolToHand(slotNumber, mc);
                 }
             }
         }
+    }
+
+    private static boolean isBetterTool(ItemStack stack, ItemStack previousBestTool, BlockState state)
+    {
+        if (stack.isEmpty() || isEffectiveToolWithDurability(stack, state) == false)
+        {
+            return false;
+        }
+
+        return isMoreEffectiveToolWithDurability(stack, previousBestTool, state);
+    }
+
+    private static int findSuitableSlot(ScreenHandler container, Predicate<ItemStack> itemTest, UniformIntProvider... ranges)
+    {
+        final int max = container.slots.size() - 1;
+
+        for (UniformIntProvider range : ranges)
+        {
+            int end = Math.min(max, range.getMax());
+
+            for (int slotNumber = range.getMin(); slotNumber <= end; ++slotNumber)
+            {
+                if (itemTest.test(container.getSlot(slotNumber).getStack()))
+                {
+                    return slotNumber;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private static int findSlotWithBestItemMatch(ScreenHandler container, ItemPickerTest itemTest, UniformIntProvider... ranges)
+    {
+        final int max = container.slots.size() - 1;
+        ItemStack bestMatch = ItemStack.EMPTY;
+        int slotNum = -1;
+
+        for (UniformIntProvider range : ranges)
+        {
+            int end = Math.min(max, range.getMax());
+
+            for (int slotNumber = range.getMin(); slotNumber <= end; ++slotNumber)
+            {
+                Slot slot = container.getSlot(slotNumber);
+
+                if (itemTest.isBetterMatch(slot.getStack(), bestMatch))
+                {
+                    bestMatch = slot.getStack();
+                    slotNum = slot.id;
+                }
+            }
+        }
+
+        return slotNum;
+    }
+
+    private static int findEmptySlot(ScreenHandler container, Collection<Integer> slotNumbers)
+    {
+        final int maxSlot = container.slots.size() - 1;
+
+        for (int slotNumber : slotNumbers)
+        {
+            if (slotNumber >= 0 && slotNumber <= maxSlot &&
+                container.getSlot(slotNumber).hasStack() == false)
+            {
+                return slotNumber;
+            }
+        }
+
+        return -1;
+    }
+
+    private static boolean isEffectiveToolWithDurability(ItemStack stack, BlockState state)
+    {
+        return hasEnoughDurability(stack) && getEffectiveSpeed(stack, state) > 1.0f;
+    }
+
+    private static boolean isMoreEffectiveToolWithDurability(ItemStack stack, ItemStack oldTool, BlockState state)
+    {
+        if (hasEnoughDurability(stack))
+        {
+            return getEffectiveSpeed(stack, state) > getEffectiveSpeed(oldTool, state);
+        }
+
+        return false;
+    }
+
+    protected static boolean hasEnoughDurability(ItemStack stack)
+    {
+        return stack.getMaxDamage() - stack.getDamage() > getMinDurability(stack);
+    }
+
+    protected static float getEffectiveSpeed(ItemStack stack, BlockState state)
+    {
+        float speed = stack.getMiningSpeedMultiplier(state);
+
+        if (speed > 1.0f)
+        {
+            int effLevel = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
+
+            if (effLevel > 0)
+            {
+                speed += (effLevel * effLevel) + 1;
+            }
+        }
+
+        return speed;
+    }
+
+    public interface ItemPickerTest
+    {
+        boolean isBetterMatch(ItemStack stack, ItemStack previousBestMatch);
     }
 
     private static boolean isItemAtLowDurability(ItemStack stack, int minDurability)
@@ -461,7 +636,7 @@ public class InventoryUtils
 
     private static boolean isHotbarSlot(Slot slot)
     {
-        return slot.id >= 36 && slot.id <= 44;
+        return slot.id >= 36 && slot.id < (36 + PlayerInventory.getHotbarSize());
     }
 
     private static void swapItemToHand(PlayerEntity player, Hand hand, int slotNumber)
@@ -499,6 +674,83 @@ public class InventoryUtils
                 mc.interactionManager.clickSlot(container.syncId, slotNumber, currentHotbarSlot, SlotActionType.SWAP, mc.player);
             }
         }
+    }
+
+    private static void swapToolToHand(int slotNumber, MinecraftClient mc)
+    {
+        PlayerEntity player = mc.player;
+
+        if (slotNumber >= 0 && player.currentScreenHandler == player.playerScreenHandler)
+        {
+            PlayerInventory inventory = player.getInventory();
+            ScreenHandler container = player.playerScreenHandler;
+            Slot slot = container.getSlot(slotNumber);
+
+            if (isHotbarSlot(slot))
+            {
+                inventory.selectedSlot = slotNumber - 36;
+                mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(inventory.selectedSlot));
+            }
+            else
+            {
+                int selectedSlot = inventory.selectedSlot;
+                int hotbarSlot = getUsableHotbarSlotForTool(selectedSlot, TOOL_SWITCHABLE_SLOTS, container);
+
+                if (PlayerInventory.isValidHotbarIndex(hotbarSlot))
+                {
+                    if (hotbarSlot != selectedSlot)
+                    {
+                        inventory.selectedSlot = hotbarSlot;
+                        mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(inventory.selectedSlot));
+                    }
+
+                    mc.interactionManager.clickSlot(container.syncId, slotNumber, hotbarSlot, SlotActionType.SWAP, mc.player);
+                }
+            }
+        }
+    }
+
+    private static int getUsableHotbarSlotForTool(int currentHotbarSlot, Collection<Integer> validSlots, ScreenHandler container)
+    {
+        int first = -1;
+        int nonTool = -1;
+
+        if (validSlots.contains(currentHotbarSlot))
+        {
+            ItemStack stack = container.getSlot(currentHotbarSlot + 36).getStack();
+
+            if (stack.isEmpty())
+            {
+                return currentHotbarSlot;
+            }
+
+            if ((stack.getItem() instanceof ToolItem) == false)
+            {
+                nonTool = currentHotbarSlot;
+            }
+        }
+
+        for (int hotbarSlot : validSlots)
+        {
+            ItemStack stack = container.getSlot(hotbarSlot + 36).getStack();
+
+            if (stack.isEmpty())
+            {
+                return hotbarSlot;
+            }
+
+            if (nonTool == -1 && (stack.getItem() instanceof ToolItem) == false)
+            {
+                nonTool = hotbarSlot;
+            }
+
+            if (first == -1)
+            {
+                first = hotbarSlot;
+            }
+        }
+
+        return nonTool >= 0 ? nonTool : first;
     }
 
     private static void swapItemToEquipmentSlot(PlayerEntity player, EquipmentSlot type, int sourceSlotNumber)
