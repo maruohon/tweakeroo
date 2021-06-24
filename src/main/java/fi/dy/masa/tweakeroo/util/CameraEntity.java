@@ -131,7 +131,7 @@ public class CameraEntity extends ClientPlayerEntity
 
     private void handleMotion(float forward, float up, float strafe)
     {
-        float yaw = this.getYaw();
+        float yaw = this.yaw;
         double xFactor = Math.sin(yaw * Math.PI / 180D);
         double zFactor = Math.cos(yaw * Math.PI / 180D);
         double scale = getMoveSpeed();
@@ -154,16 +154,16 @@ public class CameraEntity extends ClientPlayerEntity
         this.prevY = this.getY();
         this.prevZ = this.getZ();
 
-        this.prevYaw = this.getYaw();
-        this.prevPitch = this.getPitch();
+        this.prevYaw = this.yaw;
+        this.prevPitch = this.pitch;
 
         this.prevHeadYaw = this.headYaw;
     }
 
     public void setCameraRotations(float yaw, float pitch)
     {
-        this.setYaw(yaw);
-        this.setPitch(pitch);
+        this.yaw = yaw;
+        this.pitch = pitch;
 
         this.headYaw = yaw;
 
@@ -176,11 +176,11 @@ public class CameraEntity extends ClientPlayerEntity
 
     public void updateCameraRotations(float yawChange, float pitchChange)
     {
-        float yaw = this.getYaw() + yawChange * 0.15F;
-        float pitch = MathHelper.clamp(this.getPitch() + pitchChange * 0.15F, -90F, 90F);
+        float yaw = this.yaw + yawChange * 0.15F;
+        float pitch = MathHelper.clamp(this.pitch + pitchChange * 0.15F, -90F, 90F);
 
-        this.setYaw(yaw);
-        this.setPitch(pitch);
+        this.yaw = yaw;
+        this.pitch = pitch;
 
         this.setCameraRotations(yaw, pitch);
     }
@@ -190,8 +190,8 @@ public class CameraEntity extends ClientPlayerEntity
         ClientPlayerEntity player = mc.player;
         CameraEntity camera = new CameraEntity(mc, mc.world, player.networkHandler, player.getStatHandler(), player.getRecipeBook());
         camera.noClip = true;
-        float yaw = player.getYaw();
-        float pitch = player.getPitch();
+        float yaw = player.yaw;
+        float pitch = player.pitch;
 
         camera.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), yaw, pitch);
         camera.setRotation(yaw, pitch);

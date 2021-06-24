@@ -400,7 +400,7 @@ public class RenderUtils
         int height = 50;
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
-        double currentPitch = mc.player.getPitch();
+        double currentPitch = mc.player.pitch;
         double centerPitch = 0;
         double indicatorRange = 180;
 

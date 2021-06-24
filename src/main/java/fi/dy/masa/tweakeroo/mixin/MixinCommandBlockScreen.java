@@ -64,11 +64,11 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             y = 181;
             this.textFieldName = new TextFieldWidget(this.textRenderer, x1, y, width, 20, new LiteralText(""));
             this.textFieldName.setText(this.blockEntity.getCommandExecutor().getCustomName().getString());
-            this.addSelectableChild(this.textFieldName);
+            this.children.add(this.textFieldName);
             final TextFieldWidget tf = this.textFieldName;
             final BlockPos pos = this.blockEntity.getPos();
 
-            this.addDrawableChild(new ButtonWidget(x2, y, widthBtn, 20, str, (button) ->
+            this.addButton(new ButtonWidget(x2, y, widthBtn, 20, str, (button) ->
             {
                 String name = tf.getText();
                 name = String.format("{\"CustomName\":\"{\\\"text\\\":\\\"%s\\\"}\"}", name);
@@ -94,7 +94,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
                 this.client.player.sendChatMessage(cmd);
             });
 
-            this.addDrawableChild(this.buttonUpdateExec);
+            this.addButton(this.buttonUpdateExec);
         }
     }
 

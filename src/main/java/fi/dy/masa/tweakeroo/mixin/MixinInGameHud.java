@@ -48,7 +48,7 @@ public abstract class MixinInGameHud extends DrawableHelper
 
     @Inject(method = "render",
             at = @At(value = "INVOKE",
-                     target = "Lnet/minecraft/client/gui/hud/PlayerListHud;setVisible(Z)V",
+                     target = "Lnet/minecraft/client/gui/hud/PlayerListHud;tick(Z)V",
                      ordinal = 1, shift = At.Shift.AFTER))
     private void alwaysRenderPlayerList(MatrixStack matrixStack, float partialTicks, CallbackInfo ci)
     {
@@ -57,7 +57,7 @@ public abstract class MixinInGameHud extends DrawableHelper
             Scoreboard scoreboard = this.client.world.getScoreboard();
             ScoreboardObjective objective = scoreboard.getObjectiveForSlot(0);
 
-            this.playerListHud.setVisible(true);
+            this.playerListHud.tick(true);
             this.playerListHud.render(matrixStack, this.scaledWidth, scoreboard, objective);
         }
     }

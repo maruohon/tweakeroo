@@ -27,7 +27,7 @@ public abstract class MixinAbstractInventoryScreen<T extends net.minecraft.scree
     {
         if (Configs.Disable.DISABLE_INVENTORY_EFFECTS.getBooleanValue())
         {
-            this.x = (this.width - this.backgroundWidth) / 2;
+            this.field_2776 = (this.width - this.backgroundWidth) / 2; // x
             // This won't actually work anymore, the InventoryScreen#render() method overrides
             // the value based on whether or not the recipe book is open.
             this.drawStatusEffects = false;
