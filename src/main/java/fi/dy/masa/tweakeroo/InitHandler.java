@@ -4,12 +4,13 @@ import fi.dy.masa.malilib.config.BaseModConfig;
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.event.dispatch.ClientWorldChangeEventDispatcher;
-import fi.dy.masa.malilib.input.InputDispatcher;
-import fi.dy.masa.malilib.input.HotkeyManager;
 import fi.dy.masa.malilib.event.dispatch.RenderEventDispatcher;
 import fi.dy.masa.malilib.gui.config.ConfigSearchInfo;
+import fi.dy.masa.malilib.gui.config.ConfigStatusWidgetRegistry;
 import fi.dy.masa.malilib.gui.config.ConfigTabRegistry;
 import fi.dy.masa.malilib.gui.config.ConfigWidgetRegistry;
+import fi.dy.masa.malilib.input.HotkeyManager;
+import fi.dy.masa.malilib.input.InputDispatcher;
 import fi.dy.masa.malilib.interoperation.BlockPlacementPositionHandler;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -22,6 +23,8 @@ import fi.dy.masa.tweakeroo.feature.Actions;
 import fi.dy.masa.tweakeroo.gui.ConfigScreen;
 import fi.dy.masa.tweakeroo.gui.widget.DisableToggleConfigWidget;
 import fi.dy.masa.tweakeroo.gui.widget.FeatureToggleConfigWidget;
+import fi.dy.masa.tweakeroo.gui.widget.info.DisableConfigStatusWidget;
+import fi.dy.masa.tweakeroo.gui.widget.info.TweakConfigStatusWidget;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 
 public class InitHandler implements InitializationHandler
@@ -37,6 +40,9 @@ public class InitHandler implements InitializationHandler
 
         ConfigWidgetRegistry.INSTANCE.registerConfigSearchInfo(FeatureToggle.class, new ConfigSearchInfo<FeatureToggle>(true, true).setBooleanConfigGetter(FeatureToggle::getBooleanConfig).setKeyBindGetter(FeatureToggle::getKeyBind));
         ConfigWidgetRegistry.INSTANCE.registerConfigSearchInfo(DisableToggle.class, new ConfigSearchInfo<DisableToggle>(true, true).setBooleanConfigGetter(DisableToggle::getBooleanConfig).setKeyBindGetter(DisableToggle::getKeyBind));
+
+        ConfigStatusWidgetRegistry.INSTANCE.registerConfigStatusWidgetFactory(DisableToggle.class, DisableConfigStatusWidget::new, "tweakeroo:csi_value_disable_toggle");
+        ConfigStatusWidgetRegistry.INSTANCE.registerConfigStatusWidgetFactory(FeatureToggle.class, TweakConfigStatusWidget::new, "tweakeroo:csi_value_tweak_toggle");
 
         HotkeyManager.INSTANCE.registerHotkeyProvider(InputHandler.getInstance());
         InputDispatcher.INSTANCE.registerKeyboardInputHandler(InputHandler.getInstance());
