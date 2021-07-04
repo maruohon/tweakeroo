@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
+import java.util.Optional;
 import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -536,12 +537,12 @@ public class PlacementTweaks
                     BlockPos posPlacement = getPlacementPositionForTargetedPosition(posNew, sideIn, world);
                     IBlockState state = item.getBlock().getStateForPlacement(world, posPlacement, sideIn,
                             (float) hitVec.x, (float) hitVec.y, (float) hitVec.z, meta, player);
-                    EnumFacing facingTmp = BlockUtils.getFirstPropertyFacingValue(state);
+                    Optional<EnumFacing> facingTmp = BlockUtils.getFirstPropertyFacingValue(state);
                     //System.out.printf("accurate - sideIn: %s, state: %s, hit: %s, f: %s, posNew: %s\n", sideIn, state, hitVec, EnumFacing.getDirectionFromEntityLiving(posIn, player), posNew);
 
-                    if (facingTmp != null)
+                    if (facingTmp.isPresent())
                     {
-                        facing = facingTmp;
+                        facing = facingTmp.get();
                     }
                 }
                 else

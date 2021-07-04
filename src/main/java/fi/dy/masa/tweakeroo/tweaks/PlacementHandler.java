@@ -1,6 +1,6 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRedstoneComparator;
 import net.minecraft.block.BlockRedstoneRepeater;
@@ -23,11 +23,12 @@ public class PlacementHandler
         IBlockState state = stateIn;
         Vec3d hitVec = context.getHitVec();
         Block block = stateIn.getBlock();
-        @Nullable PropertyDirection property = BlockUtils.getFirstDirectionProperty(stateIn);
+        Optional<PropertyDirection> propertyOptional = BlockUtils.getFirstDirectionProperty(stateIn);
         int x = (int) hitVec.x;
 
-        if (x >= 2 && property != null)
+        if (x >= 2 && propertyOptional.isPresent())
         {
+            PropertyDirection property = propertyOptional.get();
             EnumFacing facingOrig = stateIn.getValue(property);
             EnumFacing facing = facingOrig;
             int facingIndex = (x % 10) - 2;
