@@ -76,11 +76,19 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     @Override
     public void onPostRenderItemTooltip(ItemStack stack, int x, int y, Minecraft mc)
     {
+        float z = Configs.Generic.ITEM_PREVIEW_Z.getIntegerValue();
+
         if (stack.getItem() instanceof ItemMap)
         {
             if (FeatureToggle.TWEAK_MAP_PREVIEW.getBooleanValue())
             {
-                fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue());
+                boolean render = Configs.Generic.MAP_PREVIEW_REQUIRE_SHIFT.getBooleanValue() == false || BaseScreen.isShiftDown();
+
+                if (render)
+                {
+                    int dimensions = Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue();
+                    fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, z, dimensions);
+                }
             }
         }
         else if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
@@ -92,7 +100,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
                 boolean background = Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue();
                 x += 8;
                 y -= 10;
-                InventoryRenderUtils.renderItemInventoryPreview(stack, x, y, 300, background);
+                InventoryRenderUtils.renderItemInventoryPreview(stack, x, y, z, background);
             }
         }
     }

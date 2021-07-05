@@ -73,8 +73,10 @@ public class Configs
         public static final IntegerConfig HOTBAR_SLOT_RANDOMIZER_MAX                    = new IntegerConfig("hotbarSlotRandomizerMax", 5, 1, 9);
         public static final IntegerConfig HOTBAR_SWAP_OVERLAY_OFFSET_X                  = new IntegerConfig("hotbarSwapOverlayOffsetX", 4);
         public static final IntegerConfig HOTBAR_SWAP_OVERLAY_OFFSET_Y                  = new IntegerConfig("hotbarSwapOverlayOffsetY", 4);
+        public static final IntegerConfig ITEM_PREVIEW_Z                                = new IntegerConfig("itemPreviewZ", 400, 0, 4096);
         public static final IntegerConfig ITEM_SWAP_DURABILITY_THRESHOLD                = new IntegerConfig("itemSwapDurabilityThreshold", 20, 0, 10000);
         public static final BooleanConfig LAVA_VISIBILITY_OPTIFINE                      = new BooleanConfig("lavaVisibilityOptifineCompat", true);
+        public static final BooleanConfig MAP_PREVIEW_REQUIRE_SHIFT                     = new BooleanConfig("mapPreviewRequireShift", true);
         public static final IntegerConfig MAP_PREVIEW_SIZE                              = new IntegerConfig("mapPreviewSize", 160, 16, 512);
         public static final IntegerConfig PERIODIC_ATTACK_INTERVAL                      = new IntegerConfig("periodicAttackInterval", 20, 0, Integer.MAX_VALUE);
         public static final IntegerConfig PERIODIC_USE_INTERVAL                         = new IntegerConfig("periodicUseInterval", 20, 0, Integer.MAX_VALUE);
@@ -151,8 +153,10 @@ public class Configs
                 HOTBAR_SWAP_OVERLAY_ALIGNMENT,
                 HOTBAR_SWAP_OVERLAY_OFFSET_X,
                 HOTBAR_SWAP_OVERLAY_OFFSET_Y,
+                ITEM_PREVIEW_Z,
                 ITEM_SWAP_DURABILITY_THRESHOLD,
                 LAVA_VISIBILITY_OPTIFINE,
+                MAP_PREVIEW_REQUIRE_SHIFT,
                 MAP_PREVIEW_SIZE,
                 PERIODIC_ATTACK_INTERVAL,
                 PERIODIC_USE_INTERVAL,
