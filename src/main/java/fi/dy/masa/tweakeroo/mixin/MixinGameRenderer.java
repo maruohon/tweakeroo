@@ -18,8 +18,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -98,8 +96,7 @@ public abstract class MixinGameRenderer
                                  "Lnet/minecraft/util/math/Box;" +
                                  "Ljava/util/function/Predicate;D)" +
                                  "Lnet/minecraft/util/hit/EntityHitResult;"))
-    private Predicate<Entity> overrideTargetedEntityCheck(Entity entity, Vec3d startVec, Vec3d endVec,
-                                                          Box box, Predicate<Entity> predicate, double distance)
+    private Predicate<Entity> overrideTargetedEntityCheck(Predicate<Entity> predicate)
     {
         if (Configs.Disable.DISABLE_DEAD_MOB_TARGETING.getBooleanValue())
         {
