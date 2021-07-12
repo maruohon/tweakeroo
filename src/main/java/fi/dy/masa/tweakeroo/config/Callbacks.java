@@ -89,6 +89,7 @@ public class Callbacks
         Hotkeys.SWAP_ELYTRA_CHESTPLATE.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOGGLE_GRAB_CURSOR.getKeybind().setCallback(callbackGeneric);
         Hotkeys.TOOL_PICK.getKeybind().setCallback(callbackGeneric);
+        Hotkeys.WRITE_MAPS_AS_IMAGES.getKeybind().setCallback((a, k) -> MiscUtils.writeAllMapsAsImages());
         Hotkeys.ZOOM_ACTIVATE.getKeybind().setCallback(callbackGeneric);
 
         Hotkeys.SKIP_ALL_RENDERING.getKeybind().setCallback(callbackMessage);

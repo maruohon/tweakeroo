@@ -48,6 +48,7 @@ public class Hotkeys
     public static final ConfigHotkey SWAP_ELYTRA_CHESTPLATE             = new ConfigHotkey("swapElytraChestplate",              "",     "Swaps the currently equipped item in the chest slot between an Elytra and a Chest Plate");
     public static final ConfigHotkey TOGGLE_GRAB_CURSOR                 = new ConfigHotkey("toggleGrabCursor",                  "",     "Grabs or ungrabs the mouse cursor, depending on the current state");
     public static final ConfigHotkey TOOL_PICK                          = new ConfigHotkey("toolPick",                          "",     "Switches to the effective tool for the targeted block");
+    public static final ConfigHotkey WRITE_MAPS_AS_IMAGES               = new ConfigHotkey("writeMapsAsImages",                 "",     "Writes all the currently available maps as images\nto the 'config/tweakeroo/map_images/<worldname>/' directory");
     public static final ConfigHotkey ZOOM_ACTIVATE                      = new ConfigHotkey("zoomActivate",                      "",     KeybindSettings.create(Context.INGAME, KeyAction.BOTH, true, false, false, false, false), "Zoom activation hotkey");
 
     public static final List<ConfigHotkey> HOTKEY_LIST = ImmutableList.of(
@@ -90,6 +91,7 @@ public class Hotkeys
             SWAP_ELYTRA_CHESTPLATE,
             TOGGLE_GRAB_CURSOR,
             TOOL_PICK,
+            WRITE_MAPS_AS_IMAGES,
             ZOOM_ACTIVATE
     );
 }
