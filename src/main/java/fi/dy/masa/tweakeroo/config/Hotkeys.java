@@ -43,8 +43,10 @@ public class Hotkeys
     public static final ConfigHotkey PLACEMENT_RESTRICTION_MODE_LAYER   = new ConfigHotkey("placementRestrictionModeLayer",     "Z,6",  "Switch the Placement Restriction mode to the Layer mode");
     public static final ConfigHotkey PLACEMENT_RESTRICTION_MODE_LINE    = new ConfigHotkey("placementRestrictionModeLine",      "Z,4",  "Switch the Placement Restriction mode to the Line mode");
     public static final ConfigHotkey PLACEMENT_RESTRICTION_MODE_PLANE   = new ConfigHotkey("placementRestrictionModePlane",     "Z,1",  "Switch the Placement Restriction mode to the Plane mode");
+    public static final ConfigHotkey SIT_DOWN_NEARBY_PETS               = new ConfigHotkey("sitDownNearbyPets",                 "",     "Makes all nearby pets sit down");
     public static final ConfigHotkey SKIP_ALL_RENDERING                 = new ConfigHotkey("skipAllRendering",                  "",     "Toggles skipping _all_ rendering");
     public static final ConfigHotkey SKIP_WORLD_RENDERING               = new ConfigHotkey("skipWorldRendering",                "",     "Toggles skipping world rendering");
+    public static final ConfigHotkey STAND_UP_NEARBY_PETS               = new ConfigHotkey("standUpNearbyPets",                 "",     "Makes all nearby pets stand up");
     public static final ConfigHotkey SWAP_ELYTRA_CHESTPLATE             = new ConfigHotkey("swapElytraChestplate",              "",     "Swaps the currently equipped item in the chest slot between an Elytra and a Chest Plate");
     public static final ConfigHotkey TOGGLE_GRAB_CURSOR                 = new ConfigHotkey("toggleGrabCursor",                  "",     "Grabs or ungrabs the mouse cursor, depending on the current state");
     public static final ConfigHotkey TOOL_PICK                          = new ConfigHotkey("toolPick",                          "",     "Switches to the effective tool for the targeted block");
@@ -86,8 +88,10 @@ public class Hotkeys
             PLACEMENT_RESTRICTION_MODE_LAYER,
             PLACEMENT_RESTRICTION_MODE_LINE,
             PLACEMENT_RESTRICTION_MODE_PLANE,
+            SIT_DOWN_NEARBY_PETS,
             SKIP_ALL_RENDERING,
             SKIP_WORLD_RENDERING,
+            STAND_UP_NEARBY_PETS,
             SWAP_ELYTRA_CHESTPLATE,
             TOGGLE_GRAB_CURSOR,
             TOOL_PICK,
