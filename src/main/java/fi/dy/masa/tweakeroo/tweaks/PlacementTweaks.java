@@ -68,6 +68,7 @@ public class PlacementTweaks
     public static final BlockRestriction FAST_RIGHT_CLICK_BLOCK_RESTRICTION = new BlockRestriction();
     public static final ItemRestriction FAST_RIGHT_CLICK_ITEM_RESTRICTION = new ItemRestriction();
     public static final ItemRestriction FAST_PLACEMENT_ITEM_RESTRICTION = new ItemRestriction();
+    public static final ItemRestriction HAND_RESTOCK_RESTRICTION = new ItemRestriction();
 
     public static void onTick()
     {
@@ -116,7 +117,9 @@ public class PlacementTweaks
 
         ItemStack stackOriginal = player.getStackInHand(hand);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            stackOriginal.isEmpty() == false &&
+            canUseItemWithRestriction(HAND_RESTOCK_RESTRICTION, stackOriginal))
         {
             if (isEmulatedClick == false)
             {
@@ -165,7 +168,9 @@ public class PlacementTweaks
         PlayerEntity player = MinecraftClient.getInstance().player;
         ItemStack stackOriginal = player.getStackInHand(hand);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            stackOriginal.isEmpty() == false &&
+            canUseItemWithRestriction(HAND_RESTOCK_RESTRICTION, stackOriginal))
         {
             stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
             hotbarSlot = player.getInventory().selectedSlot;
@@ -613,23 +618,21 @@ public class PlacementTweaks
         return true;
     }
 
-    private static boolean canUseItemWithRestriction(ItemRestriction restriction, PlayerEntity player)
+    public static boolean canUseItemWithRestriction(ItemRestriction restriction, Hand hand, PlayerEntity player)
     {
-        ItemStack stack = player.getMainHandStack();
+        ItemStack stack = player.getStackInHand(hand);
+        return canUseItemWithRestriction(restriction, stack);
+    }
 
-        if (stack.isEmpty() == false && restriction.isAllowed(stack.getItem()) == false)
-        {
-            return false;
-        }
+    public static boolean canUseItemWithRestriction(ItemRestriction restriction, ItemStack stack)
+    {
+        return stack.isEmpty() || restriction.isAllowed(stack.getItem());
+    }
 
-        stack = player.getOffHandStack();
-
-        if (stack.isEmpty() == false && restriction.isAllowed(stack.getItem()) == false)
-        {
-            return false;
-        }
-
-        return true;
+    public static boolean canUseItemWithRestriction(ItemRestriction restriction, PlayerEntity player)
+    {
+        return canUseItemWithRestriction(restriction, Hand.MAIN_HAND, player) &&
+               canUseItemWithRestriction(restriction, Hand.OFF_HAND, player);
     }
 
     private static boolean canUseFastRightClick(PlayerEntity player)
@@ -653,7 +656,8 @@ public class PlacementTweaks
 
     private static void tryRestockHand(PlayerEntity player, Hand hand, ItemStack stackOriginal)
     {
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue())
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            canUseItemWithRestriction(HAND_RESTOCK_RESTRICTION, stackOriginal))
         {
             ItemStack stackCurrent = player.getStackInHand(hand);
 

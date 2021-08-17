@@ -43,6 +43,7 @@ import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 
 public class InventoryUtils
 {
@@ -246,8 +247,11 @@ public class InventoryUtils
         ItemStack stackHand = player.getStackInHand(hand);
         int threshold = Configs.Generic.HAND_RESTOCK_PRE_THRESHOLD.getIntegerValue();
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue() &&
-            stackHand.isEmpty() == false && stackHand.getCount() <= threshold && stackHand.getMaxCount() > threshold &&
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue() &&
+            stackHand.isEmpty() == false &&
+            stackHand.getCount() <= threshold && stackHand.getMaxCount() > threshold &&
+            PlacementTweaks.canUseItemWithRestriction(PlacementTweaks.HAND_RESTOCK_RESTRICTION, stackHand) &&
             player.currentScreenHandler == player.playerScreenHandler &&
             player.currentScreenHandler.getCursorStack().isEmpty())
         {
