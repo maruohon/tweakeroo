@@ -29,8 +29,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.gui.Message;
 import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
+import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
 import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
@@ -65,6 +67,7 @@ public class PlacementTweaks
     private static int hotbarSlot = -1;
     private static ItemStack stackClickedOn = ItemStack.EMPTY;
     @Nullable private static BlockState stateClickedOn = null;
+    public static final BlockRestriction BLOCK_BREAK_RESTRICTION = new BlockRestriction();
     public static final BlockRestriction FAST_RIGHT_CLICK_BLOCK_RESTRICTION = new BlockRestriction();
     public static final ItemRestriction FAST_RIGHT_CLICK_ITEM_RESTRICTION = new ItemRestriction();
     public static final ItemRestriction FAST_PLACEMENT_ITEM_RESTRICTION = new ItemRestriction();
@@ -948,6 +951,20 @@ public class PlacementTweaks
 
     public static boolean isPositionAllowedByBreakingRestriction(BlockPos pos, Direction side)
     {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        World world = mc.world;
+
+        if (world != null && FeatureToggle.TWEAK_BLOCK_BREAK_RESTRICTION.getBooleanValue())
+        {
+            BlockState state = world.getBlockState(pos);
+
+            if (BLOCK_BREAK_RESTRICTION.isAllowed(state.getBlock()) == false)
+            {
+                InfoUtils.showGuiOrInGameMessage(Message.MessageType.WARNING, "Block breaking prevented by Block Break Restriction tweak");
+                return false;
+            }
+        }
+
         boolean restrictionEnabled = FeatureToggle.TWEAK_BREAKING_RESTRICTION.getBooleanValue();
         boolean gridEnabled = FeatureToggle.TWEAK_BREAKING_GRID.getBooleanValue();
 

@@ -182,6 +182,9 @@ public class Configs implements IConfigHandler
 
     public static class Lists
     {
+        public static final ConfigOptionList BLOCK_BREAK_RESTRICTION_LIST_TYPE  = new ConfigOptionList("blockBreakRestrictionListType", ListType.NONE, "The restriction list type for the Block Break Restriction tweak");
+        public static final ConfigStringList BLOCK_BREAK_RESTRICTION_BLACKLIST  = new ConfigStringList("blockBreakRestrictionBlackList", ImmutableList.of("minecraft:budding_amethyst"), "The blocks that are NOT allowed to be broken while the Block Break Restriction tweak is enabled,\nif the blockBreakRestrictionListType is set to Black List");
+        public static final ConfigStringList BLOCK_BREAK_RESTRICTION_WHITELIST  = new ConfigStringList("blockBreakRestrictionWhiteList", ImmutableList.of(), "The only blocks that can be broken while the Block Break Restriction tweak is enabled,\nif the blockBreakRestrictionListType is set to White List");
         public static final ConfigStringList CREATIVE_EXTRA_ITEMS               = new ConfigStringList("creativeExtraItems", ImmutableList.of("minecraft:command_block", "minecraft:chain_command_block", "minecraft:repeating_command_block", "minecraft:dragon_egg", "minecraft:structure_void", "minecraft:structure_block", "minecraft:structure_block{BlockEntityTag:{mode:\"SAVE\"}}", "minecraft:structure_block{BlockEntityTag:{mode:\"LOAD\"}}", "minecraft:structure_block{BlockEntityTag:{mode:\"CORNER\"}}"), "Extra items that should be appended to the creative inventory.\nCurrently these will appear in the Transportation category.\nIn the future the group per added item will be customizable.");
         public static final ConfigOptionList FAST_PLACEMENT_ITEM_LIST_TYPE      = new ConfigOptionList("fastPlacementItemListType", ListType.BLACKLIST, "The item restriction type for the Fast Block Placement tweak");
         public static final ConfigStringList FAST_PLACEMENT_ITEM_BLACKLIST      = new ConfigStringList("fastPlacementItemBlackList", ImmutableList.of("minecraft:ender_chest", "minecraft:white_shulker_box"), "The items that are NOT allowed to be used for the Fast Block Placement tweak,\nif the fastPlacementItemListType is set to Black List");
@@ -203,6 +206,9 @@ public class Configs implements IConfigHandler
         public static final ConfigStringList UNSTACKING_ITEMS                   = new ConfigStringList("unstackingItems", ImmutableList.of("minecraft:bucket", "minecraft:glass_bottle"), "The items that should be considered for the\n'tweakItemUnstackingProtection' tweak");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                BLOCK_BREAK_RESTRICTION_LIST_TYPE,
+                BLOCK_BREAK_RESTRICTION_BLACKLIST,
+                BLOCK_BREAK_RESTRICTION_WHITELIST,
                 CREATIVE_EXTRA_ITEMS,
                 FAST_PLACEMENT_ITEM_LIST_TYPE,
                 FAST_RIGHT_CLICK_BLOCK_LIST_TYPE,
@@ -353,6 +359,11 @@ public class Configs implements IConfigHandler
         InventoryUtils.setToolSwitchableSlots(Generic.TOOL_SWITCHABLE_SLOTS.getStringValue());
         InventoryUtils.setRepairModeSlots(Lists.REPAIR_MODE_SLOTS.getStrings());
         InventoryUtils.setUnstackingItems(Lists.UNSTACKING_ITEMS.getStrings());
+
+        PlacementTweaks.BLOCK_BREAK_RESTRICTION.setListType((ListType) Lists.BLOCK_BREAK_RESTRICTION_LIST_TYPE.getOptionListValue());
+        PlacementTweaks.BLOCK_BREAK_RESTRICTION.setListContents(
+                Lists.BLOCK_BREAK_RESTRICTION_BLACKLIST.getStrings(),
+                Lists.BLOCK_BREAK_RESTRICTION_WHITELIST.getStrings());
 
         PlacementTweaks.FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListType((ListType) Lists.FAST_RIGHT_CLICK_BLOCK_LIST_TYPE.getOptionListValue());
         PlacementTweaks.FAST_RIGHT_CLICK_BLOCK_RESTRICTION.setListContents(
