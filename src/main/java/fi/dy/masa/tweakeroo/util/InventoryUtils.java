@@ -319,30 +319,67 @@ public class InventoryUtils
         if (player != null && mc.world != null)
         {
             BlockState state = mc.world.getBlockState(pos);
-            ItemStack stack = player.getMainHandStack();
+            ScreenHandler container = player.playerScreenHandler;
+            ItemPickerTest test;
 
-            if (isEffectiveToolWithDurability(stack, state) == false)
+            if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
             {
-                ScreenHandler container = player.playerScreenHandler;
-                ItemPickerTest test = (currentStack, previous) -> InventoryUtils.isBetterTool(currentStack, previous, state);
-                int slotNumber = findSlotWithBestItemMatch(container, test, UniformIntProvider.create(36, 44), UniformIntProvider.create(9, 35));
+                test = (currentStack, previous) -> InventoryUtils.isBetterToolAndHasDurability(currentStack, previous, state);
+            }
+            else
+            {
+                test = (currentStack, previous) -> InventoryUtils.isBetterTool(currentStack, previous, state);
+            }
 
-                if (slotNumber != -1 && (slotNumber - 36) != player.getInventory().selectedSlot)
-                {
-                    swapToolToHand(slotNumber, mc);
-                }
+            int slotNumber = findSlotWithBestItemMatch(container, test, UniformIntProvider.create(36, 44), UniformIntProvider.create(9, 35));
+
+            if (slotNumber != -1 && (slotNumber - 36) != player.getInventory().selectedSlot)
+            {
+                swapToolToHand(slotNumber, mc);
             }
         }
     }
 
-    private static boolean isBetterTool(ItemStack stack, ItemStack previousBestTool, BlockState state)
+    private static boolean isBetterTool(ItemStack testedTool, ItemStack previousTool, BlockState state)
     {
-        if (stack.isEmpty() || isEffectiveToolWithDurability(stack, state) == false)
+        return testedTool.isEmpty() == false && isMoreEffectiveTool(testedTool, previousTool, state);
+    }
+
+    private static boolean isBetterToolAndHasDurability(ItemStack testedTool, ItemStack previousTool, BlockState state)
+    {
+        return isBetterTool(testedTool, previousTool, state) && hasEnoughDurability(testedTool);
+    }
+
+    private static boolean isMoreEffectiveTool(ItemStack currentTool, ItemStack previousTool, BlockState state)
+    {
+        return getBaseBlockBreakingSpeed(currentTool, state) > getBaseBlockBreakingSpeed(previousTool, state);
+    }
+
+    protected static float getBaseBlockBreakingSpeed(ItemStack stack, BlockState state)
+    {
+        float speed = stack.getMiningSpeedMultiplier(state);
+
+        if (speed > 1.0f)
         {
-            return false;
+            int effLevel = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
+
+            if (effLevel > 0)
+            {
+                speed += (effLevel * effLevel) + 1;
+            }
         }
 
-        return isMoreEffectiveToolWithDurability(stack, previousBestTool, state);
+        if (state.isToolRequired() && stack.isSuitableFor(state) == false)
+        {
+            speed /= (100F / 30F);
+        }
+
+        return speed;
+    }
+
+    protected static boolean hasEnoughDurability(ItemStack stack)
+    {
+        return stack.getMaxDamage() - stack.getDamage() > getMinDurability(stack);
     }
 
     private static int findSuitableSlot(ScreenHandler container, Predicate<ItemStack> itemTest, UniformIntProvider... ranges)
@@ -404,43 +441,6 @@ public class InventoryUtils
         }
 
         return -1;
-    }
-
-    private static boolean isEffectiveToolWithDurability(ItemStack stack, BlockState state)
-    {
-        return hasEnoughDurability(stack) && getEffectiveSpeed(stack, state) > 1.0f;
-    }
-
-    private static boolean isMoreEffectiveToolWithDurability(ItemStack stack, ItemStack oldTool, BlockState state)
-    {
-        if (hasEnoughDurability(stack))
-        {
-            return getEffectiveSpeed(stack, state) > getEffectiveSpeed(oldTool, state);
-        }
-
-        return false;
-    }
-
-    protected static boolean hasEnoughDurability(ItemStack stack)
-    {
-        return stack.getMaxDamage() - stack.getDamage() > getMinDurability(stack);
-    }
-
-    protected static float getEffectiveSpeed(ItemStack stack, BlockState state)
-    {
-        float speed = stack.getMiningSpeedMultiplier(state);
-
-        if (speed > 1.0f)
-        {
-            int effLevel = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
-
-            if (effLevel > 0)
-            {
-                speed += (effLevel * effLevel) + 1;
-            }
-        }
-
-        return speed;
     }
 
     public interface ItemPickerTest
