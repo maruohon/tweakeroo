@@ -954,7 +954,7 @@ public class PlacementTweaks
         MinecraftClient mc = MinecraftClient.getInstance();
         World world = mc.world;
 
-        if (world != null && FeatureToggle.TWEAK_BLOCK_BREAK_RESTRICTION.getBooleanValue())
+        if (world != null && FeatureToggle.TWEAK_BLOCK_TYPE_BREAK_RESTRICTION.getBooleanValue())
         {
             BlockState state = world.getBlockState(pos);
 
