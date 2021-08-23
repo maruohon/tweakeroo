@@ -45,7 +45,7 @@ public abstract class MixinChatScreen
     @Inject(method = "keyPressed(III)Z",
             slice = @Slice(
                     from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatScreen;sendMessage(Ljava/lang/String;)V")),
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V", shift = Shift.AFTER))
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V", shift = Shift.AFTER))
     private void onSendMessage(int keyCode, int scancode, int modifiers, CallbackInfoReturnable<Boolean> cir)
     {
         MiscUtils.setLastChatText("");
