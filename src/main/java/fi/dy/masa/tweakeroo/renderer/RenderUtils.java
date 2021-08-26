@@ -129,8 +129,12 @@ public class RenderUtils
             {
                 block = (ShulkerBoxBlock) blockTmp;
             }
-
-            inv = fi.dy.masa.malilib.util.InventoryUtils.getInventory(world, pos);
+            if( blockTmp instanceof EnderChestBlock)
+            {
+                inv = player.getEnderChestInventory();
+            } else {
+                inv = fi.dy.masa.malilib.util.InventoryUtils.getInventory(world, pos);
+            }
         }
         else if (trace.getType() == HitResult.Type.ENTITY)
         {
@@ -174,8 +178,8 @@ public class RenderUtils
 
             if (rows > 6)
             {
-                yInv -= (rows - 6) * 18;
-                y -= (rows - 6) * 18;
+                yInv += (rows - 6) * 18;
+                y += (rows - 6) * 18;
             }
 
             if (entityLivingBase != null)
