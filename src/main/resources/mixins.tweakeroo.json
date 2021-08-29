@@ -54,6 +54,7 @@
         "MixinRavagerEntity",
         "MixinScaffoldingBlock",
         "MixinSculkSensor",
+        "MixinShulkerBoxBlock",
         "MixinSignBlockEntity",
         "MixinSignEditScreen",
         "MixinSkyProperties_Nether",
