@@ -30,15 +30,15 @@ import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
 {
     @Shadow @Final public GameOptions options;
-
-    @Shadow
-    private int itemUseCooldown;
+    @Shadow private int itemUseCooldown;
+    @Shadow protected int attackCooldown;
 
     @Shadow
     private void doAttack() {}
 
     @Shadow
     private void doItemUse() {}
+
 
     @Override
     public void setItemUseCooldown(int value)
@@ -112,6 +112,13 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
         {
             if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue())
             {
+                // Opening a GUI sets the cooldown to 10000, and it won't have a chance
+                // to get reset normally when this tweak is active.
+                if (this.attackCooldown >= 10000)
+                {
+                    this.attackCooldown = 0;
+                }
+
                 KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.options.keyAttack.getBoundKeyTranslationKey()), true);
             }
 
