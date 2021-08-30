@@ -27,20 +27,21 @@ public class PlacementHandler
         Vec3d hitVec = context.getHitVec();
         @Nullable DirectionProperty property = fi.dy.masa.malilib.util.BlockUtils.getFirstDirectionProperty(state);
         int x = (int) (hitVec.x - (double) context.getPos().getX());
+        int rawFacingIndex = x & 0xF;
 
-        if (x >= 2 && property != null)
+        if (rawFacingIndex >= 2 && property != null)
         {
             Direction facingOrig = state.get(property);
             Direction facing = facingOrig;
-            int facingIndex = ((x - 2) / 2) % 16;
+            int decodedFacingIndex = ((x - 2) / 2);
 
-            if (facingIndex == 6) // the opposite of the normal facing requested
+            if (decodedFacingIndex == 6) // the opposite of the normal facing requested
             {
                 facing = facing.getOpposite();
             }
-            else if (facingIndex >= 0 && facingIndex <= 5)
+            else if (decodedFacingIndex >= 0 && decodedFacingIndex <= 5)
             {
-                facing = Direction.byId(facingIndex);
+                facing = Direction.byId(decodedFacingIndex);
 
                 if (property.getValues().contains(facing) == false)
                 {
@@ -48,7 +49,7 @@ public class PlacementHandler
                 }
             }
 
-            //System.out.printf("plop facing: %d -> %s\n", facingIndex, facing);
+            //System.out.printf("plop facing: %s -> %s (raw: %d, dec: %d)\n", facingOrig, facing, rawFacingIndex, decodedFacingIndex);
 
             if (facing != facingOrig && property.getValues().contains(facing))
             {
@@ -66,6 +67,8 @@ public class PlacementHandler
                 state = state.with(property, facing);
             }
         }
+
+        x &= 0xFFFFFFF0;
 
         if (x >= 16)
         {

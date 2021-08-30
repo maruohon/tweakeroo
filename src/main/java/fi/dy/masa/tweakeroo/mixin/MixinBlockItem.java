@@ -22,7 +22,7 @@ import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 @Mixin(BlockItem.class)
 public abstract class MixinBlockItem extends Item implements IItemStackLimit
 {
-    public MixinBlockItem(Block blockIn, Item.Settings builder)
+    private MixinBlockItem(Item.Settings builder)
     {
         super(builder);
     }
@@ -42,10 +42,6 @@ public abstract class MixinBlockItem extends Item implements IItemStackLimit
             {
                 UseContext context = UseContext.from(ctx, ctx.getHand());
                 cir.setReturnValue(PlacementHandler.getStateForPlacement(stateOrig, context));
-            }
-            else
-            {
-                cir.setReturnValue(null);
             }
         }
     }
