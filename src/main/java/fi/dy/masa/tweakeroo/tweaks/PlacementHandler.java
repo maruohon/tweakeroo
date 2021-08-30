@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
 import javax.annotation.Nullable;
+import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ComparatorBlock;
@@ -20,6 +21,7 @@ import net.minecraft.world.World;
 
 public class PlacementHandler
 {
+    @Nullable
     public static BlockState getStateForPlacement(BlockState state, UseContext context)
     {
         Vec3d hitVec = context.getHitVec();
@@ -50,6 +52,17 @@ public class PlacementHandler
 
             if (facing != facingOrig && property.getValues().contains(facing))
             {
+                if (state.getBlock() instanceof BedBlock)
+                {
+                    BlockPos headPos = context.pos.offset(facing);
+                    ItemPlacementContext ctx = context.getItemPlacementContext();
+
+                    if (context.getWorld().getBlockState(headPos).canReplace(ctx) == false)
+                    {
+                        return null;
+                    }
+                }
+
                 state = state.with(property, facing);
             }
         }
@@ -92,8 +105,10 @@ public class PlacementHandler
         private final Vec3d hitVec;
         private final LivingEntity entity;
         private final Hand hand;
+        @Nullable private final ItemPlacementContext itemPlacementContext;
 
-        private UseContext(World world, BlockPos pos, Direction side, Vec3d hitVec, LivingEntity entity, Hand hand)
+        private UseContext(World world, BlockPos pos, Direction side, Vec3d hitVec,
+                           LivingEntity entity, Hand hand, @Nullable ItemPlacementContext itemPlacementContext)
         {
             this.world = world;
             this.pos = pos;
@@ -101,47 +116,57 @@ public class PlacementHandler
             this.hitVec = hitVec;
             this.entity = entity;
             this.hand = hand;
+            this.itemPlacementContext = itemPlacementContext;
         }
 
+        /*
         public static UseContext of(World world, BlockPos pos, Direction side, Vec3d hitVec, LivingEntity entity, Hand hand)
         {
-            return new UseContext(world, pos, side, hitVec, entity, hand);
+            return new UseContext(world, pos, side, hitVec, entity, hand, null);
         }
+        */
 
         public static UseContext from(ItemPlacementContext ctx, Hand hand)
         {
             Vec3d pos = ctx.getHitPos();
-            return new UseContext(ctx.getWorld(), ctx.getBlockPos(), ctx.getSide(), new Vec3d(pos.x, pos.y, pos.z), ctx.getPlayer(), hand);
+            return new UseContext(ctx.getWorld(), ctx.getBlockPos(), ctx.getSide(), new Vec3d(pos.x, pos.y, pos.z),
+                                  ctx.getPlayer(), hand, ctx);
         }
 
         public World getWorld()
         {
-            return world;
+            return this.world;
         }
 
         public BlockPos getPos()
         {
-            return pos;
+            return this.pos;
         }
 
         public Direction getSide()
         {
-            return side;
+            return this.side;
         }
 
         public Vec3d getHitVec()
         {
-            return hitVec;
+            return this.hitVec;
         }
 
         public LivingEntity getEntity()
         {
-            return entity;
+            return this.entity;
         }
 
         public Hand getHand()
         {
-            return hand;
+            return this.hand;
+        }
+
+        @Nullable
+        public ItemPlacementContext getItemPlacementContext()
+        {
+            return this.itemPlacementContext;
         }
     }
 }
