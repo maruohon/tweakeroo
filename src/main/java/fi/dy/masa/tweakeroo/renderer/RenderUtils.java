@@ -9,9 +9,9 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.HorseBaseEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -249,46 +249,28 @@ public class RenderUtils
         fi.dy.masa.malilib.render.RenderUtils.drawOutline(x + 5, y + currentRow * 18 + 5, 9 * 18 + 4, 22, 2, 0xFFFF2020);
     }
 
-    public static float getLavaFog(Entity entity, float originalFog)
+    public static float getLavaFogDistance(Entity entity, float originalFog)
     {
-        if (entity instanceof LivingEntity)
+        if (entity instanceof LivingEntity living)
         {
-            LivingEntity living = (LivingEntity) entity;
             final int resp = EnchantmentHelper.getRespiration(living);
-            // The original fog value of 2.0F is way too much to reduce gradually from.
-            // You would only be able to see meaningfully with the full reduction.
-            final float baseFog = 0.6F;
-            final float respDecrement = (baseFog * 0.75F) / 3F - 0.02F;
-            float fog = baseFog;
+            final int aqua = EnchantmentHelper.getEquipmentLevel(Enchantments.AQUA_AFFINITY, living);
+            float fog = originalFog;
 
-            if (living.hasStatusEffect(StatusEffects.WATER_BREATHING))
+            if (aqua > 0)
             {
-                fog -= baseFog * 0.4F;
+                fog *= 1.6f;
             }
 
             if (resp > 0)
             {
-                fog -= (float) resp * respDecrement;
-                fog = Math.max(0.12F,  fog);
+                fog *= (float) resp * 1.6f;
             }
 
-            return fog < baseFog ? fog : originalFog;
+            return Math.max(fog, originalFog);
         }
 
         return originalFog;
-    }
-
-    public static void overrideLavaFog(Entity entity)
-    {
-        // FIXME 1.17
-        /*
-        float fog = getLavaFog(entity, 2.0F);
-
-        if (fog < 2.0F)
-        {
-            RenderSystem.fogDensity(fog);
-        }
-        */
     }
 
     public static void renderDirectionsCursor(float zLevel, float partialTicks)
