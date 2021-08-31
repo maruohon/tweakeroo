@@ -17,6 +17,7 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.EntityUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.mixin.IMixinHorseBaseEntity;
@@ -104,16 +106,21 @@ public class RenderUtils
     public static void renderInventoryOverlay(MinecraftClient mc, MatrixStack matrixStack)
     {
         World world = fi.dy.masa.malilib.util.WorldUtils.getBestWorld(mc);
+        Entity cameraEntity = EntityUtils.getCameraEntity();
 
-        // We need to get the player from the server world, so that the player itself won't be included in the ray trace
-        PlayerEntity player = world.getPlayerByUuid(mc.player.getUuid());
-
-        if (player == null)
+        if (cameraEntity == mc.player && world instanceof ServerWorld)
         {
-            player = mc.player;
+            // We need to get the player from the server world (if available, ie. in single player),
+            // so that the player itself won't be included in the ray trace
+            Entity serverPlayer = world.getPlayerByUuid(mc.player.getUuid());
+
+            if (serverPlayer != null)
+            {
+                cameraEntity = serverPlayer;
+            }
         }
 
-        HitResult trace = RayTraceUtils.getRayTraceFromEntity(world, player, false);
+        HitResult trace = RayTraceUtils.getRayTraceFromEntity(world, cameraEntity, false);
 
         if (trace == null)
         {
