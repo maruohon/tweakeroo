@@ -21,7 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ToolItem;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
@@ -1014,13 +1014,13 @@ public class InventoryUtils
     public static boolean cleanUpShulkerBoxNBT(ItemStack stack)
     {
         boolean changed = false;
-        CompoundTag nbt = stack.getTag();
+        NbtCompound nbt = stack.getTag();
 
         if (nbt != null)
         {
             if (nbt.contains("BlockEntityTag", Constants.NBT.TAG_COMPOUND))
             {
-                CompoundTag tag = nbt.getCompound("BlockEntityTag");
+                NbtCompound tag = nbt.getCompound("BlockEntityTag");
 
                 if (tag.contains("Items", Constants.NBT.TAG_LIST) &&
                     tag.getList("Items", Constants.NBT.TAG_COMPOUND).size() == 0)

@@ -16,13 +16,13 @@ public abstract class MixinClientBossBar extends BossBar
     }
 
     @Override
-    public boolean getThickenFog()
+    public boolean shouldThickenFog()
     {
         if (Configs.Disable.DISABLE_BOSS_FOG.getBooleanValue())
         {
             return false;
         }
 
-        return super.getThickenFog();
+        return super.shouldThickenFog();
     }
 }

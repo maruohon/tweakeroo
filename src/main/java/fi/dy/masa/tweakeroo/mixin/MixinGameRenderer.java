@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.Entity;
@@ -47,7 +47,7 @@ public abstract class MixinGameRenderer
     }
 
     @Redirect(method = "renderWorld", require = 0, at = @At(value = "FIELD",
-              target = "Lnet/minecraft/client/options/GameOptions;bobView:Z"))
+              target = "Lnet/minecraft/client/option/GameOptions;bobView:Z"))
     private boolean disableWorldViewBob(GameOptions options)
     {
         if (Configs.Disable.DISABLE_WORLD_VIEW_BOB.getBooleanValue())

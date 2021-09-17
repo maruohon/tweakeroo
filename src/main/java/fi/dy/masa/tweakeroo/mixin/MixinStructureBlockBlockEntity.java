@@ -102,12 +102,12 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
         }
     }
 
-    @Inject(method = "getSquaredRenderDistance", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getRenderDistance", at = @At("HEAD"), cancellable = true)
     private void overrideRenderDistance(CallbackInfoReturnable<Double> cir)
     {
         if (FeatureToggle.TWEAK_STRUCTURE_BLOCK_LIMIT.getBooleanValue())
         {
-            cir.setReturnValue(65536.0D);
+            cir.setReturnValue(512.0D);
         }
     }
 }

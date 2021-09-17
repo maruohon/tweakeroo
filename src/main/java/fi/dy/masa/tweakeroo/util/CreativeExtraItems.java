@@ -66,7 +66,7 @@ public class CreativeExtraItems
             if (item != null)
             {
                 ItemStack stack = new ItemStack(item);
-                stack.setTag(reader.getTag());
+                stack.setTag(reader.getNbt());
                 return stack;
             }
         }

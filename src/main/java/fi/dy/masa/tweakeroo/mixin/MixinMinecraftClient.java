@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.ActionResult;
@@ -28,8 +29,7 @@ import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
 {
-    @Shadow
-    public GameOptions options;
+    @Shadow @Final public GameOptions options;
 
     @Shadow
     private int itemUseCooldown;

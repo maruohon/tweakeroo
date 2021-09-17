@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.recipebook.ClientRecipeBook;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;

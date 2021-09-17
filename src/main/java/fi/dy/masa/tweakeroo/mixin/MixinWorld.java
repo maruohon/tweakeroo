@@ -29,7 +29,7 @@ public abstract class MixinWorld
 
     @Shadow
     @Final
-    private List<BlockEntity> unloadedBlockEntities;
+    protected List<BlockEntity> unloadedBlockEntities;
 
     @Inject(method = "tickEntity(Ljava/util/function/Consumer;Lnet/minecraft/entity/Entity;)V", at = @At("HEAD"), cancellable = true)
     private void preventEntityTicking(Consumer<Entity> consumer, Entity entityIn, CallbackInfo ci)
