@@ -1,17 +1,9 @@
 package fi.dy.masa.tweakeroo;
 
 import fi.dy.masa.malilib.config.BaseModConfig;
-import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InitializationHandler;
-import fi.dy.masa.malilib.event.dispatch.ClientWorldChangeEventDispatcher;
-import fi.dy.masa.malilib.event.dispatch.RenderEventDispatcher;
 import fi.dy.masa.malilib.gui.config.ConfigSearchInfo;
-import fi.dy.masa.malilib.gui.config.ConfigStatusWidgetRegistry;
-import fi.dy.masa.malilib.gui.config.ConfigTabRegistry;
-import fi.dy.masa.malilib.gui.config.ConfigWidgetRegistry;
-import fi.dy.masa.malilib.input.HotkeyManager;
-import fi.dy.masa.malilib.input.InputDispatcher;
-import fi.dy.masa.malilib.interoperation.BlockPlacementPositionHandler;
+import fi.dy.masa.malilib.registry.Registry;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
@@ -32,29 +24,29 @@ public class InitHandler implements InitializationHandler
     @Override
     public void registerModHandlers()
     {
-        ConfigManager.INSTANCE.registerConfigHandler(BaseModConfig.createDefaultModConfig(Reference.MOD_INFO, 1, Configs.CATEGORIES));
-        ConfigTabRegistry.INSTANCE.registerConfigTabProvider(Reference.MOD_INFO, ConfigScreen::getConfigTabs);
+        Registry.CONFIG_MANAGER.registerConfigHandler(BaseModConfig.createDefaultModConfig(Reference.MOD_INFO, 1, Configs.CATEGORIES));
+        Registry.CONFIG_TAB.registerConfigTabProvider(Reference.MOD_INFO, ConfigScreen::getConfigTabs);
 
-        ConfigWidgetRegistry.INSTANCE.registerConfigWidgetFactory(FeatureToggle.class, FeatureToggleConfigWidget::new);
-        ConfigWidgetRegistry.INSTANCE.registerConfigWidgetFactory(DisableToggle.class, DisableToggleConfigWidget::new);
+        Registry.CONFIG_WIDGET.registerConfigWidgetFactory(FeatureToggle.class, FeatureToggleConfigWidget::new);
+        Registry.CONFIG_WIDGET.registerConfigWidgetFactory(DisableToggle.class, DisableToggleConfigWidget::new);
 
-        ConfigWidgetRegistry.INSTANCE.registerConfigSearchInfo(FeatureToggle.class, new ConfigSearchInfo<FeatureToggle>(true, true).setBooleanConfigGetter(FeatureToggle::getBooleanConfig).setKeyBindGetter(FeatureToggle::getKeyBind));
-        ConfigWidgetRegistry.INSTANCE.registerConfigSearchInfo(DisableToggle.class, new ConfigSearchInfo<DisableToggle>(true, true).setBooleanConfigGetter(DisableToggle::getBooleanConfig).setKeyBindGetter(DisableToggle::getKeyBind));
+        Registry.CONFIG_WIDGET.registerConfigSearchInfo(FeatureToggle.class, new ConfigSearchInfo<FeatureToggle>(true, true).setBooleanConfigGetter(FeatureToggle::getBooleanConfig).setKeyBindGetter(FeatureToggle::getKeyBind));
+        Registry.CONFIG_WIDGET.registerConfigSearchInfo(DisableToggle.class, new ConfigSearchInfo<DisableToggle>(true, true).setBooleanConfigGetter(DisableToggle::getBooleanConfig).setKeyBindGetter(DisableToggle::getKeyBind));
 
-        ConfigStatusWidgetRegistry.INSTANCE.registerConfigStatusWidgetFactory(DisableToggle.class, DisableConfigStatusWidget::new, "tweakeroo:csi_value_disable_toggle");
-        ConfigStatusWidgetRegistry.INSTANCE.registerConfigStatusWidgetFactory(FeatureToggle.class, TweakConfigStatusWidget::new, "tweakeroo:csi_value_tweak_toggle");
+        Registry.CONFIG_STATUS_WIDGET.registerConfigStatusWidgetFactory(DisableToggle.class, DisableConfigStatusWidget::new, "tweakeroo:csi_value_disable_toggle");
+        Registry.CONFIG_STATUS_WIDGET.registerConfigStatusWidgetFactory(FeatureToggle.class, TweakConfigStatusWidget::new, "tweakeroo:csi_value_tweak_toggle");
 
-        HotkeyManager.INSTANCE.registerHotkeyProvider(InputHandler.getInstance());
-        InputDispatcher.INSTANCE.registerKeyboardInputHandler(InputHandler.getInstance());
-        InputDispatcher.INSTANCE.registerMouseInputHandler(InputHandler.getInstance());
+        Registry.HOTKEY_MANAGER.registerHotkeyProvider(InputHandler.getInstance());
+        Registry.INPUT_DISPATCHER.registerKeyboardInputHandler(InputHandler.getInstance());
+        Registry.INPUT_DISPATCHER.registerMouseInputHandler(InputHandler.getInstance());
 
         RenderHandler renderer = new RenderHandler();
-        RenderEventDispatcher.INSTANCE.registerGameOverlayRenderer(renderer);
-        RenderEventDispatcher.INSTANCE.registerTooltipPostRenderer(renderer);
-        RenderEventDispatcher.INSTANCE.registerWorldPostRenderer(renderer);
+        Registry.RENDER_EVENT_DISPATCHER.registerGameOverlayRenderer(renderer);
+        Registry.RENDER_EVENT_DISPATCHER.registerTooltipPostRenderer(renderer);
+        Registry.RENDER_EVENT_DISPATCHER.registerWorldPostRenderer(renderer);
 
-        BlockPlacementPositionHandler.INSTANCE.registerPositionProvider(PlacementTweaks::getOverriddenPlacementPosition);
-        ClientWorldChangeEventDispatcher.INSTANCE.registerClientWorldChangeHandler(new ClientWorldChangeHandler());
+        Registry.BLOCK_PLACEMENT_POSITION_HANDLER.registerPositionProvider(PlacementTweaks::getOverriddenPlacementPosition);
+        Registry.CLIENT_WORLD_CHANGE_EVENT_DISPATCHER.registerClientWorldChangeHandler(new ClientWorldChangeHandler());
 
         Actions.init();
         Callbacks.init();
