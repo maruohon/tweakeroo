@@ -1,13 +1,17 @@
 package fi.dy.masa.tweakeroo.util;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ChunkProviderClient;
+import net.minecraft.client.renderer.ViewFrustum;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 import fi.dy.masa.malilib.util.EntityUtils;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class CameraUtils
 {
-    private static final net.minecraft.client.Minecraft MC = net.minecraft.client.Minecraft.getMinecraft();
-
     private static float cameraYaw;
     private static float cameraPitch;
     private static boolean freeCameraSpectator;
@@ -36,12 +40,12 @@ public class CameraUtils
 
     public static float getCameraYaw()
     {
-        return net.minecraft.util.math.MathHelper.wrapDegrees(cameraYaw);
+        return MathHelper.wrapDegrees(cameraYaw);
     }
 
     public static float getCameraPitch()
     {
-        return net.minecraft.util.math.MathHelper.wrapDegrees(cameraPitch);
+        return MathHelper.wrapDegrees(cameraPitch);
     }
 
     public static void setCameraYaw(float yaw)
@@ -74,16 +78,17 @@ public class CameraUtils
         }
     }
 
-    public static void markChunksForRebuild(net.minecraft.client.renderer.ViewFrustum storage,
-            int chunkX, int chunkZ, int lastChunkX, int lastChunkZ)
+    public static void markChunksForRebuild(ViewFrustum storage,
+                                            int chunkX, int chunkZ, int lastChunkX, int lastChunkZ)
     {
         if (chunkX == lastChunkX && chunkZ == lastChunkZ)
         {
             return;
         }
 
-        final int viewDistance = MC.gameSettings.renderDistanceChunks;
-        net.minecraft.client.multiplayer.ChunkProviderClient provider = MC.world.getChunkProvider();
+        Minecraft mc = GameUtils.getClient();
+        ChunkProviderClient provider = mc.world.getChunkProvider();
+        final int viewDistance = mc.gameSettings.renderDistanceChunks;
 
         if (chunkX != lastChunkX)
         {
@@ -126,9 +131,10 @@ public class CameraUtils
 
     public static void markChunksForRebuildOnDeactivation(int lastChunkX, int lastChunkZ)
     {
-        net.minecraft.client.multiplayer.ChunkProviderClient provider = MC.world.getChunkProvider();
-        net.minecraft.entity.Entity entity = EntityUtils.getCameraEntity();
-        final int viewDistance = MC.gameSettings.renderDistanceChunks;
+        Minecraft mc = GameUtils.getClient();
+        Entity entity = EntityUtils.getCameraEntity();
+        ChunkProviderClient provider = mc.world.getChunkProvider();
+        final int viewDistance = mc.gameSettings.renderDistanceChunks;
         final int chunkX = entity.chunkCoordX;
         final int chunkZ = entity.chunkCoordZ;
 
@@ -151,7 +157,7 @@ public class CameraUtils
                 {
                     int x = cx << 4;
                     int z = cz << 4;
-                    MC.world.markBlockRangeForRenderUpdate(x, 0, z, x, 255, z);
+                    mc.world.markBlockRangeForRenderUpdate(x, 0, z, x, 255, z);
                 }
             }
         }

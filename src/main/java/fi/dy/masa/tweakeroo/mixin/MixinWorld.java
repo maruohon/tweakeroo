@@ -13,6 +13,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -20,30 +27,30 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 @Mixin(net.minecraft.world.World.class)
 public abstract class MixinWorld
 {
-    @Shadow @Final public List<net.minecraft.tileentity.TileEntity> loadedTileEntityList;
-    @Shadow @Final public List<net.minecraft.tileentity.TileEntity> tickableTileEntities;
-    @Shadow @Final private List<net.minecraft.tileentity.TileEntity> tileEntitiesToBeRemoved;
+    @Shadow @Final public List<TileEntity> loadedTileEntityList;
+    @Shadow @Final public List<TileEntity> tickableTileEntities;
+    @Shadow @Final private List<TileEntity> tileEntitiesToBeRemoved;
 
     @Inject(method = "getFogColor", at = @At("HEAD"), cancellable = true)
-    private void adjustFogColor(float partialTicks, CallbackInfoReturnable<net.minecraft.util.math.Vec3d> cir)
+    private void adjustFogColor(float partialTicks, CallbackInfoReturnable<Vec3d> cir)
     {
         if (FeatureToggle.TWEAK_MATCHING_SKY_FOG.getBooleanValue())
         {
-            net.minecraft.world.World world = (net.minecraft.world.World) (Object) this;
+            World world = (World) (Object) this;
 
             if (world.provider.hasSkyLight() && world.isRaining() == false)
             {
-                net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getMinecraft();
+                Minecraft mc = GameUtils.getClient();
                 cir.setReturnValue(world.getSkyColor(mc.getRenderViewEntity(), mc.getRenderPartialTicks()));
             }
         }
     }
 
     @Inject(method = "updateEntityWithOptionalForce", at = @At("HEAD"), cancellable = true)
-    private void preventEntityTicking(net.minecraft.entity.Entity entityIn, boolean forceUpdate, CallbackInfo ci)
+    private void preventEntityTicking(Entity entityIn, boolean forceUpdate, CallbackInfo ci)
     {
         if (DisableToggle.DISABLE_ENTITY_TICKING.getBooleanValue() &&
-            (entityIn instanceof net.minecraft.entity.player.EntityPlayer) == false)
+            (entityIn instanceof EntityPlayer) == false)
         {
             ci.cancel();
         }
@@ -53,7 +60,7 @@ public abstract class MixinWorld
             slice = @Slice(
                     from = @At(value = "FIELD", target = "Lnet/minecraft/world/World;processingLoadedTiles:Z", ordinal = 0)),
             at = @At(value = "INVOKE", target = "Lnet/minecraft/tileentity/TileEntity;isInvalid()Z", ordinal = 0))
-    private boolean preventTileEntityTicking(net.minecraft.tileentity.TileEntity te)
+    private boolean preventTileEntityTicking(TileEntity te)
     {
         if (DisableToggle.DISABLE_TILE_ENTITY_TICKING.getBooleanValue())
         {
@@ -72,7 +79,7 @@ public abstract class MixinWorld
         {
             if (this.tileEntitiesToBeRemoved.isEmpty() == false)
             {
-                Set<net.minecraft.tileentity.TileEntity> remove = Collections.newSetFromMap(new IdentityHashMap<>());
+                Set<TileEntity> remove = Collections.newSetFromMap(new IdentityHashMap<>());
                 remove.addAll(this.tileEntitiesToBeRemoved);
                 this.tickableTileEntities.removeAll(remove);
                 this.loadedTileEntityList.removeAll(remove);

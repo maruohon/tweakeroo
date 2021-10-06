@@ -16,6 +16,7 @@ import fi.dy.masa.malilib.input.callback.AdjustableValueHotkeyCallback;
 import fi.dy.masa.malilib.input.callback.HotkeyCallback;
 import fi.dy.masa.malilib.overlay.message.MessageHelpers;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.feature.Actions;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
@@ -31,11 +32,11 @@ public class Callbacks
     {
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanConfig().setValueLoadCallback((newValue) -> {
             // If the feature is enabled on game launch, apply it here. Note: This does require the Generic configs to be read first.
-            if (newValue) { Minecraft.getMinecraft().gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getFloatValue(); }
+            if (newValue) { GameUtils.getClient().gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getFloatValue(); }
         });
 
         FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanConfig().setValueChangeCallback((newValue, oldValue) -> {
-            Minecraft mc = Minecraft.getMinecraft();
+            Minecraft mc = GameUtils.getClient();
             if (newValue) {
                 Configs.Internal.GAMMA_VALUE_ORIGINAL.setValue((double) mc.gameSettings.gammaSetting);
                 mc.gameSettings.gammaSetting = Configs.Generic.GAMMA_OVERRIDE_VALUE.getFloatValue();
@@ -51,7 +52,7 @@ public class Callbacks
             else { Blocks.SLIME_BLOCK.slipperiness = Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.getFloatValue(); }
         });
 
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = GameUtils.getClient();
         Configs.Internal.GAMMA_VALUE_ORIGINAL.setValue((double) mc.gameSettings.gammaSetting);
         Configs.Internal.SLIME_BLOCK_SLIPPERINESS_ORIGINAL.setValue((double) Blocks.SLIME_BLOCK.slipperiness);
 

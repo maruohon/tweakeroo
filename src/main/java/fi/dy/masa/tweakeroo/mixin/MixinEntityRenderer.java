@@ -1,6 +1,5 @@
 package fi.dy.masa.tweakeroo.mixin;
 
-import javax.annotation.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,7 +25,6 @@ public abstract class MixinEntityRenderer
     @Shadow @Final private net.minecraft.client.Minecraft mc;
     @Shadow private float farPlaneDistance;
 
-    @Nullable private net.minecraft.entity.Entity renderViewEntityOriginal;
     private float realYaw;
     private float realPitch;
 
@@ -77,7 +75,7 @@ public abstract class MixinEntityRenderer
     {
         if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() && Configs.Generic.LAVA_VISIBILITY_OPTIFINE.getBooleanValue() == false)
         {
-            RenderUtils.overrideLavaFog(net.minecraft.client.Minecraft.getMinecraft().player);
+            RenderUtils.overrideLavaFog(this.mc.player);
         }
     }
 

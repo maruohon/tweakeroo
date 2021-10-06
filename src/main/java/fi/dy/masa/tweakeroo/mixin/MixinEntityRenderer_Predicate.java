@@ -4,10 +4,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLivingBase;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -24,7 +24,7 @@ public abstract class MixinEntityRenderer_Predicate
             ||
             (FeatureToggle.TWEAK_HANGABLE_ENTITY_BYPASS.getBooleanValue()
                 && (entity instanceof EntityHanging)
-                && Minecraft.getMinecraft().player.isSneaking() == Configs.Generic.HANGABLE_ENTITY_BYPASS_INVERSE.getBooleanValue()))
+                && GameUtils.getClientPlayer().isSneaking() == Configs.Generic.HANGABLE_ENTITY_BYPASS_INVERSE.getBooleanValue()))
         {
             cir.setReturnValue(false);
         }

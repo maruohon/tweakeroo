@@ -11,6 +11,7 @@ import net.minecraft.stats.RecipeBook;
 import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
@@ -42,15 +43,13 @@ public class CameraEntity extends EntityPlayerSP
 
         if (camera != null && Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() == false)
         {
-            Minecraft mc = Minecraft.getMinecraft();
-
             camera.updateLastTickPosition();
 
             float forward = 0;
             float vertical = 0;
             float strafe = 0;
 
-            GameSettings options = mc.gameSettings;
+            GameSettings options = GameUtils.getClient().gameSettings;
             if (options.keyBindForward.isKeyDown()) { forward++;  }
             if (options.keyBindBack.isKeyDown())    { forward--;  }
             if (options.keyBindLeft.isKeyDown())    { strafe++;   }
@@ -192,7 +191,7 @@ public class CameraEntity extends EntityPlayerSP
 
     public static void setCameraState(boolean enabled)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = GameUtils.getClient();
 
         if (mc.world != null && mc.player != null)
         {

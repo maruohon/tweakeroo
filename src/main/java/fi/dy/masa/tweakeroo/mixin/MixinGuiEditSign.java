@@ -6,12 +6,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.tileentity.TileEntitySign;
 import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.input.Keys;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -19,9 +19,7 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 @Mixin(GuiEditSign.class)
 public abstract class MixinGuiEditSign
 {
-    @Shadow
-    @Final
-    private TileEntitySign tileSign;
+    @Shadow @Final private TileEntitySign tileSign;
 
     @Inject(method = "onGuiClosed", at = @At("HEAD"))
     private void storeText(CallbackInfo ci)
@@ -46,7 +44,7 @@ public abstract class MixinGuiEditSign
 
             // Update the keybind state, because opening a GUI resets them all.
             // Also, KeyBinding.updateKeyBindState() only works for keyboard keys
-            int keyCode = Minecraft.getMinecraft().gameSettings.keyBindUseItem.getKeyCode();
+            int keyCode = GameUtils.getClient().gameSettings.keyBindUseItem.getKeyCode();
             KeyBinding.setKeyBindState(keyCode, Keys.isKeyDown(keyCode));
 
             ci.cancel();

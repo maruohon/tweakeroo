@@ -24,6 +24,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.data.Constants;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -192,8 +193,7 @@ public class InventoryUtils
     {
         if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
         {
-            Minecraft mc = Minecraft.getMinecraft();
-            EntityPlayer player = mc.player;
+            EntityPlayer player = GameUtils.getClientPlayer();
             ItemStack stack = player.getHeldItem(hand);
             EntityEquipmentSlot slot = hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND;
 
@@ -400,7 +400,7 @@ public class InventoryUtils
     {
         if (slotNumber != -1 && player.openContainer == player.inventoryContainer)
         {
-            Minecraft mc = Minecraft.getMinecraft();
+            Minecraft mc = GameUtils.getClient();
             Container container = player.inventoryContainer;
 
             if (hand == EnumHand.MAIN_HAND)
@@ -437,7 +437,7 @@ public class InventoryUtils
     {
         if (sourceSlotNumber != -1 && player.openContainer == player.inventoryContainer)
         {
-            Minecraft mc = Minecraft.getMinecraft();
+            Minecraft mc = GameUtils.getClient();
             Container container = player.inventoryContainer;
 
             if (type == EntityEquipmentSlot.MAINHAND)
@@ -554,7 +554,7 @@ public class InventoryUtils
     {
         List<Slot> slots = new ArrayList<>();
         Container container = player.inventoryContainer;
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = GameUtils.getClient();
 
         for (Slot slot : container.inventorySlots)
         {
@@ -627,7 +627,7 @@ public class InventoryUtils
 
     public static void switchToPickedBlock()
     {
-        Minecraft mc  = Minecraft.getMinecraft();
+        Minecraft mc  = GameUtils.getClient();
         EntityPlayer player = mc.player;
         World world = mc.world;
         double reach = mc.playerController.getBlockReachDistance();

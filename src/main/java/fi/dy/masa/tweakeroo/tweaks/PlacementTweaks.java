@@ -30,6 +30,7 @@ import fi.dy.masa.malilib.config.value.BlackWhiteList;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.Keys;
 import fi.dy.masa.malilib.util.BlockUtils;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.PlacementUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
@@ -145,7 +146,7 @@ public class PlacementTweaks
 
     public static void onLeftClickMousePre()
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = GameUtils.getClient();
         RayTraceResult trace = mc.objectMouseOver;
 
         // Only set the position if it was null, otherwise the fast left click tweak
@@ -161,13 +162,12 @@ public class PlacementTweaks
 
     public static void onLeftClickMousePost()
     {
-        onProcessRightClickPost(Minecraft.getMinecraft().player, EnumHand.MAIN_HAND);
+        onProcessRightClickPost(GameUtils.getClientPlayer(), EnumHand.MAIN_HAND);
     }
 
     public static void cacheStackInHand(EnumHand hand)
     {
-        EntityPlayer player = Minecraft.getMinecraft().player;
-        ItemStack stackOriginal = player.getHeldItem(hand);
+        ItemStack stackOriginal = GameUtils.getClientPlayer().getHeldItem(hand);
 
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
         {
@@ -200,7 +200,7 @@ public class PlacementTweaks
     @Nullable
     public static BlockPos getOverriddenPlacementPosition()
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = GameUtils.getClient();
 
         if (mc.player != null)
         {
@@ -278,17 +278,18 @@ public class PlacementTweaks
 
     private static void onUsingTick()
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayerSP player = GameUtils.getClientPlayer();
 
-        if (mc.player == null)
+        if (player == null)
         {
             return;
         }
 
+        Minecraft mc = GameUtils.getClient();
+
         if (posFirst != null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue() &&
-            canUseItemWithRestriction(FAST_PLACEMENT_ITEM_RESTRICTION, mc.player))
+            canUseItemWithRestriction(FAST_PLACEMENT_ITEM_RESTRICTION, player))
         {
-            EntityPlayerSP player = mc.player;
             World world = player.getEntityWorld();
             final double reach = mc.playerController.getBlockReachDistance();
             final int maxCount = Configs.Generic.FAST_BLOCK_PLACEMENT_COUNT.getIntegerValue();
@@ -1163,7 +1164,7 @@ public class PlacementTweaks
 
     public static boolean shouldSkipSlotSync(int slotNumber, ItemStack newStack)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = GameUtils.getClient();
         EntityPlayer player = mc.player;
         Container container = player != null ? player.openContainer : null;
 

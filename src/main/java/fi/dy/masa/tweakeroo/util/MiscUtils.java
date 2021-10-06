@@ -21,8 +21,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.IRayPositionHandler;
 import fi.dy.masa.malilib.util.inventory.InventoryUtils;
@@ -76,7 +78,7 @@ public class MiscUtils
             resetMouseSensitivityForZoom();
 
             // Refresh the rendered chunks when exiting zoom mode
-            Minecraft.getMinecraft().renderGlobal.setDisplayListEntitiesDirty();
+            GameUtils.getClient().renderGlobal.setDisplayListEntitiesDirty();
 
             zoomActive = false;
         }
@@ -84,7 +86,7 @@ public class MiscUtils
 
     public static void setMouseSensitivityForZoom()
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = GameUtils.getClient();
 
         float fov = Configs.Generic.ZOOM_FOV.getFloatValue();
         float origFov = mc.gameSettings.fovSetting;
@@ -107,7 +109,7 @@ public class MiscUtils
     {
         if (mouseSensitivity > 0.0F)
         {
-            Minecraft.getMinecraft().gameSettings.mouseSensitivity = mouseSensitivity;
+            GameUtils.getClient().gameSettings.mouseSensitivity = mouseSensitivity;
             mouseSensitivity = -1.0F;
         }
     }
@@ -118,9 +120,8 @@ public class MiscUtils
 
         if (scale > 0 && scale != 1.0)
         {
-            Minecraft mc = Minecraft.getMinecraft();
-            int origX = mc.displayWidth - 170;
-            int origY = mc.displayHeight - 320;
+            int origX = GuiUtils.getDisplayWidth() - 170;
+            int origY = GuiUtils.getDisplayHeight() - 320;
             double width = 320.0;
             double height = 400.0;
             double xOff = (1.0 - scale) * (origX + width / 2.0);

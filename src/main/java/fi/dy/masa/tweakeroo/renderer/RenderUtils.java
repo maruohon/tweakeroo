@@ -22,6 +22,7 @@ import fi.dy.masa.malilib.render.ShapeRenderUtils;
 import fi.dy.masa.malilib.render.inventory.BuiltinInventoryRenderDefinitions;
 import fi.dy.masa.malilib.render.inventory.InventoryRenderDefinition;
 import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.inventory.InventoryView;
 import fi.dy.masa.malilib.util.inventory.SlicedInventoryView;
 import fi.dy.masa.malilib.util.inventory.VanillaInventoryView;
@@ -183,14 +184,12 @@ public class RenderUtils
 
     public static void renderDirectionsCursor(float zLevel, float partialTicks)
     {
-        Minecraft mc = Minecraft.getMinecraft();
-
         GlStateManager.pushMatrix();
 
         int width = GuiUtils.getScaledWindowWidth();
         int height = GuiUtils.getScaledWindowHeight();
         GlStateManager.translate(width / 2.0F, height / 2.0F, zLevel);
-        Entity entity = mc.getRenderViewEntity();
+        Entity entity = GameUtils.getClient().getRenderViewEntity();
         GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
         GlStateManager.scale(-1.0F, -1.0F, -1.0F);
@@ -210,24 +209,24 @@ public class RenderUtils
 
         if (current - lastRotationChangeTime < 750)
         {
-            Minecraft mc = Minecraft.getMinecraft();
             final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
             final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
             SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
+            FontRenderer textRenderer = GameUtils.getClient().fontRenderer;
 
             if (mode != SnapAimMode.PITCH)
             {
-                renderSnapAimAngleIndicatorYaw(xCenter, yCenter, 80, 12, mc);
+                renderSnapAimAngleIndicatorYaw(xCenter, yCenter, 80, 12, textRenderer);
             }
 
             if (mode != SnapAimMode.YAW)
             {
-                renderSnapAimAngleIndicatorPitch(xCenter, yCenter, 12, 50, mc);
+                renderSnapAimAngleIndicatorPitch(xCenter, yCenter, 12, 50, textRenderer);
             }
         }
     }
 
-    private static void renderSnapAimAngleIndicatorYaw(int xCenter, int yCenter, int width, int height, Minecraft mc)
+    private static void renderSnapAimAngleIndicatorYaw(int xCenter, int yCenter, int width, int height, FontRenderer textRenderer)
     {
         double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
         double realYaw = MathHelper.positiveModulo(MiscUtils.getLastRealYaw(), 360.0D);
@@ -237,7 +236,6 @@ public class RenderUtils
         final int y = yCenter + 10;
         final int z = 0;
         int lineX = x + (int) ((MathHelper.wrapDegrees(realYaw - startYaw)) / step * width);
-        FontRenderer textRenderer = mc.fontRenderer;
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
@@ -274,7 +272,7 @@ public class RenderUtils
         ShapeRenderUtils.renderRectangle(lineX, y, z, 2, height, 0xFFFFFFFF);
     }
 
-    private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height, Minecraft mc)
+    private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height, FontRenderer textRenderer)
     {
         double step = Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue();
         int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
@@ -296,7 +294,7 @@ public class RenderUtils
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
 
-        renderPitchIndicator(x, y, width, height, realPitch, snappedPitch, step, true, mc);
+        renderPitchIndicator(x, y, width, height, realPitch, snappedPitch, step, true, textRenderer);
     }
 
     public static void renderPitchLockIndicator(Minecraft mc)
@@ -311,11 +309,11 @@ public class RenderUtils
         double centerPitch = 0;
         double indicatorRange = 180;
 
-        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange, false, mc);
+        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange, false, mc.fontRenderer);
     }
 
     private static void renderPitchIndicator(int x, int y, int width, int height,
-            double currentPitch, double centerPitch, double indicatorRange, boolean isSnapRange, Minecraft mc)
+            double currentPitch, double centerPitch, double indicatorRange, boolean isSnapRange, FontRenderer textRenderer)
     {
         double startPitch = centerPitch - (indicatorRange / 2.0);
         double printedRange = isSnapRange ? indicatorRange : indicatorRange / 2;
@@ -325,7 +323,6 @@ public class RenderUtils
         double angleDown = centerPitch + printedRange;
 
         fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
-        FontRenderer textRenderer = mc.fontRenderer;
 
         if (isSnapRange)
         {

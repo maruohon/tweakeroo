@@ -18,6 +18,7 @@ import fi.dy.masa.malilib.input.HotkeyCategory;
 import fi.dy.masa.malilib.input.HotkeyProvider;
 import fi.dy.masa.malilib.input.KeyboardInputHandler;
 import fi.dy.masa.malilib.input.MouseInputHandler;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -69,12 +70,10 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
     @Override
     public boolean onKeyInput(int keyCode, int scanCode, int modifiers, boolean eventKeyState)
     {
-        Minecraft mc = Minecraft.getMinecraft();
-
         // Not in a GUI
         if (GuiUtils.getCurrentScreen() == null && eventKeyState)
         {
-            this.storeLastMovementDirection(keyCode, mc);
+            this.storeLastMovementDirection(keyCode, GameUtils.getClient());
         }
 
         MiscUtils.checkZoomStatus();
@@ -85,7 +84,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
     @Override
     public boolean onMouseInput(int eventButton, int wheelDelta, boolean eventButtonState)
     {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = GameUtils.getClient();
 
         if (GuiUtils.getCurrentScreen() == null && mc.player != null && mc.player.capabilities.isCreativeMode &&
             eventButtonState && eventButton == mc.gameSettings.keyBindUseItem.getKeyCode() + 100 &&
@@ -151,7 +150,7 @@ public class InputHandler implements HotkeyProvider, KeyboardInputHandler, Mouse
 
     public void handleMovementKeys(MovementInput movement)
     {
-        GameSettings settings = Minecraft.getMinecraft().gameSettings;
+        GameSettings settings = GameUtils.getClient().gameSettings;
 
         if (settings.keyBindLeft.isKeyDown() && settings.keyBindRight.isKeyDown())
         {
