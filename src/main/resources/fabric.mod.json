@@ -1,38 +1,39 @@
 {
-    "schemaVersion": 1,
-    "id": "tweakeroo",
-    "name": "Tweakeroo",
-    "version": "${mod_version}",
+	"schemaVersion": 1,
+	"id": "tweakeroo",
+	"name": "Tweakeroo",
+	"version": "${mod_version}",
 
-    "description": "Adds a bunch of configurable client-side tweaks",
-    "authors": [
-        "masa"
-    ],
-    "contact": {
-        "homepage": "https://www.curseforge.com/minecraft/mc-mods/tweakeroo",
-        "issues": "https://github.com/maruohon/tweakeroo/issues",
-        "sources": "https://github.com/maruohon/tweakeroo",
-        "twitter": "https://twitter.com/maruohon",
-        "discord": "https://discordapp.com/channels/211786369951989762/453662800460644354/"
-    },
+	"description": "Adds a bunch of configurable client-side tweaks",
+	"authors": [
+		"masa"
+	],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/tweakeroo",
+		"issues": "https://github.com/maruohon/tweakeroo/issues",
+		"sources": "https://github.com/maruohon/tweakeroo",
+		"twitter": "https://twitter.com/maruohon",
+		"discord": "https://discordapp.com/channels/211786369951989762/453662800460644354/"
+	},
 
-    "license": "LGPLv3",
-    "icon": "assets/tweakeroo/icon.png",
-    "environment": "client",
-    "entrypoints": {
-        "main": [
-            "fi.dy.masa.tweakeroo.Tweakeroo"
-        ],
-        "modmenu": [
-            "fi.dy.masa.tweakeroo.compat.modmenu.ModMenuImpl"
-        ]
-    },
+	"license": "LGPLv3",
+	"icon": "assets/tweakeroo/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"fi.dy.masa.tweakeroo.Tweakeroo"
+		],
+		"modmenu": [
+			"fi.dy.masa.tweakeroo.compat.modmenu.ModMenuImpl"
+		]
+	},
 
-    "mixins": [
-        "mixins.tweakeroo.json"
-    ],
+	"mixins": [
+		"mixins.tweakeroo.json"
+	],
 
-    "depends": {
-        "malilib": ">=0.10.0-dev.22"
-    }
+	"depends": {
+		"minecraft": "1.17.1",
+		"malilib": ">=0.10.0-dev.25 <0.11"
+	}
 }
