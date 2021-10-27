@@ -245,6 +245,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_OFFHAND_RENDERING       = new ConfigBooleanHotkeyed("disableOffhandRendering",              false, "", "Disables the offhand item from getting rendered");
         public static final ConfigBooleanHotkeyed       DISABLE_PARTICLES               = new ConfigBooleanHotkeyed("disableParticles",                     false, "", "Disables all particles");
         public static final ConfigBooleanHotkeyed       DISABLE_PORTAL_GUI_CLOSING      = new ConfigBooleanHotkeyed("disablePortalGuiClosing",              false, "", "If enabled, then you can still open GUIs while in a Nether Portal");
+        public static final ConfigBooleanHotkeyed       DISABLE_PUMPKIN_OVERLAY         = new ConfigBooleanHotkeyed("disablePumpkinOverlay",                false, "", "Disables the pumpkin blur when a carved pumpkin is equipped");
         public static final ConfigBooleanHotkeyed       DISABLE_RAIN_EFFECTS            = new ConfigBooleanHotkeyed("disableRainEffects",                   false, "", "Disables rain rendering and sounds");
         public static final ConfigBooleanHotkeyed       DISABLE_RENDERING_SCAFFOLDING   = new ConfigBooleanHotkeyed("disableRenderingScaffolding",          false, "", "Disables rendering of Scaffolding Blocks");
         public static final ConfigBooleanHotkeyed       DISABLE_RENDER_DISTANCE_FOG     = new ConfigBooleanHotkeyed("disableRenderDistanceFog",             false, "", "Disables the fog that increases around the render distance");
@@ -279,6 +280,7 @@ public class Configs implements IConfigHandler
                 DISABLE_OFFHAND_RENDERING,
                 DISABLE_PARTICLES,
                 DISABLE_PORTAL_GUI_CLOSING,
+                DISABLE_PUMPKIN_OVERLAY,
                 DISABLE_RAIN_EFFECTS,
                 DISABLE_RENDERING_SCAFFOLDING,
                 DISABLE_RENDER_DISTANCE_FOG,

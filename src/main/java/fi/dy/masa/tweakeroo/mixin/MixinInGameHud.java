@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import fi.dy.masa.tweakeroo.config.Configs;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -59,6 +60,15 @@ public abstract class MixinInGameHud extends DrawableHelper
 
             this.playerListHud.tick(true);
             this.playerListHud.render(matrixStack, this.scaledWidth, scoreboard, objective);
+        }
+    }
+
+    @Inject(method = "renderPumpkinOverlay", at = @At("HEAD"), cancellable = true)
+    private void disablePumpkinOverlay(CallbackInfo ci)
+    {
+        if (Configs.Disable.DISABLE_PUMPKIN_OVERLAY.getBooleanValue())
+        {
+            ci.cancel();
         }
     }
 }
