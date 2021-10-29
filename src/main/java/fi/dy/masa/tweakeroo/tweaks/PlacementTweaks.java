@@ -10,12 +10,7 @@ import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.*;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.property.DirectionProperty;
@@ -313,6 +308,13 @@ public class PlacementTweaks
         if (Configs.Disable.DISABLE_AXE_STRIPPING.getBooleanValue() &&
             stackPre.getItem() instanceof AxeItem &&
             MiscUtils.isStrippableLog(world, hitResult.getBlockPos()))
+        {
+            return ActionResult.PASS;
+        }
+
+        if(Configs.Disable.DISABLE_PATHING.getBooleanValue() &&
+            stackPre.getItem() instanceof ShovelItem &&
+            MiscUtils.isPathableBlock(world, hitResult.getBlockPos()))
         {
             return ActionResult.PASS;
         }

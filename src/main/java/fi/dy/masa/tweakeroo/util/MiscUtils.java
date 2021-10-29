@@ -10,7 +10,9 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -125,6 +127,12 @@ public class MiscUtils
     {
         BlockState state = world.getBlockState(pos);
         return IMixinAxeItem.tweakeroo_getStrippedBlocks().containsKey(state.getBlock());
+    }
+
+    public static boolean isPathableBlock(World world, BlockPos pos){
+        Block block = world.getBlockState(pos).getBlock();
+
+        return block == Blocks.DIRT || block == Blocks.GRASS_BLOCK || block == Blocks.COARSE_DIRT || block == Blocks.MYCELIUM || block == Blocks.PODZOL || block == Blocks.ROOTED_DIRT;
     }
 
     public static boolean getUpdateExec(CommandBlockBlockEntity te)
