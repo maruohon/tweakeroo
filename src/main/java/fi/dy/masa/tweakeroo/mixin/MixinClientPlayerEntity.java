@@ -95,7 +95,8 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         if (FeatureToggle.TWEAK_PERMANENT_SPRINT.getBooleanValue() &&
             ! this.isSprinting() && ! this.isUsingItem() && this.input.movementForward >= 0.8F &&
             (this.getHungerManager().getFoodLevel() > 6.0F || this.getAbilities().allowFlying) &&
-            ! this.hasStatusEffect(StatusEffects.BLINDNESS))
+            ! this.hasStatusEffect(StatusEffects.BLINDNESS) &&
+            (! this.isTouchingWater() || (!Configs.Disable.DISABLE_AUTO_SWIM.getBooleanValue() && this.submergedInWater) ))
         {
             this.setSprinting(true);
         }
