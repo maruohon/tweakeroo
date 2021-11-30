@@ -397,6 +397,9 @@ public class Configs implements IConfigHandler
         MiscTweaks.POTION_RESTRICTION.setListContents(
                 Lists.POTION_WARNING_BLACKLIST.getStrings(),
                 Lists.POTION_WARNING_WHITELIST.getStrings());
+
+        // Turn off after loading the configs, just in case it was enabled in the config somehow
+        FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
     }
 
     public static void saveToFile()
