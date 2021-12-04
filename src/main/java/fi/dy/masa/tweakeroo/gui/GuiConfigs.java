@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.gui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import com.google.common.collect.ImmutableList;
@@ -18,7 +19,7 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 
 public class GuiConfigs extends GuiConfigsBase
 {
-    private static ConfigGuiTab tab = ConfigGuiTab.TWEAK_TOGGLES;
+    private static ConfigGuiTab tab = ConfigGuiTab.TWEAKS;
 
     public GuiConfigs()
     {
@@ -58,7 +59,7 @@ public class GuiConfigs extends GuiConfigsBase
         {
             return 120;
         }
-        else if (tab == ConfigGuiTab.FIXES || tab == ConfigGuiTab.TWEAK_TOGGLES || tab == ConfigGuiTab.DISABLE_TOGGLES)
+        else if (tab == ConfigGuiTab.FIXES)
         {
             return 80;
         }
@@ -73,9 +74,9 @@ public class GuiConfigs extends GuiConfigsBase
     @Override
     protected boolean useKeybindSearch()
     {
-        return GuiConfigs.tab == ConfigGuiTab.TWEAK_HOTKEYS ||
+        return GuiConfigs.tab == ConfigGuiTab.TWEAKS ||
                GuiConfigs.tab == ConfigGuiTab.GENERIC_HOTKEYS ||
-               GuiConfigs.tab == ConfigGuiTab.DISABLE_HOTKEYS;
+               GuiConfigs.tab == ConfigGuiTab.DISABLES;
     }
 
     @Override
@@ -96,21 +97,19 @@ public class GuiConfigs extends GuiConfigsBase
         {
             configs = Configs.Lists.OPTIONS;
         }
-        else if (tab == ConfigGuiTab.DISABLE_TOGGLES)
+        else if (tab == ConfigGuiTab.DISABLES)
         {
-            configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS));
+            List<IConfigBase> list = new ArrayList<>();
+            list.addAll(ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS)));
+            list.addAll(ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(Configs.Disable.OPTIONS)));
+            return ConfigOptionWrapper.createFor(list);
         }
-        else if (tab == ConfigGuiTab.DISABLE_HOTKEYS)
+        else if (tab == ConfigGuiTab.TWEAKS)
         {
-            configs = ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(Configs.Disable.OPTIONS));
-        }
-        else if (tab == ConfigGuiTab.TWEAK_TOGGLES)
-        {
-            configs = ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(FeatureToggle.values()));
-        }
-        else if (tab == ConfigGuiTab.TWEAK_HOTKEYS)
-        {
-            configs = ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(FeatureToggle.values()));
+            List<IConfigBase> list = new ArrayList<>();
+            list.addAll(ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(FeatureToggle.values())));
+            list.addAll(ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(FeatureToggle.values())));
+            return ConfigOptionWrapper.createFor(list);
         }
         else if (tab == ConfigGuiTab.GENERIC_HOTKEYS)
         {
@@ -139,17 +138,9 @@ public class GuiConfigs extends GuiConfigsBase
         public void actionPerformedWithButton(ButtonBase button, int mouseButton)
         {
             GuiConfigs.tab = this.tab;
-
-            if (this.tab != ConfigGuiTab.PLACEMENT)
-            {
-                this.parent.reCreateListWidget(); // apply the new config width
-                this.parent.getListWidget().resetScrollbarPosition();
-                this.parent.initGui();
-            }
-            else
-            {
-                //GuiBase.openGui(new GuiPlacementSettings());
-            }
+            this.parent.reCreateListWidget(); // apply the new config width
+            this.parent.getListWidget().resetScrollbarPosition();
+            this.parent.initGui();
         }
     }
 
@@ -158,16 +149,13 @@ public class GuiConfigs extends GuiConfigsBase
         GENERIC         ("tweakeroo.gui.button.config_gui.generic"),
         FIXES           ("tweakeroo.gui.button.config_gui.fixes"),
         LISTS           ("tweakeroo.gui.button.config_gui.lists"),
-        TWEAK_TOGGLES   ("tweakeroo.gui.button.config_gui.tweak_toggles"),
-        TWEAK_HOTKEYS   ("tweakeroo.gui.button.config_gui.tweak_hotkeys"),
+        TWEAKS          ("tweakeroo.gui.button.config_gui.tweaks"),
         GENERIC_HOTKEYS ("tweakeroo.gui.button.config_gui.generic_hotkeys"),
-        DISABLE_TOGGLES ("tweakeroo.gui.button.config_gui.disable_toggle"),
-        DISABLE_HOTKEYS ("tweakeroo.gui.button.config_gui.disable_hotkeys"),
-        PLACEMENT       ("tweakeroo.gui.button.config_gui.placement");
+        DISABLES        ("tweakeroo.gui.button.config_gui.disables");
 
         private final String translationKey;
 
-        private ConfigGuiTab(String translationKey)
+        ConfigGuiTab(String translationKey)
         {
             this.translationKey = translationKey;
         }

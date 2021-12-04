@@ -1,13 +1,11 @@
 {
-    "tweakeroo.gui.button.config_gui.disable_hotkeys": "TweakNo Hotkeys",
-    "tweakeroo.gui.button.config_gui.disable_toggle": "TweakNo Toggles",
+    "tweakeroo.gui.button.config_gui.disables": "Yeets",
     "tweakeroo.gui.button.config_gui.fixes": "Fixes",
     "tweakeroo.gui.button.config_gui.generic": "Generic",
-    "tweakeroo.gui.button.config_gui.generic_hotkeys": "Generic Hotkeys",
+    "tweakeroo.gui.button.config_gui.generic_hotkeys": "Hotkeys",
     "tweakeroo.gui.button.config_gui.lists": "Lists",
     "tweakeroo.gui.button.config_gui.placement": "Placement stuff",
-    "tweakeroo.gui.button.config_gui.tweak_hotkeys": "Tweak Hotkeys",
-    "tweakeroo.gui.button.config_gui.tweak_toggles": "Tweak Toggles",
+    "tweakeroo.gui.button.config_gui.tweaks": "Tweaks",
 
     "tweakeroo.gui.button.misc.command_block.set_name": "Set name",
     "tweakeroo.gui.button.misc.command_block.update_execution.on": "Loops: §aON",
