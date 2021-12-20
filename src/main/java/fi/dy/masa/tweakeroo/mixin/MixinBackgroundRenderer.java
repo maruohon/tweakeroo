@@ -29,9 +29,10 @@ public abstract class MixinBackgroundRenderer
             require = 0)
     private static float reduceLavaFogStart(float original)
     {
+        wasLava = true;
+
         if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue())
         {
-            wasLava = true;
             return 0.0f;
         }
 
@@ -47,9 +48,10 @@ public abstract class MixinBackgroundRenderer
             require = 0)
     private static float reduceLavaFogEnd(float original)
     {
+        wasLava = true;
+
         if (FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue())
         {
-            wasLava = true;
             return RenderUtils.getLavaFogDistance(MinecraftClient.getInstance().getCameraEntity(), original);
         }
 

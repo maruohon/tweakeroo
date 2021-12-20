@@ -32,7 +32,6 @@
 		"MixinExplosion",
 		"MixinFillCommand",
 		"MixinGameRenderer",
-		"MixinGlStateManager",
 		"MixinHeldItemRenderer",
 		"MixinInGameHud",
 		"MixinItem",
