@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.MiningToolItem;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.property.DirectionProperty;
@@ -83,7 +84,7 @@ public class PlacementTweaks
                 onUsingTick();
             }
 
-            if (mc.player.getAbilities().creativeMode && mc.options.keyAttack.isPressed())
+            if (mc.options.keyAttack.isPressed())
             {
                 onAttackTick(mc);
             }
@@ -183,14 +184,17 @@ public class PlacementTweaks
     {
         if (FeatureToggle.TWEAK_FAST_LEFT_CLICK.getBooleanValue())
         {
-            final int count = Configs.Generic.FAST_LEFT_CLICK_COUNT.getIntegerValue();
-
-            for (int i = 0; i < count; ++i)
+            if (mc.player.getAbilities().creativeMode ||
+                (Configs.Generic.FAST_LEFT_CLICK_ALLOW_TOOLS.getBooleanValue() || (mc.player.getMainHandStack().getItem() instanceof MiningToolItem) == false))
             {
-                InventoryUtils.trySwapCurrentToolIfNearlyBroken();
-                isEmulatedClick = true;
-                ((IMinecraftClientInvoker) mc).leftClickMouseAccessor();
-                isEmulatedClick = false;
+                final int count = Configs.Generic.FAST_LEFT_CLICK_COUNT.getIntegerValue();
+
+                for (int i = 0; i < count; ++i)
+                {
+                    isEmulatedClick = true;
+                    ((IMinecraftClientInvoker) mc).leftClickMouseAccessor();
+                    isEmulatedClick = false;
+                }
             }
         }
         else
