@@ -67,7 +67,7 @@ public class PlacementTweaks
     private static int hotbarSlot = -1;
     private static ItemStack stackClickedOn = ItemStack.EMPTY;
     @Nullable private static BlockState stateClickedOn = null;
-    public static final BlockRestriction BLOCK_BREAK_RESTRICTION = new BlockRestriction();
+    public static final BlockRestriction BLOCK_TYPE_BREAK_RESTRICTION = new BlockRestriction();
     public static final BlockRestriction FAST_RIGHT_CLICK_BLOCK_RESTRICTION = new BlockRestriction();
     public static final ItemRestriction FAST_RIGHT_CLICK_ITEM_RESTRICTION = new ItemRestriction();
     public static final ItemRestriction FAST_PLACEMENT_ITEM_RESTRICTION = new ItemRestriction();
@@ -956,9 +956,13 @@ public class PlacementTweaks
         {
             BlockState state = world.getBlockState(pos);
 
-            if (BLOCK_BREAK_RESTRICTION.isAllowed(state.getBlock()) == false)
+            if (BLOCK_TYPE_BREAK_RESTRICTION.isAllowed(state.getBlock()) == false)
             {
-                InfoUtils.showGuiOrInGameMessage(Message.MessageType.WARNING, "Block breaking prevented by Block Break Restriction tweak");
+                if (Configs.Generic.BLOCK_TYPE_BREAK_RESTRICTION_WARN.getBooleanValue())
+                {
+                    InfoUtils.showGuiOrInGameMessage(Message.MessageType.WARNING, "tweakeroo.message.warning.block_type_break_restriction");
+                }
+
                 return false;
             }
         }

@@ -72,5 +72,7 @@
     "tweakeroo.message.toggled_zoom_on": "Toggled zoom %s, FOV: %s",
     "tweakeroo.message.unfocusing_game": "§6Un-focusing§f the game (un-grabbing the cursor)",
     "tweakeroo.message.value.off": "OFF",
-    "tweakeroo.message.value.on": "ON"
+    "tweakeroo.message.value.on": "ON",
+
+    "tweakeroo.message.warning.block_type_break_restriction": "Block breaking prevented by Block Type Break Restriction tweak"
 }

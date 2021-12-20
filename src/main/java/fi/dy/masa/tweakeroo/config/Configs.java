@@ -38,6 +38,7 @@ public class Configs implements IConfigHandler
     {
         public static final ConfigInteger       AFTER_CLICKER_CLICK_COUNT           = new ConfigInteger     ("afterClickerClickCount",  1, 1, 32, "The number of right clicks to do per placed block when\ntweakAfterClicker is enabled");
         public static final ConfigDouble        BLOCK_REACH_DISTANCE                = new ConfigDouble      ("blockReachDistance", 4.5, 0, 8, "The block reach distance to use if the\noverride tweak is enabled.\nThe maximum the server allows is 8 for placing, 6 for breaking.");
+        public static final ConfigBoolean       BLOCK_TYPE_BREAK_RESTRICTION_WARN   = new ConfigBoolean     ("blockTypeBreakRestrictionWarn", true, "Shows a warning message when the Block Type Break Restriction\nfeature prevents breaking a block");
         public static final ConfigInteger       BREAKING_GRID_SIZE                  = new ConfigInteger     ("breakingGridSize", 3, 1, 1000, "The grid interval size for the grid breaking mode.\nTo quickly adjust the value, scroll while\nholding down the tweak toggle keybind.");
         public static final ConfigOptionList    BREAKING_RESTRICTION_MODE           = new ConfigOptionList  ("breakingRestrictionMode", PlacementRestrictionMode.LINE, "The Breaking Restriction mode to use (hotkey-selectable)");
         public static final ConfigColor         CHAT_BACKGROUND_COLOR               = new ConfigColor       ("chatBackgroundColor", "#80000000", "The background color for the chat messages,\nif 'tweakChatBackgroundColor' is enabled");
@@ -101,6 +102,7 @@ public class Configs implements IConfigHandler
         public static final ConfigDouble        ZOOM_FOV                            = new ConfigDouble      ("zoomFov", 30, 0.01, 359.99, "The FOV value used for the zoom feature");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                BLOCK_TYPE_BREAK_RESTRICTION_WARN,
                 CLIENT_PLACEMENT_ROTATION,
                 FREE_CAMERA_PLAYER_INPUTS,
                 FREE_CAMERA_PLAYER_MOVEMENT,
@@ -369,8 +371,8 @@ public class Configs implements IConfigHandler
         InventoryUtils.setRepairModeSlots(Lists.REPAIR_MODE_SLOTS.getStrings());
         InventoryUtils.setUnstackingItems(Lists.UNSTACKING_ITEMS.getStrings());
 
-        PlacementTweaks.BLOCK_BREAK_RESTRICTION.setListType((ListType) Lists.BLOCK_BREAK_RESTRICTION_LIST_TYPE.getOptionListValue());
-        PlacementTweaks.BLOCK_BREAK_RESTRICTION.setListContents(
+        PlacementTweaks.BLOCK_TYPE_BREAK_RESTRICTION.setListType((ListType) Lists.BLOCK_BREAK_RESTRICTION_LIST_TYPE.getOptionListValue());
+        PlacementTweaks.BLOCK_TYPE_BREAK_RESTRICTION.setListContents(
                 Lists.BLOCK_BREAK_RESTRICTION_BLACKLIST.getStrings(),
                 Lists.BLOCK_BREAK_RESTRICTION_WHITELIST.getStrings());
 
