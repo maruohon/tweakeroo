@@ -4,6 +4,7 @@ import java.io.File;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.MinecraftClient;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.malilib.config.IConfigBase;
@@ -398,8 +399,12 @@ public class Configs implements IConfigHandler
                 Lists.POTION_WARNING_BLACKLIST.getStrings(),
                 Lists.POTION_WARNING_WHITELIST.getStrings());
 
-        // Turn off after loading the configs, just in case it was enabled in the config somehow
-        FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
+        if (MinecraftClient.getInstance().world == null)
+        {
+            // Turn off after loading the configs, just in case it was enabled in the config somehow.
+            // But only if we are currently not in a world, since changing configs also re-loads them when closing the menu.
+            FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
+        }
     }
 
     public static void saveToFile()
