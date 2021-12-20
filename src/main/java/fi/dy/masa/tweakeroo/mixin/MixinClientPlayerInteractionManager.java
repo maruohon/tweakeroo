@@ -125,6 +125,10 @@ public abstract class MixinClientPlayerInteractionManager
         {
             cir.setReturnValue(false);
         }
+        else
+        {
+            InventoryUtils.trySwapCurrentToolIfNearlyBroken();
+        }
     }
 
     @Inject(method = "updateBlockBreakingProgress", at = @At("HEAD"), cancellable = true) // MCP: onPlayerDamageBlock
@@ -134,6 +138,10 @@ public abstract class MixinClientPlayerInteractionManager
             PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
         {
             cir.setReturnValue(true);
+        }
+        else
+        {
+            InventoryUtils.trySwapCurrentToolIfNearlyBroken();
         }
     }
 
