@@ -1,6 +1,7 @@
 {
-   "pack": {
-      "pack_format": 7,
-      "description": "Tweakeroo"
-   }
+	"pack":
+	{
+		"pack_format": 8,
+		"description": "Tweakeroo"
+	}
 }
