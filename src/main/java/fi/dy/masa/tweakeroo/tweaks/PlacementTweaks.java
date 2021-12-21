@@ -43,6 +43,7 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
+import fi.dy.masa.tweakeroo.util.MessageOutputType;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 
@@ -958,9 +959,15 @@ public class PlacementTweaks
 
             if (BLOCK_TYPE_BREAK_RESTRICTION.isAllowed(state.getBlock()) == false)
             {
-                if (Configs.Generic.BLOCK_TYPE_BREAK_RESTRICTION_WARN.getBooleanValue())
+                MessageOutputType type = (MessageOutputType) Configs.Generic.BLOCK_TYPE_BREAK_RESTRICTION_WARN.getOptionListValue();
+
+                if (type == MessageOutputType.MESSAGE)
                 {
                     InfoUtils.showGuiOrInGameMessage(Message.MessageType.WARNING, "tweakeroo.message.warning.block_type_break_restriction");
+                }
+                else if (type == MessageOutputType.ACTIONBAR)
+                {
+                    InfoUtils.printActionbarMessage("tweakeroo.message.warning.block_type_break_restriction");
                 }
 
                 return false;
