@@ -37,6 +37,7 @@
     "tweakeroo.label.snap_aim_mode.pitch": "Pitch",
     "tweakeroo.label.snap_aim_mode.yaw": "Yaw",
 
+    "tweakeroo.message.death_coordinates": "§6You died§r @ [§b%d, %d, %d§r] in §a%s",
     "tweakeroo.message.focusing_game": "§6Focusing§f the game (grabbing the cursor)",
     "tweakeroo.message.potion_effects_running_out": "§6!! WARNING - %s potion effect(s) about to run out in %s seconds !!§r",
     "tweakeroo.message.repair_mode.swapped_repairable_item_to_slot": "Swapped a repairable item to %s slot",

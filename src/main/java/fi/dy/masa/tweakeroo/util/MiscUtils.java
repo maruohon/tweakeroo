@@ -20,6 +20,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.map.MapState;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
@@ -31,8 +35,10 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.Message;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.Reference;
+import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -135,6 +141,22 @@ public class MiscUtils
     public static void setUpdateExec(CommandBlockBlockEntity te, boolean value)
     {
         ((IMixinCommandBlockExecutor) te.getCommandExecutor()).setUpdateLastExecution(value);
+    }
+
+    public static void printDeathCoordinates(MinecraftClient mc)
+    {
+        BlockPos pos = PositionUtils.getEntityBlockPos(mc.player);
+        String dim = mc.player.getEntityWorld().getRegistryKey().getValue().toString();
+        String str = StringUtils.translate("tweakeroo.message.death_coordinates",
+                                           pos.getX(), pos.getY(), pos.getZ(), dim);
+        LiteralText message = new LiteralText(str);
+        Style style = message.getStyle();
+        String coords = pos.getX() + " " + pos.getY() + " " + pos.getZ();
+        style = style.withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, coords));
+        style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText(coords)));
+        message.setStyle(style);
+        mc.inGameHud.getChatHud().addMessage(message);
+        Tweakeroo.logger.info(str);
     }
 
     public static String getChatTimestamp()
