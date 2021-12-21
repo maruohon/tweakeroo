@@ -4,13 +4,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.minecraft.client.render.SkyProperties;
+import net.minecraft.client.render.DimensionEffects;
 import fi.dy.masa.tweakeroo.config.Configs;
 
-@Mixin(SkyProperties.Nether.class)
-public abstract class MixinSkyProperties_Nether extends SkyProperties
+@Mixin(DimensionEffects.Nether.class)
+public abstract class MixinDimensionEffects_Nether extends DimensionEffects
 {
-    public MixinSkyProperties_Nether(float cloudsHeight, boolean alternateSkyColor, SkyType skyType, boolean shouldRenderSky, boolean darkened)
+    private MixinDimensionEffects_Nether(float cloudsHeight, boolean alternateSkyColor,
+                                         SkyType skyType, boolean shouldRenderSky, boolean darkened)
     {
         super(cloudsHeight, alternateSkyColor, skyType, shouldRenderSky, darkened);
     }

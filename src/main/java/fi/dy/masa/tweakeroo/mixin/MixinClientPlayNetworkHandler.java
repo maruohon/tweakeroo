@@ -14,7 +14,7 @@ public abstract class MixinClientPlayNetworkHandler
 {
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/screen/ScreenHandler;setStackInSlot(ILnet/minecraft/item/ItemStack;)V"),
+            target = "Lnet/minecraft/screen/ScreenHandler;setStackInSlot(IILnet/minecraft/item/ItemStack;)V"),
             cancellable = true)
     private void onHandleSetSlot(net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci)
     {
@@ -25,7 +25,7 @@ public abstract class MixinClientPlayNetworkHandler
     }
 
     @Inject(method = "onDeathMessage", at = @At(value = "INVOKE", // onCombatEvent
-            target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V"))
+            target = "Lnet/minecraft/client/MinecraftClient;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V"))
     private void onPlayerDeath(DeathMessageS2CPacket packetIn, CallbackInfo ci)
     {
         net.minecraft.client.MinecraftClient mc = net.minecraft.client.MinecraftClient.getInstance();
