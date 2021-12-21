@@ -78,16 +78,6 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         }
     }
 
-    @Inject(method = "tickMovement", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V"))
-    private void fixElytraDeployment(CallbackInfo ci)
-    {
-        if (Configs.Fixes.ELYTRA_FIX.getBooleanValue() && this.isSubmergedInWater() == false)
-        {
-            this.setFlag(7, true);
-        }
-    }
-
     @Inject(method = "tickMovement", at = @At(value = "FIELD",
                 target = "Lnet/minecraft/entity/player/PlayerAbilities;allowFlying:Z", ordinal = 1))
     private void overrideSprint(CallbackInfo ci)

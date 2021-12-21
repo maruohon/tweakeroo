@@ -5,9 +5,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.MinecraftClient;
@@ -21,8 +19,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.profiler.ProfilerTiming;
-import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
@@ -134,27 +130,5 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
                 KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.options.keyUse.getBoundKeyTranslationKey()), true);
             }
         }
-    }
-
-    @ModifyConstant(method = "handleProfilerKeyPress", constant = @Constant(intValue = 46), require = 0, allow = 1)
-    private int fixProfiler1(int orig)
-    {
-        // ProfileResultImpl switched to using '\u001e' ie. ASCII "record separator", but this method wasn't updated
-        return Configs.Fixes.PROFILER_CHART_FIX.getBooleanValue() ? 30 : orig;
-    }
-
-    @ModifyConstant(method = "handleProfilerKeyPress", constant = @Constant(stringValue = "."), require = 0, allow = 1)
-    private String fixProfiler2(String orig)
-    {
-        // ProfileResultImpl switched to using '\u001e' ie. ASCII "record separator", but this method wasn't updated
-        return Configs.Fixes.PROFILER_CHART_FIX.getBooleanValue() ? "\u001e" : orig;
-    }
-
-    @Redirect(method = "drawProfilerResults", require = 0, allow = 5, at = @At(value = "FIELD",
-                        target = "Lnet/minecraft/util/profiler/ProfilerTiming;name:Ljava/lang/String;"))
-    private String fixProfilerSectionDisplayName(ProfilerTiming timing)
-    {
-        // ProfileResultImpl switched to using '\u001e', which looks horrible when printed, so return back to the old dot
-        return Configs.Fixes.PROFILER_CHART_FIX.getBooleanValue() ? timing.name.replace('\u001e', '.') : timing.name;
     }
 }
