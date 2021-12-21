@@ -386,7 +386,7 @@ public class InventoryUtils
 
     protected static boolean hasEnoughDurability(ItemStack stack)
     {
-        return stack.getMaxDamage() - stack.getDamage() > getMinDurability(stack);
+        return stack.getMaxDamage() - stack.getDamage() >= getMinDurability(stack);
     }
 
     private static int findSuitableSlot(ScreenHandler container, Predicate<ItemStack> itemTest)
@@ -467,6 +467,11 @@ public class InventoryUtils
 
     private static int getMinDurability(ItemStack stack)
     {
+        if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue() == false)
+        {
+            return 0;
+        }
+
         int minDurability = Configs.Generic.ITEM_SWAP_DURABILITY_THRESHOLD.getIntegerValue();
 
         // For items with low maximum durability, use 8% as the threshold,
@@ -762,7 +767,7 @@ public class InventoryUtils
             // Only accept regular inventory slots (no crafting, armor slots, or offhand)
             if (fi.dy.masa.malilib.util.InventoryUtils.isRegularInventorySlot(slot.id, false) &&
                 stackSlot.isItemEqualIgnoreDamage(stackReference) &&
-                stackSlot.getMaxDamage() - stackSlot.getDamage() > minDurabilityLeft &&
+                stackSlot.getMaxDamage() - stackSlot.getDamage() >= minDurabilityLeft &&
                 hasSameIshEnchantments(stackReference, stackSlot))
             {
                 return slot.id;

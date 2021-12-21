@@ -77,14 +77,17 @@ public class PlacementTweaks
 
     public static void onTick(MinecraftClient mc)
     {
+        boolean attack = mc.options.keyAttack.isPressed();
+        boolean use = mc.options.keyUse.isPressed();
+
         if (GuiUtils.getCurrentScreen() == null)
         {
-            if (mc.options.keyUse.isPressed())
+            if (use)
             {
                 onUsingTick();
             }
 
-            if (mc.options.keyAttack.isPressed())
+            if (attack)
             {
                 onAttackTick(mc);
             }
@@ -95,20 +98,20 @@ public class PlacementTweaks
             stackBeforeUse[1] = ItemStack.EMPTY;
         }
 
-        if (mc.options.keyUse.isPressed() == false)
+        if (use == false)
         {
             clearClickedBlockInfoUse();
 
             // Clear the cached stack when releasing both keys, so that the restock doesn't happen when
-            // using another another item or an empty hand.
-            if (mc.options.keyAttack.isPressed() == false)
+            // using another item or an empty hand.
+            if (attack == false)
             {
                 stackBeforeUse[0] = ItemStack.EMPTY;
                 stackBeforeUse[1] = ItemStack.EMPTY;
             }
         }
 
-        if (mc.options.keyAttack.isPressed() == false)
+        if (attack == false)
         {
             clearClickedBlockInfoAttack();
         }
@@ -662,7 +665,7 @@ public class PlacementTweaks
         return FAST_RIGHT_CLICK_BLOCK_RESTRICTION.isAllowed(block);
     }
 
-    private static void tryRestockHand(PlayerEntity player, Hand hand, ItemStack stackOriginal)
+    public static void tryRestockHand(PlayerEntity player, Hand hand, ItemStack stackOriginal)
     {
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
             canUseItemWithRestriction(HAND_RESTOCK_RESTRICTION, stackOriginal))
