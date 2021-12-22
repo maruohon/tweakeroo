@@ -88,7 +88,7 @@ public class CameraUtils
 
         Minecraft mc = GameUtils.getClient();
         ChunkProviderClient provider = mc.world.getChunkProvider();
-        final int viewDistance = mc.gameSettings.renderDistanceChunks;
+        final int viewDistance = GameUtils.getRenderDistanceChunks();
 
         if (chunkX != lastChunkX)
         {
@@ -134,7 +134,7 @@ public class CameraUtils
         Minecraft mc = GameUtils.getClient();
         Entity entity = EntityUtils.getCameraEntity();
         ChunkProviderClient provider = mc.world.getChunkProvider();
-        final int viewDistance = mc.gameSettings.renderDistanceChunks;
+        final int viewDistance = GameUtils.getRenderDistanceChunks();
         final int chunkX = entity.chunkCoordX;
         final int chunkZ = entity.chunkCoordZ;
 
