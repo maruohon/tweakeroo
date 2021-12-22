@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.action.ActionContext;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
@@ -132,10 +133,18 @@ public class MiscUtils
         }
     }
 
-    public static ActionResult antiGhostBlock(Minecraft mc)
+    public static ActionResult antiGhostBlock(ActionContext ctx)
     {
+        Minecraft mc = GameUtils.getClient();
+        EntityPlayer player = ctx.getPlayer();
+        World worldIn = ctx.getWorld();
+
+        if (player == null || worldIn == null)
+        {
+            return ActionResult.PASS;
+        }
+
         double range = mc.playerController.getBlockReachDistance();
-        EntityPlayer player = mc.player;
         Vec3d eyesPos = player.getPositionEyes(1f);
         Vec3d rangedLookRot = player.getLook(1f).scale(range);
         Vec3d lookEndPos = eyesPos.add(rangedLookRot);
@@ -183,7 +192,7 @@ public class MiscUtils
             return false;
         };
 
-        RayTraceUtils.rayTraceBlocks(mc.world, eyesPos, lookEndPos,
+        RayTraceUtils.rayTraceBlocks(worldIn, eyesPos, lookEndPos,
                 handler, RayTraceUtils.RayTraceFluidHandling.NONE,
                 RayTraceUtils.BLOCK_FILTER_NON_AIR, false, false, null, 16);
 

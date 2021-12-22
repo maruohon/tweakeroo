@@ -102,14 +102,14 @@ public class Callbacks
         Hotkeys.BREAKING_RESTRICTION_MODE_LINE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_LINE));
         Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_PLANE));
         Hotkeys.COPY_SIGN_TEXT.setHotkeyCallback(HotkeyCallback.of(Actions.COPY_SIGN_TEXT));
-        Hotkeys.FLY_PRESET_1.setHotkeyCallback(createFlySpeedAdjustCallback(1, Configs.Generic.FLY_SPEED_PRESET_1, Actions.SET_FLY_SPEED_PRESET_1.getAction()));
-        Hotkeys.FLY_PRESET_2.setHotkeyCallback(createFlySpeedAdjustCallback(2, Configs.Generic.FLY_SPEED_PRESET_2, Actions.SET_FLY_SPEED_PRESET_2.getAction()));
-        Hotkeys.FLY_PRESET_3.setHotkeyCallback(createFlySpeedAdjustCallback(3, Configs.Generic.FLY_SPEED_PRESET_3, Actions.SET_FLY_SPEED_PRESET_3.getAction()));
-        Hotkeys.FLY_PRESET_4.setHotkeyCallback(createFlySpeedAdjustCallback(4, Configs.Generic.FLY_SPEED_PRESET_4, Actions.SET_FLY_SPEED_PRESET_4.getAction()));
+        Hotkeys.FLY_PRESET_1.setHotkeyCallback(createFlySpeedAdjustCallback(1, Configs.Generic.FLY_SPEED_PRESET_1, (ctx) -> Actions.setFlySpeedPreset(1)));
+        Hotkeys.FLY_PRESET_2.setHotkeyCallback(createFlySpeedAdjustCallback(2, Configs.Generic.FLY_SPEED_PRESET_2, (ctx) -> Actions.setFlySpeedPreset(2)));
+        Hotkeys.FLY_PRESET_3.setHotkeyCallback(createFlySpeedAdjustCallback(3, Configs.Generic.FLY_SPEED_PRESET_3, (ctx) -> Actions.setFlySpeedPreset(3)));
+        Hotkeys.FLY_PRESET_4.setHotkeyCallback(createFlySpeedAdjustCallback(4, Configs.Generic.FLY_SPEED_PRESET_4, (ctx) -> Actions.setFlySpeedPreset(4)));
         Hotkeys.GHOST_BLOCK_REMOVER.setHotkeyCallback(HotkeyCallback.of(Actions.GHOST_BLOCK_REMOVER_MANUAL));
         Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(AdjustableValueHotkeyCallback.createWrapping(null, Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW, 0, 2)
                                                     .setAdjustmentEnabledCondition(FeatureToggle.TWEAK_HOTBAR_SCROLL::getBooleanValue)
-                                                    .setKeyAction(Actions.HOTBAR_SCROLL.getAction()).setReverseDirection(true).setTriggerAlwaysOnRelease(true));
+                                                    .setKeyAction(Actions::hotbarScroll).setReverseDirection(true).setTriggerAlwaysOnRelease(true));
         Hotkeys.HOTBAR_SWAP_1.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_1));
         Hotkeys.HOTBAR_SWAP_2.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_2));
         Hotkeys.HOTBAR_SWAP_3.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_3));
