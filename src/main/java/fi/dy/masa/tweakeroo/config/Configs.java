@@ -265,6 +265,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_MOB_SPAWNER_MOB_RENDER  = new ConfigBooleanHotkeyed("disableMobSpawnerMobRendering",        false, "", "Removes the entity rendering from mob spawners");
         public static final ConfigBooleanHotkeyed       DISABLE_NAUSEA_EFFECT           = new ConfigBooleanHotkeyed("disableNauseaEffect",                  false, "", "Disables the nausea visual effects");
         public static final ConfigBooleanHotkeyed       DISABLE_NETHER_FOG              = new ConfigBooleanHotkeyed("disableNetherFog",                     false, "", "Removes the fog in the Nether");
+        public static final ConfigBooleanHotkeyed       DISABLE_NETHER_PORTAL_SOUND     = new ConfigBooleanHotkeyed("disableNetherPortalSound",             false, "", "Disables the Nether Portal sound");
         public static final ConfigBooleanHotkeyed       DISABLE_OBSERVER                = new ConfigBooleanClient  ("disableObserver",                      false, "", "Disable Observers from triggering at all");
         public static final ConfigBooleanHotkeyed       DISABLE_OFFHAND_RENDERING       = new ConfigBooleanHotkeyed("disableOffhandRendering",              false, "", "Disables the offhand item from getting rendered");
         public static final ConfigBooleanHotkeyed       DISABLE_PARTICLES               = new ConfigBooleanHotkeyed("disableParticles",                     false, "", "Disables all particles");
@@ -301,6 +302,7 @@ public class Configs implements IConfigHandler
                 DISABLE_MOB_SPAWNER_MOB_RENDER,
                 DISABLE_NAUSEA_EFFECT,
                 DISABLE_NETHER_FOG,
+                DISABLE_NETHER_PORTAL_SOUND,
                 DISABLE_OBSERVER,
                 DISABLE_OFFHAND_RENDERING,
                 DISABLE_PARTICLES,

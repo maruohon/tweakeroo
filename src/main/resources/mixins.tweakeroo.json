@@ -46,6 +46,7 @@
 		"MixinMobSpawnerBlockEntityRenderer",
 		"MixinMobSpawnerLogic",
 		"MixinMouse",
+		"MixinNetherPortalBlock",
 		"MixinObserverBlock",
 		"MixinParticleManager",
 		"MixinPlayerAbilities",
