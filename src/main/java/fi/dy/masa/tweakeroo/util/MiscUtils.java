@@ -445,11 +445,9 @@ public class MiscUtils
             for (int x = 0; x < 128; ++x)
             {
                 int index = x + y * 128;
-                int color = state.colors[index] & 255;
-                int colorIndex = color / 4;
-                int col = colorIndex == 0 ? 0 : MapColor.getRenderColor(color & 0x3);
+                int color = MapColor.getRenderColor(state.colors[index]);
                 // Swap the color channels from ABGR to ARGB
-                int outputColor = (col & 0xFF00FF00) | (col & 0xFF0000) >> 16 | (col & 0xFF) << 16;
+                int outputColor = (color & 0xFF00FF00) | (color & 0xFF0000) >> 16 | (color & 0xFF) << 16;
 
                 image.setRGB(x, y, outputColor);
             }
