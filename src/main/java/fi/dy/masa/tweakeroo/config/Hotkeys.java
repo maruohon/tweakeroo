@@ -48,6 +48,7 @@ public class Hotkeys
     public static final ConfigHotkey SKIP_WORLD_RENDERING               = new ConfigHotkey("skipWorldRendering",                "",     "Toggles skipping world rendering");
     public static final ConfigHotkey STAND_UP_NEARBY_PETS               = new ConfigHotkey("standUpNearbyPets",                 "",     "Makes all nearby pets stand up");
     public static final ConfigHotkey SWAP_ELYTRA_CHESTPLATE             = new ConfigHotkey("swapElytraChestplate",              "",     "Swaps the currently equipped item in the chest slot between an Elytra and a Chest Plate");
+    public static final ConfigHotkey TOGGLE_CARPET_AP_PROTOCOL          = new ConfigHotkey("toggleCarpetAccuratePlacementProtocol", "", "Toggles the value of the Generic -> 'carpetAccuratePlacementProtocol' option");
     public static final ConfigHotkey TOGGLE_GRAB_CURSOR                 = new ConfigHotkey("toggleGrabCursor",                  "",     "Grabs or ungrabs the mouse cursor, depending on the current state");
     public static final ConfigHotkey TOOL_PICK                          = new ConfigHotkey("toolPick",                          "",     "Switches to the effective tool for the targeted block");
     public static final ConfigHotkey WRITE_MAPS_AS_IMAGES               = new ConfigHotkey("writeMapsAsImages",                 "",     "Writes all the currently available maps as images\nto the 'config/tweakeroo/map_images/<worldname>/' directory");
@@ -93,6 +94,7 @@ public class Hotkeys
             SKIP_WORLD_RENDERING,
             STAND_UP_NEARBY_PETS,
             SWAP_ELYTRA_CHESTPLATE,
+            TOGGLE_CARPET_AP_PROTOCOL,
             TOGGLE_GRAB_CURSOR,
             TOOL_PICK,
             WRITE_MAPS_AS_IMAGES,
