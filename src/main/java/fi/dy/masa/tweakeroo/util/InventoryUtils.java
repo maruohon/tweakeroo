@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.EnchantmentHelper;

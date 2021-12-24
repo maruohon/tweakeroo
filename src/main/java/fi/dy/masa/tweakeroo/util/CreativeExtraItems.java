@@ -2,7 +2,7 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.util.HashMap;
 import java.util.List;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.ArrayListMultimap;
 import com.mojang.brigadier.StringReader;
 import net.minecraft.command.argument.ItemStringReader;

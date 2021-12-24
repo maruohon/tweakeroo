@@ -1,6 +1,6 @@
 package fi.dy.masa.tweakeroo.util;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;

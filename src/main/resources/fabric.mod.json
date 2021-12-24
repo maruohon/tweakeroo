@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "tweakeroo",
 	"name": "Tweakeroo",
-	"version": "${mod_version}",
+	"version": "0.10.0-dev",
 
 	"description": "Adds a bunch of configurable client-side tweaks",
 	"authors": [
