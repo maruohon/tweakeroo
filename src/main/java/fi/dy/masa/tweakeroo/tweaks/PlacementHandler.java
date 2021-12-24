@@ -1,6 +1,6 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
