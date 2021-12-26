@@ -19,7 +19,7 @@ public class Buildscript extends FabricProject {
 
     @Override
     public String getVersion() {
-        return "0.10.0-dev";
+        return "0.11.0";
     }
 
     @Override
