@@ -17,6 +17,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.MiningToolItem;
+import net.minecraft.item.ShovelItem;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.property.DirectionProperty;
@@ -319,10 +320,18 @@ public class PlacementTweaks
         InventoryUtils.trySwapCurrentToolIfNearlyBroken();
 
         ItemStack stackPre = player.getStackInHand(hand);
+        BlockPos posIn = hitResult.getBlockPos();
 
         if (Configs.Disable.DISABLE_AXE_STRIPPING.getBooleanValue() &&
             stackPre.getItem() instanceof AxeItem &&
-            MiscUtils.isStrippableLog(world, hitResult.getBlockPos()))
+            MiscUtils.isStrippableLog(world, posIn))
+        {
+            return ActionResult.PASS;
+        }
+
+        if (Configs.Disable.DISABLE_SHOVEL_PATHING.getBooleanValue() &&
+            stackPre.getItem() instanceof ShovelItem &&
+            MiscUtils.isShovelPathConvertableBlock(world, posIn))
         {
             return ActionResult.PASS;
         }
@@ -330,7 +339,6 @@ public class PlacementTweaks
         stackPre = stackPre.copy();
         boolean restricted = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() || FeatureToggle.TWEAK_PLACEMENT_GRID.getBooleanValue();
         Direction sideIn = hitResult.getSide();
-        BlockPos posIn = hitResult.getBlockPos();
         Vec3d hitVec = hitResult.getPos();
         Direction playerFacingH = player.getHorizontalFacing();
         HitPart hitPart = PositionUtils.getHitPart(sideIn, playerFacingH, posIn, hitVec);
