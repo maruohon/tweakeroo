@@ -70,7 +70,8 @@ public class InventoryUtils
 
         output.clear();
 
-        if (configStr.isBlank()){
+        if (configStr.isBlank())
+        {
             return;
         }
 
