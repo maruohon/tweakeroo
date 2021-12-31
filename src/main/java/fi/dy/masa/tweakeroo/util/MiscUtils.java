@@ -45,6 +45,7 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.mixin.IMixinAxeItem;
 import fi.dy.masa.tweakeroo.mixin.IMixinClientWorld;
 import fi.dy.masa.tweakeroo.mixin.IMixinCommandBlockExecutor;
+import fi.dy.masa.tweakeroo.mixin.IMixinShovelItem;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
 public class MiscUtils
@@ -131,6 +132,12 @@ public class MiscUtils
     {
         BlockState state = world.getBlockState(pos);
         return IMixinAxeItem.tweakeroo_getStrippedBlocks().containsKey(state.getBlock());
+    }
+
+    public static boolean isShovelPathConvertableBlock(World world, BlockPos pos)
+    {
+        BlockState state = world.getBlockState(pos);
+        return IMixinShovelItem.tweakeroo_getPathStates().containsKey(state.getBlock());
     }
 
     public static boolean getUpdateExec(CommandBlockBlockEntity te)
