@@ -98,6 +98,21 @@ public abstract class MixinClientPlayerInteractionManager
         }
     }
 
+    @Inject(method = "attackEntity",
+            at = @At("HEAD"))
+    private void switchToAttackWeapon(PlayerEntity player, Entity target, CallbackInfo ci)
+    {
+        if (this.client.player != null && this.client.world != null)
+        {
+            if (FeatureToggle.TWEAK_WEAPON_SWITCH.getBooleanValue())
+            {
+                InventoryUtils.trySwitchToWeapon(target);
+            }
+
+            PlacementTweaks.cacheStackInHand(Hand.MAIN_HAND);
+        }
+    }
+
     @Inject(method = "attackBlock",
             slice = @Slice(from = @At(value = "FIELD", ordinal = 0,
                                       target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;breakingBlock:Z")),
