@@ -51,10 +51,16 @@ public class InventoryUtils
     private static final List<Integer> REPAIR_MODE_SLOT_NUMBERS = new ArrayList<>();
     private static final HashSet<Item> UNSTACKING_ITEMS = new HashSet<>();
     private static final List<Integer> TOOL_SWITCHABLE_SLOTS = new ArrayList<>();
+    private static final List<Integer> TOOL_SWITCH_IGNORED_SLOTS = new ArrayList<>();
 
     public static void setToolSwitchableSlots(String configStr)
     {
         parseSlotsFromString(configStr, TOOL_SWITCHABLE_SLOTS);
+    }
+
+    public static void setToolSwitchIgnoreSlots(String configStr)
+    {
+        parseSlotsFromString(configStr, TOOL_SWITCH_IGNORED_SLOTS);
     }
 
     public static void parseSlotsFromString(String configStr, Collection<Integer> output)
@@ -64,43 +70,45 @@ public class InventoryUtils
 
         output.clear();
 
-        for (String str : parts)
-        {
-            try
+        if (!configStr.isBlank()){
+            for (String str : parts)
             {
-                Matcher matcher = patternRange.matcher(str);
-
-                if (matcher.matches())
+                try
                 {
-                    int slotStart = Integer.parseInt(matcher.group("start")) - 1;
-                    int slotEnd = Integer.parseInt(matcher.group("end")) - 1;
+                    Matcher matcher = patternRange.matcher(str);
 
-                    if (slotStart <= slotEnd &&
-                        PlayerInventory.isValidHotbarIndex(slotStart) &&
-                        PlayerInventory.isValidHotbarIndex(slotEnd))
+                    if (matcher.matches())
                     {
-                        for (int slotNum = slotStart; slotNum <= slotEnd; ++slotNum)
+                        int slotStart = Integer.parseInt(matcher.group("start")) - 1;
+                        int slotEnd = Integer.parseInt(matcher.group("end")) - 1;
+
+                        if (slotStart <= slotEnd &&
+                            PlayerInventory.isValidHotbarIndex(slotStart) &&
+                            PlayerInventory.isValidHotbarIndex(slotEnd))
                         {
-                            if (output.contains(slotNum) == false)
+                            for (int slotNum = slotStart; slotNum <= slotEnd; ++slotNum)
                             {
-                                output.add(slotNum);
+                                if (output.contains(slotNum) == false)
+                                {
+                                    output.add(slotNum);
+                                }
                             }
                         }
                     }
-                }
-                else
-                {
-                    int slotNum = Integer.parseInt(str) - 1;
-
-                    if (PlayerInventory.isValidHotbarIndex(slotNum) && output.contains(slotNum) == false)
+                    else
                     {
-                        output.add(slotNum);
+                        int slotNum = Integer.parseInt(str) - 1;
+
+                        if (PlayerInventory.isValidHotbarIndex(slotNum) && output.contains(slotNum) == false)
+                        {
+                            output.add(slotNum);
+                        }
                     }
                 }
-            }
-            catch (NumberFormatException ignore)
-            {
-                InfoUtils.showGuiOrInGameMessage(Message.MessageType.ERROR, "Failed to parse slots from string %s", configStr);
+                catch (NumberFormatException ignore)
+                {
+                    InfoUtils.showGuiOrInGameMessage(Message.MessageType.ERROR, "Failed to parse slots from string %s", configStr);
+                }
             }
         }
     }
@@ -325,24 +333,26 @@ public class InventoryUtils
 
         if (player != null && mc.world != null)
         {
-            BlockState state = mc.world.getBlockState(pos);
-            ScreenHandler container = player.playerScreenHandler;
-            ItemPickerTest test;
+            if (!TOOL_SWITCH_IGNORED_SLOTS.contains( player.getInventory().selectedSlot)){
+                BlockState state = mc.world.getBlockState(pos);
+                ScreenHandler container = player.playerScreenHandler;
+                ItemPickerTest test;
 
-            if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
-            {
-                test = (currentStack, previous) -> InventoryUtils.isBetterToolAndHasDurability(currentStack, previous, state);
-            }
-            else
-            {
-                test = (currentStack, previous) -> InventoryUtils.isBetterTool(currentStack, previous, state);
-            }
+                if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
+                {
+                    test = (currentStack, previous) -> InventoryUtils.isBetterToolAndHasDurability(currentStack, previous, state);
+                }
+                else
+                {
+                    test = (currentStack, previous) -> InventoryUtils.isBetterTool(currentStack, previous, state);
+                }
 
-            int slotNumber = findSlotWithBestItemMatch(container, test, UniformIntProvider.create(36, 44), UniformIntProvider.create(9, 35));
+                int slotNumber = findSlotWithBestItemMatch(container, test, UniformIntProvider.create(36, 44), UniformIntProvider.create(9, 35));
 
-            if (slotNumber != -1 && (slotNumber - 36) != player.getInventory().selectedSlot)
-            {
-                swapToolToHand(slotNumber, mc);
+                if (slotNumber != -1 && (slotNumber - 36) != player.getInventory().selectedSlot)
+                {
+                    swapToolToHand(slotNumber, mc);
+                }
             }
         }
     }
