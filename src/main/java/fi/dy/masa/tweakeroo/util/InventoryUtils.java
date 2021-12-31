@@ -70,45 +70,47 @@ public class InventoryUtils
 
         output.clear();
 
-        if (!configStr.isBlank()){
-            for (String str : parts)
+        if (configStr.isBlank()){
+            return;
+        }
+
+        for (String str : parts)
+        {
+            try
             {
-                try
+                Matcher matcher = patternRange.matcher(str);
+
+                if (matcher.matches())
                 {
-                    Matcher matcher = patternRange.matcher(str);
+                    int slotStart = Integer.parseInt(matcher.group("start")) - 1;
+                    int slotEnd = Integer.parseInt(matcher.group("end")) - 1;
 
-                    if (matcher.matches())
+                    if (slotStart <= slotEnd &&
+                        PlayerInventory.isValidHotbarIndex(slotStart) &&
+                        PlayerInventory.isValidHotbarIndex(slotEnd))
                     {
-                        int slotStart = Integer.parseInt(matcher.group("start")) - 1;
-                        int slotEnd = Integer.parseInt(matcher.group("end")) - 1;
-
-                        if (slotStart <= slotEnd &&
-                            PlayerInventory.isValidHotbarIndex(slotStart) &&
-                            PlayerInventory.isValidHotbarIndex(slotEnd))
+                        for (int slotNum = slotStart; slotNum <= slotEnd; ++slotNum)
                         {
-                            for (int slotNum = slotStart; slotNum <= slotEnd; ++slotNum)
+                            if (output.contains(slotNum) == false)
                             {
-                                if (output.contains(slotNum) == false)
-                                {
-                                    output.add(slotNum);
-                                }
+                                output.add(slotNum);
                             }
                         }
                     }
-                    else
-                    {
-                        int slotNum = Integer.parseInt(str) - 1;
+                }
+                else
+                {
+                    int slotNum = Integer.parseInt(str) - 1;
 
-                        if (PlayerInventory.isValidHotbarIndex(slotNum) && output.contains(slotNum) == false)
-                        {
-                            output.add(slotNum);
-                        }
+                    if (PlayerInventory.isValidHotbarIndex(slotNum) && output.contains(slotNum) == false)
+                    {
+                        output.add(slotNum);
                     }
                 }
-                catch (NumberFormatException ignore)
-                {
-                    InfoUtils.showGuiOrInGameMessage(Message.MessageType.ERROR, "Failed to parse slots from string %s", configStr);
-                }
+            }
+            catch (NumberFormatException ignore)
+            {
+                InfoUtils.showGuiOrInGameMessage(Message.MessageType.ERROR, "Failed to parse slots from string %s", configStr);
             }
         }
     }
@@ -331,28 +333,27 @@ public class InventoryUtils
         MinecraftClient mc = MinecraftClient.getInstance();
         PlayerEntity player = mc.player;
 
-        if (player != null && mc.world != null)
+        if (player != null && mc.world != null &&
+            TOOL_SWITCH_IGNORED_SLOTS.contains(player.getInventory().selectedSlot) == false)
         {
-            if (!TOOL_SWITCH_IGNORED_SLOTS.contains( player.getInventory().selectedSlot)){
-                BlockState state = mc.world.getBlockState(pos);
-                ScreenHandler container = player.playerScreenHandler;
-                ItemPickerTest test;
+            BlockState state = mc.world.getBlockState(pos);
+            ScreenHandler container = player.playerScreenHandler;
+            ItemPickerTest test;
 
-                if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
-                {
-                    test = (currentStack, previous) -> InventoryUtils.isBetterToolAndHasDurability(currentStack, previous, state);
-                }
-                else
-                {
-                    test = (currentStack, previous) -> InventoryUtils.isBetterTool(currentStack, previous, state);
-                }
+            if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
+            {
+                test = (currentStack, previous) -> InventoryUtils.isBetterToolAndHasDurability(currentStack, previous, state);
+            }
+            else
+            {
+                test = (currentStack, previous) -> InventoryUtils.isBetterTool(currentStack, previous, state);
+            }
 
-                int slotNumber = findSlotWithBestItemMatch(container, test, UniformIntProvider.create(36, 44), UniformIntProvider.create(9, 35));
+            int slotNumber = findSlotWithBestItemMatch(container, test, UniformIntProvider.create(36, 44), UniformIntProvider.create(9, 35));
 
-                if (slotNumber != -1 && (slotNumber - 36) != player.getInventory().selectedSlot)
-                {
-                    swapToolToHand(slotNumber, mc);
-                }
+            if (slotNumber != -1 && (slotNumber - 36) != player.getInventory().selectedSlot)
+            {
+                swapToolToHand(slotNumber, mc);
             }
         }
     }
