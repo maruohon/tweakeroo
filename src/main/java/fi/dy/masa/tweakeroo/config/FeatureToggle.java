@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.config;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
@@ -94,6 +95,8 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_Y_MIRROR                  ("tweakYMirror",                        false, "",    "Mirrors the targeted y-position within the block bounds.\nThis is basically for placing slabs or stairs\nin the opposite top/bottom state from normal,\nif you have to place them against another slab for example."),
     TWEAK_ZOOM                      ("tweakZoom",                           false, "",    KeybindSettings.INGAME_BOTH, "Enables using the zoom hotkey to, well, zoom in");
 
+    public static final ImmutableList<FeatureToggle> VALUES = ImmutableList.copyOf(values());
+
     private final String name;
     private final String comment;
     private final String prettyName;
@@ -103,37 +106,37 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     private boolean valueBoolean;
     private IValueChangeCallback<IConfigBoolean> callback;
 
-    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
         this(name, defaultValue, false, defaultHotkey, KeybindSettings.DEFAULT, comment);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment)
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment)
     {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT, comment);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment)
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment)
     {
         this(name, defaultValue, false, defaultHotkey, settings, comment);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment)
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment)
     {
         this(name, defaultValue, singlePlayer, defaultHotkey, settings, comment, StringUtils.splitCamelCase(name.substring(5)));
     }
 
-    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
     {
         this(name, defaultValue, false, defaultHotkey, comment, prettyName);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName)
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName)
     {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT, comment, prettyName);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName)
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName)
     {
         this.name = name;
         this.valueBoolean = defaultValue;
