@@ -453,7 +453,7 @@ public class PlacementTweaks
 
         if (handleFlexible == false &&
             FeatureToggle.TWEAK_FAKE_SNEAK_PLACEMENT.getBooleanValue() &&
-            stack.isEmpty() == false)
+            stack.getItem() instanceof BlockItem)
         {
             BlockHitResult hitResult = new BlockHitResult(hitVec, sideIn, posIn, false);
             ItemPlacementContext ctx = new ItemPlacementContext(new ItemUsageContext(player, hand, hitResult));
