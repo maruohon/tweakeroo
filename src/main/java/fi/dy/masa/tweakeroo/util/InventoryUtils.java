@@ -23,6 +23,8 @@ import net.minecraft.item.ElytraItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.MiningToolItem;
+import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
@@ -435,7 +437,7 @@ public class InventoryUtils
 
     private static boolean isBetterWeapon(ItemStack testedStack, ItemStack previousWeapon, Entity entity)
     {
-        return testedStack.isEmpty() == false && matchesWeaponMapping(testedStack, entity) && makesMoreDamage(testedStack, previousWeapon);
+        return testedStack.isEmpty() == false && matchesWeaponMapping(testedStack, entity) && (makesMoreDamage(testedStack, previousWeapon) || matchesWeaponMapping(previousWeapon, entity) == false);
     }
 
     private static boolean isBetterWeaponAndHasDurability(ItemStack testedStack, ItemStack previousTool, Entity entity)
@@ -449,14 +451,28 @@ public class InventoryUtils
     }
 
     private static float getBaseAttackDamage(ItemStack stack) {
-        try
+        // Original implementation, but does not seam to work in release mode
+        // try
+        // {
+        //     // This is to support any Item that has a getAttackDamage method.
+        //     // In vanilla these are SwordItem and MiningToolItem
+        //     // Item item = stack.getItem();
+        //     // return (float) item.getClass().getMethod("getAttackDamage").invoke(item);
+
+        // }
+        // catch(Exception ignore){
+        //     return 0F;
+        // }
+        Item item = stack.getItem();
+
+        if (item instanceof SwordItem)
         {
-            // This is to support any Item that has a getAttackDamage method.
-            // In vanilla these are SwordItem and MiningToolItem
-            Item item = stack.getItem();
-            return (float) item.getClass().getMethod("getAttackDamage").invoke(item);
+            return ((SwordItem) item).getAttackDamage();
         }
-        catch(Exception ignore){
+        else if (item instanceof MiningToolItem)
+        { 
+            return ((MiningToolItem) item).getAttackDamage();
+        } else {
             return 0F;
         }
     }
@@ -464,7 +480,7 @@ public class InventoryUtils
     protected static boolean matchesWeaponMapping(ItemStack stack, Entity entity)
     {
         HashSet<Item> weapons = WEAPON_MAPPING.getOrDefault(entity.getType(), WEAPON_MAPPING.get(null));
-        return weapons.contains(stack.getItem());
+        return weapons != null && weapons.contains(stack.getItem());
     }
 
     public static void trySwitchToEffectiveTool(BlockPos pos)
