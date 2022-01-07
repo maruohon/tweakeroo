@@ -63,6 +63,7 @@
 		"MixinSlimeBlock",
 		"MixinStructureBlockBlockEntity",
 		"MixinTeleportSpectatorMenu",
+		"MixinThreadedAnvilChunkStorage",
 		"MixinTradeOffer",
 		"MixinUpdateStructureBlockC2SPacket",
 		"MixinWorld",
