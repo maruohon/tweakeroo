@@ -259,6 +259,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_CLIENT_ENTITY_UPDATES   = new ConfigBooleanHotkeyed("disableClientEntityUpdates",           false, "", "Disables ALL except player entity updates on the client.\nThis is mainly meant for situations where you need to be\nable to do stuff to fix excessive entity count related problems");
         public static final ConfigBooleanHotkeyed       DISABLE_CLIENT_LIGHT_UPDATES    = new ConfigBooleanHotkeyed("disableClientLightUpdates",            false, "", "Disables all client-side light updates");
         public static final ConfigBooleanHotkeyed       DISABLE_CONSTANT_CHUNK_SAVING   = new ConfigBooleanHotkeyed("disableConstantChunkSaving",           false, "", "Disables the game saving up to 20 chunks every tick\nall the time, in addition to the normal auto-save cycle.");
+        public static final ConfigBooleanHotkeyed       DISABLE_CREATIVE_INFESTED_BLOCKS= new ConfigBooleanHotkeyed("disableCreativeMenuInfestedBlocks",    false, "", "Removes infested stone blocks from the creative search inventory");
         public static final ConfigBooleanHotkeyed       DISABLE_DEAD_MOB_RENDERING      = new ConfigBooleanHotkeyed("disableDeadMobRendering",              false, "", "Prevents rendering dead mobs (entities that are at 0 health)");
         public static final ConfigBooleanHotkeyed       DISABLE_DEAD_MOB_TARGETING      = new ConfigBooleanHotkeyed("disableDeadMobTargeting",              false, "", "Prevents targeting entities that are at 0 health.\nThis fixes for example hitting already dead mobs.");
         public static final ConfigBooleanHotkeyed       DISABLE_ENTITY_RENDERING        = new ConfigBooleanHotkeyed("disableEntityRendering",               false, "", "Disables ALL except player entity rendering.\nThis is mainly meant for situations where you need to be\nable to do stuff to fix excessive entity count related problems");
@@ -299,6 +300,7 @@ public class Configs implements IConfigHandler
                 DISABLE_CLIENT_ENTITY_UPDATES,
                 DISABLE_CLIENT_LIGHT_UPDATES,
                 DISABLE_CONSTANT_CHUNK_SAVING,
+                DISABLE_CREATIVE_INFESTED_BLOCKS,
                 DISABLE_DEAD_MOB_RENDERING,
                 DISABLE_DEAD_MOB_TARGETING,
                 DISABLE_ENTITY_RENDERING,

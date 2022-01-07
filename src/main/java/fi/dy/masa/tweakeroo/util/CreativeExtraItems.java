@@ -5,10 +5,13 @@ import java.util.List;
 import javax.annotation.Nullable;
 import com.google.common.collect.ArrayListMultimap;
 import com.mojang.brigadier.StringReader;
+import net.minecraft.block.InfestedBlock;
 import net.minecraft.command.argument.ItemStringReader;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.collection.DefaultedList;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 
 public class CreativeExtraItems
@@ -76,5 +79,11 @@ public class CreativeExtraItems
         }
 
         return ItemStack.EMPTY;
+    }
+
+    public static void removeInfestedBlocks(DefaultedList<ItemStack> stacks)
+    {
+        stacks.removeIf((stack) -> stack.getItem() instanceof BlockItem &&
+                                   ((BlockItem) stack.getItem()).getBlock() instanceof InfestedBlock);
     }
 }

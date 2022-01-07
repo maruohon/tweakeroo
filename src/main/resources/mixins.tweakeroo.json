@@ -29,6 +29,7 @@
 		"MixinClientWorld",
 		"MixinCloneCommand",
 		"MixinCommandBlockScreen",
+		"MixinCreativeInventoryScreen",
 		"MixinDimensionEffects_Nether",
 		"MixinEntity",
 		"MixinEntityRenderDispatcher",
