@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,7 +45,7 @@ public abstract class MixinClientPlayerInteractionManager
     }
 
     @Inject(method = "interactItem",
-            slice = @Slice(from = @At(value = "INVOKE", 
+            slice = @Slice(from = @At(value = "INVOKE",
                                       target = "Lnet/minecraft/item/ItemStack;use(" +
                                                "Lnet/minecraft/world/World;" +
                                                "Lnet/minecraft/entity/player/PlayerEntity;" +
@@ -90,9 +91,14 @@ public abstract class MixinClientPlayerInteractionManager
     }
 
     @Inject(method = "attackEntity", at = @At("HEAD"), cancellable = true)
-    private void preventEntityAttacksInFreeCameraMode(CallbackInfo ci)
+    private void preventEntityAttacksInFreeCameraMode(PlayerEntity player, Entity target, CallbackInfo ci)
     {
         if (CameraUtils.shouldPreventPlayerInputs())
+        {
+            ci.cancel();
+        }
+        else if (FeatureToggle.TWEAK_ENTITY_TYPE_ATTACK_RESTRICTION.getBooleanValue() &&
+                MiscTweaks.isEntityAllowedByAttackingRestriction(target.getType()) == false)
         {
             ci.cancel();
         }

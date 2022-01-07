@@ -77,5 +77,6 @@
     "tweakeroo.message.value.off": "OFF",
     "tweakeroo.message.value.on": "ON",
 
-    "tweakeroo.message.warning.block_type_break_restriction": "§6Block breaking prevented by Block Type Break Restriction tweak"
+    "tweakeroo.message.warning.block_type_break_restriction": "§6Block breaking prevented by Block Type Break Restriction tweak",
+    "tweakeroo.message.warning.entity_type_attack_restriction": "§6Entity attack prevented by Entity Type Attack Restriction tweak"
 }

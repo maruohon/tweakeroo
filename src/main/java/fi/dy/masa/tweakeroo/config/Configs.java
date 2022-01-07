@@ -47,6 +47,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBoolean       CARPET_ACCURATE_PLACEMENT_PROTOCOL  = new ConfigBoolean     ("carpetAccuratePlacementProtocol", true, "If enabled, then the Flexible Block Placement and the\nAccurate Block Placement use the protocol implemented in Carpet mod.\n§6Note: This is required for any block rotations to work, other than\n§6blocks that only care about the block side you click on (Hoppers, Logs etc.)");
         public static final ConfigBoolean       CLIENT_PLACEMENT_ROTATION           = new ConfigBoolean     ("clientPlacementRotation", true, "Enable single player and client side placement rotations,\nsuch as Accurate Placement working in single player without Carpet mod");
         public static final ConfigOptionList    ELYTRA_CAMERA_INDICATOR             = new ConfigOptionList  ("elytraCameraIndicator", ActiveMode.WITH_KEY, "Whether or not to render the real pitch angle\nindicator when the elytra camera mode is active");
+        public static final ConfigOptionList    ENTITY_TYPE_ATTACK_RESTRICTION_WARN = new ConfigOptionList  ("entityTypeAttackRestrictionWarn", MessageOutputType.MESSAGE, "Selects which type of warning message to show (if any)\nwhen the Entity Type Attack Restriction feature prevents attacking an entity");
         public static final ConfigInteger       FAST_BLOCK_PLACEMENT_COUNT          = new ConfigInteger     ("fastBlockPlacementCount", 2, 1, 16, "The maximum number of blocks to place per game tick\nwith the Fast Block Placement tweak");
         public static final ConfigBoolean       FAST_LEFT_CLICK_ALLOW_TOOLS         = new ConfigBoolean     ("fastLeftClickAllowTools", false, "Allow the Fast Left Click to work in survival\nalso while holding tool items");
         public static final ConfigInteger       FAST_LEFT_CLICK_COUNT               = new ConfigInteger     ("fastLeftClickCount",  10, 1, 64, "The number of left clicks to do per game tick when\ntweakFastLeftClick is enabled and the attack button is held down");
@@ -132,6 +133,7 @@ public class Configs implements IConfigHandler
                 BLOCK_TYPE_BREAK_RESTRICTION_WARN,
                 BREAKING_RESTRICTION_MODE,
                 ELYTRA_CAMERA_INDICATOR,
+                ENTITY_TYPE_ATTACK_RESTRICTION_WARN,
                 PLACEMENT_RESTRICTION_MODE,
                 HOTBAR_SWAP_OVERLAY_ALIGNMENT,
                 SNAP_AIM_MODE,
@@ -202,6 +204,9 @@ public class Configs implements IConfigHandler
         public static final ConfigStringList BLOCK_TYPE_BREAK_RESTRICTION_BLACKLIST = new ConfigStringList("blockTypeBreakRestrictionBlackList", ImmutableList.of("minecraft:budding_amethyst"), "The blocks that are NOT allowed to be broken while the Block Break Restriction tweak is enabled,\nif the blockBreakRestrictionListType is set to Black List");
         public static final ConfigStringList BLOCK_TYPE_BREAK_RESTRICTION_WHITELIST = new ConfigStringList("blockTypeBreakRestrictionWhiteList", ImmutableList.of(), "The only blocks that can be broken while the Block Break Restriction tweak is enabled,\nif the blockBreakRestrictionListType is set to White List");
         public static final ConfigStringList CREATIVE_EXTRA_ITEMS               = new ConfigStringList("creativeExtraItems", ImmutableList.of("minecraft:command_block", "minecraft:chain_command_block", "minecraft:repeating_command_block", "minecraft:dragon_egg", "minecraft:structure_void", "minecraft:structure_block", "minecraft:structure_block{BlockEntityTag:{mode:\"SAVE\"}}", "minecraft:structure_block{BlockEntityTag:{mode:\"LOAD\"}}", "minecraft:structure_block{BlockEntityTag:{mode:\"CORNER\"}}"), "Extra items that should be appended to the creative inventory.\nCurrently these will appear in the Transportation category.\nIn the future the group per added item will be customizable.");
+        public static final ConfigOptionList ENTITY_TYPE_ATTACK_RESTRICTION_LIST_TYPE = new ConfigOptionList("entityTypeAttackRestrictionListType", ListType.BLACKLIST, "The restriction list type for the Entity Type Attack Restriction tweak");
+        public static final ConfigStringList ENTITY_TYPE_ATTACK_RESTRICTION_BLACKLIST = new ConfigStringList("entityTypeAttackRestrictionBlackList", ImmutableList.of("minecraft:villager"), "The entities that are NOT allowed to be attacked while the Entity Attack Restriction tweak is enabled,\nif the entityAttackRestrictionListType is set to Black List");
+        public static final ConfigStringList ENTITY_TYPE_ATTACK_RESTRICTION_WHITELIST = new ConfigStringList("entityTypeAttackRestrictionWhiteList", ImmutableList.of(), "The only entities that can be attacked while the Entity Attack Restriction tweak is enabled,\nif the entityAttackRestrictionListType is set to White List");
         public static final ConfigOptionList FAST_PLACEMENT_ITEM_LIST_TYPE      = new ConfigOptionList("fastPlacementItemListType", ListType.BLACKLIST, "The item restriction type for the Fast Block Placement tweak");
         public static final ConfigStringList FAST_PLACEMENT_ITEM_BLACKLIST      = new ConfigStringList("fastPlacementItemBlackList", ImmutableList.of("minecraft:ender_chest", "minecraft:white_shulker_box"), "The items that are NOT allowed to be used for the Fast Block Placement tweak,\nif the fastPlacementItemListType is set to Black List");
         public static final ConfigStringList FAST_PLACEMENT_ITEM_WHITELIST      = new ConfigStringList("fastPlacementItemWhiteList", ImmutableList.of(), "The items that are allowed to be used for the Fast Block Placement tweak,\nif the fastPLacementItemListType is set to White List");
@@ -226,6 +231,9 @@ public class Configs implements IConfigHandler
                 BLOCK_TYPE_BREAK_RESTRICTION_BLACKLIST,
                 BLOCK_TYPE_BREAK_RESTRICTION_WHITELIST,
                 CREATIVE_EXTRA_ITEMS,
+                ENTITY_TYPE_ATTACK_RESTRICTION_LIST_TYPE,
+                ENTITY_TYPE_ATTACK_RESTRICTION_BLACKLIST,
+                ENTITY_TYPE_ATTACK_RESTRICTION_WHITELIST,
                 FAST_PLACEMENT_ITEM_LIST_TYPE,
                 FAST_RIGHT_CLICK_BLOCK_LIST_TYPE,
                 FAST_RIGHT_CLICK_ITEM_LIST_TYPE,
@@ -416,6 +424,11 @@ public class Configs implements IConfigHandler
         MiscTweaks.POTION_RESTRICTION.setListContents(
                 Lists.POTION_WARNING_BLACKLIST.getStrings(),
                 Lists.POTION_WARNING_WHITELIST.getStrings());
+
+        MiscTweaks.ENTITY_TYPE_ATTACK_RESTRICTION.setListType((ListType) Lists.ENTITY_TYPE_ATTACK_RESTRICTION_LIST_TYPE.getOptionListValue());
+        MiscTweaks.ENTITY_TYPE_ATTACK_RESTRICTION.setListContents(
+                Lists.ENTITY_TYPE_ATTACK_RESTRICTION_BLACKLIST.getStrings(),
+                Lists.ENTITY_TYPE_ATTACK_RESTRICTION_WHITELIST.getStrings());
 
         if (MinecraftClient.getInstance().world == null)
         {
