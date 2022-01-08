@@ -35,6 +35,7 @@ import fi.dy.masa.malilib.gui.Message;
 import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
+import fi.dy.masa.malilib.util.MessageOutputType;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
 import fi.dy.masa.malilib.util.restrictions.BlockRestriction;
@@ -45,7 +46,6 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.IMinecraftClientInvoker;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
-import fi.dy.masa.tweakeroo.util.MessageOutputType;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 
@@ -453,7 +453,7 @@ public class PlacementTweaks
 
         if (handleFlexible == false &&
             FeatureToggle.TWEAK_FAKE_SNEAK_PLACEMENT.getBooleanValue() &&
-            stack.isEmpty() == false)
+            stack.getItem() instanceof BlockItem)
         {
             BlockHitResult hitResult = new BlockHitResult(hitVec, sideIn, posIn, false);
             ItemPlacementContext ctx = new ItemPlacementContext(new ItemUsageContext(player, hand, hitResult));

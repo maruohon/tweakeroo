@@ -20,10 +20,6 @@
     "tweakeroo.hotkeys.category.generic_hotkeys": "Generic hotkeys",
     "tweakeroo.hotkeys.category.tweak_toggle_hotkeys": "Tweak toggle hotkeys",
 
-    "tweakeroo.label.message_output_type.none": "None",
-    "tweakeroo.label.message_output_type.actionbar": "Actionbar",
-    "tweakeroo.label.message_output_type.message": "Message",
-
     "tweakeroo.label.placement_restriction_mode.column": "Column",
     "tweakeroo.label.placement_restriction_mode.diagonal": "Diagonal",
     "tweakeroo.label.placement_restriction_mode.face": "Face",
@@ -77,5 +73,6 @@
     "tweakeroo.message.value.off": "OFF",
     "tweakeroo.message.value.on": "ON",
 
-    "tweakeroo.message.warning.block_type_break_restriction": "§6Block breaking prevented by Block Type Break Restriction tweak"
+    "tweakeroo.message.warning.block_type_break_restriction": "§6Block breaking prevented by Block Type Break Restriction tweak",
+    "tweakeroo.message.warning.entity_type_attack_restriction": "§6Entity attack prevented by Entity Type Attack Restriction tweak"
 }

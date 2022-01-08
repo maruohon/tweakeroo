@@ -32,6 +32,6 @@ public class ConfigBooleanClient extends ConfigBooleanHotkeyed
     @Override
     public String getConfigGuiDisplayName()
     {
-        return GuiBase.TXT_GOLD + this.getName() + GuiBase.TXT_RST;
+        return GuiBase.TXT_GOLD + super.getConfigGuiDisplayName() + GuiBase.TXT_RST;
     }
 }

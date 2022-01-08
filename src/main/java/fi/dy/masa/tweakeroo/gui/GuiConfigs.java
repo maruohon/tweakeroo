@@ -1,12 +1,11 @@
 package fi.dy.masa.tweakeroo.gui;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.ConfigType;
-import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
+import fi.dy.masa.malilib.config.IHotkeyTogglable;
+import fi.dy.masa.malilib.config.options.BooleanHotkeyGuiWrapper;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
@@ -19,6 +18,12 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 
 public class GuiConfigs extends GuiConfigsBase
 {
+    // If you have an add-on mod, you can append stuff to these GUI lists by re-assigning a new list to it.
+    // I'd recommend using your own config handler for the config serialization to/from config files.
+    // Although the config dirty marking stuff probably is a mess in this old malilib code base for that stuff...
+    public static ImmutableList<FeatureToggle> TWEAK_LIST = FeatureToggle.VALUES;
+    public static ImmutableList<IHotkeyTogglable> YEET_LIST = Configs.Disable.OPTIONS;
+
     private static ConfigGuiTab tab = ConfigGuiTab.TWEAKS;
 
     public GuiConfigs()
@@ -61,14 +66,14 @@ public class GuiConfigs extends GuiConfigsBase
         }
         else if (tab == ConfigGuiTab.FIXES)
         {
-            return 80;
+            return 60;
         }
         else if (tab == ConfigGuiTab.LISTS)
         {
             return 200;
         }
 
-        return super.getConfigWidth();
+        return 260;
     }
 
     @Override
@@ -99,17 +104,11 @@ public class GuiConfigs extends GuiConfigsBase
         }
         else if (tab == ConfigGuiTab.DISABLES)
         {
-            List<IConfigBase> list = new ArrayList<>();
-            list.addAll(ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(Configs.Disable.OPTIONS)));
-            list.addAll(ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(Configs.Disable.OPTIONS)));
-            return ConfigOptionWrapper.createFor(list);
+            return ConfigOptionWrapper.createFor(YEET_LIST);
         }
         else if (tab == ConfigGuiTab.TWEAKS)
         {
-            List<IConfigBase> list = new ArrayList<>();
-            list.addAll(ConfigUtils.createConfigWrapperForType(ConfigType.BOOLEAN, ImmutableList.copyOf(FeatureToggle.values())));
-            list.addAll(ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, ImmutableList.copyOf(FeatureToggle.values())));
-            return ConfigOptionWrapper.createFor(list);
+            return ConfigOptionWrapper.createFor(TWEAK_LIST.stream().map(this::wrapConfig).toList());
         }
         else if (tab == ConfigGuiTab.GENERIC_HOTKEYS)
         {
@@ -121,6 +120,11 @@ public class GuiConfigs extends GuiConfigsBase
         }
 
         return ConfigOptionWrapper.createFor(configs);
+    }
+
+    protected BooleanHotkeyGuiWrapper wrapConfig(FeatureToggle config)
+    {
+        return new BooleanHotkeyGuiWrapper(config.getName(), config, config.getKeybind());
     }
 
     private static class ButtonListener implements IButtonActionListener

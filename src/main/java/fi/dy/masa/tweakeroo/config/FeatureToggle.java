@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.config;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import fi.dy.masa.malilib.config.ConfigType;
@@ -32,6 +33,7 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_CREATIVE_EXTRA_ITEMS      ("tweakCreativeExtraItems",             false, "",    "Adds custom items to item groups.\nSee Lists -> 'creativeExtraItems' to control which items are added to the groups.\nNote: Currently these will be added to the Transportation group\n(because it has the elast items), but in the future\nthe groups will be configurable per added item"),
     TWEAK_CUSTOM_FLAT_PRESETS       ("tweakCustomFlatPresets",              false, "",    "Allows adding custom flat world presets to the list.\nThe presets are defined in Lists -> flatWorldPresets"),
     TWEAK_ELYTRA_CAMERA             ("tweakElytraCamera",                   false, "",    "Allows locking the real player rotations while holding the 'elytraCamera' activation key.\nThe controls will then only affect the separate 'camera rotations' for the rendering/camera.\nMeant for things like looking down/around while elytra flying nice and straight."),
+    TWEAK_ENTITY_TYPE_ATTACK_RESTRICTION("tweakEntityTypeAttackRestriction",false, "",    "Restricts which entities you are able to attack (manually).\nSee the corresponding 'entityAttackRestriction*' configs in the Lists category."),
     TWEAK_SHULKERBOX_STACKING       ("tweakEmptyShulkerBoxesStack",         false, true, "",    "Enables empty Shulker Boxes stacking up to 64.\nNOTE: They will also stack inside inventories!\nOn servers this will cause desyncs/glitches\nunless the server has a mod that does the same.\nIn single player this changes shulker box based system behaviour."),
     TWEAK_SHULKERBOX_STACK_GROUND   ("tweakEmptyShulkerBoxesStackOnGround", false, true, "",    "Enables empty Shulker Boxes stacking up to 64\nwhen as items on the ground"),
     TWEAK_EXPLOSION_REDUCED_PARTICLES ("tweakExplosionReducedParticles",    false, "",    "If enabled, then all explosion particles will use the\nEXPLOSION_NORMAL particle instead of possibly\nthe EXPLOSION_LARGE or EXPLOSION_HUGE particles"),
@@ -95,6 +97,8 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     TWEAK_Y_MIRROR                  ("tweakYMirror",                        false, "",    "Mirrors the targeted y-position within the block bounds.\nThis is basically for placing slabs or stairs\nin the opposite top/bottom state from normal,\nif you have to place them against another slab for example."),
     TWEAK_ZOOM                      ("tweakZoom",                           false, "",    KeybindSettings.INGAME_BOTH, "Enables using the zoom hotkey to, well, zoom in");
 
+    public static final ImmutableList<FeatureToggle> VALUES = ImmutableList.copyOf(values());
+
     private final String name;
     private final String comment;
     private final String prettyName;
@@ -104,37 +108,37 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     private boolean valueBoolean;
     private IValueChangeCallback<IConfigBoolean> callback;
 
-    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment)
     {
         this(name, defaultValue, false, defaultHotkey, KeybindSettings.DEFAULT, comment);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment)
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment)
     {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT, comment);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment)
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, KeybindSettings settings, String comment)
     {
         this(name, defaultValue, false, defaultHotkey, settings, comment);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment)
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment)
     {
         this(name, defaultValue, singlePlayer, defaultHotkey, settings, comment, StringUtils.splitCamelCase(name.substring(5)));
     }
 
-    private FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
+    FeatureToggle(String name, boolean defaultValue, String defaultHotkey, String comment, String prettyName)
     {
         this(name, defaultValue, false, defaultHotkey, comment, prettyName);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName)
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, String comment, String prettyName)
     {
         this(name, defaultValue, singlePlayer, defaultHotkey, KeybindSettings.DEFAULT, comment, prettyName);
     }
 
-    private FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName)
+    FeatureToggle(String name, boolean defaultValue, boolean singlePlayer, String defaultHotkey, KeybindSettings settings, String comment, String prettyName)
     {
         this.name = name;
         this.valueBoolean = defaultValue;
@@ -161,12 +165,14 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     @Override
     public String getConfigGuiDisplayName()
     {
+        String name = StringUtils.getTranslatedOrFallback("config.name." + this.getName().toLowerCase(), this.getName());
+
         if (this.singlePlayer)
         {
-            return GuiBase.TXT_GOLD + this.getName() + GuiBase.TXT_RST;
+            return GuiBase.TXT_GOLD + name + GuiBase.TXT_RST;
         }
 
-        return this.getName();
+        return name;
     }
 
     @Override
@@ -210,19 +216,14 @@ public enum FeatureToggle implements IHotkeyTogglable, IConfigNotifiable<IConfig
     @Override
     public String getComment()
     {
-        if (this.comment == null)
+        String comment = StringUtils.getTranslatedOrFallback("config.comment." + this.getName().toLowerCase(), this.comment);
+
+        if (comment != null && this.singlePlayer)
         {
-            return "";
+            return comment + "\n" + StringUtils.translate("tweakeroo.label.config_comment.single_player_only");
         }
 
-        if (this.singlePlayer)
-        {
-            return this.comment + "\n" + StringUtils.translate("tweakeroo.label.config_comment.single_player_only");
-        }
-        else
-        {
-            return this.comment;
-        }
+        return comment;
     }
 
     @Override
