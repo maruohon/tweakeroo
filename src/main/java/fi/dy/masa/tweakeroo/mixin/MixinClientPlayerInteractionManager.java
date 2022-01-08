@@ -1,6 +1,5 @@
 package fi.dy.masa.tweakeroo.mixin;
 
-import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,6 +20,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
@@ -98,9 +98,13 @@ public abstract class MixinClientPlayerInteractionManager
             ci.cancel();
         }
         else if (FeatureToggle.TWEAK_ENTITY_TYPE_ATTACK_RESTRICTION.getBooleanValue() &&
-                MiscTweaks.isEntityAllowedByAttackingRestriction(target.getType()) == false)
+                 MiscTweaks.isEntityAllowedByAttackingRestriction(target.getType()) == false)
         {
             ci.cancel();
+        }
+        else if (FeatureToggle.TWEAK_WEAPON_SWITCH.getBooleanValue())
+        {
+            InventoryUtils.trySwitchToWeapon(target);
         }
     }
 

@@ -2,8 +2,10 @@ package fi.dy.masa.tweakeroo.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +14,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,6 +24,8 @@ import net.minecraft.item.ElytraItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.MiningToolItem;
+import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
@@ -52,6 +58,7 @@ public class InventoryUtils
     private static final HashSet<Item> UNSTACKING_ITEMS = new HashSet<>();
     private static final List<Integer> TOOL_SWITCHABLE_SLOTS = new ArrayList<>();
     private static final List<Integer> TOOL_SWITCH_IGNORED_SLOTS = new ArrayList<>();
+    private static final HashMap<EntityType<?>, HashSet<Item>> WEAPON_MAPPING = new HashMap<>();
 
     public static void setToolSwitchableSlots(String configStr)
     {
@@ -166,6 +173,70 @@ public class InventoryUtils
                 if (slotNum >= 0)
                 {
                     REPAIR_MODE_SLOT_NUMBERS.add(slotNum);
+                }
+            }
+        }
+    }
+
+    public static void setWeaponMapping(List<String> mappings)
+    {
+        WEAPON_MAPPING.clear();
+
+        for (String mapping : mappings)
+        {
+            String[] split = mapping.replaceAll(" ", "").split("=>");
+
+            if (split.length != 2)
+            {
+                Tweakeroo.logger.warn("Expected weapon mapping to be `entity_ids => weapon_ids` got '{}'", mapping);
+                continue;
+            }
+
+            HashSet<Item> weapons = new HashSet<>();
+            String entities = split[0].trim();
+            String items = split[1].trim();
+            
+            if (items.equals("<ignore>") == false)
+            {
+                for (String itemId : items.split(","))
+                {
+                    try
+                    {
+                        Optional<Item> weapon = Registry.ITEM.getOrEmpty(new Identifier(itemId));
+
+                        if (weapon.isPresent())
+                        {
+                            weapons.add(weapon.get());
+                            continue;
+                        }
+                    }
+                    catch (Exception ignore) {}
+
+                    Tweakeroo.logger.warn("Unable to find item to use as weapon: '{}'", itemId);
+                }
+            }
+
+            if (entities.equalsIgnoreCase("<default>"))
+            {
+                WEAPON_MAPPING.computeIfAbsent(null, s -> new HashSet<>()).addAll(weapons);
+            }
+            else
+            {
+                for (String entity_id : entities.split(","))
+                {
+                    try
+                    {
+                        Optional<EntityType<?>> entity = Registry.ENTITY_TYPE.getOrEmpty(new Identifier(entity_id));
+
+                        if (entity.isPresent())
+                        {
+                            WEAPON_MAPPING.computeIfAbsent(entity.get(), s -> new HashSet<>()).addAll(weapons);
+                            continue;
+                        }
+                    }
+                    catch (Exception ignore) {}
+
+                    Tweakeroo.logger.warn("Unable to find entity: '{}'", entity_id);
                 }
             }
         }
@@ -327,6 +398,73 @@ public class InventoryUtils
                 swapItemWithHigherDurabilityToHand(player, hand, stack, minDurability + 1);
             }
         }
+    }
+
+    public static void trySwitchToWeapon(Entity entity)
+    {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        PlayerEntity player = mc.player;
+
+        if (player != null && mc.world != null &&
+            TOOL_SWITCH_IGNORED_SLOTS.contains(player.getInventory().selectedSlot) == false)
+        {
+            ScreenHandler container = player.playerScreenHandler;
+            ItemPickerTest test;
+
+            if (FeatureToggle.TWEAK_SWAP_ALMOST_BROKEN_TOOLS.getBooleanValue())
+            {
+                test = (currentStack, previous) -> InventoryUtils.isBetterWeaponAndHasDurability(currentStack, previous, entity);
+            }
+            else
+            {
+                test = (currentStack, previous) -> InventoryUtils.isBetterWeapon(currentStack, previous, entity);
+            }
+
+            int slotNumber = findSlotWithBestItemMatch(container, test, UniformIntProvider.create(36, 44), UniformIntProvider.create(9, 35));
+
+            if (slotNumber != -1 && (slotNumber - 36) != player.getInventory().selectedSlot)
+            {
+                swapToolToHand(slotNumber, mc);
+                PlacementTweaks.cacheStackInHand(Hand.MAIN_HAND);
+            }
+        }
+    }
+
+    private static boolean isBetterWeapon(ItemStack testedStack, ItemStack previousWeapon, Entity entity)
+    {
+        return testedStack.isEmpty() == false && matchesWeaponMapping(testedStack, entity) && (makesMoreDamage(testedStack, previousWeapon) || matchesWeaponMapping(previousWeapon, entity) == false);
+    }
+
+    private static boolean isBetterWeaponAndHasDurability(ItemStack testedStack, ItemStack previousTool, Entity entity)
+    {
+        return hasEnoughDurability(testedStack) && isBetterWeapon(testedStack, previousTool, entity);
+    }
+
+    private static boolean makesMoreDamage(ItemStack testedStack, ItemStack previousTool)
+    {
+        return getBaseAttackDamage(testedStack) > getBaseAttackDamage(previousTool);
+    }
+
+    private static float getBaseAttackDamage(ItemStack stack)
+    {
+        Item item = stack.getItem();
+
+        if (item instanceof SwordItem)
+        {
+            return ((SwordItem) item).getAttackDamage();
+        }
+        else if (item instanceof MiningToolItem)
+        { 
+            return ((MiningToolItem) item).getAttackDamage();
+        }
+
+        return 0F;
+    }
+
+    protected static boolean matchesWeaponMapping(ItemStack stack, Entity entity)
+    {
+        HashSet<Item> weapons = WEAPON_MAPPING.getOrDefault(entity.getType(), WEAPON_MAPPING.get(null));
+        return weapons != null && weapons.contains(stack.getItem());
     }
 
     public static void trySwitchToEffectiveTool(BlockPos pos)
