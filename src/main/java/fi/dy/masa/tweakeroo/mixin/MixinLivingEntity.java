@@ -13,7 +13,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity
@@ -37,7 +36,7 @@ public abstract class MixinLivingEntity extends Entity
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (FeatureToggle.TWEAK_REMOVE_OWN_POTION_EFFECTS.getBooleanValue() &&
+        if (Configs.Disable.DISABLE_FP_EFFECT_PARTICLES.getBooleanValue() &&
             ((Object) this) == mc.player && mc.options.getPerspective() == Perspective.FIRST_PERSON)
         {
             ci.cancel();
