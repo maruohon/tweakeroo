@@ -43,7 +43,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
     @Redirect(method = "updateNausea()V",
               at = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/client/gui/screen/Screen;isPauseScreen()Z"))
+                       target = "Lnet/minecraft/client/gui/screen/Screen;shouldPause()Z"))
     private boolean onDoesGuiPauseGame(Screen gui)
     {
         // Spoof the return value to prevent entering the if block
@@ -52,7 +52,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
             return true;
         }
 
-        return gui.isPauseScreen();
+        return gui.shouldPause();
     }
 
     @Inject(method = "updateNausea", at = @At("HEAD"))
