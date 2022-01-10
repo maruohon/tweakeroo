@@ -8,7 +8,7 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(SculkSensorBlock.class)
-public class MixinSculkSensor
+public abstract class MixinSculkSensor
 {
     @ModifyConstant(method = "setActive", constant = @Constant(intValue = 40), require = 0)
     private static int modifyPulseLength(int original)

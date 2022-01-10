@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(NetherPortalBlock.class)
-public class MixinNetherPortalBlock
+public abstract class MixinNetherPortalBlock
 {
     @Redirect(method = "randomDisplayTick", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/world/World;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"))

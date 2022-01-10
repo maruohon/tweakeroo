@@ -8,7 +8,7 @@ import net.minecraft.client.render.chunk.ChunkBuilder;
 import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(ChunkBuilder.BuiltChunk.class)
-public class MixinBuiltChunk
+public abstract class MixinBuiltChunk
 {
     @Inject(method = "scheduleRebuild(Z)V", at = @At("HEAD"), cancellable = true)
     private void disableChunkReRenders(boolean important, CallbackInfo ci)

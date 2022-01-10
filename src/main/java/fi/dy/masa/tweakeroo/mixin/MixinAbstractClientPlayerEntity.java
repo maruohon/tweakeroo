@@ -9,7 +9,7 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public class MixinAbstractClientPlayerEntity
+public abstract class MixinAbstractClientPlayerEntity
 {
     @Inject(method = "isSpectator", at = @At("HEAD"), cancellable = true)
     private void overrideIsSpectator(CallbackInfoReturnable<Boolean> cir)

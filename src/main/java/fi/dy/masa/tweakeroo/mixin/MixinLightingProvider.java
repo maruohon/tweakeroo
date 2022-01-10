@@ -14,7 +14,7 @@ import net.minecraft.world.chunk.light.LightingProvider;
 import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(LightingProvider.class)
-public class MixinLightingProvider
+public abstract class MixinLightingProvider
 {
     @Shadow @Final @Nullable private ChunkLightProvider<?, ?> blockLightProvider;
 

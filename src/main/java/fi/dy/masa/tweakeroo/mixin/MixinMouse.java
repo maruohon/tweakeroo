@@ -8,9 +8,9 @@ import net.minecraft.client.Mouse;
 import fi.dy.masa.tweakeroo.config.Configs;
 
 @Mixin(Mouse.class)
-public class MixinMouse
+public abstract class MixinMouse
 {
-    @ModifyVariable(method = "onMouseScroll", ordinal = 1, at = @At("HEAD"))
+    @ModifyVariable(method = "onMouseScroll", ordinal = 1, at = @At("HEAD"), argsOnly = true)
     private double applyHorizontalScroll(double vertical, long argWindow, double argHorizontal, double argVertical)
     {
         if (Configs.Fixes.MAC_HORIZONTAL_SCROLL.getBooleanValue() && MinecraftClient.IS_SYSTEM_MAC && vertical == 0)
