@@ -262,6 +262,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_ARMOR_STAND_RENDERING   = new ConfigBooleanHotkeyed("disableArmorStandRendering",           false, "", "Disables all Armor Stand entity rendering");
         public static final ConfigBooleanHotkeyed       DISABLE_AXE_STRIPPING           = new ConfigBooleanHotkeyed("disableAxeStripping",                  false, "", "Disables stripping logs with an axe");
         public static final ConfigBooleanHotkeyed       DISABLE_BAT_SPAWNING            = new ConfigBooleanClient  ("disableBatSpawning",                   false, "", "Disables Bat spawning in single player");
+        public static final ConfigBooleanHotkeyed       DISABLE_BEACON_BEAM_RENDERING   = new ConfigBooleanHotkeyed("disableBeaconBeamRendering",           false, "", "Disables Beacon beam rendering");
         public static final ConfigBooleanHotkeyed       DISABLE_BLOCK_BREAK_PARTICLES   = new ConfigBooleanHotkeyed("disableBlockBreakingParticles",        false, "", "Removes the block breaking particles.\n(This is originally from usefulmod by nessie.)");
         public static final ConfigBooleanHotkeyed       DISABLE_DOUBLE_TAP_SPRINT       = new ConfigBooleanHotkeyed("disableDoubleTapSprint",               false, "", "Disables the double-tap-forward-key sprinting");
         public static final ConfigBooleanHotkeyed       DISABLE_BOSS_FOG                = new ConfigBooleanHotkeyed("disableBossFog",                       false, "", "Removes the fog that boss mobs cause");
@@ -304,6 +305,7 @@ public class Configs implements IConfigHandler
                 DISABLE_ARMOR_STAND_RENDERING,
                 DISABLE_AXE_STRIPPING,
                 DISABLE_BAT_SPAWNING,
+                DISABLE_BEACON_BEAM_RENDERING,
                 DISABLE_BLOCK_BREAK_PARTICLES,
                 DISABLE_DOUBLE_TAP_SPRINT,
                 DISABLE_BOSS_FOG,
