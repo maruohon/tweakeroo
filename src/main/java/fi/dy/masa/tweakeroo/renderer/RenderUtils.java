@@ -42,7 +42,7 @@ public class RenderUtils
     {
         PlayerEntity player = mc.player;
 
-        if (player != null)
+        if (player != null && mc.currentScreen == null)
         {
             final int scaledWidth = GuiUtils.getScaledWindowWidth();
             final int scaledHeight = GuiUtils.getScaledWindowHeight();
