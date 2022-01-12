@@ -25,15 +25,16 @@ public class RenderHandler implements IRenderer
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
-            Hotkeys.HOTBAR_SWAP_BASE.getKeybind().isKeybindHeld())
-        {
-            RenderUtils.renderHotbarSwapOverlay(mc, matrixStack);
-        }
-        else if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() &&
+
+        if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() &&
                  Hotkeys.HOTBAR_SCROLL.getKeybind().isKeybindHeld())
         {
             RenderUtils.renderHotbarScrollOverlay(mc);
+        }
+        else if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
+                (Hotkeys.HOTBAR_SWAP_BASE.getKeybind().isKeybindHeld() || FeatureToggle.TWEAK_HOTBAR_SWAP_BASE.getBooleanValue()))
+        {
+            RenderUtils.renderHotbarSwapOverlay(mc, matrixStack);
         }
 
         if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
