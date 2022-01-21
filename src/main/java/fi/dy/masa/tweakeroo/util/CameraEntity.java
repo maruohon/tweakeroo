@@ -20,9 +20,7 @@ public class CameraEntity extends ClientPlayerEntity
     @Nullable private static Entity originalCameraEntity;
     @Nullable private static CameraEntity camera;
     private static boolean cullChunksOriginal;
-    private static float forwardRamped;
-    private static float strafeRamped;
-    private static float verticalRamped;
+    private static Vec3d cameraMotion = Vec3d.ZERO;
     private static boolean sprinting;
     private static boolean originalCameraWasPlayer;
 
@@ -46,75 +44,22 @@ public class CameraEntity extends ClientPlayerEntity
         if (camera != null && Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() == false)
         {
             MinecraftClient mc = MinecraftClient.getInstance();
+            GameOptions options = mc.options;
 
             camera.updateLastTickPosition();
-
-            float forward = 0;
-            float vertical = 0;
-            float strafe = 0;
-
-            GameOptions options = mc.options;
-            if (options.keyForward.isPressed()) { forward++;  }
-            if (options.keyBack.isPressed())    { forward--;  }
-            if (options.keyLeft.isPressed())    { strafe++;   }
-            if (options.keyRight.isPressed())   { strafe--;   }
-            if (options.keyJump.isPressed())    { vertical++; }
-            if (options.keySneak.isPressed())   { vertical--; }
 
             if (options.keySprint.isPressed())
             {
                 sprinting = true;
             }
-            else if (forward == 0)
+            else if (options.keyForward.isPressed() == false && options.keyBack.isPressed() == false)
             {
                 sprinting = false;
             }
 
-            float rampAmount = 0.15f;
-            float speed = strafe * strafe + forward * forward;
-
-            if (forward != 0 && strafe != 0)
-            {
-                speed = (float) Math.sqrt(speed * 0.6);
-            }
-            else
-            {
-                speed = 1;
-            }
-
-            forwardRamped  = getRampedMotion(forwardRamped , forward , rampAmount) / speed;
-            verticalRamped = getRampedMotion(verticalRamped, vertical, rampAmount);
-            strafeRamped   = getRampedMotion(strafeRamped  , strafe  , rampAmount) / speed;
-
-            forward = sprinting ? forwardRamped * 3 : forwardRamped;
-
-            camera.handleMotion(forward, verticalRamped, strafeRamped);
+            cameraMotion = MiscUtils.calculatePlayerMotionWithDeceleration(cameraMotion, 0.15, 0.4, sprinting);
+            camera.handleMotion(cameraMotion.x, cameraMotion.y, cameraMotion.z);
         }
-    }
-
-    private static float getRampedMotion(float current, float input, float rampAmount)
-    {
-        if (input != 0)
-        {
-            if (input < 0)
-            {
-                rampAmount *= -1f;
-            }
-
-            // Immediately kill the motion when changing direction to the opposite
-            if ((input < 0) != (current < 0))
-            {
-                current = 0;
-            }
-
-            current = MathHelper.clamp(current + rampAmount, -1f, 1f);
-        }
-        else
-        {
-            current *= 0.5f;
-        }
-
-        return current;
     }
 
     private static double getMoveSpeed()
@@ -129,18 +74,18 @@ public class CameraEntity extends ClientPlayerEntity
         return base * 10;
     }
 
-    private void handleMotion(float forward, float up, float strafe)
+    private void handleMotion(double forward, double up, double strafe)
     {
         float yaw = this.getYaw();
-        double xFactor = Math.sin(yaw * Math.PI / 180D);
-        double zFactor = Math.cos(yaw * Math.PI / 180D);
         double scale = getMoveSpeed();
+        double xFactor = Math.sin(yaw * Math.PI / 180.0);
+        double zFactor = Math.cos(yaw * Math.PI / 180.0);
 
-        double x = (double) (strafe * zFactor - forward * xFactor) * scale;
-        double y = (double) up * scale;
-        double z = (double) (forward * zFactor + strafe * xFactor) * scale;
+        double x = (strafe * zFactor - forward * xFactor) * scale;
+        double y = up * scale;
+        double z = (forward * zFactor + strafe * xFactor) * scale;
+
         this.setVelocity(new Vec3d(x, y, z));
-
         this.move(MovementType.SELF, this.getVelocity());
     }
 

@@ -13,11 +13,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity
 {
-    public MixinLivingEntity(EntityType<?> type, World worldIn)
+    private MixinLivingEntity(EntityType<?> type, World worldIn)
     {
         super(type, worldIn);
     }
@@ -40,6 +42,17 @@ public abstract class MixinLivingEntity extends Entity
             ((Object) this) == mc.player && mc.options.getPerspective() == Perspective.FIRST_PERSON)
         {
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "tickMovement", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/entity/LivingEntity;tickFallFlying()V"))
+    private void tweakeroo_applyCustomDeceleration(CallbackInfo ci)
+    {
+        if (FeatureToggle.TWEAK_CUSTOM_FLY_DECELERATION.getBooleanValue() &&
+            ((Entity) this) == MinecraftClient.getInstance().player)
+        {
+            MiscUtils.handlePlayerDeceleration();
         }
     }
 }
