@@ -123,10 +123,7 @@ public class MiscTweaks
             InventoryUtils.repairModeSwapItems(player);
         }
 
-        if (player.input != null)
-        {
-            CameraEntity.movementTick(player.input.sneaking, player.input.jumping);
-        }
+        CameraEntity.movementTick();
     }
 
     public static void onGameLoop(MinecraftClient mc)

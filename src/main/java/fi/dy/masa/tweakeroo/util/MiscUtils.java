@@ -83,54 +83,39 @@ public class MiscUtils
 
     public static Vec3d calculatePlayerMotionWithDeceleration(Vec3d lastMotion,
                                                               double rampAmount,
-                                                              double decelerationFactor,
-                                                              boolean sprinting)
+                                                              double decelerationFactor)
     {
         GameOptions options = MinecraftClient.getInstance().options;
-        double forward = 0;
-        double vertical = 0;
-        double strafe = 0;
-        double speed;
+        int forward = 0;
+        int vertical = 0;
+        int strafe = 0;
 
-        if (options.keyForward.isPressed()) { forward += 1.0;  }
-        if (options.keyBack.isPressed())    { forward -= 1.0;  }
-        if (options.keyLeft.isPressed())    { strafe += 1.0;   }
-        if (options.keyRight.isPressed())   { strafe -= 1.0;   }
-        if (options.keyJump.isPressed())    { vertical += 1.0; }
-        if (options.keySneak.isPressed())   { vertical -= 1.0; }
+        if (options.keyForward.isPressed()) { forward += 1;  }
+        if (options.keyBack.isPressed())    { forward -= 1;  }
+        if (options.keyLeft.isPressed())    { strafe += 1;   }
+        if (options.keyRight.isPressed())   { strafe -= 1;   }
+        if (options.keyJump.isPressed())    { vertical += 1; }
+        if (options.keySneak.isPressed())   { vertical -= 1; }
 
-        if (forward != 0 && strafe != 0)
-        {
-            speed = Math.sqrt((strafe * strafe + forward * forward) * 0.6);
-        }
-        else
-        {
-            speed = 1.0;
-        }
-
+        double speed = (forward != 0 && strafe != 0) ? 1.2 : 1.0;
         double forwardRamped  = getRampedMotion(lastMotion.x, forward , rampAmount, decelerationFactor) / speed;
         double verticalRamped = getRampedMotion(lastMotion.y, vertical, rampAmount, decelerationFactor);
         double strafeRamped   = getRampedMotion(lastMotion.z, strafe  , rampAmount, decelerationFactor) / speed;
 
-        if (sprinting)
-        {
-            forwardRamped *= 3.0;
-        }
-
         return new Vec3d(forwardRamped, verticalRamped, strafeRamped);
     }
 
-    public static double getRampedMotion(double current, double input, double rampAmount, double decelerationFactor)
+    public static double getRampedMotion(double current, int input, double rampAmount, double decelerationFactor)
     {
-        if (input != 0.0)
+        if (input != 0)
         {
-            if (input < 0.0)
+            if (input < 0)
             {
                 rampAmount *= -1.0;
             }
 
             // Immediately kill the motion when changing direction to the opposite
-            if ((input < 0.0) != (current < 0.0))
+            if ((input < 0) != (current < 0.0))
             {
                 current = 0.0;
             }

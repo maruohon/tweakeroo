@@ -17,18 +17,18 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class CameraEntity extends ClientPlayerEntity
 {
-    @Nullable private static Entity originalCameraEntity;
     @Nullable private static CameraEntity camera;
+    @Nullable private static Entity originalCameraEntity;
+    private static Vec3d cameraMotion = new Vec3d(0.0, 0.0, 0.0);
     private static boolean cullChunksOriginal;
-    private static Vec3d cameraMotion = Vec3d.ZERO;
     private static boolean sprinting;
     private static boolean originalCameraWasPlayer;
 
-    public CameraEntity(MinecraftClient mc, ClientWorld world,
-                        ClientPlayNetworkHandler nethandler, StatHandler stats,
-                        ClientRecipeBook recipeBook)
+    private CameraEntity(MinecraftClient mc, ClientWorld world,
+                         ClientPlayNetworkHandler netHandler, StatHandler stats,
+                         ClientRecipeBook recipeBook)
     {
-        super(mc, world, nethandler, stats, recipeBook, false, false);
+        super(mc, world, netHandler, stats, recipeBook, false, false);
     }
 
     @Override
@@ -37,14 +37,13 @@ public class CameraEntity extends ClientPlayerEntity
         return true;
     }
 
-    public static void movementTick(boolean sneak, boolean jump)
+    public static void movementTick()
     {
         CameraEntity camera = getCamera();
 
         if (camera != null && Configs.Generic.FREE_CAMERA_PLAYER_MOVEMENT.getBooleanValue() == false)
         {
-            MinecraftClient mc = MinecraftClient.getInstance();
-            GameOptions options = mc.options;
+            GameOptions options = MinecraftClient.getInstance().options;
 
             camera.updateLastTickPosition();
 
@@ -57,8 +56,10 @@ public class CameraEntity extends ClientPlayerEntity
                 sprinting = false;
             }
 
-            cameraMotion = MiscUtils.calculatePlayerMotionWithDeceleration(cameraMotion, 0.15, 0.4, sprinting);
-            camera.handleMotion(cameraMotion.x, cameraMotion.y, cameraMotion.z);
+            cameraMotion = MiscUtils.calculatePlayerMotionWithDeceleration(cameraMotion, 0.15, 0.4);
+            double forward = sprinting ? cameraMotion.x * 3 : cameraMotion.x;
+
+            camera.handleMotion(forward, cameraMotion.y, cameraMotion.z);
         }
     }
 
