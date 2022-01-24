@@ -71,4 +71,13 @@ public abstract class MixinInGameHud extends DrawableHelper
             ci.cancel();
         }
     }
+
+    @Inject(method = "renderStatusEffectOverlay", at = @At("HEAD"), cancellable = true)
+    private void disableStatusEffectHudRendering(CallbackInfo ci)
+    {
+        if (Configs.Disable.DISABLE_STATUS_EFFECT_HUD.getBooleanValue())
+        {
+            ci.cancel();
+        }
+    }
 }
