@@ -1,11 +1,11 @@
 package fi.dy.masa.tweakeroo.config;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.config.option.BooleanConfig;
+import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.KeyBindSettings;
@@ -116,9 +116,8 @@ public enum DisableToggle implements ConfigInfo
         return this.toggleStatus.getDisplayName();
     }
 
-    @Nullable
     @Override
-    public String getComment()
+    public Optional<String> getComment()
     {
         return this.toggleStatus.getComment();
     }

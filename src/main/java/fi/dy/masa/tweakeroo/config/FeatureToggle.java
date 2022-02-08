@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.config;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
@@ -180,9 +181,8 @@ public enum FeatureToggle implements ConfigInfo
         return this.toggleStatus.getDisplayName();
     }
 
-    @Nullable
     @Override
-    public String getComment()
+    public Optional<String> getComment()
     {
         return this.toggleStatus.getComment();
     }
