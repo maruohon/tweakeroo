@@ -84,22 +84,22 @@ public class Actions
         register("zoomActivate", (ctx) -> zoomActivate(true));
         register("zoomDeactivate", (ctx) -> zoomActivate(false));
 
-        register("setAfterClickerCount",        ConfigActions.setIntValue(Configs.Generic.AFTER_CLICKER_CLICK_COUNT));
-        register("setBreakingGridSize",         ConfigActions.setIntValue(Configs.Generic.BREAKING_GRID_SIZE));
-        register("setFastLeftClickCount",       ConfigActions.setIntValue(Configs.Generic.FAST_LEFT_CLICK_COUNT));
-        register("setFastRightClickCount",      ConfigActions.setIntValue(Configs.Generic.FAST_RIGHT_CLICK_COUNT));
-        register("setHotbarSlotCycleMax",       ConfigActions.setIntValue(Configs.Generic.HOTBAR_SLOT_CYCLE_MAX));
-        register("setHotbarSlotRandomizerMax",  ConfigActions.setIntValue(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX));
-        register("setPeriodicAttackInterval",   ConfigActions.setIntValue(Configs.Generic.PERIODIC_ATTACK_INTERVAL));
-        register("setPeriodicUseInterval",      ConfigActions.setIntValue(Configs.Generic.PERIODIC_USE_INTERVAL));
-        register("setPlacementGridSize",        ConfigActions.setIntValue(Configs.Generic.PLACEMENT_GRID_SIZE));
-        register("setPlacementLimit",           ConfigActions.setIntValue(Configs.Generic.PLACEMENT_LIMIT));
-        register("setRenderLimitItem",          ConfigActions.setIntValue(Configs.Generic.RENDER_LIMIT_ITEM));
-        register("setRenderLimitXP",            ConfigActions.setIntValue(Configs.Generic.RENDER_LIMIT_XP_ORB));
+        register("setAfterClickerCount",        ConfigActions.createSetIntValueAction(Configs.Generic.AFTER_CLICKER_CLICK_COUNT));
+        register("setBreakingGridSize",         ConfigActions.createSetIntValueAction(Configs.Generic.BREAKING_GRID_SIZE));
+        register("setFastLeftClickCount",       ConfigActions.createSetIntValueAction(Configs.Generic.FAST_LEFT_CLICK_COUNT));
+        register("setFastRightClickCount",      ConfigActions.createSetIntValueAction(Configs.Generic.FAST_RIGHT_CLICK_COUNT));
+        register("setHotbarSlotCycleMax",       ConfigActions.createSetIntValueAction(Configs.Generic.HOTBAR_SLOT_CYCLE_MAX));
+        register("setHotbarSlotRandomizerMax",  ConfigActions.createSetIntValueAction(Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX));
+        register("setPeriodicAttackInterval",   ConfigActions.createSetIntValueAction(Configs.Generic.PERIODIC_ATTACK_INTERVAL));
+        register("setPeriodicUseInterval",      ConfigActions.createSetIntValueAction(Configs.Generic.PERIODIC_USE_INTERVAL));
+        register("setPlacementGridSize",        ConfigActions.createSetIntValueAction(Configs.Generic.PLACEMENT_GRID_SIZE));
+        register("setPlacementLimit",           ConfigActions.createSetIntValueAction(Configs.Generic.PLACEMENT_LIMIT));
+        register("setRenderLimitItem",          ConfigActions.createSetIntValueAction(Configs.Generic.RENDER_LIMIT_ITEM));
+        register("setRenderLimitXP",            ConfigActions.createSetIntValueAction(Configs.Generic.RENDER_LIMIT_XP_ORB));
 
-        register("setSnapAimPitchStep",         ConfigActions.setDoubleValue(Configs.Generic.SNAP_AIM_PITCH_STEP));
-        register("setSnapAimYawStep",           ConfigActions.setDoubleValue(Configs.Generic.SNAP_AIM_YAW_STEP));
-        register("setZoomFoV",                  ConfigActions.setDoubleValue(Configs.Generic.ZOOM_FOV));
+        register("setSnapAimPitchStep",         ConfigActions.createSetDoubleValueAction(Configs.Generic.SNAP_AIM_PITCH_STEP));
+        register("setSnapAimYawStep",           ConfigActions.createSetDoubleValueAction(Configs.Generic.SNAP_AIM_YAW_STEP));
+        register("setZoomFoV",                  ConfigActions.createSetDoubleValueAction(Configs.Generic.ZOOM_FOV));
     }
 
     private static NamedAction register(String name, EventListener action)
