@@ -236,7 +236,7 @@ public class Actions
         mc.skipRenderWorld = ! mc.skipRenderWorld;
 
         boolean enabled = mc.skipRenderWorld;
-        String toggleKey = enabled ? "malilib.message.toggled_config_on" : "malilib.message.toggled_config_off";
+        String toggleKey = enabled ? "malilib.message.info.toggled_config_on" : "malilib.message.info.toggled_config_off";
         String name = StringUtils.translate("tweakeroo.hotkey.name.skipallrendering");
         MessageUtils.printCustomActionbarMessage(toggleKey, name);
 
@@ -248,7 +248,7 @@ public class Actions
         MiscUtils.skipWorldRendering = ! MiscUtils.skipWorldRendering;
 
         boolean enabled = MiscUtils.skipWorldRendering;
-        String toggleKey = enabled ? "malilib.message.toggled_config_on" : "malilib.message.toggled_config_off";
+        String toggleKey = enabled ? "malilib.message.info.toggled_config_on" : "malilib.message.info.toggled_config_off";
         String name = StringUtils.translate("tweakeroo.hotkey.name.skipworldrendering");
         MessageUtils.printCustomActionbarMessage(toggleKey, name);
 
