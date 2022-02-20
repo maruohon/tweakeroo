@@ -8,7 +8,7 @@ import com.mumfrey.liteloader.LiteMod;
 import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
 import fi.dy.masa.malilib.registry.Registry;
-import fi.dy.masa.tweakeroo.config.gui.TweakerooConfigPanel;
+import fi.dy.masa.tweakeroo.gui.TweakerooConfigPanel;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 import net.minecraft.client.Minecraft;
 
