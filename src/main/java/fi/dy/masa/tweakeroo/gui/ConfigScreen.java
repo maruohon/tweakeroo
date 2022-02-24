@@ -23,8 +23,8 @@ public class ConfigScreen
     private static final BaseConfigTab LISTS           = new BaseConfigTab(MOD_INFO, "lists",           200, Configs.Lists.OPTIONS,   ConfigScreen::create);
     private static final BaseConfigTab FIXES           = new BaseConfigTab(MOD_INFO, "fixes",            -1, Configs.Fixes.OPTIONS,   ConfigScreen::create);
     private static final BaseConfigTab TWEAK_TOGGLES   = new BaseConfigTab(MOD_INFO, "tweaks",          200, FeatureToggle.VALUES,    ConfigScreen::create);
-    private static final BaseConfigTab DISABLE_TOGGLES = new BaseConfigTab(MOD_INFO, "disable_toggles", 200, DisableToggle.VALUES,    ConfigScreen::create);
-    private static final BaseConfigTab GENERIC_HOTKEYS = new BaseConfigTab(MOD_INFO, "generic_hotkeys", 160, Hotkeys.HOTKEY_LIST,     ConfigScreen::create);
+    private static final BaseConfigTab DISABLE_TOGGLES = new BaseConfigTab(MOD_INFO, "yeets",           200, DisableToggle.VALUES,    ConfigScreen::create);
+    private static final BaseConfigTab GENERIC_HOTKEYS = new BaseConfigTab(MOD_INFO, "hotkeys",         160, Hotkeys.HOTKEY_LIST,     ConfigScreen::create);
     //private static final BaseScreenTab PLACEMENT       = new BaseScreenTab("tweakeroo.gui.button.config_gui.placement", null, ConfigScreen::openPlacementStuffScreen);
 
     private static final ImmutableList<ConfigTab> CONFIG_TABS = ImmutableList.of(
@@ -54,14 +54,14 @@ public class ConfigScreen
     {
         // The parent screen should not be set here, to prevent infinite recursion via
         // the call to the parent's setWorldAndResolution -> initScreen -> switch tab -> etc.
-        return new BaseConfigScreen(MOD_INFO, null, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.gui.title.configs");
+        return new BaseConfigScreen(MOD_INFO, null, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.title.screen.configs", Reference.MOD_VERSION);
     }
 
     public static BaseConfigScreen create(@Nullable GuiScreen currentScreen)
     {
         // The parent screen should not be set here, to prevent infinite recursion via
         // the call to the parent's setWorldAndResolution -> initScreen -> switch tab -> etc.
-        return new BaseConfigScreen(MOD_INFO, null, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.gui.title.configs");
+        return new BaseConfigScreen(MOD_INFO, null, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.title.screen.configs", Reference.MOD_VERSION);
     }
 
     public static ImmutableList<ConfigTab> getConfigTabs()

@@ -1,4 +1,10 @@
-
+tweakeroo.config.tab.fixes=Fixes
+tweakeroo.config.tab.generic=Generic
+tweakeroo.config.tab.hotkeys=Hotkeys
+tweakeroo.config.tab.lists=Lists
+tweakeroo.config.tab.placement=Placement Stuff
+tweakeroo.config.tab.tweaks=Tweaks
+tweakeroo.config.tab.yeets=Yeets
 
 tweakeroo.config.comment.afterclickerclickcount=The number of right clicks to do per placed block when\nthe 'After Clicker' tweak is enabled.
 tweakeroo.config.comment.blockreachdistance=The block reach distance to use if the 'Block Reach Override'\ntweak is enabled. The maximum the server allows\nis 8 for placing, 6 for breaking.
@@ -519,7 +525,7 @@ tweakeroo.gui.button.misc.command_block.set_name=Set name
 tweakeroo.gui.button.misc.command_block.update_execution=Loops: %s
 tweakeroo.gui.button.misc.command_block.hover.update_execution=Whether or not multiple triggers per game tick are allowed
 
-tweakeroo.gui.title.configs=Tweakeroo Configs
+tweakeroo.title.screen.configs=Tweakeroo %s - Configs
 
 tweakeroo.hotkeys.category.disable_toggle_hotkeys=Disable Toggle Hotkeys
 tweakeroo.hotkeys.category.generic=Generic
@@ -527,14 +533,6 @@ tweakeroo.hotkeys.category.generic_hotkeys=Hotkeys
 tweakeroo.hotkeys.category.tweak_toggle_hotkeys=Tweak Hotkeys
 
 tweakeroo.label.config_comment.single_player_only=§6Note: This feature works either at all or\nat least fully only in single player
-
-tweakeroo.label.config_tab.disable_toggles=Disable Toggles
-tweakeroo.label.config_tab.fixes=Fixes
-tweakeroo.label.config_tab.generic=Generic
-tweakeroo.label.config_tab.generic_hotkeys=Hotkeys
-tweakeroo.label.config_tab.lists=Lists
-tweakeroo.label.config_tab.placement=Placement stuff
-tweakeroo.label.config_tab.tweaks=Tweaks
 
 tweakeroo.label.placement_restriction_mode.column=Column
 tweakeroo.label.placement_restriction_mode.diagonal=Diagonal
