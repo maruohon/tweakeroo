@@ -13,7 +13,6 @@ import fi.dy.masa.malilib.config.option.OptionListConfig;
 import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.input.KeyAction;
 import fi.dy.masa.malilib.input.callback.AdjustableValueHotkeyCallback;
-import fi.dy.masa.malilib.input.callback.HotkeyCallback;
 import fi.dy.masa.malilib.overlay.message.MessageHelpers;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.GameUtils;
@@ -93,44 +92,44 @@ public class Callbacks
         FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanConfig().setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindAttack::getKeyCode));
         FeatureToggle.TWEAK_HOLD_USE.getBooleanConfig().setValueChangeCallback(new FeatureCallbackHold(mc.gameSettings.keyBindUseItem::getKeyCode));
 
-        Hotkeys.BLINK_DRIVE.setHotkeyCallback(HotkeyCallback.of(Actions.BLINK_DRIVE_TELEPORT_GROUND));
-        Hotkeys.BLINK_DRIVE_Y_LEVEL.setHotkeyCallback(HotkeyCallback.of(Actions.BLINK_DRIVE_TELEPORT_SAME_Y));
-        Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_COLUMN));
-        Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_DIAGONAL));
-        Hotkeys.BREAKING_RESTRICTION_MODE_FACE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_FACE));
-        Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_LAYER));
-        Hotkeys.BREAKING_RESTRICTION_MODE_LINE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_LINE));
-        Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_BREAKING_RESTRICTION_MODE_PLANE));
-        Hotkeys.COPY_SIGN_TEXT.setHotkeyCallback(HotkeyCallback.of(Actions.COPY_SIGN_TEXT));
+        Hotkeys.BLINK_DRIVE.createCallbackForAction(Actions.BLINK_DRIVE_TELEPORT_GROUND);
+        Hotkeys.BLINK_DRIVE_Y_LEVEL.createCallbackForAction(Actions.BLINK_DRIVE_TELEPORT_SAME_Y);
+        Hotkeys.BREAKING_RESTRICTION_MODE_COLUMN.createCallbackForAction(Actions.SET_BREAKING_RESTRICTION_MODE_COLUMN);
+        Hotkeys.BREAKING_RESTRICTION_MODE_DIAGONAL.createCallbackForAction(Actions.SET_BREAKING_RESTRICTION_MODE_DIAGONAL);
+        Hotkeys.BREAKING_RESTRICTION_MODE_FACE.createCallbackForAction(Actions.SET_BREAKING_RESTRICTION_MODE_FACE);
+        Hotkeys.BREAKING_RESTRICTION_MODE_LAYER.createCallbackForAction(Actions.SET_BREAKING_RESTRICTION_MODE_LAYER);
+        Hotkeys.BREAKING_RESTRICTION_MODE_LINE.createCallbackForAction(Actions.SET_BREAKING_RESTRICTION_MODE_LINE);
+        Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.createCallbackForAction(Actions.SET_BREAKING_RESTRICTION_MODE_PLANE);
+        Hotkeys.COPY_SIGN_TEXT.createCallbackForAction(Actions.COPY_SIGN_TEXT);
         Hotkeys.FLY_PRESET_1.setHotkeyCallback(createFlySpeedAdjustCallback(1, Configs.Generic.FLY_SPEED_PRESET_1, (ctx) -> Actions.setFlySpeedPreset(1)));
         Hotkeys.FLY_PRESET_2.setHotkeyCallback(createFlySpeedAdjustCallback(2, Configs.Generic.FLY_SPEED_PRESET_2, (ctx) -> Actions.setFlySpeedPreset(2)));
         Hotkeys.FLY_PRESET_3.setHotkeyCallback(createFlySpeedAdjustCallback(3, Configs.Generic.FLY_SPEED_PRESET_3, (ctx) -> Actions.setFlySpeedPreset(3)));
         Hotkeys.FLY_PRESET_4.setHotkeyCallback(createFlySpeedAdjustCallback(4, Configs.Generic.FLY_SPEED_PRESET_4, (ctx) -> Actions.setFlySpeedPreset(4)));
-        Hotkeys.GHOST_BLOCK_REMOVER.setHotkeyCallback(HotkeyCallback.of(Actions.GHOST_BLOCK_REMOVER_MANUAL));
+        Hotkeys.GHOST_BLOCK_REMOVER.createCallbackForAction(Actions.GHOST_BLOCK_REMOVER_MANUAL);
         Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(AdjustableValueHotkeyCallback.createWrapping(null, Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW, 0, 2)
                                                     .setAdjustmentEnabledCondition(FeatureToggle.TWEAK_HOTBAR_SCROLL::getBooleanValue)
                                                     .setKeyAction(Actions::hotbarScroll).setReverseDirection(true).setTriggerAlwaysOnRelease(true));
-        Hotkeys.HOTBAR_SWAP_1.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_1));
-        Hotkeys.HOTBAR_SWAP_2.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_2));
-        Hotkeys.HOTBAR_SWAP_3.setHotkeyCallback(HotkeyCallback.of(Actions.HOTBAR_SWAP_ROW_3));
-        Hotkeys.OPEN_CONFIG_GUI.setHotkeyCallback(HotkeyCallback.of(Actions.OPEN_CONFIG_SCREEN));
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_COLUMN));
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_DIAGONAL));
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_FACE));
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_LAYER));
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_LINE));
-        Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.setHotkeyCallback(HotkeyCallback.of(Actions.SET_PLACEMENT_RESTRICTION_MODE_PLANE));
-        Hotkeys.RELOAD_LANGUAGE_PACKS.setHotkeyCallback(HotkeyCallback.of(Actions.RELOAD_LANGUAGE_PACKS));
-        Hotkeys.TOGGLE_GRAB_CURSOR.setHotkeyCallback(HotkeyCallback.of(Actions.TOGGLE_GRAB_CURSOR));
-        Hotkeys.TOOL_PICK.setHotkeyCallback(HotkeyCallback.of(Actions.TOOL_PICK));
+        Hotkeys.HOTBAR_SWAP_1.createCallbackForAction(Actions.HOTBAR_SWAP_ROW_1);
+        Hotkeys.HOTBAR_SWAP_2.createCallbackForAction(Actions.HOTBAR_SWAP_ROW_2);
+        Hotkeys.HOTBAR_SWAP_3.createCallbackForAction(Actions.HOTBAR_SWAP_ROW_3);
+        Hotkeys.OPEN_CONFIG_GUI.createCallbackForAction(Actions.OPEN_CONFIG_SCREEN);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_COLUMN.createCallbackForAction(Actions.SET_PLACEMENT_RESTRICTION_MODE_COLUMN);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_DIAGONAL.createCallbackForAction(Actions.SET_PLACEMENT_RESTRICTION_MODE_DIAGONAL);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_FACE.createCallbackForAction(Actions.SET_PLACEMENT_RESTRICTION_MODE_FACE);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_LAYER.createCallbackForAction(Actions.SET_PLACEMENT_RESTRICTION_MODE_LAYER);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_LINE.createCallbackForAction(Actions.SET_PLACEMENT_RESTRICTION_MODE_LINE);
+        Hotkeys.PLACEMENT_RESTRICTION_MODE_PLANE.createCallbackForAction(Actions.SET_PLACEMENT_RESTRICTION_MODE_PLANE);
+        Hotkeys.RELOAD_LANGUAGE_PACKS.createCallbackForAction(Actions.RELOAD_LANGUAGE_PACKS);
+        Hotkeys.TOGGLE_GRAB_CURSOR.createCallbackForAction(Actions.TOGGLE_GRAB_CURSOR);
+        Hotkeys.TOOL_PICK.createCallbackForAction(Actions.TOOL_PICK);
         Hotkeys.ZOOM_ACTIVATE.setHotkeyCallback(AdjustableValueHotkeyCallback.createClamped(null, Configs.Generic.ZOOM_FOV, () -> BaseScreen.isCtrlDown() ? 5.0 : 1.0)
                                                     .setToggleMessageFactory(Callbacks::getZoomToggleMessage)
                                                     .setHotkeyCallback((a, k) -> Actions.zoomActivate(a == KeyAction.PRESS))
                                                     .addAdjustListener(MiscUtils::onZoomActivated)
                                                     .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to",
                                                                                                                       String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
-        Hotkeys.SKIP_ALL_RENDERING.setHotkeyCallback(HotkeyCallback.of(Actions.TOGGLE_SKIP_ALL_RENDERING));
-        Hotkeys.SKIP_WORLD_RENDERING.setHotkeyCallback(HotkeyCallback.of(Actions.TOGGLE_SKIP_WORLD_RENDERING));
+        Hotkeys.SKIP_ALL_RENDERING.createCallbackForAction(Actions.TOGGLE_SKIP_ALL_RENDERING);
+        Hotkeys.SKIP_WORLD_RENDERING.createCallbackForAction(Actions.TOGGLE_SKIP_WORLD_RENDERING);
 
         addAdjustableCallback(FeatureToggle.TWEAK_AFTER_CLICKER,            Configs.Generic.AFTER_CLICKER_CLICK_COUNT,  "tweakeroo.message.toggled_after_clicker_on",   "tweakeroo.message.set_after_clicker_count_to");
         addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_GRID,            Configs.Generic.BREAKING_GRID_SIZE,         "tweakeroo.message.toggled_breaking_grid_on",   "tweakeroo.message.set_breaking_grid_size_to");
