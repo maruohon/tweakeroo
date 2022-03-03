@@ -90,12 +90,12 @@ public class MiscUtils
         int vertical = 0;
         int strafe = 0;
 
-        if (options.keyForward.isPressed()) { forward += 1;  }
-        if (options.keyBack.isPressed())    { forward -= 1;  }
-        if (options.keyLeft.isPressed())    { strafe += 1;   }
-        if (options.keyRight.isPressed())   { strafe -= 1;   }
-        if (options.keyJump.isPressed())    { vertical += 1; }
-        if (options.keySneak.isPressed())   { vertical -= 1; }
+        if (options.forwardKey.isPressed()) { forward += 1;  }
+        if (options.backKey.isPressed())    { forward -= 1;  }
+        if (options.leftKey.isPressed())    { strafe += 1;   }
+        if (options.rightKey.isPressed())   { strafe -= 1;   }
+        if (options.jumpKey.isPressed())    { vertical += 1; }
+        if (options.sneakKey.isPressed())   { vertical -= 1; }
 
         double speed = (forward != 0 && strafe != 0) ? 1.2 : 1.0;
         double forwardRamped  = getRampedMotion(lastMotion.x, forward , rampAmount, decelerationFactor) / speed;

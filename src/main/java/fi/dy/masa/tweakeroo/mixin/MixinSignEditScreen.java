@@ -60,7 +60,7 @@ public abstract class MixinSignEditScreen extends Screen implements IGuiEditSign
 
             // Update the keybind state, because opening a GUI resets them all.
             // Also, KeyBinding.updateKeyBindState() only works for keyboard keys
-            KeyBinding keybind = MinecraftClient.getInstance().options.keyUse;
+            KeyBinding keybind = MinecraftClient.getInstance().options.useKey;
             InputUtil.Key input = InputUtil.fromTranslationKey(keybind.getBoundKeyTranslationKey());
 
             if (input != null)

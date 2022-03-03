@@ -37,8 +37,8 @@ public class MiscTweaks
     public static final EntityRestriction ENTITY_TYPE_ATTACK_RESTRICTION = new EntityRestriction();
     public static final PotionRestriction POTION_RESTRICTION = new PotionRestriction();
 
-    private static final KeybindState KEY_STATE_ATTACK = new KeybindState(MinecraftClient.getInstance().options.keyAttack, (mc) -> ((IMinecraftClientInvoker) mc).leftClickMouseAccessor());
-    private static final KeybindState KEY_STATE_USE = new KeybindState(MinecraftClient.getInstance().options.keyUse, (mc) -> ((IMinecraftClientInvoker) mc).rightClickMouseAccessor());
+    private static final KeybindState KEY_STATE_ATTACK = new KeybindState(MinecraftClient.getInstance().options.attackKey, (mc) -> ((IMinecraftClientInvoker) mc).tweakeroo_invokeDoAttack());
+    private static final KeybindState KEY_STATE_USE = new KeybindState(MinecraftClient.getInstance().options.useKey, (mc) -> ((IMinecraftClientInvoker) mc).tweakeroo_invokeDoItemUse());
 
     private static int potionWarningTimer;
 

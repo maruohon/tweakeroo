@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -8,10 +9,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.gui.screen.PresetsScreen;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.structure.StructureSet;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -19,7 +21,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorLayer;
-import net.minecraft.world.gen.feature.StructureFeature;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -32,7 +33,13 @@ public abstract class MixinPresetsScreen
     @Shadow @Final static List<Object> PRESETS;
 
     @Shadow
-    private static void addPreset(Text name, ItemConvertible itemIn, RegistryKey<Biome> biomeIn, List<StructureFeature<?>> structures, boolean b1, boolean b2, boolean b3, FlatChunkGeneratorLayer... layers) {};
+    private static void addPreset(Text presetName,
+                                  ItemConvertible icon,
+                                  RegistryKey<Biome> presetBiome,
+                                  Set<RegistryKey<StructureSet>> structureKeys,
+                                  boolean generateStronghold,
+                                  boolean generateFeatures,
+                                  FlatChunkGeneratorLayer... layers) {};
 
     @Inject(method = "init", at = @At("HEAD"))
     private void addCustomEntries(CallbackInfo ci)
@@ -42,9 +49,9 @@ public abstract class MixinPresetsScreen
             int vanillaEntries = 9;
             int toRemove = PRESETS.size() - vanillaEntries;
 
-            for (int i = 0; i < toRemove; ++i)
+            if (toRemove > 0)
             {
-                PRESETS.remove(0);
+                PRESETS.subList(0, toRemove).clear();
             }
 
             List<String> presetStrings = Configs.Lists.FLAT_WORLD_PRESETS.getStrings();
@@ -80,9 +87,7 @@ public abstract class MixinPresetsScreen
             {
                 biome = RegistryKey.of(Registry.BIOME_KEY, new Identifier(biomeName));
             }
-            catch (Exception ignore)
-            {
-            }
+            catch (Exception ignore) {}
 
             if (biome == null)
             {
@@ -96,9 +101,7 @@ public abstract class MixinPresetsScreen
             {
                 item = Registry.ITEM.get(new Identifier(iconItemName));
             }
-            catch (Exception ignore)
-            {
-            }
+            catch (Exception ignore) {}
 
             if (item == null)
             {
@@ -114,7 +117,7 @@ public abstract class MixinPresetsScreen
                 return false;
             }
 
-            addPreset(new TranslatableText(name), item, biome, ImmutableList.of(), false, false, false, layers);
+            addPreset(new TranslatableText(name), item, biome, ImmutableSet.of(), false, false, layers);
 
             return true;
         }

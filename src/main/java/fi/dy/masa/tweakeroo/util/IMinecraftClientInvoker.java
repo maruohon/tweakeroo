@@ -2,9 +2,9 @@ package fi.dy.masa.tweakeroo.util;
 
 public interface IMinecraftClientInvoker
 {
-    void setItemUseCooldown(int value);
+    void tweakeroo_setItemUseCooldown(int value);
 
-    void leftClickMouseAccessor();
+    boolean tweakeroo_invokeDoAttack();
 
-    void rightClickMouseAccessor();
+    void tweakeroo_invokeDoItemUse();
 }

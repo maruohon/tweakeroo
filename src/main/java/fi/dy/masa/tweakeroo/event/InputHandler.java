@@ -95,7 +95,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         MinecraftClient mc = MinecraftClient.getInstance();
 
         if (GuiUtils.getCurrentScreen() == null && mc.player != null && mc.player.isCreative() &&
-            eventButtonState && mc.options.keyUse.matchesMouse(eventButton) &&
+            eventButtonState && mc.options.useKey.matchesMouse(eventButton) &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
             mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.MISS)
         {
@@ -279,19 +279,19 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
 
     private void storeLastMovementDirection(int eventKey, int scanCode, MinecraftClient mc)
     {
-        if (mc.options.keyForward.matchesKey(eventKey, scanCode))
+        if (mc.options.forwardKey.matchesKey(eventKey, scanCode))
         {
             this.lastForwardInput = ForwardBack.FORWARD;
         }
-        else if (mc.options.keyBack.matchesKey(eventKey, scanCode))
+        else if (mc.options.backKey.matchesKey(eventKey, scanCode))
         {
             this.lastForwardInput = ForwardBack.BACK;
         }
-        else if (mc.options.keyLeft.matchesKey(eventKey, scanCode))
+        else if (mc.options.leftKey.matchesKey(eventKey, scanCode))
         {
             this.lastSidewaysInput = LeftRight.LEFT;
         }
-        else if (mc.options.keyRight.matchesKey(eventKey, scanCode))
+        else if (mc.options.rightKey.matchesKey(eventKey, scanCode))
         {
             this.lastSidewaysInput = LeftRight.RIGHT;
         }
@@ -301,7 +301,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
     {
         GameOptions settings = MinecraftClient.getInstance().options;
 
-        if (settings.keyLeft.isPressed() && settings.keyRight.isPressed())
+        if (settings.leftKey.isPressed() && settings.rightKey.isPressed())
         {
             if (this.lastSidewaysInput == LeftRight.LEFT)
             {
@@ -317,7 +317,7 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
             }
         }
 
-        if (settings.keyBack.isPressed() && settings.keyForward.isPressed())
+        if (settings.backKey.isPressed() && settings.forwardKey.isPressed())
         {
             if (this.lastForwardInput == ForwardBack.FORWARD)
             {

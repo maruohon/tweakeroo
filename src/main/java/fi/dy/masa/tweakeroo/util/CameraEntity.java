@@ -47,11 +47,11 @@ public class CameraEntity extends ClientPlayerEntity
 
             camera.updateLastTickPosition();
 
-            if (options.keySprint.isPressed())
+            if (options.sprintKey.isPressed())
             {
                 sprinting = true;
             }
-            else if (options.keyForward.isPressed() == false && options.keyBack.isPressed() == false)
+            else if (options.forwardKey.isPressed() == false && options.backKey.isPressed() == false)
             {
                 sprinting = false;
             }

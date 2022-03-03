@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -35,25 +36,25 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
     @Shadow protected int attackCooldown;
 
     @Shadow
-    private void doAttack() {}
+    private boolean doAttack() { return false; }
 
     @Shadow
     private void doItemUse() {}
 
     @Override
-    public void setItemUseCooldown(int value)
+    public void tweakeroo_setItemUseCooldown(int value)
     {
         this.itemUseCooldown = value;
     }
 
     @Override
-    public void leftClickMouseAccessor()
+    public boolean tweakeroo_invokeDoAttack()
     {
-        this.doAttack();
+        return this.doAttack();
     }
 
     @Override
-    public void rightClickMouseAccessor()
+    public void tweakeroo_invokeDoItemUse()
     {
         this.doItemUse();
     }
@@ -77,7 +78,7 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
                          "Lnet/minecraft/util/math/BlockPos;" +
                          "Lnet/minecraft/util/math/Direction;)Z")
             })
-    private void onLeftClickMousePre(CallbackInfo ci)
+    private void onLeftClickMousePre(CallbackInfoReturnable<Boolean> cir)
     {
         PlacementTweaks.onLeftClickMousePre();
     }
@@ -85,7 +86,7 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
     @Inject(method = "doAttack", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/network/ClientPlayerEntity;swingHand(Lnet/minecraft/util/Hand;)V"))
-    private void onLeftClickMousePost(CallbackInfo ci)
+    private void onLeftClickMousePost(CallbackInfoReturnable<Boolean> cir)
     {
         PlacementTweaks.onLeftClickMousePost();
     }
@@ -122,12 +123,12 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
                     this.attackCooldown = 0;
                 }
 
-                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.options.keyAttack.getBoundKeyTranslationKey()), true);
+                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.options.attackKey.getBoundKeyTranslationKey()), true);
             }
 
             if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue())
             {
-                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.options.keyUse.getBoundKeyTranslationKey()), true);
+                KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(this.options.useKey.getBoundKeyTranslationKey()), true);
             }
         }
     }

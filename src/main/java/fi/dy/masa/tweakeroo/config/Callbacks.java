@@ -47,8 +47,8 @@ public class Callbacks
             }
         });
         FeatureToggle.TWEAK_FREE_CAMERA.setValueChangeCallback((cfg) -> CameraEntity.setCameraState(cfg.getBooleanValue()));
-        FeatureToggle.TWEAK_HOLD_ATTACK.setValueChangeCallback(new FeatureCallbackHold(mc.options.keyAttack));
-        FeatureToggle.TWEAK_HOLD_USE.setValueChangeCallback(new FeatureCallbackHold(mc.options.keyUse));
+        FeatureToggle.TWEAK_HOLD_ATTACK.setValueChangeCallback(new FeatureCallbackHold(mc.options.attackKey));
+        FeatureToggle.TWEAK_HOLD_USE.setValueChangeCallback(new FeatureCallbackHold(mc.options.useKey));
 
         IHotkeyCallback callbackGeneric = new KeyCallbackHotkeysGeneric(mc);
         IHotkeyCallback callbackMessage = new KeyCallbackHotkeyWithMessage(mc);
