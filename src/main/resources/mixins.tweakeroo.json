@@ -59,6 +59,7 @@
 		"MixinRavagerEntity",
 		"MixinScaffoldingBlock",
 		"MixinSculkSensor",
+		"MixinServerPlayNetworkHandler",
 		"MixinShulkerBoxBlock",
 		"MixinSignBlockEntity",
 		"MixinSignEditScreen",
