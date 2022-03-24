@@ -6,12 +6,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.MovementInputFromOptions;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.event.InputHandler;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.MovementInputFromOptions;
 
 @Mixin(MovementInputFromOptions.class)
 public abstract class MixinMovementInputFromOptions extends MovementInput

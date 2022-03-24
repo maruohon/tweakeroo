@@ -1,13 +1,13 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import fi.dy.masa.malilib.util.inventory.InventoryUtils;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
+import fi.dy.masa.malilib.util.inventory.InventoryUtils;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 
 @Mixin(ItemShulkerBox.class)
 public abstract class MixinItemShulkerBox extends ItemBlock implements IItemStackLimit

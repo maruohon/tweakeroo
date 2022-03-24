@@ -3,11 +3,11 @@ package fi.dy.masa.tweakeroo.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandClone;
 import net.minecraft.command.CommandFill;
+import fi.dy.masa.tweakeroo.config.Configs;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin({CommandFill.class, CommandClone.class})
 public abstract class MixinCommandFillClone extends CommandBase

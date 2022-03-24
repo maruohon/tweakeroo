@@ -631,7 +631,6 @@ public class InventoryUtils
         EntityPlayer player = mc.player;
         World world = mc.world;
         double reach = mc.playerController.getBlockReachDistance();
-        boolean isCreative = player.capabilities.isCreativeMode;
         RayTraceResult trace = player.rayTrace(reach, mc.getRenderPartialTicks());
 
         if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
@@ -654,7 +653,7 @@ public class InventoryUtils
                 }
                 */
 
-                if (isCreative)
+                if (GameUtils.isCreativeMode())
                 {
                     player.inventory.setPickedItemStack(stack);
                     mc.playerController.sendSlotPacket(player.getHeldItem(EnumHand.MAIN_HAND), 36 + player.inventory.currentItem);

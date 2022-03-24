@@ -4,10 +4,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiNewChat;
+import fi.dy.masa.tweakeroo.config.FeatureToggle;
+import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 @Mixin(GuiNewChat.class)
 public abstract class MixinGuiNewChat
