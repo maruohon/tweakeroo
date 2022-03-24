@@ -27,6 +27,7 @@ tweakeroo.config.comment.fastplacementrememberorientation=If enabled, then the F
 tweakeroo.config.comment.fastrightclickcount=The number of right clicks to do per game tick when\nthe 'Fast Right Click' tweak is enabled and the use\nbutton (right click) is held down.
 tweakeroo.config.comment.fillclonelimit=The new /fill and /clone block limit in single player,\nif the 'Fill/Clone Limit Override' tweak is enabled.
 tweakeroo.config.comment.flexibleblockplacementoverlaycolor=The color of the currently pointed at\nregion in the Flexible Block Placement overlay.
+tweakeroo.config.comment.flexibleblockplacementadjacentoverlaycolor=The color of the currently pointed at\nregion in the Flexible Block Placement overlay when used in adjacent mode.
 tweakeroo.config.comment.flyspeedpreset1=The fly speed for preset 1.
 tweakeroo.config.comment.flyspeedpreset2=The fly speed for preset 2.
 tweakeroo.config.comment.flyspeedpreset3=The fly speed for preset 3.

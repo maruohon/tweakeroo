@@ -58,6 +58,7 @@ public class Configs
         public static final IntegerConfig FAST_RIGHT_CLICK_COUNT                        = new IntegerConfig("fastRightClickCount", 2, 1, 64);
         public static final IntegerConfig FILL_CLONE_LIMIT                              = new IntegerConfig("fillCloneLimit", 10000000, 1, 1000000000);
         public static final ColorConfig FLEXIBLE_PLACEMENT_OVERLAY_COLOR                = new ColorConfig("flexibleBlockPlacementOverlayColor", "#C03030F0");
+        public static final ColorConfig FLEXIBLE_PLACEMENT_ADJACENT_OVERLAY_COLOR       = new ColorConfig("flexibleBlockPlacementAdjacentOverlayColor", "#C03030F0");
         public static final DoubleConfig FLY_SPEED_PRESET_1                             = new DoubleConfig("flySpeedPreset1", 0.01, 0, 4);
         public static final DoubleConfig FLY_SPEED_PRESET_2                             = new DoubleConfig("flySpeedPreset2", 0.064, 0, 4);
         public static final DoubleConfig FLY_SPEED_PRESET_3                             = new DoubleConfig("flySpeedPreset3", 0.128, 0, 4);
@@ -137,6 +138,7 @@ public class Configs
                 FAST_RIGHT_CLICK_COUNT,
                 FILL_CLONE_LIMIT,
                 FLEXIBLE_PLACEMENT_OVERLAY_COLOR,
+                FLEXIBLE_PLACEMENT_ADJACENT_OVERLAY_COLOR,
                 FLY_SPEED_PRESET_1,
                 FLY_SPEED_PRESET_2,
                 FLY_SPEED_PRESET_3,

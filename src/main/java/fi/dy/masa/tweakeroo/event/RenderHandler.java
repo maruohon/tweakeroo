@@ -133,6 +133,11 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
             fi.dy.masa.malilib.render.RenderUtils.setupBlend();
 
             Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
+            if(Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld())
+            {
+                color = Configs.Generic.FLEXIBLE_PLACEMENT_ADJACENT_OVERLAY_COLOR.getColor();
+            }
+            
 
             fi.dy.masa.malilib.render.RenderUtils.renderBlockTargetingOverlay(
                     entity,
