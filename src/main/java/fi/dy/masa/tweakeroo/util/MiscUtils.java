@@ -242,7 +242,7 @@ public class MiscUtils
 
     public static String getChatTimestamp()
     {
-        SimpleDateFormat sdf = new SimpleDateFormat(Configs.Generic.CHAT_TIME_FORMAT.getStringValue());
+        SimpleDateFormat sdf = new SimpleDateFormat(Configs.Generic.CHAT_TIME_FORMAT.getValue());
         DATE.setTime(System.currentTimeMillis());
         return sdf.format(DATE);
     }

@@ -39,13 +39,16 @@ public class Configs
 {
     public static class Generic
     {
+        public static final HotkeyedBooleanConfig CARPET_ACCURATE_PLACEMENT_PROTOCOL    = new HotkeyedBooleanConfig("carpetAccuratePlacementProtocol", true, "");
+        public static final HotkeyedBooleanConfig FREE_CAMERA_PLAYER_INPUTS             = new HotkeyedBooleanConfig("freeCameraPlayerInputs", false, "");
+        public static final HotkeyedBooleanConfig FREE_CAMERA_PLAYER_MOVEMENT           = new HotkeyedBooleanConfig("freeCameraPlayerMovement", false, "");
+
         public static final IntegerConfig AFTER_CLICKER_CLICK_COUNT                     = new IntegerConfig("afterClickerClickCount", 1, 1, 64);
         public static final DoubleConfig BLOCK_REACH_DISTANCE                           = new DoubleConfig("blockReachDistance", 4.5, 0, 8);
         public static final IntegerConfig BLOCK_BREAKING_PARTICLE_LIMIT                 = new IntegerConfig("blockBreakingParticleLimit", 8, 1, 1024);
         public static final DoubleConfig BLOCK_BREAKING_PARTICLE_SCALE                  = new DoubleConfig("blockBreakingParticleScale", 1.0, 0, 10D);
         public static final DoubleConfig BLOCK_BREAKING_PARTICLE_SPEED                  = new DoubleConfig("blockBreakingParticleSpeedMultiplier", 1.0, 0, 20D);
         public static final IntegerConfig BREAKING_GRID_SIZE                            = new IntegerConfig("breakingGridSize", 3, 1, 1000);
-        public static final HotkeyedBooleanConfig CARPET_ACCURATE_PLACEMENT_PROTOCOL    = new HotkeyedBooleanConfig("carpetAccuratePlacementProtocol", true, "");
         public static final ColorConfig CHAT_BACKGROUND_COLOR                           = new ColorConfig("chatBackgroundColor", "#80000000");
         public static final StringConfig CHAT_TIME_FORMAT                               = new StringConfig("chatTimeFormat", "[HH:mm:ss]");
         public static final IntegerConfig CHUNK_RENDER_TIMEOUT                          = new IntegerConfig("chunkRenderTimeout", 50000000, 1, Integer.MAX_VALUE);
@@ -62,8 +65,6 @@ public class Configs
         public static final DoubleConfig FLY_SPEED_PRESET_2                             = new DoubleConfig("flySpeedPreset2", 0.064, 0, 4);
         public static final DoubleConfig FLY_SPEED_PRESET_3                             = new DoubleConfig("flySpeedPreset3", 0.128, 0, 4);
         public static final DoubleConfig FLY_SPEED_PRESET_4                             = new DoubleConfig("flySpeedPreset4", 0.32, 0, 4);
-        public static final HotkeyedBooleanConfig FREE_CAMERA_PLAYER_INPUTS             = new HotkeyedBooleanConfig("freeCameraPlayerInputs", false, "");
-        public static final HotkeyedBooleanConfig FREE_CAMERA_PLAYER_MOVEMENT           = new HotkeyedBooleanConfig("freeCameraPlayerMovement", false, "");
         public static final DoubleConfig GAMMA_OVERRIDE_VALUE                           = new DoubleConfig("gammaOverrideValue", 16, 0, 32);
         public static final BooleanConfig HAND_RESTOCK_CONTINUOUS                       = new BooleanConfig("handRestockContinuous", false);
         public static final BooleanConfig HAND_RESTOCK_PRE                              = new BooleanConfig("handRestockPre", true);
@@ -116,6 +117,10 @@ public class Configs
         public static final OptionListConfig<SnapAimMode> SNAP_AIM_MODE                             = new OptionListConfig<>("snapAimMode", SnapAimMode.YAW, SnapAimMode.VALUES);
 
         public static final ImmutableList<ConfigOption<?>> OPTIONS = ImmutableList.of(
+                CARPET_ACCURATE_PLACEMENT_PROTOCOL,
+                FREE_CAMERA_PLAYER_INPUTS,
+                FREE_CAMERA_PLAYER_MOVEMENT,
+
                 AFTER_CLICKER_CLICK_COUNT,
                 BLOCK_BREAKING_PARTICLE_LIMIT,
                 BLOCK_BREAKING_PARTICLE_SCALE,
@@ -123,7 +128,6 @@ public class Configs
                 BLOCK_REACH_DISTANCE,
                 BREAKING_GRID_SIZE,
                 BREAKING_RESTRICTION_MODE,
-                CARPET_ACCURATE_PLACEMENT_PROTOCOL,
                 CHAT_BACKGROUND_COLOR,
                 CHAT_TIME_FORMAT,
                 CHUNK_RENDER_TIMEOUT,
@@ -141,8 +145,6 @@ public class Configs
                 FLY_SPEED_PRESET_2,
                 FLY_SPEED_PRESET_3,
                 FLY_SPEED_PRESET_4,
-                FREE_CAMERA_PLAYER_INPUTS,
-                FREE_CAMERA_PLAYER_MOVEMENT,
                 GAMMA_OVERRIDE_VALUE,
                 HAND_RESTOCK_CONTINUOUS,
                 HAND_RESTOCK_PRE,

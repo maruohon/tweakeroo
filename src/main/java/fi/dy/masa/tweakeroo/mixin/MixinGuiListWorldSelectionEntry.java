@@ -22,7 +22,7 @@ public abstract class MixinGuiListWorldSelectionEntry
     {
         if (FeatureToggle.TWEAK_WORLD_LIST_DATE_FORMAT.getBooleanValue())
         {
-            return MiscUtils.getDateFormatFor(Configs.Generic.WORLD_LIST_DATE_FORMAT.getStringValue());
+            return MiscUtils.getDateFormatFor(Configs.Generic.WORLD_LIST_DATE_FORMAT.getValue());
         }
 
         return DATE_FORMAT;

@@ -69,16 +69,12 @@ public class Actions
     {
         for (FeatureToggle feature : FeatureToggle.VALUES)
         {
-            ActionUtils.registerToggle(Reference.MOD_INFO, feature.getName(),
-                                       feature.getBooleanConfig(), null,
-                                       () -> feature.getKeyBind().getSettings().getMessageType());
+            ActionUtils.registerBooleanConfigActions(Reference.MOD_INFO, feature.getBooleanConfig(), feature.getKeyBind());
         }
 
         for (DisableToggle feature : DisableToggle.VALUES)
         {
-            ActionUtils.registerToggle(Reference.MOD_INFO, feature.getName(),
-                                       feature.getBooleanConfig(), null,
-                                       () -> feature.getKeyBind().getSettings().getMessageType());
+            ActionUtils.registerBooleanConfigActions(Reference.MOD_INFO, feature.getBooleanConfig(), feature.getKeyBind());
         }
 
         register("zoomActivate", (ctx) -> zoomActivate(true));
@@ -100,6 +96,9 @@ public class Actions
         register("setSnapAimPitchStep",         ConfigActions.createSetDoubleValueAction(Configs.Generic.SNAP_AIM_PITCH_STEP));
         register("setSnapAimYawStep",           ConfigActions.createSetDoubleValueAction(Configs.Generic.SNAP_AIM_YAW_STEP));
         register("setZoomFoV",                  ConfigActions.createSetDoubleValueAction(Configs.Generic.ZOOM_FOV));
+
+        ActionUtils.registerBooleanConfigActions(Configs.Generic.OPTIONS);
+        ActionUtils.registerBooleanConfigActions(Configs.Fixes.OPTIONS);
     }
 
     private static NamedAction register(String name, EventListener action)
