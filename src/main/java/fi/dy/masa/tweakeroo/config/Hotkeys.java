@@ -7,8 +7,8 @@ import fi.dy.masa.malilib.input.KeyBindSettings;
 
 public class Hotkeys
 {
-    public static final HotkeyConfig ACCURATE_BLOCK_PLACEMENT_IN        = new HotkeyConfig("accurateBlockPlacementInto",        "", KeyBindSettings.INGAME_MODIFIER);
     public static final HotkeyConfig ACCURATE_BLOCK_PLACEMENT_REVERSE   = new HotkeyConfig("accurateBlockPlacementReverse",     "", KeyBindSettings.INGAME_MODIFIER);
+    public static final HotkeyConfig ACCURATE_BLOCK_PLACEMENT_INTO      = new HotkeyConfig("accurateBlockPlacementInto",        "",         KeyBindSettings.INGAME_MODIFIER);
     public static final HotkeyConfig BLINK_DRIVE                        = new HotkeyConfig("blinkDrive",                        "");
     public static final HotkeyConfig BLINK_DRIVE_Y_LEVEL                = new HotkeyConfig("blinkDriveYLevel",                  "");
     public static final HotkeyConfig BREAKING_RESTRICTION_MODE_COLUMN   = new HotkeyConfig("breakingRestrictionModeColumn",     "");

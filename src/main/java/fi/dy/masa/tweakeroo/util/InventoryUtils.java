@@ -209,10 +209,10 @@ public class InventoryUtils
         }
     }
 
-    public static void trySwitchToEffectiveTool(Minecraft mc, BlockPos pos)
+    public static void trySwitchToEffectiveTool(BlockPos pos)
     {
-        EntityPlayer player = mc.player;
-        IBlockState state = mc.world.getBlockState(pos);
+        EntityPlayer player = GameUtils.getClientPlayer();
+        IBlockState state = GameUtils.getClientWorld().getBlockState(pos);
         ItemStack stack = player.getHeldItemMainhand();
 
         if (stack.isEmpty() || stack.getDestroySpeed(state) <= 1f)

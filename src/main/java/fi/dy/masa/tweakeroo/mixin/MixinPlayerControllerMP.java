@@ -80,7 +80,7 @@ public abstract class MixinPlayerControllerMP
     {
         if (FeatureToggle.TWEAK_TOOL_SWITCH.getBooleanValue())
         {
-            InventoryUtils.trySwitchToEffectiveTool(this.mc, pos);
+            InventoryUtils.trySwitchToEffectiveTool(pos);
         }
 
         PlacementTweaks.cacheStackInHand(EnumHand.MAIN_HAND);

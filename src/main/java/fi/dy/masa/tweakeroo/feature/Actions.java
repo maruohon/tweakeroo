@@ -125,7 +125,7 @@ public class Actions
         {
             RayTraceResult trace = RayTraceUtils.getRayTraceFromEntity(world, EntityUtils.getCameraEntity(),
                 RayTraceUtils.RayTraceFluidHandling.SOURCE_ONLY, false,
-                GameUtils.getRenderDistanceChunks() * 16 + 200);
+                Math.max(GameUtils.getRenderDistanceChunks() * 16, world.getHeight()) + 32);
 
             if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
             {
@@ -142,7 +142,7 @@ public class Actions
 
     private static ActionResult copySignText(ActionContext ctx)
     {
-        RayTraceResult trace = GameUtils.getClient().objectMouseOver;
+        RayTraceResult trace = GameUtils.getRayTrace();
 
         if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
         {
@@ -256,11 +256,11 @@ public class Actions
 
     private static ActionResult toolPick()
     {
-        Minecraft mc = GameUtils.getClient();
+        RayTraceResult trace = GameUtils.getRayTrace();
 
-        if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK)
+        if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
         {
-            InventoryUtils.trySwitchToEffectiveTool(mc, mc.objectMouseOver.getBlockPos());
+            InventoryUtils.trySwitchToEffectiveTool(trace.getBlockPos());
             return ActionResult.SUCCESS;
         }
 

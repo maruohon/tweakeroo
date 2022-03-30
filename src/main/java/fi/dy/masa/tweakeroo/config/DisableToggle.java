@@ -51,9 +51,9 @@ public enum DisableToggle implements ConfigInfo
     DISABLE_VILLAGER_TRADE_LOCKING  ("disableVillagerTradeLocking",         false),
     DISABLE_WALL_UNSPRINT           ("disableWallUnsprint",                 false);
 
-    public static final ImmutableList<DisableToggle> VALUES = com.google.common.collect.ImmutableList.copyOf(values());
-    public static final ImmutableList<BooleanConfig> TOGGLE_CONFIGS = com.google.common.collect.ImmutableList.copyOf(VALUES.stream().map(DisableToggle::getBooleanConfig).collect(Collectors.toList()));
-    public static final ImmutableList<HotkeyConfig> TOGGLE_HOTKEYS = com.google.common.collect.ImmutableList.copyOf(VALUES.stream().map(DisableToggle::getHotkeyConfig).collect(Collectors.toList()));
+    public static final ImmutableList<DisableToggle> VALUES = ImmutableList.copyOf(values());
+    public static final ImmutableList<BooleanConfig> TOGGLE_CONFIGS = ImmutableList.copyOf(VALUES.stream().map(DisableToggle::getBooleanConfig).collect(Collectors.toList()));
+    public static final ImmutableList<HotkeyConfig> TOGGLE_HOTKEYS = ImmutableList.copyOf(VALUES.stream().map(DisableToggle::getHotkeyConfig).collect(Collectors.toList()));
 
     private final BooleanConfig toggleStatus;
     private final HotkeyConfig toggleHotkey;

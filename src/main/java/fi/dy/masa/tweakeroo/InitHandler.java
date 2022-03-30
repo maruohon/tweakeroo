@@ -1,6 +1,8 @@
 package fi.dy.masa.tweakeroo;
 
-import fi.dy.masa.malilib.config.BaseModConfig;
+import fi.dy.masa.malilib.config.JsonModConfig;
+import fi.dy.masa.malilib.config.JsonModConfig.ConfigDataUpdater;
+import fi.dy.masa.malilib.config.util.ConfigUpdateUtils.KeyBindSettingsResetter;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.gui.config.ConfigSearchInfo;
 import fi.dy.masa.malilib.registry.Registry;
@@ -9,7 +11,6 @@ import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.event.ClientWorldChangeHandler;
-import fi.dy.masa.tweakeroo.event.InputHandler;
 import fi.dy.masa.tweakeroo.event.RenderHandler;
 import fi.dy.masa.tweakeroo.feature.Actions;
 import fi.dy.masa.tweakeroo.gui.ConfigScreen;
@@ -17,6 +18,8 @@ import fi.dy.masa.tweakeroo.gui.widget.DisableToggleConfigWidget;
 import fi.dy.masa.tweakeroo.gui.widget.FeatureToggleConfigWidget;
 import fi.dy.masa.tweakeroo.gui.widget.info.DisableConfigStatusWidget;
 import fi.dy.masa.tweakeroo.gui.widget.info.TweakConfigStatusWidget;
+import fi.dy.masa.tweakeroo.input.InputHandler;
+import fi.dy.masa.tweakeroo.input.TweakerooHotkeyProvider;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 
 public class InitHandler implements InitializationHandler
@@ -24,7 +27,10 @@ public class InitHandler implements InitializationHandler
     @Override
     public void registerModHandlers()
     {
-        Registry.CONFIG_MANAGER.registerConfigHandler(BaseModConfig.createDefaultModConfig(Reference.MOD_INFO, 1, Configs.CATEGORIES));
+        // Reset all KeyBindSettings when updating to the first post-malilib-refactor version
+        ConfigDataUpdater updater = new KeyBindSettingsResetter(TweakerooHotkeyProvider.INSTANCE::getAllHotkeys, 1);
+        Registry.CONFIG_MANAGER.registerConfigHandler(JsonModConfig.createJsonModConfig(Reference.MOD_INFO, Configs.CURRENT_VERSION, Configs.CATEGORIES, updater));
+
         Registry.CONFIG_SCREEN.registerConfigScreenFactory(Reference.MOD_INFO, ConfigScreen::create);
         Registry.CONFIG_TAB.registerConfigTabProvider(Reference.MOD_INFO, ConfigScreen::getConfigTabs);
 
@@ -37,9 +43,9 @@ public class InitHandler implements InitializationHandler
         Registry.CONFIG_STATUS_WIDGET.registerConfigStatusWidgetFactory(DisableToggle.class, DisableConfigStatusWidget::new, "tweakeroo:csi_value_disable_toggle");
         Registry.CONFIG_STATUS_WIDGET.registerConfigStatusWidgetFactory(FeatureToggle.class, TweakConfigStatusWidget::new, "tweakeroo:csi_value_tweak_toggle");
 
-        Registry.HOTKEY_MANAGER.registerHotkeyProvider(InputHandler.getInstance());
-        Registry.INPUT_DISPATCHER.registerKeyboardInputHandler(InputHandler.getInstance());
-        Registry.INPUT_DISPATCHER.registerMouseInputHandler(InputHandler.getInstance());
+        Registry.HOTKEY_MANAGER.registerHotkeyProvider(TweakerooHotkeyProvider.INSTANCE);
+        Registry.INPUT_DISPATCHER.registerKeyboardInputHandler(InputHandler.INSTANCE);
+        Registry.INPUT_DISPATCHER.registerMouseInputHandler(InputHandler.INSTANCE);
 
         RenderHandler renderer = new RenderHandler();
         Registry.RENDER_EVENT_DISPATCHER.registerGameOverlayRenderer(renderer);

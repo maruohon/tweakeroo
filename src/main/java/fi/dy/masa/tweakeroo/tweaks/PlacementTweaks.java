@@ -416,7 +416,7 @@ public class PlacementTweaks
             boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
             boolean rotation = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld();
             boolean offset = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld();
-            boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeyBind().isKeyBindHeld();
+            boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_INTO.getKeyBind().isKeyBindHeld();
             boolean accurateReverse = Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeyBind().isKeyBindHeld();
 
             firstWasRotation = (flexible && rotation) || (accurate && (accurateIn || accurateReverse));
@@ -492,7 +492,7 @@ public class PlacementTweaks
         }
 
         boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
-        boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeyBind().isKeyBindHeld();
+        boolean accurateIn = Hotkeys.ACCURATE_BLOCK_PLACEMENT_INTO.getKeyBind().isKeyBindHeld();
         boolean accurateReverse = Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeyBind().isKeyBindHeld();
         boolean afterClicker = FeatureToggle.TWEAK_AFTER_CLICKER.getBooleanValue();
 
@@ -765,7 +765,7 @@ public class PlacementTweaks
         boolean rememberFlexible = Configs.Generic.REMEMBER_FLEXIBLE.getBooleanValue();
         boolean rotation = rotationHeld || (rememberFlexible && firstWasRotation);
         boolean accurate = FeatureToggle.TWEAK_ACCURATE_BLOCK_PLACEMENT.getBooleanValue();
-        boolean keys = Hotkeys.ACCURATE_BLOCK_PLACEMENT_IN.getKeyBind().isKeyBindHeld() || Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeyBind().isKeyBindHeld();
+        boolean keys = Hotkeys.ACCURATE_BLOCK_PLACEMENT_INTO.getKeyBind().isKeyBindHeld() || Hotkeys.ACCURATE_BLOCK_PLACEMENT_REVERSE.getKeyBind().isKeyBindHeld();
         accurate = accurate && keys;
 
         // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later

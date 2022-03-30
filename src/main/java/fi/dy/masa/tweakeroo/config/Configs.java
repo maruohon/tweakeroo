@@ -32,11 +32,14 @@ import fi.dy.masa.malilib.config.value.BlackWhiteList;
 import fi.dy.masa.malilib.config.value.HudAlignment;
 import fi.dy.masa.malilib.input.Hotkey;
 import fi.dy.masa.malilib.util.restriction.UsageRestriction.ListType;
+import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
 
 public class Configs
 {
+    public static final int CURRENT_VERSION = 1;
+
     public static class Generic
     {
         public static final HotkeyedBooleanConfig CARPET_ACCURATE_PLACEMENT_PROTOCOL    = new HotkeyedBooleanConfig("carpetAccuratePlacementProtocol", true, "");
@@ -266,15 +269,15 @@ public class Configs
     }
 
     public static final List<ConfigOptionCategory> CATEGORIES = ImmutableList.of(
-            BaseConfigOptionCategory.normal("Generic",          Generic.OPTIONS),
-            BaseConfigOptionCategory.normal("Fixes",            Fixes.OPTIONS),
-            BaseConfigOptionCategory.normal("Lists",            Lists.OPTIONS),
-            BaseConfigOptionCategory.normal("TweakToggles",     FeatureToggle.TOGGLE_CONFIGS),
-            BaseConfigOptionCategory.normal("TweakHotkeys",     FeatureToggle.TOGGLE_HOTKEYS),
-            BaseConfigOptionCategory.normal("GenericHotkeys",   Hotkeys.HOTKEY_LIST),
-            BaseConfigOptionCategory.normal("DisableToggles",   DisableToggle.TOGGLE_CONFIGS),
-            BaseConfigOptionCategory.normal("DisableHotkeys",   DisableToggle.TOGGLE_HOTKEYS),
-            BaseConfigOptionCategory.normal("Internal",         Internal.OPTIONS)
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "Generic",          Generic.OPTIONS),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "Fixes",            Fixes.OPTIONS),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "Lists",            Lists.OPTIONS),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "TweakToggles",     FeatureToggle.TOGGLE_CONFIGS),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "TweakHotkeys",     FeatureToggle.TOGGLE_HOTKEYS),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "GenericHotkeys",   Hotkeys.HOTKEY_LIST),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "DisableToggles",   DisableToggle.TOGGLE_CONFIGS),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "DisableHotkeys",   DisableToggle.TOGGLE_HOTKEYS),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "Internal",         Internal.OPTIONS)
     );
 
     public static DoubleConfig getActiveFlySpeedConfig()
