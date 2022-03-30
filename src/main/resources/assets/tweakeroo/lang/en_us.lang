@@ -545,6 +545,7 @@ tweakeroo.label.snap_aim_mode.both=Yaw & Pitch
 tweakeroo.label.snap_aim_mode.pitch=Pitch
 tweakeroo.label.snap_aim_mode.yaw=Yaw
 
+tweakeroo.message.error.invalid_fly_speed_value=Invalid fly speed value §a%s
 tweakeroo.message.focusing_game=§6Focusing§f the game (grabbing the cursor)
 tweakeroo.message.language_packs_reloaded=Reloaded the language packs
 tweakeroo.message.potion_effects_running_out=§d!! WARNING - %s potion effect(s) about to run out in %s seconds !!§r
@@ -556,6 +557,7 @@ tweakeroo.message.set_fast_left_click_count_to=Set Fast Left Click count to §b%
 tweakeroo.message.set_fast_right_click_count_to=Set Fast Right Click count to §b%s clicks per tick
 tweakeroo.message.set_fly_speed_preset_to=Switched to fly speed preset §b%s§r, speed: §b%s
 tweakeroo.message.set_fly_speed_to=Set fly speed of preset §b%s§r to §b%s
+tweakeroo.message.set_fly_speed_non_preset_value_to=Set fly speed override value to §b%s
 tweakeroo.message.set_gamma_override_value_to=Set Gamma Override value to §b%s
 tweakeroo.message.set_hotbar_slot_cycle_max_to=Set Hotbar Slot Cycle max slot to §b%s
 tweakeroo.message.set_hotbar_slot_randomizer_max_to=Set Hotbar Slot Randomizer max slot to §b%s
@@ -580,7 +582,8 @@ tweakeroo.message.toggled_breaking_restriction_on=Toggled Breaking Restriction �
 tweakeroo.message.toggled_fast_left_click_on=Toggled Fast Left Click §aON§r, §b%s§r clicks per tick
 tweakeroo.message.toggled_fast_right_click_on=Toggled Fast Right Click §aON§r, §b%s§r clicks per tick
 tweakeroo.message.toggled_gamma_override_on=Toggled Gamma Override §aON§r, value: §b%s§r
-tweakeroo.message.toggled_fly_speed_on=Toggled Fly Speed §aON§r, preset: §b%s§r, speed: §b%s
+tweakeroo.message.toggled_fly_speed_on.custom=Toggled Fly Speed §aON§r, (non-preset) speed: §b%s
+tweakeroo.message.toggled_fly_speed_on.preset=Toggled Fly Speed §aON§r, preset: §b%s§r, speed: §b%s
 tweakeroo.message.toggled_fast_block_placement_on=Toggled Fast Block Placement §aON§r, mode: §3%s
 tweakeroo.message.toggled_periodic_attack_on=Toggled Periodic Attack §aON§r, interval = §b%s§r ticks
 tweakeroo.message.toggled_periodic_use_on=Toggled Periodic Use §aON§r, interval = §b%s§r ticks

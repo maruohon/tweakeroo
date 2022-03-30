@@ -152,9 +152,10 @@ public class Callbacks
         addAdjustableCallback(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT,     Configs.Generic.PLACEMENT_RESTRICTION_MODE, "tweakeroo.message.toggled_fast_block_placement_on", "tweakeroo.message.set_placement_restriction_mode_to");
 
         FeatureToggle.TWEAK_FLY_SPEED.setHotkeyCallback(AdjustableValueHotkeyCallback.createClampedDoubleDelegate(
-                FeatureToggle.TWEAK_FLY_SPEED.getBooleanConfig(), Configs::getActiveFlySpeedConfig, 0, 4.0, () -> BaseScreen.isCtrlDown() ? 0.02 : 0.005)
+                FeatureToggle.TWEAK_FLY_SPEED.getBooleanConfig(), () -> Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE,
+                0, 4.0, () -> BaseScreen.isCtrlDown() ? 0.02 : 0.005)
                     .setToggleMessageFactory(Callbacks::getFlySpeedToggleMessage)
-                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", String.format("%.4f", Configs.getActiveFlySpeedConfig().getDoubleValue()))));
+                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", String.format("%.4f", Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.getDoubleValue()))));
 
         FeatureToggle.TWEAK_SNAP_AIM.setHotkeyCallback(AdjustableValueHotkeyCallback.createClampedDoubleDelegate(
                 FeatureToggle.TWEAK_SNAP_AIM.getBooleanConfig(),
@@ -229,9 +230,19 @@ public class Callbacks
     {
         if (config.getBooleanValue())
         {
-            int preset = Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1;
-            String strSpeed = String.format("%.3f", Configs.getActiveFlySpeedConfig().getDoubleValue());
-            return StringUtils.translate("tweakeroo.message.toggled_fly_speed_on", preset, strSpeed);
+            int preset = Configs.Internal.FLY_SPEED_PRESET.getIntegerValue();
+            float presetSpeed = Configs.getFlySpeedConfig(preset).getFloatValue();
+            float activeSpeed = Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.getFloatValue();
+            String strSpeed = String.format("%.3f", activeSpeed);
+
+            if (activeSpeed == presetSpeed)
+            {
+                return StringUtils.translate("tweakeroo.message.toggled_fly_speed_on.preset", preset + 1, strSpeed);
+            }
+            else
+            {
+                return StringUtils.translate("tweakeroo.message.toggled_fly_speed_on.custom", strSpeed);
+            }
         }
         else
         {

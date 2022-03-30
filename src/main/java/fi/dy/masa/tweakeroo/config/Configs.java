@@ -64,10 +64,10 @@ public class Configs
         public static final IntegerConfig FAST_RIGHT_CLICK_COUNT                        = new IntegerConfig("fastRightClickCount", 2, 1, 64);
         public static final IntegerConfig FILL_CLONE_LIMIT                              = new IntegerConfig("fillCloneLimit", 10000000, 1, 1000000000);
         public static final ColorConfig FLEXIBLE_PLACEMENT_OVERLAY_COLOR                = new ColorConfig("flexibleBlockPlacementOverlayColor", "#C03030F0");
-        public static final DoubleConfig FLY_SPEED_PRESET_1                             = new DoubleConfig("flySpeedPreset1", 0.01, 0, 4);
-        public static final DoubleConfig FLY_SPEED_PRESET_2                             = new DoubleConfig("flySpeedPreset2", 0.064, 0, 4);
-        public static final DoubleConfig FLY_SPEED_PRESET_3                             = new DoubleConfig("flySpeedPreset3", 0.128, 0, 4);
-        public static final DoubleConfig FLY_SPEED_PRESET_4                             = new DoubleConfig("flySpeedPreset4", 0.32, 0, 4);
+        public static final DoubleConfig FLY_SPEED_PRESET_1                             = new DoubleConfig("flySpeedPreset1", 0.01, 0.0, 4.0);
+        public static final DoubleConfig FLY_SPEED_PRESET_2                             = new DoubleConfig("flySpeedPreset2", 0.064, 0.0, 4.0);
+        public static final DoubleConfig FLY_SPEED_PRESET_3                             = new DoubleConfig("flySpeedPreset3", 0.128, 0.0, 4.0);
+        public static final DoubleConfig FLY_SPEED_PRESET_4                             = new DoubleConfig("flySpeedPreset4", 0.32, 0.0, 4.0);
         public static final DoubleConfig GAMMA_OVERRIDE_VALUE                           = new DoubleConfig("gammaOverrideValue", 16, 0, 32);
         public static final BooleanConfig HAND_RESTOCK_CONTINUOUS                       = new BooleanConfig("handRestockContinuous", false);
         public static final BooleanConfig HAND_RESTOCK_PRE                              = new BooleanConfig("handRestockPre", true);
@@ -254,14 +254,16 @@ public class Configs
 
     public static class Internal
     {
+        public static final DoubleConfig  ACTIVE_FLY_SPEED_OVERRIDE_VALUE   = new DoubleConfig("activeFlySpeedOverrideValue", 0.064, 0.0, 4.0);
         public static final IntegerConfig FLY_SPEED_PRESET                  = new IntegerConfig("flySpeedPreset", 0, 0, 3);
-        public static final DoubleConfig GAMMA_VALUE_ORIGINAL               = new DoubleConfig("gammaValueOriginal", -1, -1, 1000);
+        public static final DoubleConfig  GAMMA_VALUE_ORIGINAL              = new DoubleConfig("gammaValueOriginal", -1, -1, 1000);
         public static final IntegerConfig HOTBAR_SCROLL_CURRENT_ROW         = new IntegerConfig("hotbarScrollCurrentRow", 2, 0, 2);
-        public static final DoubleConfig SLIME_BLOCK_SLIPPERINESS_ORIGINAL  = new DoubleConfig("slimeBlockSlipperinessOriginal", 0.8, 0, 1);
-        public static final DoubleConfig SNAP_AIM_LAST_PITCH                = new DoubleConfig("snapAimLastPitch", 0, -135, 135);
-        public static final DoubleConfig SNAP_AIM_LAST_YAW                  = new DoubleConfig("snapAimLastYaw", 0, 0, 360);
+        public static final DoubleConfig  SLIME_BLOCK_SLIPPERINESS_ORIGINAL = new DoubleConfig("slimeBlockSlipperinessOriginal", 0.8, 0, 1);
+        public static final DoubleConfig  SNAP_AIM_LAST_PITCH               = new DoubleConfig("snapAimLastPitch", 0, -135, 135);
+        public static final DoubleConfig  SNAP_AIM_LAST_YAW                 = new DoubleConfig("snapAimLastYaw", 0, 0, 360);
 
         public static final ImmutableList<ConfigOption<?>> OPTIONS = ImmutableList.of(
+                ACTIVE_FLY_SPEED_OVERRIDE_VALUE,
                 FLY_SPEED_PRESET,
                 GAMMA_VALUE_ORIGINAL,
                 HOTBAR_SCROLL_CURRENT_ROW,
@@ -281,11 +283,6 @@ public class Configs
             BaseConfigOptionCategory.normal(Reference.MOD_INFO, "DisableHotkeys",   DisableToggle.TOGGLE_HOTKEYS),
             BaseConfigOptionCategory.normal(Reference.MOD_INFO, "Internal",         Internal.OPTIONS)
     );
-
-    public static DoubleConfig getActiveFlySpeedConfig()
-    {
-        return getFlySpeedConfig(Configs.Internal.FLY_SPEED_PRESET.getIntegerValue());
-    }
 
     public static DoubleConfig getFlySpeedConfig(int preset)
     {

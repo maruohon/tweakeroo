@@ -119,7 +119,7 @@ public class CameraEntity extends EntityPlayerSP
 
         if (FeatureToggle.TWEAK_FLY_SPEED.getBooleanValue())
         {
-            base = Configs.getActiveFlySpeedConfig().getDoubleValue();
+            base = Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.getDoubleValue();
         }
 
         return base * 10;

@@ -38,7 +38,6 @@ public class Actions
     public static final NamedAction BLINK_DRIVE_TELEPORT_SAME_Y             = register("blinkDriveTeleportSameY", (ctx) -> blinkDriveTeleport(true));
     public static final NamedAction COPY_SIGN_TEXT                          = register("copySignText", Actions::copySignText);
     public static final NamedAction GHOST_BLOCK_REMOVER_MANUAL              = register("ghostBlockRemoverManual", MiscUtils::antiGhostBlock);
-    public static final NamedAction HOTBAR_SCROLL                           = register("hotbarScroll", Actions::hotbarScroll);
     public static final NamedAction HOTBAR_SWAP_ROW_1                       = register("hotbarSwapRow1", (ctx) -> hotbarSwapRow(1, ctx));
     public static final NamedAction HOTBAR_SWAP_ROW_2                       = register("hotbarSwapRow2", (ctx) -> hotbarSwapRow(2, ctx));
     public static final NamedAction HOTBAR_SWAP_ROW_3                       = register("hotbarSwapRow3", (ctx) -> hotbarSwapRow(3, ctx));
@@ -50,10 +49,6 @@ public class Actions
     public static final NamedAction SET_BREAKING_RESTRICTION_MODE_LAYER     = register("setBreakingRestrictionModeLayer", () -> setBreakingRestrictionMode(PlacementRestrictionMode.LAYER));
     public static final NamedAction SET_BREAKING_RESTRICTION_MODE_LINE      = register("setBreakingRestrictionModeLine", () -> setBreakingRestrictionMode(PlacementRestrictionMode.LINE));
     public static final NamedAction SET_BREAKING_RESTRICTION_MODE_PLANE     = register("setBreakingRestrictionModePlane", () -> setBreakingRestrictionMode(PlacementRestrictionMode.PLANE));
-    public static final NamedAction SET_FLY_SPEED_PRESET_1                  = register("setFlySpeedPreset1", () -> setFlySpeedPreset(1));
-    public static final NamedAction SET_FLY_SPEED_PRESET_2                  = register("setFlySpeedPreset2", () -> setFlySpeedPreset(2));
-    public static final NamedAction SET_FLY_SPEED_PRESET_3                  = register("setFlySpeedPreset3", () -> setFlySpeedPreset(3));
-    public static final NamedAction SET_FLY_SPEED_PRESET_4                  = register("setFlySpeedPreset4", () -> setFlySpeedPreset(4));
     public static final NamedAction SET_PLACEMENT_RESTRICTION_MODE_COLUMN   = register("setPlacementRestrictionModeColumn", () -> setPlacementRestrictionMode(PlacementRestrictionMode.COLUMN));
     public static final NamedAction SET_PLACEMENT_RESTRICTION_MODE_DIAGONAL = register("setPlacementRestrictionModeDiagonal", () -> setPlacementRestrictionMode(PlacementRestrictionMode.DIAGONAL));
     public static final NamedAction SET_PLACEMENT_RESTRICTION_MODE_FACE     = register("setPlacementRestrictionModeFace", () -> setPlacementRestrictionMode(PlacementRestrictionMode.FACE));
@@ -77,6 +72,12 @@ public class Actions
             ActionUtils.registerBooleanConfigActions(Reference.MOD_INFO, feature.getBooleanConfig(), feature.getKeyBind());
         }
 
+        register("hotbarScroll", Actions::hotbarScroll);
+        register("setFlySpeedPreset1", () -> setFlySpeedPreset(1));
+        register("setFlySpeedPreset2", () -> setFlySpeedPreset(2));
+        register("setFlySpeedPreset3", () -> setFlySpeedPreset(3));
+        register("setFlySpeedPreset4", () -> setFlySpeedPreset(4));
+        register("setFlySpeedOverrideValue", Actions::setFlySpeedValue);
         register("zoomActivate", (ctx) -> zoomActivate(true));
         register("zoomDeactivate", (ctx) -> zoomActivate(false));
 
@@ -191,10 +192,33 @@ public class Actions
         return ActionResult.SUCCESS;
     }
 
+    public static ActionResult setFlySpeedValue(ActionContext ctx, String str)
+    {
+        try
+        {
+            double speed = Double.parseDouble(str);
+            Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.setDoubleValue(speed);
+            // Apply possible clamping
+            speed = Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.getFloatValue();
+            String strSpeed = String.format("%.3f", speed);
+            MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_non_preset_value_to", strSpeed);
+            return ActionResult.SUCCESS;
+        }
+        catch (Exception ignore)
+        {
+            MessageUtils.printCustomActionbarMessage("tweakeroo.message.error.invalid_fly_speed_value", str);
+            return ActionResult.FAIL;
+        }
+    }
+
     public static ActionResult setFlySpeedPreset(int preset)
     {
-        Configs.Internal.FLY_SPEED_PRESET.setValue(preset - 1);
-        String strSpeed = String.format("%.3f", Configs.getActiveFlySpeedConfig().getFloatValue());
+        float speed = Configs.getFlySpeedConfig(preset - 1).getFloatValue();
+        Configs.Internal.FLY_SPEED_PRESET.setIntegerValue(preset - 1);
+        Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.setDoubleValue(speed);
+        // Apply possible clamping
+        speed = Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.getFloatValue();
+        String strSpeed = String.format("%.3f", speed);
         MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", preset, strSpeed);
         return ActionResult.SUCCESS;
     }

@@ -21,7 +21,7 @@ public abstract class MixinPlayerCapabilities
         if (FeatureToggle.TWEAK_FLY_SPEED.getBooleanValue() &&
             player != null && player.capabilities.allowFlying)
         {
-            cir.setReturnValue(Configs.getActiveFlySpeedConfig().getFloatValue());
+            cir.setReturnValue(Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.getFloatValue());
         }
     }
 }
