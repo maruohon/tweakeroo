@@ -100,12 +100,23 @@ public abstract class MixinEntityRenderer
     @Inject(method = "getFOVModifier", at = @At("HEAD"), cancellable = true)
     private void zoom(float partialTicks, boolean useFOVSetting, CallbackInfoReturnable<Float> cir)
     {
+        if (useFOVSetting == false)
+        {
+            return;
+        }
+
         if (MiscUtils.isZoomActive())
         {
-            cir.setReturnValue((float) Configs.Generic.ZOOM_FOV.getDoubleValue());
+            cir.setReturnValue(Configs.Generic.ZOOM_FOV.getFloatValue());
         }
-        // Don't change the FoV when "sprinting" in Free Camera mode, or with the static FoV tweak active 
-        else if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() || FeatureToggle.TWEAK_STATIC_FOV.getBooleanValue())
+        else if (FeatureToggle.TWEAK_STATIC_FOV.getBooleanValue())
+        {
+            cir.setReturnValue(Configs.Generic.STATIC_FOV.getFloatValue());
+        }
+        // Don't change the FoV when "sprinting" in Free Camera mode
+        // FIXME remove this, this breaks other zoom mods while in Free Camera mode.
+        // FIXME Instead try to prevent the zoom effect from happening some other way while in free cam sprint mode 
+        else if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
         {
             cir.setReturnValue(this.mc.gameSettings.fovSetting);
         }
