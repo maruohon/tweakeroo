@@ -67,7 +67,7 @@ public enum DisableToggle implements ConfigInfo
     {
         this.toggleStatus = new BooleanConfig(name, defaultValue);
         this.toggleHotkey = new HotkeyConfig(name, "", settings);
-        this.toggleHotkey.getKeyBind().setCallback(new ToggleBooleanWithMessageKeyCallback(this.toggleStatus));
+        this.toggleHotkey.getKeyBind().setCallback(new ToggleBooleanWithMessageKeyCallback<>(this.toggleStatus));
 
         String nameLower = name.toLowerCase(Locale.ROOT);
         String nameKey = "tweakeroo.disable_toggle.name." + nameLower;

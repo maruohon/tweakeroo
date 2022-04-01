@@ -2,7 +2,6 @@ package fi.dy.masa.tweakeroo.config;
 
 import java.util.Locale;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
@@ -13,6 +12,7 @@ import fi.dy.masa.malilib.input.KeyBind;
 import fi.dy.masa.malilib.input.KeyBindSettings;
 import fi.dy.masa.malilib.input.callback.HotkeyCallback;
 import fi.dy.masa.malilib.input.callback.ToggleBooleanWithMessageKeyCallback;
+import fi.dy.masa.malilib.overlay.message.MessageHelpers.BooleanConfigMessageFactory;
 import fi.dy.masa.malilib.util.data.ModInfo;
 import fi.dy.masa.tweakeroo.Reference;
 
@@ -132,9 +132,9 @@ public enum FeatureToggle implements ConfigInfo
      * This will replace the default hotkey callback with the ToggleBooleanWithMessageKeyCallback
      * variant that takes in the message factory
      */
-    public void setSpecialToggleMessageFactory(@Nullable Function<BooleanConfig, String> messageFactory)
+    public void setSpecialToggleMessageFactory(@Nullable BooleanConfigMessageFactory messageFactory)
     {
-        HotkeyCallback callback = new ToggleBooleanWithMessageKeyCallback(this.toggleStatus, messageFactory);
+        HotkeyCallback callback = new ToggleBooleanWithMessageKeyCallback<>(this.toggleStatus, messageFactory);
         this.toggleHotkey.getKeyBind().setCallback(callback);
     }
 

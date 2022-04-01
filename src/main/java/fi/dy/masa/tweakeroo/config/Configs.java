@@ -121,10 +121,6 @@ public class Configs
         public static final OptionListConfig<SnapAimMode> SNAP_AIM_MODE                             = new OptionListConfig<>("snapAimMode", SnapAimMode.YAW, SnapAimMode.VALUES);
 
         public static final ImmutableList<ConfigOption<?>> OPTIONS = ImmutableList.of(
-                CARPET_ACCURATE_PLACEMENT_PROTOCOL,
-                FREE_CAMERA_PLAYER_INPUTS,
-                FREE_CAMERA_PLAYER_MOVEMENT,
-
                 AFTER_CLICKER_CLICK_COUNT,
                 BLOCK_BREAKING_PARTICLE_LIMIT,
                 BLOCK_BREAKING_PARTICLE_SCALE,
@@ -132,6 +128,7 @@ public class Configs
                 BLOCK_REACH_DISTANCE,
                 BREAKING_GRID_SIZE,
                 BREAKING_RESTRICTION_MODE,
+                CARPET_ACCURATE_PLACEMENT_PROTOCOL,
                 CHAT_BACKGROUND_COLOR,
                 CHAT_TIME_FORMAT,
                 CHUNK_RENDER_TIMEOUT,
@@ -149,6 +146,8 @@ public class Configs
                 FLY_SPEED_PRESET_2,
                 FLY_SPEED_PRESET_3,
                 FLY_SPEED_PRESET_4,
+                FREE_CAMERA_PLAYER_INPUTS,
+                FREE_CAMERA_PLAYER_MOVEMENT,
                 GAMMA_OVERRIDE_VALUE,
                 HAND_RESTOCK_CONTINUOUS,
                 HAND_RESTOCK_PRE,

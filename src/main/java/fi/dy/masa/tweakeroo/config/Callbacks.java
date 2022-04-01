@@ -8,7 +8,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import fi.dy.masa.malilib.action.Action;
 import fi.dy.masa.malilib.config.ValueChangeCallback;
-import fi.dy.masa.malilib.config.option.BooleanConfig;
+import fi.dy.masa.malilib.config.option.BaseGenericConfig;
 import fi.dy.masa.malilib.config.option.DoubleConfig;
 import fi.dy.masa.malilib.config.option.IntegerConfig;
 import fi.dy.masa.malilib.config.option.OptionListConfig;
@@ -16,9 +16,11 @@ import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.input.KeyAction;
 import fi.dy.masa.malilib.input.callback.AdjustableValueHotkeyCallback;
 import fi.dy.masa.malilib.overlay.message.MessageHelpers;
+import fi.dy.masa.malilib.overlay.message.MessageHelpers.SimpleBooleanConfigMessageFactory;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.malilib.util.data.BooleanStorage;
 import fi.dy.masa.tweakeroo.feature.Actions;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
@@ -182,11 +184,8 @@ public class Callbacks
                                               String adjustMessageKey)
     {
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.createClamped(feature.getBooleanConfig(), intConfig)
-                 .setToggleMessageFactory((cfg) -> {
-                     if (cfg.getBooleanValue()) { return StringUtils.translate(toggleMessageKey, intConfig.getStringValue()); }
-                     else { return MessageHelpers.getBasicBooleanConfigToggleMessage(cfg); }
-                 })
-                 .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, intConfig.getStringValue()));
+                .setToggleMessageFactory(new SimpleBooleanConfigMessageFactory(toggleMessageKey, intConfig::getStringValue))
+                .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, intConfig.getStringValue()));
         feature.setHotkeyCallback(callback);
     }
 
@@ -197,10 +196,7 @@ public class Callbacks
                                               DoubleSupplier multiplier)
     {
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.createClamped(feature.getBooleanConfig(), doubleConfig, multiplier)
-                .setToggleMessageFactory((cfg) -> {
-                    if (cfg.getBooleanValue()) { return StringUtils.translate(toggleMessageKey, TWO_DIGITS.format(doubleConfig.getDoubleValue())); }
-                    else { return MessageHelpers.getBasicBooleanConfigToggleMessage(cfg); }
-                })
+                .setToggleMessageFactory(new SimpleBooleanConfigMessageFactory(toggleMessageKey, () -> TWO_DIGITS.format(doubleConfig.getDoubleValue())))
                 .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, TWO_DIGITS.format(doubleConfig.getDoubleValue())));
         feature.setHotkeyCallback(callback);
     }
@@ -211,11 +207,8 @@ public class Callbacks
                                               String adjustMessageKey)
     {
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.create(feature.getBooleanConfig(), config)
-                 .setToggleMessageFactory((cfg) -> {
-                     if (cfg.getBooleanValue()) { return StringUtils.translate(toggleMessageKey, config.getValue().getDisplayName()); }
-                     else { return MessageHelpers.getBasicBooleanConfigToggleMessage(cfg); }
-                 })
-                 .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, config.getValue().getDisplayName()));
+                .setToggleMessageFactory(new SimpleBooleanConfigMessageFactory(toggleMessageKey, () -> config.getValue().getDisplayName()))
+                .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, config.getValue().getDisplayName()));
         feature.setHotkeyCallback(callback);
     }
 
@@ -226,7 +219,8 @@ public class Callbacks
                 .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", preset, String.format("%.4f", config.getDoubleValue())));
     }
 
-    private static String getFlySpeedToggleMessage(BooleanConfig config)
+    private static <CFG extends BaseGenericConfig<?> & BooleanStorage>
+    String getFlySpeedToggleMessage(CFG config)
     {
         if (config.getBooleanValue())
         {
@@ -250,7 +244,8 @@ public class Callbacks
         }
     }
 
-    private static String getSnapAimToggleMessage(BooleanConfig config)
+    private static <CFG extends BaseGenericConfig<?> & BooleanStorage>
+    String getSnapAimToggleMessage(CFG config)
     {
         if (config.getBooleanValue())
         {
@@ -279,7 +274,8 @@ public class Callbacks
         }
     }
 
-    private static String getZoomToggleMessage(BooleanConfig config)
+    private static <CFG extends BaseGenericConfig<?> & BooleanStorage>
+    String getZoomToggleMessage(CFG config)
     {
         if (config.getBooleanValue())
         {
