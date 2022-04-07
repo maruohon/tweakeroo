@@ -37,8 +37,8 @@ public class InitHandler implements InitializationHandler
         Registry.CONFIG_WIDGET.registerConfigWidgetFactory(FeatureToggle.class, FeatureToggleConfigWidget::new);
         Registry.CONFIG_WIDGET.registerConfigWidgetFactory(DisableToggle.class, DisableToggleConfigWidget::new);
 
-        Registry.CONFIG_WIDGET.registerConfigSearchInfo(FeatureToggle.class, new ConfigSearchInfo<FeatureToggle>(true, true).setBooleanConfigGetter(FeatureToggle::getBooleanConfig).setKeyBindGetter(FeatureToggle::getKeyBind));
-        Registry.CONFIG_WIDGET.registerConfigSearchInfo(DisableToggle.class, new ConfigSearchInfo<DisableToggle>(true, true).setBooleanConfigGetter(DisableToggle::getBooleanConfig).setKeyBindGetter(DisableToggle::getKeyBind));
+        Registry.CONFIG_WIDGET.registerConfigSearchInfo(FeatureToggle.class, new ConfigSearchInfo<FeatureToggle>(true, true).setBooleanStorageGetter(FeatureToggle::getBooleanConfig).setKeyBindGetter(FeatureToggle::getKeyBind));
+        Registry.CONFIG_WIDGET.registerConfigSearchInfo(DisableToggle.class, new ConfigSearchInfo<DisableToggle>(true, true).setBooleanStorageGetter(DisableToggle::getBooleanConfig).setKeyBindGetter(DisableToggle::getKeyBind));
 
         Registry.CONFIG_STATUS_WIDGET.registerConfigStatusWidgetFactory(DisableToggle.class, DisableConfigStatusWidget::new, "tweakeroo:csi_value_disable_toggle");
         Registry.CONFIG_STATUS_WIDGET.registerConfigStatusWidgetFactory(FeatureToggle.class, TweakConfigStatusWidget::new, "tweakeroo:csi_value_tweak_toggle");
