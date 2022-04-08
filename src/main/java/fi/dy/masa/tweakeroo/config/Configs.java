@@ -278,8 +278,8 @@ public class Configs
             BaseConfigOptionCategory.normal(Reference.MOD_INFO, "TweakToggles",     FeatureToggle.TOGGLE_CONFIGS),
             BaseConfigOptionCategory.normal(Reference.MOD_INFO, "TweakHotkeys",     FeatureToggle.TOGGLE_HOTKEYS),
             BaseConfigOptionCategory.normal(Reference.MOD_INFO, "GenericHotkeys",   Hotkeys.HOTKEY_LIST),
-            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "DisableToggles",   DisableToggle.TOGGLE_CONFIGS),
-            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "DisableHotkeys",   DisableToggle.TOGGLE_HOTKEYS),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "YeetToggles",      DisableToggle.TOGGLE_CONFIGS),
+            BaseConfigOptionCategory.normal(Reference.MOD_INFO, "YeetHotkeys",      DisableToggle.TOGGLE_HOTKEYS),
             BaseConfigOptionCategory.normal(Reference.MOD_INFO, "Internal",         Internal.OPTIONS)
     );
 

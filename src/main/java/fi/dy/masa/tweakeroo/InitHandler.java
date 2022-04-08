@@ -1,7 +1,11 @@
 package fi.dy.masa.tweakeroo;
 
+import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.tuple.Pair;
 import fi.dy.masa.malilib.config.JsonModConfig;
 import fi.dy.masa.malilib.config.JsonModConfig.ConfigDataUpdater;
+import fi.dy.masa.malilib.config.util.ConfigUpdateUtils.ChainedConfigDataUpdater;
+import fi.dy.masa.malilib.config.util.ConfigUpdateUtils.ConfigCategoryRenamer;
 import fi.dy.masa.malilib.config.util.ConfigUpdateUtils.KeyBindSettingsResetter;
 import fi.dy.masa.malilib.event.InitializationHandler;
 import fi.dy.masa.malilib.gui.config.ConfigSearchInfo;
@@ -28,7 +32,9 @@ public class InitHandler implements InitializationHandler
     public void registerModHandlers()
     {
         // Reset all KeyBindSettings when updating to the first post-malilib-refactor version
-        ConfigDataUpdater updater = new KeyBindSettingsResetter(TweakerooHotkeyProvider.INSTANCE::getAllHotkeys, 1);
+        ConfigDataUpdater keyUpdater = new KeyBindSettingsResetter(TweakerooHotkeyProvider.INSTANCE::getAllHotkeys, 0);
+        ConfigDataUpdater categoryUpdater = new ConfigCategoryRenamer(ImmutableList.of(Pair.of("DisableToggles", "YeetToggles"), Pair.of("DisableHotkeys", "YeetHotkeys")), 0, 0);
+        ConfigDataUpdater updater = new ChainedConfigDataUpdater(categoryUpdater, keyUpdater);
         Registry.CONFIG_MANAGER.registerConfigHandler(JsonModConfig.createJsonModConfig(Reference.MOD_INFO, Configs.CURRENT_VERSION, Configs.CATEGORIES, updater));
 
         Registry.CONFIG_SCREEN.registerConfigScreenFactory(Reference.MOD_INFO, ConfigScreen::create);
