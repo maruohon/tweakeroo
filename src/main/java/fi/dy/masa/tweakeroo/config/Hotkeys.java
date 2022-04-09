@@ -3,6 +3,7 @@ package fi.dy.masa.tweakeroo.config;
 import java.util.List;
 import com.google.common.collect.ImmutableList;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
+import fi.dy.masa.malilib.input.Context;
 import fi.dy.masa.malilib.input.KeyBindSettings;
 
 public class Hotkeys
@@ -22,10 +23,12 @@ public class Hotkeys
     public static final HotkeyConfig FLEXIBLE_BLOCK_PLACEMENT_ADJACENT  = new HotkeyConfig("flexibleBlockPlacementAdjacent",    "",         KeyBindSettings.INGAME_MODIFIER);
     public static final HotkeyConfig FLEXIBLE_BLOCK_PLACEMENT_OFFSET    = new HotkeyConfig("flexibleBlockPlacementOffset",      "L_CTRL",   KeyBindSettings.INGAME_MODIFIER);
     public static final HotkeyConfig FLEXIBLE_BLOCK_PLACEMENT_ROTATION  = new HotkeyConfig("flexibleBlockPlacementRotation",    "L_ALT",    KeyBindSettings.INGAME_MODIFIER);
-    public static final HotkeyConfig FLY_PRESET_1                       = new HotkeyConfig("flyPreset1",                        "",         KeyBindSettings.INGAME_BOTH);
-    public static final HotkeyConfig FLY_PRESET_2                       = new HotkeyConfig("flyPreset2",                        "",         KeyBindSettings.INGAME_BOTH);
-    public static final HotkeyConfig FLY_PRESET_3                       = new HotkeyConfig("flyPreset3",                        "",         KeyBindSettings.INGAME_BOTH);
-    public static final HotkeyConfig FLY_PRESET_4                       = new HotkeyConfig("flyPreset4",                        "",         KeyBindSettings.INGAME_BOTH);
+    public static final HotkeyConfig FLY_PRESET_1                       = new HotkeyConfig("flySpeedPreset1",                   "",         KeyBindSettings.INGAME_BOTH);
+    public static final HotkeyConfig FLY_PRESET_2                       = new HotkeyConfig("flySpeedPreset2",                   "",         KeyBindSettings.INGAME_BOTH);
+    public static final HotkeyConfig FLY_PRESET_3                       = new HotkeyConfig("flySpeedPreset3",                   "",         KeyBindSettings.INGAME_BOTH);
+    public static final HotkeyConfig FLY_PRESET_4                       = new HotkeyConfig("flySpeedPreset4",                   "",         KeyBindSettings.INGAME_BOTH);
+    public static final HotkeyConfig FLY_PRESET_5                       = new HotkeyConfig("flySpeedPreset5",                   "",         KeyBindSettings.INGAME_BOTH);
+    public static final HotkeyConfig FLY_PRESET_6                       = new HotkeyConfig("flySpeedPreset6",                   "",         KeyBindSettings.INGAME_BOTH);
     public static final HotkeyConfig GHOST_BLOCK_REMOVER                = new HotkeyConfig("ghostBlockRemover",                 "");
     public static final HotkeyConfig HOTBAR_SCROLL                      = new HotkeyConfig("hotbarScroll",                      "",         KeyBindSettings.INGAME_RELEASE);
     public static final HotkeyConfig HOTBAR_SWAP_BASE                   = new HotkeyConfig("hotbarSwapBase",                    "",         KeyBindSettings.INGAME_MODIFIER);
@@ -42,7 +45,7 @@ public class Hotkeys
     public static final HotkeyConfig PLACEMENT_RESTRICTION_MODE_LAYER   = new HotkeyConfig("placementRestrictionModeLayer",     "Z,6");
     public static final HotkeyConfig PLACEMENT_RESTRICTION_MODE_LINE    = new HotkeyConfig("placementRestrictionModeLine",      "Z,4");
     public static final HotkeyConfig PLACEMENT_RESTRICTION_MODE_PLANE   = new HotkeyConfig("placementRestrictionModePlane",     "Z,1");
-    public static final HotkeyConfig RELOAD_LANGUAGE_PACKS              = new HotkeyConfig("reloadLanguagePacks",               "");
+    public static final HotkeyConfig RELOAD_LANGUAGE_PACKS              = new HotkeyConfig("reloadLanguagePacks",               "",         KeyBindSettings.builder().context(Context.ANY).build());
     public static final HotkeyConfig SKIP_ALL_RENDERING                 = new HotkeyConfig("skipAllRendering",                  "");
     public static final HotkeyConfig SKIP_WORLD_RENDERING               = new HotkeyConfig("skipWorldRendering",                "");
     public static final HotkeyConfig TOGGLE_GRAB_CURSOR                 = new HotkeyConfig("toggleGrabCursor",                  "");
@@ -69,6 +72,8 @@ public class Hotkeys
             FLY_PRESET_2,
             FLY_PRESET_3,
             FLY_PRESET_4,
+            FLY_PRESET_5,
+            FLY_PRESET_6,
             GHOST_BLOCK_REMOVER,
             HOTBAR_SCROLL,
             HOTBAR_SWAP_BASE,

@@ -111,6 +111,8 @@ public class Callbacks
         Hotkeys.FLY_PRESET_2.setHotkeyCallback(createFlySpeedAdjustCallback(2, Configs.Generic.FLY_SPEED_PRESET_2, (ctx) -> Actions.setFlySpeedPreset(2)));
         Hotkeys.FLY_PRESET_3.setHotkeyCallback(createFlySpeedAdjustCallback(3, Configs.Generic.FLY_SPEED_PRESET_3, (ctx) -> Actions.setFlySpeedPreset(3)));
         Hotkeys.FLY_PRESET_4.setHotkeyCallback(createFlySpeedAdjustCallback(4, Configs.Generic.FLY_SPEED_PRESET_4, (ctx) -> Actions.setFlySpeedPreset(4)));
+        Hotkeys.FLY_PRESET_5.setHotkeyCallback(createFlySpeedAdjustCallback(5, Configs.Generic.FLY_SPEED_PRESET_5, (ctx) -> Actions.setFlySpeedPreset(5)));
+        Hotkeys.FLY_PRESET_6.setHotkeyCallback(createFlySpeedAdjustCallback(6, Configs.Generic.FLY_SPEED_PRESET_6, (ctx) -> Actions.setFlySpeedPreset(6)));
         Hotkeys.GHOST_BLOCK_REMOVER.createCallbackForAction(Actions.GHOST_BLOCK_REMOVER_MANUAL);
         Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(AdjustableValueHotkeyCallback.createWrapping(null, Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW, 0, 2)
                                                     .setAdjustmentEnabledCondition(FeatureToggle.TWEAK_HOTBAR_SCROLL::getBooleanValue)
