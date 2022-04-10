@@ -22,6 +22,7 @@ import fi.dy.masa.malilib.config.option.HotkeyedBooleanConfig;
 import fi.dy.masa.malilib.config.option.IntegerConfig;
 import fi.dy.masa.malilib.config.option.OptionListConfig;
 import fi.dy.masa.malilib.config.option.StringConfig;
+import fi.dy.masa.malilib.config.option.Vec2iConfig;
 import fi.dy.masa.malilib.config.option.list.BlackWhiteListConfig;
 import fi.dy.masa.malilib.config.option.list.EquipmentSlotListConfig;
 import fi.dy.masa.malilib.config.option.list.IdentifierListConfig;
@@ -77,8 +78,7 @@ public class Configs
         public static final BooleanConfig HANGABLE_ENTITY_BYPASS_INVERSE        = new BooleanConfig("hangableEntityBypassInverse", false);
         public static final IntegerConfig HOTBAR_SLOT_CYCLE_MAX                 = new IntegerConfig("hotbarSlotCycleMax", 2, 1, 9);
         public static final IntegerConfig HOTBAR_SLOT_RANDOMIZER_MAX            = new IntegerConfig("hotbarSlotRandomizerMax", 5, 1, 9);
-        public static final IntegerConfig HOTBAR_SWAP_OVERLAY_OFFSET_X          = new IntegerConfig("hotbarSwapOverlayOffsetX", 4);
-        public static final IntegerConfig HOTBAR_SWAP_OVERLAY_OFFSET_Y          = new IntegerConfig("hotbarSwapOverlayOffsetY", 4);
+        public static final Vec2iConfig   HOTBAR_SWAP_OVERLAY_OFFSET            = new Vec2iConfig(  "hotbarSwapOverlayOffset", 4, 4, -8192, 8192);
         public static final IntegerConfig ITEM_PREVIEW_Z                        = new IntegerConfig("itemPreviewZ", 400, 0, 4096);
         public static final IntegerConfig ITEM_SWAP_DURABILITY_THRESHOLD        = new IntegerConfig("itemSwapDurabilityThreshold", 20, 0, 10000);
         public static final BooleanConfig LAVA_VISIBILITY_OPTIFINE              = new BooleanConfig("lavaVisibilityOptifineCompat", true);
@@ -160,8 +160,7 @@ public class Configs
                 HOTBAR_SLOT_CYCLE_MAX,
                 HOTBAR_SLOT_RANDOMIZER_MAX,
                 HOTBAR_SWAP_OVERLAY_ALIGNMENT,
-                HOTBAR_SWAP_OVERLAY_OFFSET_X,
-                HOTBAR_SWAP_OVERLAY_OFFSET_Y,
+                HOTBAR_SWAP_OVERLAY_OFFSET,
                 ITEM_PREVIEW_Z,
                 ITEM_SWAP_DURABILITY_THRESHOLD,
                 LAVA_VISIBILITY_OPTIFINE,

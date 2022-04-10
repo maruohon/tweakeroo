@@ -26,6 +26,7 @@ import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.inventory.InventoryView;
 import fi.dy.masa.malilib.util.inventory.SlicedInventoryView;
 import fi.dy.masa.malilib.util.inventory.VanillaInventoryView;
+import fi.dy.masa.malilib.util.position.Vec2i;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
@@ -42,8 +43,9 @@ public class RenderUtils
         {
             final int scaledWidth = GuiUtils.getScaledWindowWidth();
             final int scaledHeight = GuiUtils.getScaledWindowHeight();
-            final int offX = Configs.Generic.HOTBAR_SWAP_OVERLAY_OFFSET_X.getIntegerValue();
-            final int offY = Configs.Generic.HOTBAR_SWAP_OVERLAY_OFFSET_Y.getIntegerValue();
+            Vec2i val = Configs.Generic.HOTBAR_SWAP_OVERLAY_OFFSET.getValue();
+            final int offX = val.x;
+            final int offY = val.y;
             int startX = offX;
             int startY = offY;
 
