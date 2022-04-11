@@ -134,7 +134,7 @@ public enum FeatureToggle implements ConfigInfo
      */
     public void setSpecialToggleMessageFactory(@Nullable BooleanConfigMessageFactory messageFactory)
     {
-        HotkeyCallback callback = new ToggleBooleanWithMessageKeyCallback<>(this.toggleStatus, messageFactory);
+        HotkeyCallback callback = new ToggleBooleanWithMessageKeyCallback(this.toggleStatus, messageFactory);
         this.toggleHotkey.getKeyBind().setCallback(callback);
     }
 

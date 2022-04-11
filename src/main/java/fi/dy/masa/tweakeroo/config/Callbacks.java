@@ -8,7 +8,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import fi.dy.masa.malilib.action.Action;
 import fi.dy.masa.malilib.config.ValueChangeCallback;
-import fi.dy.masa.malilib.config.option.BaseGenericConfig;
+import fi.dy.masa.malilib.config.option.BooleanContainingConfig;
 import fi.dy.masa.malilib.config.option.DoubleConfig;
 import fi.dy.masa.malilib.config.option.IntegerConfig;
 import fi.dy.masa.malilib.config.option.OptionListConfig;
@@ -20,7 +20,6 @@ import fi.dy.masa.malilib.overlay.message.MessageHelpers.SimpleBooleanConfigMess
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.malilib.util.data.BooleanStorage;
 import fi.dy.masa.tweakeroo.feature.Actions;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
@@ -221,8 +220,7 @@ public class Callbacks
                 .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", preset, String.format("%.4f", config.getDoubleValue())));
     }
 
-    private static <CFG extends BaseGenericConfig<?> & BooleanStorage>
-    String getFlySpeedToggleMessage(CFG config)
+    private static String getFlySpeedToggleMessage(BooleanContainingConfig<?> config)
     {
         if (config.getBooleanValue())
         {
@@ -246,8 +244,7 @@ public class Callbacks
         }
     }
 
-    private static <CFG extends BaseGenericConfig<?> & BooleanStorage>
-    String getSnapAimToggleMessage(CFG config)
+    private static String getSnapAimToggleMessage(BooleanContainingConfig<?> config)
     {
         if (config.getBooleanValue())
         {
@@ -276,8 +273,7 @@ public class Callbacks
         }
     }
 
-    private static <CFG extends BaseGenericConfig<?> & BooleanStorage>
-    String getZoomToggleMessage(CFG config)
+    private static String getZoomToggleMessage(BooleanContainingConfig<?> config)
     {
         if (config.getBooleanValue())
         {
