@@ -13,6 +13,7 @@ import fi.dy.masa.malilib.config.option.DoubleConfig;
 import fi.dy.masa.malilib.config.option.IntegerConfig;
 import fi.dy.masa.malilib.config.option.OptionListConfig;
 import fi.dy.masa.malilib.gui.BaseScreen;
+import fi.dy.masa.malilib.input.Hotkey;
 import fi.dy.masa.malilib.input.KeyAction;
 import fi.dy.masa.malilib.input.callback.AdjustableValueHotkeyCallback;
 import fi.dy.masa.malilib.overlay.message.MessageHelpers;
@@ -106,12 +107,12 @@ public class Callbacks
         Hotkeys.BREAKING_RESTRICTION_MODE_LINE.createCallbackForAction(Actions.SET_BREAKING_RESTRICTION_MODE_LINE);
         Hotkeys.BREAKING_RESTRICTION_MODE_PLANE.createCallbackForAction(Actions.SET_BREAKING_RESTRICTION_MODE_PLANE);
         Hotkeys.COPY_SIGN_TEXT.createCallbackForAction(Actions.COPY_SIGN_TEXT);
-        Hotkeys.FLY_PRESET_1.setHotkeyCallback(createFlySpeedAdjustCallback(1, Configs.Generic.FLY_SPEED_PRESET_1, (ctx) -> Actions.setFlySpeedPreset(1)));
-        Hotkeys.FLY_PRESET_2.setHotkeyCallback(createFlySpeedAdjustCallback(2, Configs.Generic.FLY_SPEED_PRESET_2, (ctx) -> Actions.setFlySpeedPreset(2)));
-        Hotkeys.FLY_PRESET_3.setHotkeyCallback(createFlySpeedAdjustCallback(3, Configs.Generic.FLY_SPEED_PRESET_3, (ctx) -> Actions.setFlySpeedPreset(3)));
-        Hotkeys.FLY_PRESET_4.setHotkeyCallback(createFlySpeedAdjustCallback(4, Configs.Generic.FLY_SPEED_PRESET_4, (ctx) -> Actions.setFlySpeedPreset(4)));
-        Hotkeys.FLY_PRESET_5.setHotkeyCallback(createFlySpeedAdjustCallback(5, Configs.Generic.FLY_SPEED_PRESET_5, (ctx) -> Actions.setFlySpeedPreset(5)));
-        Hotkeys.FLY_PRESET_6.setHotkeyCallback(createFlySpeedAdjustCallback(6, Configs.Generic.FLY_SPEED_PRESET_6, (ctx) -> Actions.setFlySpeedPreset(6)));
+        Hotkeys.FLY_PRESET_1.setHotkeyCallback(createFlySpeedAdjustCallback(1, Hotkeys.FLY_PRESET_1, Configs.Generic.FLY_SPEED_PRESET_1, ctx -> Actions.setFlySpeedPreset(ctx, 1)));
+        Hotkeys.FLY_PRESET_2.setHotkeyCallback(createFlySpeedAdjustCallback(2, Hotkeys.FLY_PRESET_2, Configs.Generic.FLY_SPEED_PRESET_2, ctx -> Actions.setFlySpeedPreset(ctx, 2)));
+        Hotkeys.FLY_PRESET_3.setHotkeyCallback(createFlySpeedAdjustCallback(3, Hotkeys.FLY_PRESET_3, Configs.Generic.FLY_SPEED_PRESET_3, ctx -> Actions.setFlySpeedPreset(ctx, 3)));
+        Hotkeys.FLY_PRESET_4.setHotkeyCallback(createFlySpeedAdjustCallback(4, Hotkeys.FLY_PRESET_4, Configs.Generic.FLY_SPEED_PRESET_4, ctx -> Actions.setFlySpeedPreset(ctx, 4)));
+        Hotkeys.FLY_PRESET_5.setHotkeyCallback(createFlySpeedAdjustCallback(5, Hotkeys.FLY_PRESET_5, Configs.Generic.FLY_SPEED_PRESET_5, ctx -> Actions.setFlySpeedPreset(ctx, 5)));
+        Hotkeys.FLY_PRESET_6.setHotkeyCallback(createFlySpeedAdjustCallback(6, Hotkeys.FLY_PRESET_6, Configs.Generic.FLY_SPEED_PRESET_6, ctx -> Actions.setFlySpeedPreset(ctx, 6)));
         Hotkeys.GHOST_BLOCK_REMOVER.createCallbackForAction(Actions.GHOST_BLOCK_REMOVER_MANUAL);
         Hotkeys.HOTBAR_SCROLL.setHotkeyCallback(AdjustableValueHotkeyCallback.createWrapping(null, Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW, 0, 2)
                                                     .setAdjustmentEnabledCondition(FeatureToggle.TWEAK_HOTBAR_SCROLL::getBooleanValue)
@@ -133,8 +134,9 @@ public class Callbacks
                                                     .setToggleMessageFactory(Callbacks::getZoomToggleMessage)
                                                     .setHotkeyCallback((a, k) -> Actions.zoomActivate(a == KeyAction.PRESS))
                                                     .addAdjustListener(MiscUtils::onZoomActivated)
-                                                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to",
-                                                                                                                      String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
+                                                    .addAdjustListener(() -> MessageUtils.printMessage(Hotkeys.ZOOM_ACTIVATE,
+                                                                                                       "tweakeroo.message.set_zoom_fov_to",
+                                                                                                       String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
         Hotkeys.SKIP_ALL_RENDERING.createCallbackForAction(Actions.TOGGLE_SKIP_ALL_RENDERING);
         Hotkeys.SKIP_WORLD_RENDERING.createCallbackForAction(Actions.TOGGLE_SKIP_WORLD_RENDERING);
 
@@ -158,7 +160,10 @@ public class Callbacks
                 FeatureToggle.TWEAK_FLY_SPEED.getBooleanConfig(), () -> Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE,
                 0, 4.0, () -> BaseScreen.isCtrlDown() ? 0.02 : 0.005)
                     .setToggleMessageFactory(Callbacks::getFlySpeedToggleMessage)
-                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", String.format("%.4f", Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.getDoubleValue()))));
+                    .addAdjustListener(() -> MessageUtils.printMessage(FeatureToggle.TWEAK_FLY_SPEED.getHotkeyConfig(),
+                                                                       "tweakeroo.message.set_fly_speed_to",
+                                                                       Configs.Internal.FLY_SPEED_PRESET.getIntegerValue() + 1,
+                                                                       String.format("%.4f", Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.getDoubleValue()))));
 
         FeatureToggle.TWEAK_SNAP_AIM.setHotkeyCallback(AdjustableValueHotkeyCallback.createClampedDoubleDelegate(
                 FeatureToggle.TWEAK_SNAP_AIM.getBooleanConfig(),
@@ -169,14 +174,16 @@ public class Callbacks
                     SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
                     DoubleConfig config = mode == SnapAimMode.PITCH ? Configs.Generic.SNAP_AIM_PITCH_STEP : Configs.Generic.SNAP_AIM_YAW_STEP;
                     String key = mode == SnapAimMode.PITCH ? "tweakeroo.message.set_snap_aim_pitch_step_to" : "tweakeroo.message.set_snap_aim_yaw_step_to";
-                    MessageUtils.printCustomActionbarMessage(key, config.getStringValue());
+                    MessageUtils.printMessage(FeatureToggle.TWEAK_SNAP_AIM.getHotkeyConfig(), key, config.getStringValue());
                 }));
 
         FeatureToggle.TWEAK_ZOOM.setHotkeyCallback(AdjustableValueHotkeyCallback.createClamped(
                 FeatureToggle.TWEAK_ZOOM.getBooleanConfig(), Configs.Generic.ZOOM_FOV, () -> BaseScreen.isCtrlDown() ? 5.0 : 1.0)
                     .setToggleMessageFactory(Callbacks::getZoomToggleMessage)
                     .addAdjustListener(MiscUtils::onZoomActivated)
-                    .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_zoom_fov_to", String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
+                    .addAdjustListener(() -> MessageUtils.printMessage(FeatureToggle.TWEAK_ZOOM.getHotkeyConfig(),
+                                                                       "tweakeroo.message.set_zoom_fov_to",
+                                                                       String.format("%.1f", Configs.Generic.ZOOM_FOV.getDoubleValue()))));
     }
 
     private static void addAdjustableCallback(FeatureToggle feature,
@@ -186,7 +193,8 @@ public class Callbacks
     {
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.createClamped(feature.getBooleanConfig(), intConfig)
                 .setToggleMessageFactory(new SimpleBooleanConfigMessageFactory(toggleMessageKey, intConfig::getStringValue))
-                .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, intConfig.getStringValue()));
+                .addAdjustListener(() -> MessageUtils.printMessage(feature.getHotkeyConfig(),
+                                                                   adjustMessageKey, intConfig.getStringValue()));
         feature.setHotkeyCallback(callback);
     }
 
@@ -198,7 +206,9 @@ public class Callbacks
     {
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.createClamped(feature.getBooleanConfig(), doubleConfig, multiplier)
                 .setToggleMessageFactory(new SimpleBooleanConfigMessageFactory(toggleMessageKey, () -> TWO_DIGITS.format(doubleConfig.getDoubleValue())))
-                .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, TWO_DIGITS.format(doubleConfig.getDoubleValue())));
+                .addAdjustListener(() -> MessageUtils.printMessage(feature.getHotkeyConfig(),
+                                                                   adjustMessageKey,
+                                                                   TWO_DIGITS.format(doubleConfig.getDoubleValue())));
         feature.setHotkeyCallback(callback);
     }
 
@@ -209,15 +219,17 @@ public class Callbacks
     {
         AdjustableValueHotkeyCallback callback = AdjustableValueHotkeyCallback.create(feature.getBooleanConfig(), config)
                 .setToggleMessageFactory(new SimpleBooleanConfigMessageFactory(toggleMessageKey, () -> config.getValue().getDisplayName()))
-                .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage(adjustMessageKey, config.getValue().getDisplayName()));
+                .addAdjustListener(() -> MessageUtils.printMessage(feature.getHotkeyConfig(),
+                                                                   adjustMessageKey, config.getValue().getDisplayName()));
         feature.setHotkeyCallback(callback);
     }
 
-    private static AdjustableValueHotkeyCallback createFlySpeedAdjustCallback(int preset, DoubleConfig config, Action action)
+    private static AdjustableValueHotkeyCallback createFlySpeedAdjustCallback(int preset, Hotkey hotkey,
+                                                                              DoubleConfig config, Action action)
     {
         return AdjustableValueHotkeyCallback.createClamped(null, config, 0, 4.0, () -> BaseScreen.isCtrlDown() ? 0.1 : 0.005)
                 .setKeyAction(action)
-                .addAdjustListener(() -> MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_to", preset, String.format("%.4f", config.getDoubleValue())));
+                .addAdjustListener(() -> MessageUtils.printMessage(hotkey, "tweakeroo.message.set_fly_speed_to", preset, String.format("%.4f", config.getDoubleValue())));
     }
 
     private static String getFlySpeedToggleMessage(BooleanContainingConfig<?> config)

@@ -17,6 +17,7 @@ import fi.dy.masa.malilib.action.ParameterizedAction;
 import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.listener.EventListener;
 import fi.dy.masa.malilib.overlay.message.MessageDispatcher;
+import fi.dy.masa.malilib.overlay.message.MessageOutput;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.EntityUtils;
 import fi.dy.masa.malilib.util.GameUtils;
@@ -73,10 +74,10 @@ public class Actions
         }
 
         register("hotbarScroll", Actions::hotbarScroll);
-        register("setFlySpeedPreset1", () -> setFlySpeedPreset(1));
-        register("setFlySpeedPreset2", () -> setFlySpeedPreset(2));
-        register("setFlySpeedPreset3", () -> setFlySpeedPreset(3));
-        register("setFlySpeedPreset4", () -> setFlySpeedPreset(4));
+        register("setFlySpeedPreset1", ctx -> setFlySpeedPreset(ctx, 1));
+        register("setFlySpeedPreset2", ctx -> setFlySpeedPreset(ctx, 2));
+        register("setFlySpeedPreset3", ctx -> setFlySpeedPreset(ctx, 3));
+        register("setFlySpeedPreset4", ctx -> setFlySpeedPreset(ctx, 4));
         register("setFlySpeedOverrideValue", Actions::setFlySpeedValue);
         register("zoomActivate", (ctx) -> zoomActivate(true));
         register("zoomDeactivate", (ctx) -> zoomActivate(false));
@@ -211,7 +212,7 @@ public class Actions
         }
     }
 
-    public static ActionResult setFlySpeedPreset(int preset)
+    public static ActionResult setFlySpeedPreset(ActionContext ctx, int preset)
     {
         float speed = Configs.getFlySpeedConfig(preset - 1).getFloatValue();
         Configs.Internal.FLY_SPEED_PRESET.setIntegerValue(preset - 1);
@@ -219,7 +220,10 @@ public class Actions
         // Apply possible clamping
         speed = Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE.getFloatValue();
         String strSpeed = String.format("%.3f", speed);
-        MessageUtils.printCustomActionbarMessage("tweakeroo.message.set_fly_speed_preset_to", preset, strSpeed);
+
+        MessageOutput output = ctx.getMessageOutputOrDefault(MessageOutput.CUSTOM_HOTBAR);
+        MessageUtils.printMessage(output, "tweakeroo.message.set_fly_speed_preset_to", preset, strSpeed);
+
         return ActionResult.SUCCESS;
     }
 
