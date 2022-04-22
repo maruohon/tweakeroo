@@ -146,16 +146,17 @@ public class Callbacks
         public FeatureCallbackGamma(FeatureToggle feature, MinecraftClient mc)
         {
             this.mc = mc;
+            double gamma = this.mc.options.getGamma().getValue();
 
-            if (this.mc.options.gamma <= 1.0F)
+            if (gamma <= 1.0F)
             {
-                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.options.gamma);
+                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(gamma);
             }
 
             // If the feature is enabled on game launch, apply it here
             if (feature.getBooleanValue())
             {
-                this.mc.options.gamma = Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue();
+                this.mc.options.getGamma().setValue(Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue());
             }
         }
 
@@ -164,12 +165,13 @@ public class Callbacks
         {
             if (config.getBooleanValue())
             {
-                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.options.gamma);
-                this.mc.options.gamma = Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue();
+                double gamma = this.mc.options.getGamma().getValue();
+                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(gamma);
+                this.mc.options.getGamma().setValue(Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue());
             }
             else
             {
-                this.mc.options.gamma = (float) Configs.Internal.GAMMA_VALUE_ORIGINAL.getDoubleValue();
+                this.mc.options.getGamma().setValue(Configs.Internal.GAMMA_VALUE_ORIGINAL.getDoubleValue());
             }
         }
     }

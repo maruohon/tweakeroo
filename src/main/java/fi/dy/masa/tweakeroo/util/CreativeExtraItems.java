@@ -4,15 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import javax.annotation.Nullable;
 import com.google.common.collect.ArrayListMultimap;
-import com.mojang.brigadier.StringReader;
 import net.minecraft.block.InfestedBlock;
-import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
-import fi.dy.masa.tweakeroo.Tweakeroo;
 
 public class CreativeExtraItems
 {
@@ -60,6 +57,7 @@ public class CreativeExtraItems
 
     public static ItemStack parseItemFromString(String str)
     {
+        /*
         try
         {
             ItemStringReader reader = new ItemStringReader(new StringReader(str), true);
@@ -77,6 +75,7 @@ public class CreativeExtraItems
         {
             Tweakeroo.logger.warn("Invalid item '{}'", str);
         }
+        */
 
         return ItemStack.EMPTY;
     }

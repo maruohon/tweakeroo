@@ -23,13 +23,11 @@ public abstract class MixinClientWorld extends World
 {
     private MixinClientWorld(MutableWorldProperties properties,
                              RegistryKey<World> registryRef,
-                             RegistryEntry<DimensionType> registryEntry,
-                             Supplier<Profiler> profiler,
-                             boolean isClient,
-                             boolean debugWorld,
-                             long seed)
+                             RegistryEntry<DimensionType> dimension,
+                             Supplier<Profiler> supplier,
+                             boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates)
     {
-        super(properties, registryRef, registryEntry, profiler, isClient, debugWorld, seed);
+        super(properties, registryRef, dimension, supplier, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
     @Inject(method = "tickEntity", at = @At("HEAD"), cancellable = true)

@@ -1,25 +1,14 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.Slice;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BackgroundRenderer;
-import net.minecraft.client.render.Camera;
-import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.renderer.RenderUtils;
 
 @Mixin(BackgroundRenderer.class)
 public abstract class MixinBackgroundRenderer
 {
     private static boolean wasLava;
 
+    /*
     @ModifyConstant(
             method = "applyFog(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/BackgroundRenderer$FogType;FZ)V",
             slice = @Slice(
@@ -57,6 +46,7 @@ public abstract class MixinBackgroundRenderer
 
         return original;
     }
+    */
 
     /*
     @ModifyVariable(
@@ -90,6 +80,7 @@ public abstract class MixinBackgroundRenderer
     }
     */
 
+    /*
     @Inject(method = "applyFog(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/BackgroundRenderer$FogType;FZ)V",
             require = 0,
             at = @At(value = "INVOKE", remap = false,
@@ -112,4 +103,5 @@ public abstract class MixinBackgroundRenderer
             wasLava = false;
         }
     }
+    */
 }

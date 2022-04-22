@@ -9,7 +9,7 @@
 		"IMixinChunkLightProvider",
 		"IMixinClientWorld",
 		"IMixinCommandBlockExecutor",
-		"IMixinHorseBaseEntity",
+		"IMixinAbstractHorseEntity",
 		"IMixinShovelItem",
 		"MixinAbstractClientPlayerEntity",
 		"MixinAbstractInventoryScreen",

@@ -12,7 +12,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 import fi.dy.masa.malilib.util.EntityUtils;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
-import fi.dy.masa.tweakeroo.mixin.IMixinHorseBaseEntity;
+import fi.dy.masa.tweakeroo.mixin.IMixinAbstractHorseEntity;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.RayTraceUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
@@ -164,9 +164,9 @@ public class RenderUtils
             {
                 inv = ((VillagerEntity) entity).getInventory();
             }
-            else if (entity instanceof HorseBaseEntity)
+            else if (entity instanceof AbstractHorseEntity)
             {
-                inv = ((IMixinHorseBaseEntity) entity).getHorseInventory();
+                inv = ((IMixinAbstractHorseEntity) entity).tweakeroo_getHorseInventory();
             }
         }
 
@@ -177,7 +177,7 @@ public class RenderUtils
 
         if (inv != null && inv.size() > 0)
         {
-            final boolean isHorse = (entityLivingBase instanceof HorseBaseEntity);
+            final boolean isHorse = (entityLivingBase instanceof AbstractHorseEntity);
             final int totalSlots = isHorse ? inv.size() - 2 : inv.size();
             final int firstSlot = isHorse ? 2 : 0;
 

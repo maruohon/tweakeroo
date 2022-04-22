@@ -2,12 +2,12 @@ package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
-import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.inventory.SimpleInventory;
 
-@Mixin(HorseBaseEntity.class)
-public interface IMixinHorseBaseEntity
+@Mixin(AbstractHorseEntity.class)
+public interface IMixinAbstractHorseEntity
 {
     @Accessor("items")
-    SimpleInventory getHorseInventory();
+    SimpleInventory tweakeroo_getHorseInventory();
 }

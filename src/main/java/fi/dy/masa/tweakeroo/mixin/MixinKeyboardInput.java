@@ -16,13 +16,13 @@ import fi.dy.masa.tweakeroo.event.InputHandler;
 @Mixin(KeyboardInput.class)
 public abstract class MixinKeyboardInput extends Input
 {
-    @Inject(method = "tick(Z)V", at = @At(
+    @Inject(method = "tick(ZF)V", at = @At(
             value = "FIELD",
             target = "Lnet/minecraft/client/input/KeyboardInput;sneaking:Z",
             ordinal = 0,
             shift = Shift.AFTER,
             opcode = Opcodes.PUTFIELD))
-    private void customMovement(boolean val1, CallbackInfo ci)
+    private void customMovement(boolean val1, float f, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_MOVEMENT_KEYS.getBooleanValue())
         {

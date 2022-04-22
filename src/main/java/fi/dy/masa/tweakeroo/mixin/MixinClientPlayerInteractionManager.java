@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,12 +13,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.Packet;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
@@ -34,7 +35,7 @@ public abstract class MixinClientPlayerInteractionManager
             value = "INVOKE",
             target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;syncSelectedSlot()V"),
             cancellable = true)
-    private void onProcessRightClickFirst(PlayerEntity player, World worldIn, Hand hand, CallbackInfoReturnable<ActionResult> cir)
+    private void onProcessRightClickFirst(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir)
     {
         if (CameraUtils.shouldPreventPlayerInputs() ||
             PlacementTweaks.onProcessRightClickPre(player, hand))
@@ -44,7 +45,7 @@ public abstract class MixinClientPlayerInteractionManager
         }
     }
 
-    @Inject(method = "interactItem",
+    @Inject(method = "method_41929",
             slice = @Slice(from = @At(value = "INVOKE",
                                       target = "Lnet/minecraft/item/ItemStack;use(" +
                                                "Lnet/minecraft/world/World;" +
@@ -52,9 +53,11 @@ public abstract class MixinClientPlayerInteractionManager
                                                "Lnet/minecraft/util/Hand;" +
                                                ")Lnet/minecraft/util/TypedActionResult;")),
             at = @At("RETURN"))
-    private void onProcessRightClickPost(PlayerEntity player, World worldIn, Hand hand, CallbackInfoReturnable<ActionResult> cir)
+    private void onProcessRightClickPost(Hand hand, PlayerEntity playerEntity,
+                                         MutableObject<?> mutableObject, int sequence,
+                                         CallbackInfoReturnable<Packet<?>> cir)
     {
-        PlacementTweaks.onProcessRightClickPost(player, hand);
+        PlacementTweaks.onProcessRightClickPost(playerEntity, hand);
     }
 
     @Inject(method = "interactEntity(" +

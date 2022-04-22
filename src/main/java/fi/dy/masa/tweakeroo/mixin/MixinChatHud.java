@@ -4,6 +4,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
@@ -15,7 +17,7 @@ public abstract class MixinChatHud extends net.minecraft.client.gui.DrawableHelp
     {
         if (FeatureToggle.TWEAK_CHAT_TIMESTAMP.getBooleanValue())
         {
-            net.minecraft.text.LiteralText newComponent = new net.minecraft.text.LiteralText(MiscUtils.getChatTimestamp() + " ");
+            MutableText newComponent = Text.literal(MiscUtils.getChatTimestamp() + " ");
             newComponent.append(componentIn);
             return newComponent;
         }

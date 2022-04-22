@@ -87,7 +87,7 @@ public class CameraUtils
             return;
         }
 
-        final int viewDistance = mc.options.viewDistance;
+        final int viewDistance = mc.options.getViewDistance().getValue();
 
         if (chunkX != lastChunkX)
         {
@@ -128,7 +128,7 @@ public class CameraUtils
     {
         Entity entity = EntityUtils.getCameraEntity();
         MinecraftClient mc = MinecraftClient.getInstance();
-        final int viewDistance = mc.options.viewDistance;
+        final int viewDistance = mc.options.getViewDistance().getValue();
         final int chunkX = MathHelper.floor(entity.getX() / 16.0) >> 4;
         final int chunkZ = MathHelper.floor(entity.getZ() / 16.0) >> 4;
 
