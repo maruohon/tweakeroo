@@ -14,6 +14,7 @@ import fi.dy.masa.malilib.event.PostItemTooltipRenderer;
 import fi.dy.masa.malilib.event.PostWorldRenderer;
 import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
+import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -31,8 +32,10 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     }
 
     @Override
-    public void onPostGameOverlayRender(Minecraft mc, float partialTicks)
+    public void onPostGameOverlayRender()
     {
+        Minecraft mc = GameUtils.getClient();
+
         if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
             Hotkeys.HOTBAR_SWAP_BASE.getKeyBind().isKeyBindHeld())
         {
