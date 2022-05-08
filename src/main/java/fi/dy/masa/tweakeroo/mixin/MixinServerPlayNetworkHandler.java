@@ -5,17 +5,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.util.math.Vec3d;
-import fi.dy.masa.tweakeroo.config.Configs.Generic;
+import fi.dy.masa.tweakeroo.config.Configs;
 
-@Mixin(ServerPlayNetworkHandler.class)
+@Mixin(value = ServerPlayNetworkHandler.class, priority = 1005)
 public class MixinServerPlayNetworkHandler
 {
-    @Redirect(method = "onPlayerInteractBlock",
+    @Redirect(method = "onPlayerInteractBlock", require = 0,
               at = @At(value = "INVOKE",
                        target = "Lnet/minecraft/util/math/Vec3d;subtract(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;"))
     private Vec3d tweakeroo_removeHitPosCheck(Vec3d hitVec, Vec3d blockCenter)
     {
-        if (Generic.CLIENT_PLACEMENT_ROTATION.getBooleanValue())
+        if (Configs.Generic.ITEM_USE_PACKET_CHECK_BYPASS.getBooleanValue())
         {
             return Vec3d.ZERO;
         }
