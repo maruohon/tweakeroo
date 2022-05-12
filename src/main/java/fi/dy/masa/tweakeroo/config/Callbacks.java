@@ -131,7 +131,6 @@ public class Callbacks
         Hotkeys.TOGGLE_GRAB_CURSOR.createCallbackForAction(Actions.TOGGLE_GRAB_CURSOR);
         Hotkeys.TOOL_PICK.createCallbackForAction(Actions.TOOL_PICK);
         Hotkeys.ZOOM_ACTIVATE.setHotkeyCallback(AdjustableValueHotkeyCallback.createClamped(null, Configs.Generic.ZOOM_FOV, () -> BaseScreen.isCtrlDown() ? 5.0 : 1.0)
-                                                    .setToggleMessageFactory(Callbacks::getZoomToggleMessage)
                                                     .setHotkeyCallback((a, k) -> Actions.zoomActivate(a == KeyAction.PRESS))
                                                     .addAdjustListener(MiscUtils::onZoomActivated)
                                                     .addAdjustListener(() -> MessageUtils.printMessage(Hotkeys.ZOOM_ACTIVATE,

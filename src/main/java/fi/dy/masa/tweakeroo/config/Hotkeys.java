@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import fi.dy.masa.malilib.config.option.HotkeyConfig;
 import fi.dy.masa.malilib.input.Context;
 import fi.dy.masa.malilib.input.KeyBindSettings;
+import fi.dy.masa.malilib.overlay.message.MessageOutput;
 
 public class Hotkeys
 {
@@ -50,7 +51,7 @@ public class Hotkeys
     public static final HotkeyConfig SKIP_WORLD_RENDERING               = new HotkeyConfig("skipWorldRendering",                "");
     public static final HotkeyConfig TOGGLE_GRAB_CURSOR                 = new HotkeyConfig("toggleGrabCursor",                  "");
     public static final HotkeyConfig TOOL_PICK                          = new HotkeyConfig("toolPick",                          "");
-    public static final HotkeyConfig ZOOM_ACTIVATE                      = new HotkeyConfig("zoomActivate",                      "",         KeyBindSettings.INGAME_MODIFIER_BOTH);
+    public static final HotkeyConfig ZOOM_ACTIVATE                      = new HotkeyConfig("zoomActivate",                      "",         KeyBindSettings.INGAME_MODIFIER_BOTH.asBuilder().messageOutput(MessageOutput.CUSTOM_HOTBAR).build());
 
     public static final List<HotkeyConfig> HOTKEY_LIST = ImmutableList.of(
             ACCURATE_BLOCK_PLACEMENT_INTO,
