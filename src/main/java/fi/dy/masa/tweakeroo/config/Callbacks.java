@@ -132,6 +132,7 @@ public class Callbacks
         Hotkeys.TOOL_PICK.createCallbackForAction(Actions.TOOL_PICK);
         Hotkeys.ZOOM_ACTIVATE.setHotkeyCallback(AdjustableValueHotkeyCallback.createClamped(null, Configs.Generic.ZOOM_FOV, () -> BaseScreen.isCtrlDown() ? 5.0 : 1.0)
                                                     .setHotkeyCallback((a, k) -> Actions.zoomActivate(a == KeyAction.PRESS))
+                                                    .setAdjustmentEnabledCondition(FeatureToggle.TWEAK_ZOOM::getBooleanValue)
                                                     .addAdjustListener(MiscUtils::onZoomActivated)
                                                     .addAdjustListener(() -> MessageUtils.printMessage(Hotkeys.ZOOM_ACTIVATE,
                                                                                                        "tweakeroo.message.set_zoom_fov_to",
