@@ -1,9 +1,9 @@
 {
 	"required": true,
 	"package": "fi.dy.masa.tweakeroo.mixin",
+	"minVersion": "0.7",
 	"compatibilityLevel": "JAVA_8",
 	"refmap": "mixins.tweakeroo.refmap.json",
-	"minVersion": "0.7",
 	"client": [
 		"IMixinChunkRenderWorker",
 		"IMixinCommandBlockBaseLogic",
@@ -70,7 +70,8 @@
 		"MixinWorldProvider",
 		"MixinWorldProviderHell"
 	],
+	"mixinPriority": 990,
 	"injectors": {
-		"defaultRequire": 1
+		"defaultRequire": 0
 	}
 }
