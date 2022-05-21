@@ -25,7 +25,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.GameUtils;
-import fi.dy.masa.malilib.util.data.Constants;
+import fi.dy.masa.malilib.util.ItemUtils;
+import fi.dy.masa.malilib.util.nbt.NbtUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
@@ -197,7 +198,7 @@ public class InventoryUtils
             ItemStack stack = player.getHeldItem(hand);
             EntityEquipmentSlot slot = hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND;
 
-            if (stack.isEmpty() == false && SWAP_BROKEN_TOOLS_SLOTS.contains(slot))
+            if (ItemUtils.notEmpty(stack) && SWAP_BROKEN_TOOLS_SLOTS.contains(slot))
             {
                 int minDurability = getMinDurability(stack);
 
@@ -215,7 +216,7 @@ public class InventoryUtils
         IBlockState state = GameUtils.getClientWorld().getBlockState(pos);
         ItemStack stack = player.getHeldItemMainhand();
 
-        if (stack.isEmpty() || stack.getDestroySpeed(state) <= 1f)
+        if (ItemUtils.isEmpty(stack) || stack.getDestroySpeed(state) <= 1f)
         {
             Container container = player.inventoryContainer;
             int slotNumber = findSlotWithEffectiveItemWithDurabilityLeft(container, state);
@@ -277,7 +278,7 @@ public class InventoryUtils
 
             ItemStack stack = slot.getStack();
 
-            if (stack.isEmpty() == false && stack.getItem().isDamageable() == false)
+            if (ItemUtils.notEmpty(stack) && stack.getItem().isDamageable() == false)
             {
                 slotWithItem = slot.slotNumber;
                 break;
@@ -307,7 +308,7 @@ public class InventoryUtils
         int slotNum = getSlotNumberForEquipmentType(type, player);
         ItemStack stack = player.getItemStackFromSlot(type);
 
-        if (slotNum == -1 || stack.isEmpty())
+        if (slotNum == -1 || ItemUtils.isEmpty(stack))
         {
             return;
         }
@@ -588,7 +589,7 @@ public class InventoryUtils
                     mc.playerController.windowClick(container.windowId, slot2.slotNumber, 0, ClickType.PICKUP, player);
 
                     // If the items didn't all fit, return the rest
-                    if (player.inventory.getCurrentItem().isEmpty() == false)
+                    if (ItemUtils.notEmpty(player.inventory.getCurrentItem()))
                     {
                         mc.playerController.windowClick(container.windowId, slot1.slotNumber, 0, ClickType.PICKUP, player);
                     }
@@ -639,7 +640,7 @@ public class InventoryUtils
             IBlockState stateTargeted = world.getBlockState(pos);
             ItemStack stack = stateTargeted.getBlock().getItem(world, pos, stateTargeted);
 
-            if (stack.isEmpty() == false)
+            if (ItemUtils.notEmpty(stack))
             {
                 /*
                 if (isCreative)
@@ -686,30 +687,30 @@ public class InventoryUtils
     public static boolean cleanUpShulkerBoxNBT(ItemStack stack)
     {
         boolean changed = false;
-        NBTTagCompound nbt = stack.getTagCompound();
+        NBTTagCompound tag = ItemUtils.getTag(stack);
 
-        if (nbt != null)
+        if (tag != null)
         {
-            if (nbt.hasKey("BlockEntityTag", Constants.NBT.TAG_COMPOUND))
+            if (NbtUtils.containsCompound(tag, "BlockEntityTag"))
             {
-                NBTTagCompound tag = nbt.getCompoundTag("BlockEntityTag");
+                NBTTagCompound beTag = NbtUtils.getCompound(tag, "BlockEntityTag");
 
-                if (tag.hasKey("Items", Constants.NBT.TAG_LIST) &&
-                    tag.getTagList("Items", Constants.NBT.TAG_COMPOUND).tagCount() == 0)
+                if (NbtUtils.containsList(beTag, "Items") &&
+                    NbtUtils.getListSize(NbtUtils.getListOfCompounds(beTag, "Items")) == 0)
                 {
-                    tag.removeTag("Items");
+                    NbtUtils.remove(beTag, "Items");
                     changed = true;
                 }
 
-                if (tag.isEmpty())
+                if (beTag.isEmpty())
                 {
-                    nbt.removeTag("BlockEntityTag");
+                    NbtUtils.remove(tag, "BlockEntityTag");
                 }
             }
 
-            if (nbt.isEmpty())
+            if (tag.isEmpty())
             {
-                stack.setTagCompound(null);
+                ItemUtils.setTag(stack, null);
                 changed = true;
             }
         }

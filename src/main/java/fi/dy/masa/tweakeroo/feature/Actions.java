@@ -132,7 +132,7 @@ public class Actions
             if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
             {
                 Vec3d pos = PositionUtils.adjustPositionToSideOfEntity(trace.hitVec, player, trace.sideHit);
-                double y = maintainY ? player.posY : pos.y;
+                double y = maintainY ? EntityUtils.getY(player) : pos.y;
                 player.sendChatMessage(String.format("/tp @p %s %s %s", pos.x, y, pos.z));
             }
 

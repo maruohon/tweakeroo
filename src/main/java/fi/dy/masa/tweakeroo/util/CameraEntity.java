@@ -11,6 +11,7 @@ import net.minecraft.stats.RecipeBook;
 import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.EntityUtils;
 import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -125,28 +126,28 @@ public class CameraEntity extends EntityPlayerSP
         return base * 10;
     }
 
-    private void handleMotion(float forward, float up, float strafe)
+    private void handleMotion(float forward, double up, float strafe)
     {
         double xFactor = Math.sin(this.rotationYaw * Math.PI / 180D);
         double zFactor = Math.cos(this.rotationYaw * Math.PI / 180D);
         double scale = getMoveSpeed();
 
-        this.motionX = (double) (strafe * zFactor - forward * xFactor) * scale;
-        this.motionY = (double) up * scale;
-        this.motionZ = (double) (forward * zFactor + strafe * xFactor) * scale;
+        this.motionX = (strafe * zFactor - forward * xFactor) * scale;
+        this.motionY = up * scale;
+        this.motionZ = (forward * zFactor + strafe * xFactor) * scale;
 
         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
-        this.chunkCoordX = (int) Math.floor(this.posX) >> 4;
-        this.chunkCoordY = (int) Math.floor(this.posY) >> 4;
-        this.chunkCoordZ = (int) Math.floor(this.posZ) >> 4;
+        this.chunkCoordX = (int) Math.floor(EntityUtils.getX(this)) >> 4;
+        this.chunkCoordY = (int) Math.floor(EntityUtils.getY(this)) >> 4;
+        this.chunkCoordZ = (int) Math.floor(EntityUtils.getZ(this)) >> 4;
     }
 
     private void updateLastTickPosition()
     {
-        this.prevPosX = this.lastTickPosX = this.posX;
-        this.prevPosY = this.lastTickPosY = this.posY;
-        this.prevPosZ = this.lastTickPosZ = this.posZ;
+        this.prevPosX = this.lastTickPosX = EntityUtils.getX(this);
+        this.prevPosY = this.lastTickPosY = EntityUtils.getY(this);
+        this.prevPosZ = this.lastTickPosZ = EntityUtils.getZ(this);
     }
 
     public void setCameraRotations(float yaw, float pitch)
@@ -173,7 +174,10 @@ public class CameraEntity extends EntityPlayerSP
         CameraEntity camera = new CameraEntity(mc, mc.world, player.connection, player.getStatFileWriter(), player.getRecipeBook());
 
         camera.noClip = true;
-        camera.setLocationAndAngles(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+        camera.setLocationAndAngles(EntityUtils.getX(player),
+                                    EntityUtils.getY(player),
+                                    EntityUtils.getZ(player),
+                                    player.rotationYaw, player.rotationPitch);
 
         camera.prevRotationYaw = camera.rotationYaw;
         camera.prevRotationPitch = camera.rotationPitch;

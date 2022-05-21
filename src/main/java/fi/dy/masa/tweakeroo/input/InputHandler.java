@@ -14,6 +14,7 @@ import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.KeyboardInputHandler;
 import fi.dy.masa.malilib.input.MouseInputHandler;
 import fi.dy.masa.malilib.util.GameUtils;
+import fi.dy.masa.malilib.util.ItemUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
@@ -62,7 +63,7 @@ public class InputHandler implements KeyboardInputHandler, MouseInputHandler
                 Vec3d hitVec = PositionUtils.getHitVecCenter(posFront, facing);
                 ItemStack stack = mc.player.getHeldItemMainhand();
 
-                if (stack.isEmpty() == false && stack.getItem() instanceof ItemBlock)
+                if (ItemUtils.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
                 {
                     mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.MAIN_HAND);
                     return true;
@@ -70,7 +71,7 @@ public class InputHandler implements KeyboardInputHandler, MouseInputHandler
 
                 stack = mc.player.getHeldItemOffhand();
 
-                if (stack.isEmpty() == false && stack.getItem() instanceof ItemBlock)
+                if (ItemUtils.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
                 {
                     mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.OFF_HAND);
                     return true;

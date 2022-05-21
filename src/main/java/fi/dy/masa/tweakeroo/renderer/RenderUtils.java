@@ -23,6 +23,7 @@ import fi.dy.masa.malilib.render.inventory.BuiltinInventoryRenderDefinitions;
 import fi.dy.masa.malilib.render.inventory.InventoryRenderDefinition;
 import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
 import fi.dy.masa.malilib.util.GameUtils;
+import fi.dy.masa.malilib.util.ItemUtils;
 import fi.dy.masa.malilib.util.inventory.InventoryView;
 import fi.dy.masa.malilib.util.inventory.SlicedInventoryView;
 import fi.dy.masa.malilib.util.inventory.VanillaInventoryView;
@@ -87,7 +88,7 @@ public class RenderUtils
                 {
                     ItemStack stack = player.inventory.getStackInSlot(row * 9 + column);
 
-                    if (stack.isEmpty() == false)
+                    if (ItemUtils.notEmpty(stack))
                     {
                         ItemRenderUtils.renderStackAt(stack, x, y, z, 1f, mc);
                     }

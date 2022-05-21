@@ -15,6 +15,7 @@ import fi.dy.masa.malilib.event.PostWorldRenderer;
 import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
 import fi.dy.masa.malilib.util.GameUtils;
+import fi.dy.masa.malilib.util.ItemUtils;
 import fi.dy.masa.malilib.util.data.Color4f;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -123,8 +124,8 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld()) &&
-            (mc.player.getHeldItem(EnumHand.MAIN_HAND).isEmpty() == false ||
-             mc.player.getHeldItem(EnumHand.OFF_HAND).isEmpty() == false))
+            (ItemUtils.notEmpty(mc.player.getHeldItem(EnumHand.MAIN_HAND)) ||
+             ItemUtils.notEmpty(mc.player.getHeldItem(EnumHand.OFF_HAND))))
         {
             Entity entity = mc.getRenderViewEntity() != null ? mc.getRenderViewEntity() : mc.player;
             GlStateManager.depthMask(false);

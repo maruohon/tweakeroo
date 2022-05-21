@@ -31,6 +31,7 @@ import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.Keys;
 import fi.dy.masa.malilib.util.BlockUtils;
 import fi.dy.masa.malilib.util.GameUtils;
+import fi.dy.masa.malilib.util.ItemUtils;
 import fi.dy.masa.malilib.util.PlacementUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
@@ -121,7 +122,8 @@ public class PlacementTweaks
 
         ItemStack stackOriginal = player.getHeldItem(hand);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            ItemUtils.notEmpty(stackOriginal))
         {
             if (isEmulatedClick == false)
             {
@@ -169,7 +171,8 @@ public class PlacementTweaks
     {
         ItemStack stackOriginal = GameUtils.getClientPlayer().getHeldItem(hand);
 
-        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && stackOriginal.isEmpty() == false)
+        if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
+            ItemUtils.notEmpty(stackOriginal))
         {
             stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
         }
@@ -612,7 +615,7 @@ public class PlacementTweaks
         {
             IBlockState state = world.getBlockState(pos);
 
-            if (stackClickedOn.isEmpty() == false)
+            if (ItemUtils.notEmpty(stackClickedOn))
             {
                 ItemStack stack = state.getBlock().getItem(world, pos, state);
 
@@ -649,14 +652,14 @@ public class PlacementTweaks
     {
         ItemStack stack = player.getHeldItemMainhand();
 
-        if (stack.isEmpty() == false && restriction.isAllowed(stack.getItem()) == false)
+        if (ItemUtils.notEmpty(stack) && restriction.isAllowed(stack.getItem()) == false)
         {
             return false;
         }
 
         stack = player.getHeldItemOffhand();
 
-        if (stack.isEmpty() == false && restriction.isAllowed(stack.getItem()) == false)
+        if (ItemUtils.notEmpty(stack) && restriction.isAllowed(stack.getItem()) == false)
         {
             return false;
         }
@@ -689,8 +692,8 @@ public class PlacementTweaks
         {
             ItemStack stackCurrent = player.getHeldItem(hand);
 
-            if (stackOriginal.isEmpty() == false &&
-                (stackCurrent.isEmpty() || stackCurrent.isItemEqualIgnoreDurability(stackOriginal) == false))
+            if (ItemUtils.notEmpty(stackOriginal) &&
+                (ItemUtils.isEmpty(stackCurrent) || stackCurrent.isItemEqualIgnoreDurability(stackOriginal) == false))
             {
                 // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
                 boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
@@ -726,7 +729,7 @@ public class PlacementTweaks
         // because this code runs before the cached stack gets set on the first click/use.
         ItemStack stackOriginal;
 
-        if (stackBeforeUse[hand.ordinal()].isEmpty() == false &&
+        if (ItemUtils.notEmpty(stackBeforeUse[hand.ordinal()]) &&
             FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
             FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue() == false)
         {
@@ -1001,7 +1004,7 @@ public class PlacementTweaks
     {
         Item item = stack.getItem();
 
-        if (stack.isEmpty() == false && item instanceof ItemBlock)
+        if (ItemUtils.notEmpty(stack) && item instanceof ItemBlock)
         {
             Block block = ((ItemBlock) item).getBlock();
             IBlockState state = block.getDefaultState();

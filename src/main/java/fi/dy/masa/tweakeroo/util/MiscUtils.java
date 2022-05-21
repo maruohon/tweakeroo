@@ -26,6 +26,7 @@ import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.ActionResult;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.GameUtils;
+import fi.dy.masa.malilib.util.ItemUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.IRayPositionHandler;
 import fi.dy.masa.malilib.util.inventory.InventoryUtils;
@@ -154,7 +155,7 @@ public class MiscUtils
         Container container = player.openContainer;
 
         // Move away the items in the player's hands
-        if (player.getHeldItemMainhand().isEmpty() == false)
+        if (ItemUtils.notEmpty(player.getHeldItemMainhand()))
         {
             swappedSlotMain = InventoryUtils.findEmptySlotInPlayerInventory(container, false, false);
 
@@ -164,7 +165,7 @@ public class MiscUtils
             }
         }
 
-        if (player.getHeldItemOffhand().isEmpty() == false)
+        if (ItemUtils.notEmpty(player.getHeldItemOffhand()))
         {
             swappedSlotOff = InventoryUtils.findEmptySlotInPlayerInventory(container, false, false);
 
