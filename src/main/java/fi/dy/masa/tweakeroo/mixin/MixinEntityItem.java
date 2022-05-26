@@ -12,6 +12,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import fi.dy.masa.malilib.util.inventory.StorageItemInventoryUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IEntityItem;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
@@ -60,7 +61,7 @@ public abstract class MixinEntityItem extends Entity implements IEntityItem
 
             if (stackSelf.getItem() instanceof ItemBlock && ((ItemBlock) stackSelf.getItem()).getBlock() instanceof BlockShulkerBox &&
                 stackSelf.getItem() == stackOther.getItem() &&
-                fi.dy.masa.malilib.util.inventory.InventoryUtils.shulkerBoxHasItems(stackSelf) == false &&
+                StorageItemInventoryUtils.shulkerBoxHasItems(stackSelf) == false &&
                 // Only stack up to 64, and don't steal from other stacks that are larger
                 stackSelf.getCount() < 64 && stackSelf.getCount() >= stackOther.getCount() &&
                 ItemStack.areItemStackTagsEqual(stackSelf, stackOther))

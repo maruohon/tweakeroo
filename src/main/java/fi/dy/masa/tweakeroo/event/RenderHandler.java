@@ -72,7 +72,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
 
             if (mode == ActiveMode.ALWAYS || (mode == ActiveMode.WITH_KEY && Hotkeys.ELYTRA_CAMERA.getKeyBind().isKeyBindHeld()))
             {
-                RenderUtils.renderPitchLockIndicator(mc);
+                RenderUtils.renderPitchLockIndicator();
             }
         }
     }

@@ -26,7 +26,7 @@ import net.minecraft.world.World;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
 import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.ItemUtils;
-import fi.dy.masa.malilib.util.nbt.NbtUtils;
+import fi.dy.masa.malilib.util.wrap.NbtWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
@@ -691,20 +691,20 @@ public class InventoryUtils
 
         if (tag != null)
         {
-            if (NbtUtils.containsCompound(tag, "BlockEntityTag"))
+            if (NbtWrap.containsCompound(tag, "BlockEntityTag"))
             {
-                NBTTagCompound beTag = NbtUtils.getCompound(tag, "BlockEntityTag");
+                NBTTagCompound beTag = NbtWrap.getCompound(tag, "BlockEntityTag");
 
-                if (NbtUtils.containsList(beTag, "Items") &&
-                    NbtUtils.getListSize(NbtUtils.getListOfCompounds(beTag, "Items")) == 0)
+                if (NbtWrap.containsList(beTag, "Items") &&
+                    NbtWrap.getListSize(NbtWrap.getListOfCompounds(beTag, "Items")) == 0)
                 {
-                    NbtUtils.remove(beTag, "Items");
+                    NbtWrap.remove(beTag, "Items");
                     changed = true;
                 }
 
                 if (beTag.isEmpty())
                 {
-                    NbtUtils.remove(tag, "BlockEntityTag");
+                    NbtWrap.remove(tag, "BlockEntityTag");
                 }
             }
 

@@ -5,7 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
-import fi.dy.masa.malilib.util.inventory.InventoryUtils;
+import fi.dy.masa.malilib.util.inventory.StorageItemInventoryUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 
@@ -20,7 +20,7 @@ public abstract class MixinItemShulkerBox extends ItemBlock implements IItemStac
     @Override
     public int getItemStackLimit(ItemStack stack)
     {
-        if (FeatureToggle.TWEAK_SHULKERBOX_STACKING.getBooleanValue() && InventoryUtils.shulkerBoxHasItems(stack) == false)
+        if (FeatureToggle.TWEAK_SHULKERBOX_STACKING.getBooleanValue() && StorageItemInventoryUtils.shulkerBoxHasItems(stack) == false)
         {
             return 64;
         }

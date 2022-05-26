@@ -11,8 +11,8 @@ import net.minecraft.stats.RecipeBook;
 import net.minecraft.stats.StatisticsManager;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import fi.dy.masa.malilib.util.EntityUtils;
 import fi.dy.masa.malilib.util.GameUtils;
+import fi.dy.masa.malilib.util.wrap.EntityWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
@@ -128,8 +128,8 @@ public class CameraEntity extends EntityPlayerSP
 
     private void handleMotion(float forward, double up, float strafe)
     {
-        double xFactor = Math.sin(this.rotationYaw * Math.PI / 180D);
-        double zFactor = Math.cos(this.rotationYaw * Math.PI / 180D);
+        double xFactor = Math.sin(EntityWrap.getYaw(this) * Math.PI / 180D);
+        double zFactor = Math.cos(EntityWrap.getYaw(this) * Math.PI / 180D);
         double scale = getMoveSpeed();
 
         this.motionX = (strafe * zFactor - forward * xFactor) * scale;
@@ -138,34 +138,34 @@ public class CameraEntity extends EntityPlayerSP
 
         this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
-        this.chunkCoordX = (int) Math.floor(EntityUtils.getX(this)) >> 4;
-        this.chunkCoordY = (int) Math.floor(EntityUtils.getY(this)) >> 4;
-        this.chunkCoordZ = (int) Math.floor(EntityUtils.getZ(this)) >> 4;
+        this.chunkCoordX = EntityWrap.getChunkX(this);
+        this.chunkCoordY = EntityWrap.getChunkY(this);
+        this.chunkCoordZ = EntityWrap.getChunkZ(this);
     }
 
     private void updateLastTickPosition()
     {
-        this.prevPosX = this.lastTickPosX = EntityUtils.getX(this);
-        this.prevPosY = this.lastTickPosY = EntityUtils.getY(this);
-        this.prevPosZ = this.lastTickPosZ = EntityUtils.getZ(this);
+        this.prevPosX = this.lastTickPosX = EntityWrap.getX(this);
+        this.prevPosY = this.lastTickPosY = EntityWrap.getY(this);
+        this.prevPosZ = this.lastTickPosZ = EntityWrap.getZ(this);
     }
 
     public void setCameraRotations(float yaw, float pitch)
     {
-        this.rotationYaw = yaw;
-        this.rotationPitch = pitch;
-        this.prevRotationYaw = this.rotationYaw;
-        this.prevRotationPitch = this.rotationPitch;
-        this.setRotationYawHead(this.rotationYaw);
-        this.setRenderYawOffset(this.rotationYaw);
+        EntityWrap.setYaw(this, yaw);
+        EntityWrap.setPitch(this, pitch);
+        this.prevRotationYaw = yaw;
+        this.prevRotationPitch = pitch;
+        this.setRotationYawHead(yaw);
+        this.setRenderYawOffset(yaw);
     }
 
     public void updateCameraRotations(float yawChange, float pitchChange)
     {
-        this.rotationYaw += yawChange * 0.15F;
-        this.rotationPitch = MathHelper.clamp(this.rotationPitch - pitchChange * 0.15F, -90F, 90F);
+        float yaw = EntityWrap.getYaw(this) + yawChange * 0.15F;
+        float pitch = MathHelper.clamp(EntityWrap.getPitch(this) - pitchChange * 0.15F, -90F, 90F);
 
-        this.setCameraRotations(this.rotationYaw, this.rotationPitch);
+        this.setCameraRotations(yaw, pitch);
     }
 
     private static CameraEntity createCameraEntity(Minecraft mc)
@@ -174,15 +174,17 @@ public class CameraEntity extends EntityPlayerSP
         CameraEntity camera = new CameraEntity(mc, mc.world, player.connection, player.getStatFileWriter(), player.getRecipeBook());
 
         camera.noClip = true;
-        camera.setLocationAndAngles(EntityUtils.getX(player),
-                                    EntityUtils.getY(player),
-                                    EntityUtils.getZ(player),
-                                    player.rotationYaw, player.rotationPitch);
+        camera.setLocationAndAngles(EntityWrap.getX(player),
+                                    EntityWrap.getY(player),
+                                    EntityWrap.getZ(player),
+                                    EntityWrap.getYaw(player), EntityWrap.getPitch(player));
 
-        camera.prevRotationYaw = camera.rotationYaw;
-        camera.prevRotationPitch = camera.rotationPitch;
-        camera.setRotationYawHead(camera.rotationYaw);
-        camera.setRenderYawOffset(camera.rotationYaw);
+        float yaw = EntityWrap.getYaw(camera);
+        float pitch = EntityWrap.getPitch(camera);
+        camera.prevRotationYaw = yaw;
+        camera.prevRotationPitch = pitch;
+        camera.setRotationYawHead(yaw);
+        camera.setRenderYawOffset(yaw);
 
         return camera;
     }

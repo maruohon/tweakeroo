@@ -28,6 +28,7 @@ import fi.dy.masa.malilib.util.inventory.InventoryView;
 import fi.dy.masa.malilib.util.inventory.SlicedInventoryView;
 import fi.dy.masa.malilib.util.inventory.VanillaInventoryView;
 import fi.dy.masa.malilib.util.position.Vec2i;
+import fi.dy.masa.malilib.util.wrap.EntityWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
@@ -192,9 +193,9 @@ public class RenderUtils
         int width = GuiUtils.getScaledWindowWidth();
         int height = GuiUtils.getScaledWindowHeight();
         GlStateManager.translate(width / 2.0F, height / 2.0F, zLevel);
-        Entity entity = GameUtils.getClient().getRenderViewEntity();
-        GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
+        Entity entity = GameUtils.getCameraEntity();
+        GlStateManager.rotate(entity.prevRotationPitch + (EntityWrap.getPitch(entity) - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(entity.prevRotationYaw + (EntityWrap.getYaw(entity) - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
         GlStateManager.scale(-1.0F, -1.0F, -1.0F);
         OpenGlHelper.renderDirections(10);
 
@@ -300,7 +301,7 @@ public class RenderUtils
         renderPitchIndicator(x, y, width, height, realPitch, snappedPitch, step, true, textRenderer);
     }
 
-    public static void renderPitchLockIndicator(Minecraft mc)
+    public static void renderPitchLockIndicator()
     {
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
@@ -308,11 +309,11 @@ public class RenderUtils
         int height = 50;
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
-        double currentPitch = mc.player.rotationPitch;
+        double currentPitch = EntityWrap.getPitch(GameUtils.getClientPlayer());
         double centerPitch = 0;
         double indicatorRange = 180;
 
-        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange, false, mc.fontRenderer);
+        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange, false, GameUtils.getClient().fontRenderer);
     }
 
     private static void renderPitchIndicator(int x, int y, int width, int height,

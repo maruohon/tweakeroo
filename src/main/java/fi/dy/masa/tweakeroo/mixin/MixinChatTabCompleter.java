@@ -11,6 +11,7 @@ import net.minecraft.util.TabCompleter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import fi.dy.masa.malilib.util.GameUtils;
+import fi.dy.masa.malilib.util.wrap.EntityWrap;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(ChatTabCompleter.class)
@@ -30,7 +31,7 @@ public abstract class MixinChatTabCompleter extends TabCompleter
 
             if (mc.player != null && (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK))
             {
-                cir.setReturnValue(new BlockPos(mc.player.getPositionVector()));
+                cir.setReturnValue(EntityWrap.getPlayerBlockPos());
                 cir.cancel();
             }
         }

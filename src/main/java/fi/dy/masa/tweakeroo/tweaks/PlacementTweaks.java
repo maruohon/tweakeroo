@@ -36,6 +36,7 @@ import fi.dy.masa.malilib.util.PlacementUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.PositionUtils.HitPart;
 import fi.dy.masa.malilib.util.restriction.UsageRestriction;
+import fi.dy.masa.malilib.util.wrap.EntityWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -409,8 +410,9 @@ public class PlacementTweaks
             return EnumActionResult.PASS;
         }
 
+        float yaw = EntityWrap.getYaw(player);
         //System.out.printf("onProcessRightClickBlock() pos: %s, side: %s, part: %s, hitVec: %s\n", posIn, sideIn, hitPart, hitVec);
-        EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, player.rotationYaw, hitVecIn, hand, hitPart, true);
+        EnumActionResult result = tryPlaceBlock(controller, player, world, posIn, sideIn, sideRotated, yaw, hitVecIn, hand, hitPart, true);
 
         // Store the initial click data for the fast placement mode
         if (posFirst == null && result == EnumActionResult.SUCCESS && restricted)
@@ -431,7 +433,7 @@ public class PlacementTweaks
             hitVecFirst = hitVecIn.subtract(posFirst.getX(), posFirst.getY(), posFirst.getZ());
             sideFirst = sideIn;
             sideRotatedFirst = sideRotated;
-            playerYawFirst = player.rotationYaw;
+            playerYawFirst = yaw;
             stackBeforeUse[hand.ordinal()] = stackPre;
             //System.out.printf("plop store @ %s\n", posFirst);
         }
@@ -876,7 +878,8 @@ public class PlacementTweaks
             @Nullable HitPart hitPart)
     {
         EnumFacing facing = EnumFacing.byHorizontalIndex(MathHelper.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3);
-        float yawOrig = player.rotationYaw;
+        float yawOrig = EntityWrap.getYaw(player);
+        float pitchOrig = EntityWrap.getPitch(player);
 
         if (hitPart == HitPart.CENTER)
         {
@@ -891,14 +894,14 @@ public class PlacementTweaks
             facing = facing.rotateY();
         }
 
-        player.rotationYaw = facing.getHorizontalAngle();
-        player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
+        EntityWrap.setYaw(player, facing.getHorizontalAngle());
+        player.connection.sendPacket(new CPacketPlayer.Rotation(EntityWrap.getYaw(player), pitchOrig, player.onGround));
 
         //System.out.printf("handleFlexibleBlockPlacement() pos: %s, side: %s, orig: %s new: %s, hv: %s\n", pos, side, EnumFacing.byHorizontalIndex(MathHelper.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3), facing, hitVec);
         EnumActionResult result = processRightClickBlockWrapper(controller, player, world, pos, side, hitVec, hand);
 
-        player.rotationYaw = yawOrig;
-        player.connection.sendPacket(new CPacketPlayer.Rotation(player.rotationYaw, player.rotationPitch, player.onGround));
+        EntityWrap.setYaw(player, yawOrig);
+        player.connection.sendPacket(new CPacketPlayer.Rotation(yawOrig, pitchOrig, player.onGround));
 
         return result;
     }

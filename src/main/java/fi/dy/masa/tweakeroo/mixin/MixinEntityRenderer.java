@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import fi.dy.masa.malilib.util.GameUtils;
+import fi.dy.masa.malilib.util.wrap.EntityWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -151,8 +153,8 @@ public abstract class MixinEntityRenderer
 
             if (entity != null)
             {
-                this.realYaw = entity.rotationYaw;
-                this.realPitch = entity.rotationPitch;
+                this.realYaw = EntityWrap.getYaw(entity);
+                this.realPitch = EntityWrap.getPitch(entity);
                 MiscUtils.setEntityRotations(entity, CameraUtils.getCameraYaw(), CameraUtils.getCameraPitch());
             }
         }
@@ -163,7 +165,7 @@ public abstract class MixinEntityRenderer
     {
         if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeyBind().isKeyBindHeld())
         {
-            net.minecraft.entity.Entity entity = this.mc.getRenderViewEntity();
+            net.minecraft.entity.Entity entity = GameUtils.getCameraEntity();
 
             if (entity != null)
             {

@@ -1,9 +1,7 @@
 package fi.dy.masa.tweakeroo.gui;
 
 import java.util.ArrayList;
-import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.GuiScreen;
 import fi.dy.masa.malilib.config.option.ConfigInfo;
 import fi.dy.masa.malilib.config.util.ConfigUtils;
 import fi.dy.masa.malilib.gui.BaseScreen;
@@ -57,14 +55,7 @@ public class ConfigScreen
     {
         // The parent screen should not be set here, to prevent infinite recursion via
         // the call to the parent's setWorldAndResolution -> initScreen -> switch tab -> etc.
-        return new BaseConfigScreen(MOD_INFO, null, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.title.screen.configs", Reference.MOD_VERSION);
-    }
-
-    public static BaseConfigScreen create(@Nullable GuiScreen currentScreen)
-    {
-        // The parent screen should not be set here, to prevent infinite recursion via
-        // the call to the parent's setWorldAndResolution -> initScreen -> switch tab -> etc.
-        return new BaseConfigScreen(MOD_INFO, null, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.title.screen.configs", Reference.MOD_VERSION);
+        return new BaseConfigScreen(MOD_INFO, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.title.screen.configs", Reference.MOD_VERSION);
     }
 
     public static ImmutableList<ConfigTab> getConfigTabs()

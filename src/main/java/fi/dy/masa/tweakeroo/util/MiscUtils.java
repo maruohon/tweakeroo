@@ -30,6 +30,7 @@ import fi.dy.masa.malilib.util.ItemUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils.IRayPositionHandler;
 import fi.dy.masa.malilib.util.inventory.InventoryUtils;
+import fi.dy.masa.malilib.util.wrap.EntityWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -304,8 +305,8 @@ public class MiscUtils
 
     public static void setEntityRotations(Entity entity, float yaw, float pitch)
     {
-        entity.rotationYaw = yaw;
-        entity.rotationPitch = pitch;
+        EntityWrap.setYaw(entity, yaw);
+        EntityWrap.setPitch(entity, pitch);
         entity.prevRotationYaw = yaw;
         entity.prevRotationPitch = pitch;
 

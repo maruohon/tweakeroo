@@ -19,11 +19,11 @@ import fi.dy.masa.malilib.listener.EventListener;
 import fi.dy.masa.malilib.overlay.message.MessageDispatcher;
 import fi.dy.masa.malilib.overlay.message.MessageOutput;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
-import fi.dy.masa.malilib.util.EntityUtils;
 import fi.dy.masa.malilib.util.GameUtils;
 import fi.dy.masa.malilib.util.PositionUtils;
 import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.malilib.util.wrap.EntityWrap;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
@@ -125,14 +125,14 @@ public class Actions
 
         if (world != null && player != null && player.capabilities.isCreativeMode)
         {
-            RayTraceResult trace = RayTraceUtils.getRayTraceFromEntity(world, EntityUtils.getCameraEntity(),
-                RayTraceUtils.RayTraceFluidHandling.SOURCE_ONLY, false,
-                Math.max(GameUtils.getRenderDistanceChunks() * 16, world.getHeight()) + 32);
+            RayTraceResult trace = RayTraceUtils.getRayTraceFromEntity(world, GameUtils.getCameraEntity(),
+                                                                       RayTraceUtils.RayTraceFluidHandling.SOURCE_ONLY, false,
+                                                                       Math.max(GameUtils.getRenderDistanceChunks() * 16, world.getHeight()) + 32);
 
             if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
             {
                 Vec3d pos = PositionUtils.adjustPositionToSideOfEntity(trace.hitVec, player, trace.sideHit);
-                double y = maintainY ? EntityUtils.getY(player) : pos.y;
+                double y = maintainY ? EntityWrap.getY(player) : pos.y;
                 player.sendChatMessage(String.format("/tp @p %s %s %s", pos.x, y, pos.z));
             }
 
