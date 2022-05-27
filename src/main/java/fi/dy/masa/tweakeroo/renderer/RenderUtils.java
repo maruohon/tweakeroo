@@ -22,13 +22,13 @@ import fi.dy.masa.malilib.render.ShapeRenderUtils;
 import fi.dy.masa.malilib.render.inventory.BuiltinInventoryRenderDefinitions;
 import fi.dy.masa.malilib.render.inventory.InventoryRenderDefinition;
 import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
-import fi.dy.masa.malilib.util.GameUtils;
-import fi.dy.masa.malilib.util.ItemUtils;
+import fi.dy.masa.malilib.util.game.wrap.EntityWrap;
+import fi.dy.masa.malilib.util.game.wrap.GameUtils;
+import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
 import fi.dy.masa.malilib.util.inventory.InventoryView;
 import fi.dy.masa.malilib.util.inventory.SlicedInventoryView;
 import fi.dy.masa.malilib.util.inventory.VanillaInventoryView;
 import fi.dy.masa.malilib.util.position.Vec2i;
-import fi.dy.masa.malilib.util.wrap.EntityWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
@@ -89,7 +89,7 @@ public class RenderUtils
                 {
                     ItemStack stack = player.inventory.getStackInSlot(row * 9 + column);
 
-                    if (ItemUtils.notEmpty(stack))
+                    if (ItemWrap.notEmpty(stack))
                     {
                         ItemRenderUtils.renderStackAt(stack, x, y, z, 1f, mc);
                     }

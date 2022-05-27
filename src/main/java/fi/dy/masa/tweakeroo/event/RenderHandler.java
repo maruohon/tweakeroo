@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -14,9 +15,9 @@ import fi.dy.masa.malilib.event.PostItemTooltipRenderer;
 import fi.dy.masa.malilib.event.PostWorldRenderer;
 import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
-import fi.dy.masa.malilib.util.GameUtils;
-import fi.dy.masa.malilib.util.ItemUtils;
 import fi.dy.masa.malilib.util.data.Color4f;
+import fi.dy.masa.malilib.util.game.wrap.GameUtils;
+import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -78,7 +79,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     }
 
     @Override
-    public void onPostRenderItemTooltip(ItemStack stack, int x, int y, Minecraft mc)
+    public void onPostRenderItemTooltip(ItemStack stack, int x, int y)
     {
         float z = Configs.Generic.ITEM_PREVIEW_Z.getIntegerValue();
 
@@ -110,24 +111,27 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     }
 
     @Override
-    public void onPostWorldRender(Minecraft mc, float partialTicks)
+    public void onPostWorldRender(float tickDelta)
     {
-        this.renderOverlays(mc, partialTicks);
+        this.renderOverlays(tickDelta);
     }
 
-    private void renderOverlays(Minecraft mc, float partialTicks)
+    private void renderOverlays(float tickDelta)
     {
+        EntityPlayer player = GameUtils.getClientPlayer();
+        RayTraceResult hitResult = GameUtils.getHitResult();
+
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
-            mc.objectMouseOver != null &&
-            mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK &&
-            mc.player.isSpectator() == false &&
+            hitResult != null &&
+            hitResult.typeOfHit == RayTraceResult.Type.BLOCK &&
+            player.isSpectator() == false &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ADJACENT.getKeyBind().isKeyBindHeld()) &&
-            (ItemUtils.notEmpty(mc.player.getHeldItem(EnumHand.MAIN_HAND)) ||
-             ItemUtils.notEmpty(mc.player.getHeldItem(EnumHand.OFF_HAND))))
+            (ItemWrap.notEmpty(player.getHeldItem(EnumHand.MAIN_HAND)) ||
+             ItemWrap.notEmpty(player.getHeldItem(EnumHand.OFF_HAND))))
         {
-            Entity entity = mc.getRenderViewEntity() != null ? mc.getRenderViewEntity() : mc.player;
+            Entity entity = GameUtils.getCameraEntity();
             GlStateManager.depthMask(false);
             GlStateManager.disableLighting();
             GlStateManager.disableCull();
@@ -140,10 +144,10 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
 
             fi.dy.masa.malilib.render.RenderUtils.renderBlockTargetingOverlay(
                     entity,
-                    mc.objectMouseOver.getBlockPos(),
-                    mc.objectMouseOver.sideHit,
-                    mc.objectMouseOver.hitVec,
-                    color, partialTicks);
+                    hitResult.getBlockPos(),
+                    hitResult.sideHit,
+                    hitResult.hitVec,
+                    color, tickDelta);
 
             GlStateManager.enableTexture2D();
             GlStateManager.enableDepth();

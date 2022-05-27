@@ -13,9 +13,9 @@ import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.KeyboardInputHandler;
 import fi.dy.masa.malilib.input.MouseInputHandler;
-import fi.dy.masa.malilib.util.GameUtils;
-import fi.dy.masa.malilib.util.ItemUtils;
-import fi.dy.masa.malilib.util.PositionUtils;
+import fi.dy.masa.malilib.util.game.wrap.GameUtils;
+import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
+import fi.dy.masa.malilib.util.position.PositionUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
@@ -49,11 +49,12 @@ public class InputHandler implements KeyboardInputHandler, MouseInputHandler
     public boolean onMouseInput(int eventButton, int wheelDelta, boolean eventButtonState)
     {
         Minecraft mc = GameUtils.getClient();
+        RayTraceResult hitResult = GameUtils.getHitResult();
 
         if (GuiUtils.getCurrentScreen() == null && mc.player != null && mc.player.capabilities.isCreativeMode &&
             eventButtonState && eventButton == mc.gameSettings.keyBindUseItem.getKeyCode() + 100 &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
-            mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.MISS)
+            hitResult != null && hitResult.typeOfHit == RayTraceResult.Type.MISS)
         {
             BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
 
@@ -63,7 +64,7 @@ public class InputHandler implements KeyboardInputHandler, MouseInputHandler
                 Vec3d hitVec = PositionUtils.getHitVecCenter(posFront, facing);
                 ItemStack stack = mc.player.getHeldItemMainhand();
 
-                if (ItemUtils.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
+                if (ItemWrap.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
                 {
                     mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.MAIN_HAND);
                     return true;
@@ -71,7 +72,7 @@ public class InputHandler implements KeyboardInputHandler, MouseInputHandler
 
                 stack = mc.player.getHeldItemOffhand();
 
-                if (ItemUtils.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
+                if (ItemWrap.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
                 {
                     mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.OFF_HAND);
                     return true;

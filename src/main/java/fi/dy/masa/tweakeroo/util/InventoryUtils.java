@@ -24,9 +24,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
-import fi.dy.masa.malilib.util.GameUtils;
-import fi.dy.masa.malilib.util.ItemUtils;
-import fi.dy.masa.malilib.util.wrap.NbtWrap;
+import fi.dy.masa.malilib.util.game.wrap.GameUtils;
+import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
+import fi.dy.masa.malilib.util.game.wrap.NbtWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
@@ -198,7 +198,7 @@ public class InventoryUtils
             ItemStack stack = player.getHeldItem(hand);
             EntityEquipmentSlot slot = hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND;
 
-            if (ItemUtils.notEmpty(stack) && SWAP_BROKEN_TOOLS_SLOTS.contains(slot))
+            if (ItemWrap.notEmpty(stack) && SWAP_BROKEN_TOOLS_SLOTS.contains(slot))
             {
                 int minDurability = getMinDurability(stack);
 
@@ -216,7 +216,7 @@ public class InventoryUtils
         IBlockState state = GameUtils.getClientWorld().getBlockState(pos);
         ItemStack stack = player.getHeldItemMainhand();
 
-        if (ItemUtils.isEmpty(stack) || stack.getDestroySpeed(state) <= 1f)
+        if (ItemWrap.isEmpty(stack) || stack.getDestroySpeed(state) <= 1f)
         {
             Container container = player.inventoryContainer;
             int slotNumber = findSlotWithEffectiveItemWithDurabilityLeft(container, state);
@@ -278,7 +278,7 @@ public class InventoryUtils
 
             ItemStack stack = slot.getStack();
 
-            if (ItemUtils.notEmpty(stack) && stack.getItem().isDamageable() == false)
+            if (ItemWrap.notEmpty(stack) && stack.getItem().isDamageable() == false)
             {
                 slotWithItem = slot.slotNumber;
                 break;
@@ -308,7 +308,7 @@ public class InventoryUtils
         int slotNum = getSlotNumberForEquipmentType(type, player);
         ItemStack stack = player.getItemStackFromSlot(type);
 
-        if (slotNum == -1 || ItemUtils.isEmpty(stack))
+        if (slotNum == -1 || ItemWrap.isEmpty(stack))
         {
             return;
         }
@@ -589,7 +589,7 @@ public class InventoryUtils
                     mc.playerController.windowClick(container.windowId, slot2.slotNumber, 0, ClickType.PICKUP, player);
 
                     // If the items didn't all fit, return the rest
-                    if (ItemUtils.notEmpty(player.inventory.getCurrentItem()))
+                    if (ItemWrap.notEmpty(player.inventory.getCurrentItem()))
                     {
                         mc.playerController.windowClick(container.windowId, slot1.slotNumber, 0, ClickType.PICKUP, player);
                     }
@@ -640,7 +640,7 @@ public class InventoryUtils
             IBlockState stateTargeted = world.getBlockState(pos);
             ItemStack stack = stateTargeted.getBlock().getItem(world, pos, stateTargeted);
 
-            if (ItemUtils.notEmpty(stack))
+            if (ItemWrap.notEmpty(stack))
             {
                 /*
                 if (isCreative)
@@ -687,7 +687,7 @@ public class InventoryUtils
     public static boolean cleanUpShulkerBoxNBT(ItemStack stack)
     {
         boolean changed = false;
-        NBTTagCompound tag = ItemUtils.getTag(stack);
+        NBTTagCompound tag = ItemWrap.getTag(stack);
 
         if (tag != null)
         {
@@ -710,7 +710,7 @@ public class InventoryUtils
 
             if (tag.isEmpty())
             {
-                ItemUtils.setTag(stack, null);
+                ItemWrap.setTag(stack, null);
                 changed = true;
             }
         }

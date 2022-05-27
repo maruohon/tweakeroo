@@ -11,7 +11,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.tileentity.TileEntitySign;
 import fi.dy.masa.malilib.gui.BaseScreen;
 import fi.dy.masa.malilib.input.Keys;
-import fi.dy.masa.malilib.util.GameUtils;
+import fi.dy.masa.malilib.util.game.wrap.GameUtils;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;

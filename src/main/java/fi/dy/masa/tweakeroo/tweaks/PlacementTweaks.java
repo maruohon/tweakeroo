@@ -29,14 +29,14 @@ import net.minecraft.world.World;
 import fi.dy.masa.malilib.config.value.BlackWhiteList;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.Keys;
-import fi.dy.masa.malilib.util.BlockUtils;
-import fi.dy.masa.malilib.util.GameUtils;
-import fi.dy.masa.malilib.util.ItemUtils;
-import fi.dy.masa.malilib.util.PlacementUtils;
-import fi.dy.masa.malilib.util.PositionUtils;
-import fi.dy.masa.malilib.util.PositionUtils.HitPart;
+import fi.dy.masa.malilib.util.game.BlockUtils;
+import fi.dy.masa.malilib.util.game.PlacementUtils;
+import fi.dy.masa.malilib.util.game.wrap.EntityWrap;
+import fi.dy.masa.malilib.util.game.wrap.GameUtils;
+import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
+import fi.dy.masa.malilib.util.position.PositionUtils;
+import fi.dy.masa.malilib.util.position.PositionUtils.HitPart;
 import fi.dy.masa.malilib.util.restriction.UsageRestriction;
-import fi.dy.masa.malilib.util.wrap.EntityWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -124,7 +124,7 @@ public class PlacementTweaks
         ItemStack stackOriginal = player.getHeldItem(hand);
 
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
-            ItemUtils.notEmpty(stackOriginal))
+            ItemWrap.notEmpty(stackOriginal))
         {
             if (isEmulatedClick == false)
             {
@@ -150,7 +150,7 @@ public class PlacementTweaks
     public static void onLeftClickMousePre()
     {
         Minecraft mc = GameUtils.getClient();
-        RayTraceResult trace = mc.objectMouseOver;
+        RayTraceResult trace = GameUtils.getHitResult();
 
         // Only set the position if it was null, otherwise the fast left click tweak
         // would just reset it every time.
@@ -173,7 +173,7 @@ public class PlacementTweaks
         ItemStack stackOriginal = GameUtils.getClientPlayer().getHeldItem(hand);
 
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
-            ItemUtils.notEmpty(stackOriginal))
+            ItemWrap.notEmpty(stackOriginal))
         {
             stackBeforeUse[hand.ordinal()] = stackOriginal.copy();
         }
@@ -208,7 +208,7 @@ public class PlacementTweaks
 
         if (mc.player != null)
         {
-            RayTraceResult trace = mc.objectMouseOver;
+            RayTraceResult trace = GameUtils.getHitResult();
 
             if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
             {
@@ -617,7 +617,7 @@ public class PlacementTweaks
         {
             IBlockState state = world.getBlockState(pos);
 
-            if (ItemUtils.notEmpty(stackClickedOn))
+            if (ItemWrap.notEmpty(stackClickedOn))
             {
                 ItemStack stack = state.getBlock().getItem(world, pos, state);
 
@@ -654,14 +654,14 @@ public class PlacementTweaks
     {
         ItemStack stack = player.getHeldItemMainhand();
 
-        if (ItemUtils.notEmpty(stack) && restriction.isAllowed(stack.getItem()) == false)
+        if (ItemWrap.notEmpty(stack) && restriction.isAllowed(stack.getItem()) == false)
         {
             return false;
         }
 
         stack = player.getHeldItemOffhand();
 
-        if (ItemUtils.notEmpty(stack) && restriction.isAllowed(stack.getItem()) == false)
+        if (ItemWrap.notEmpty(stack) && restriction.isAllowed(stack.getItem()) == false)
         {
             return false;
         }
@@ -694,8 +694,8 @@ public class PlacementTweaks
         {
             ItemStack stackCurrent = player.getHeldItem(hand);
 
-            if (ItemUtils.notEmpty(stackOriginal) &&
-                (ItemUtils.isEmpty(stackCurrent) || stackCurrent.isItemEqualIgnoreDurability(stackOriginal) == false))
+            if (ItemWrap.notEmpty(stackOriginal) &&
+                (ItemWrap.isEmpty(stackCurrent) || stackCurrent.isItemEqualIgnoreDurability(stackOriginal) == false))
             {
                 // Don't allow taking stacks from elsewhere in the hotbar, if the cycle tweak is on
                 boolean allowHotbar = FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
@@ -731,7 +731,7 @@ public class PlacementTweaks
         // because this code runs before the cached stack gets set on the first click/use.
         ItemStack stackOriginal;
 
-        if (ItemUtils.notEmpty(stackBeforeUse[hand.ordinal()]) &&
+        if (ItemWrap.notEmpty(stackBeforeUse[hand.ordinal()]) &&
             FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE.getBooleanValue() == false &&
             FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER.getBooleanValue() == false)
         {
@@ -1007,7 +1007,7 @@ public class PlacementTweaks
     {
         Item item = stack.getItem();
 
-        if (ItemUtils.notEmpty(stack) && item instanceof ItemBlock)
+        if (ItemWrap.notEmpty(stack) && item instanceof ItemBlock)
         {
             Block block = ((ItemBlock) item).getBlock();
             IBlockState state = block.getDefaultState();

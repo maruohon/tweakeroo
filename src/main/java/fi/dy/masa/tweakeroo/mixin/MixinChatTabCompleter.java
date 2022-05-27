@@ -4,14 +4,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat.ChatTabCompleter;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.TabCompleter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import fi.dy.masa.malilib.util.GameUtils;
-import fi.dy.masa.malilib.util.wrap.EntityWrap;
+import fi.dy.masa.malilib.util.game.wrap.EntityWrap;
+import fi.dy.masa.malilib.util.game.wrap.GameUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(ChatTabCompleter.class)
@@ -27,9 +26,7 @@ public abstract class MixinChatTabCompleter extends TabCompleter
     {
         if (FeatureToggle.TWEAK_TAB_COMPLETE_COORDINATE.getBooleanValue())
         {
-            Minecraft mc = GameUtils.getClient();
-
-            if (mc.player != null && (mc.objectMouseOver == null || mc.objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK))
+            if (GameUtils.getClientPlayer() != null && (GameUtils.getHitResult() == null || GameUtils.getHitResult().typeOfHit != RayTraceResult.Type.BLOCK))
             {
                 cir.setReturnValue(EntityWrap.getPlayerBlockPos());
                 cir.cancel();

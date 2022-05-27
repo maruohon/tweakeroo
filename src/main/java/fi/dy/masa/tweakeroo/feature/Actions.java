@@ -19,11 +19,11 @@ import fi.dy.masa.malilib.listener.EventListener;
 import fi.dy.masa.malilib.overlay.message.MessageDispatcher;
 import fi.dy.masa.malilib.overlay.message.MessageOutput;
 import fi.dy.masa.malilib.overlay.message.MessageUtils;
-import fi.dy.masa.malilib.util.GameUtils;
-import fi.dy.masa.malilib.util.PositionUtils;
-import fi.dy.masa.malilib.util.RayTraceUtils;
 import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.malilib.util.wrap.EntityWrap;
+import fi.dy.masa.malilib.util.game.RayTraceUtils;
+import fi.dy.masa.malilib.util.game.wrap.EntityWrap;
+import fi.dy.masa.malilib.util.game.wrap.GameUtils;
+import fi.dy.masa.malilib.util.position.PositionUtils;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
@@ -144,7 +144,7 @@ public class Actions
 
     private static ActionResult copySignText(ActionContext ctx)
     {
-        RayTraceResult trace = GameUtils.getRayTrace();
+        RayTraceResult trace = GameUtils.getHitResult();
 
         if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
         {
@@ -284,7 +284,7 @@ public class Actions
 
     private static ActionResult toolPick()
     {
-        RayTraceResult trace = GameUtils.getRayTrace();
+        RayTraceResult trace = GameUtils.getHitResult();
 
         if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
         {
