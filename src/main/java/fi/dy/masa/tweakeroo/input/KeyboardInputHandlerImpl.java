@@ -2,34 +2,18 @@ package fi.dy.masa.tweakeroo.input;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.malilib.input.KeyboardInputHandler;
-import fi.dy.masa.malilib.input.MouseInputHandler;
 import fi.dy.masa.malilib.util.game.wrap.GameUtils;
-import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
-import fi.dy.masa.malilib.util.position.PositionUtils;
-import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
-public class InputHandler implements KeyboardInputHandler, MouseInputHandler
+public class KeyboardInputHandlerImpl implements KeyboardInputHandler
 {
-    public static final InputHandler INSTANCE = new InputHandler();
+    public static final KeyboardInputHandlerImpl INSTANCE = new KeyboardInputHandlerImpl();
 
     private LeftRight lastSidewaysInput = LeftRight.NONE;
     private ForwardBack lastForwardInput = ForwardBack.NONE;
-
-    private InputHandler()
-    {
-        super();
-    }
 
     @Override
     public boolean onKeyInput(int keyCode, int scanCode, int modifiers, boolean eventKeyState)
@@ -41,44 +25,6 @@ public class InputHandler implements KeyboardInputHandler, MouseInputHandler
         }
 
         MiscUtils.checkZoomStatus();
-
-        return false;
-    }
-
-    @Override
-    public boolean onMouseInput(int eventButton, int wheelDelta, boolean eventButtonState)
-    {
-        Minecraft mc = GameUtils.getClient();
-        RayTraceResult hitResult = GameUtils.getHitResult();
-
-        if (GuiUtils.getCurrentScreen() == null && mc.player != null && mc.player.capabilities.isCreativeMode &&
-            eventButtonState && eventButton == mc.gameSettings.keyBindUseItem.getKeyCode() + 100 &&
-            FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
-            hitResult != null && hitResult.typeOfHit == RayTraceResult.Type.MISS)
-        {
-            BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(mc.player);
-
-            if (mc.world.isAirBlock(posFront))
-            {
-                EnumFacing facing = PositionUtils.getClosestLookingDirection(mc.player).getOpposite();
-                Vec3d hitVec = PositionUtils.getHitVecCenter(posFront, facing);
-                ItemStack stack = mc.player.getHeldItemMainhand();
-
-                if (ItemWrap.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
-                {
-                    mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.MAIN_HAND);
-                    return true;
-                }
-
-                stack = mc.player.getHeldItemOffhand();
-
-                if (ItemWrap.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
-                {
-                    mc.playerController.processRightClickBlock(mc.player, mc.world, posFront, facing, hitVec, EnumHand.OFF_HAND);
-                    return true;
-                }
-            }
-        }
 
         return false;
     }

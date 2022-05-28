@@ -11,7 +11,7 @@ import net.minecraft.util.MovementInputFromOptions;
 import fi.dy.masa.malilib.gui.util.GuiUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
-import fi.dy.masa.tweakeroo.input.InputHandler;
+import fi.dy.masa.tweakeroo.input.KeyboardInputHandlerImpl;
 
 @Mixin(MovementInputFromOptions.class)
 public abstract class MixinMovementInputFromOptions extends MovementInput
@@ -26,7 +26,7 @@ public abstract class MixinMovementInputFromOptions extends MovementInput
     {
         if (FeatureToggle.TWEAK_MOVEMENT_KEYS.getBooleanValue())
         {
-            InputHandler.INSTANCE.handleMovementKeys(this);
+            KeyboardInputHandlerImpl.INSTANCE.handleMovementKeys(this);
         }
 
         if (FeatureToggle.TWEAK_PERMANENT_SNEAK.getBooleanValue() &&

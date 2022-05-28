@@ -22,7 +22,8 @@ import fi.dy.masa.tweakeroo.gui.widget.DisableToggleConfigWidget;
 import fi.dy.masa.tweakeroo.gui.widget.FeatureToggleConfigWidget;
 import fi.dy.masa.tweakeroo.gui.widget.info.DisableConfigStatusWidget;
 import fi.dy.masa.tweakeroo.gui.widget.info.TweakConfigStatusWidget;
-import fi.dy.masa.tweakeroo.input.InputHandler;
+import fi.dy.masa.tweakeroo.input.KeyboardInputHandlerImpl;
+import fi.dy.masa.tweakeroo.input.MouseClickHandlerImpl;
 import fi.dy.masa.tweakeroo.input.TweakerooHotkeyProvider;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 
@@ -50,8 +51,8 @@ public class InitHandler implements InitializationHandler
         Registry.CONFIG_STATUS_WIDGET.registerConfigStatusWidgetFactory(FeatureToggle.class, TweakConfigStatusWidget::new, "tweakeroo:csi_value_tweak_toggle");
 
         Registry.HOTKEY_MANAGER.registerHotkeyProvider(TweakerooHotkeyProvider.INSTANCE);
-        Registry.INPUT_DISPATCHER.registerKeyboardInputHandler(InputHandler.INSTANCE);
-        Registry.INPUT_DISPATCHER.registerMouseInputHandler(InputHandler.INSTANCE);
+        Registry.INPUT_DISPATCHER.registerKeyboardInputHandler(KeyboardInputHandlerImpl.INSTANCE);
+        Registry.INPUT_DISPATCHER.registerMouseClickHandler(new MouseClickHandlerImpl());
 
         RenderHandler renderer = new RenderHandler();
         Registry.RENDER_EVENT_DISPATCHER.registerGameOverlayRenderer(renderer);
