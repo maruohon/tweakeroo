@@ -13,7 +13,7 @@ import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 public abstract class MixinItemStack
 {
     @Shadow
-    public Item getItem() { return null; }
+    public abstract Item getItem();
 
     @Inject(method = "getMaxCount", at = @At("HEAD"), cancellable = true)
     public void getMaxStackSizeStackSensitive(CallbackInfoReturnable<Integer> ci)
