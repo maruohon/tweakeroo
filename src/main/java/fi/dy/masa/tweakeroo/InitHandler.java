@@ -26,6 +26,7 @@ import fi.dy.masa.tweakeroo.input.KeyboardInputHandlerImpl;
 import fi.dy.masa.tweakeroo.input.MouseClickHandlerImpl;
 import fi.dy.masa.tweakeroo.input.TweakerooHotkeyProvider;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
+import fi.dy.masa.tweakeroo.util.data.BlockRenderOverrides;
 
 public class InitHandler implements InitializationHandler
 {
@@ -64,5 +65,6 @@ public class InitHandler implements InitializationHandler
 
         Actions.init();
         Callbacks.init();
+        BlockRenderOverrides.init();
     }
 }

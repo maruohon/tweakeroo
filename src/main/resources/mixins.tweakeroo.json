@@ -5,6 +5,8 @@
 	"compatibilityLevel": "JAVA_8",
 	"refmap": "mixins.tweakeroo.refmap.json",
 	"client": [
+		"render.model_override.BlockRendererDispatcherMixin",
+		"render.model_override.StateImplementationMixin",
 		"IMixinChunkRenderWorker",
 		"IMixinCommandBlockBaseLogic",
 		"IMixinFlatGeneratorInfo",
