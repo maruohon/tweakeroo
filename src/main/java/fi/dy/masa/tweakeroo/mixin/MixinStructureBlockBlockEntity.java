@@ -55,7 +55,7 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
         {
             BlockPos pos = this.getPos();
             World world = this.getWorld();
-            String name = ((StructureBlockBlockEntity) (Object) this).getStructureName();
+            String name = ((StructureBlockBlockEntity) (Object) this).getTemplateName();
             int maxSize = Configs.Generic.STRUCTURE_BLOCK_MAX_SIZE.getIntegerValue();
             int maxOffset = 48;
 
@@ -90,7 +90,7 @@ public abstract class MixinStructureBlockBlockEntity extends BlockEntity
                             BlockPos p = te.getPos();
 
                             if (tes.getMode() == StructureBlockMode.CORNER &&
-                                Objects.equals(tes.getStructureName(), name) &&
+                                Objects.equals(tes.getTemplateName(), name) &&
                                 p.getX() >= minX && p.getX() <= maxX &&
                                 p.getY() >= minY && p.getY() <= maxY &&
                                 p.getZ() >= minZ && p.getZ() <= maxZ)

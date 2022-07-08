@@ -11,6 +11,7 @@
 		"IMixinCommandBlockExecutor",
 		"IMixinAbstractHorseEntity",
 		"IMixinShovelItem",
+		"IMixinSimpleOption",
 		"MixinAbstractClientPlayerEntity",
 		"MixinAbstractInventoryScreen",
 		"MixinBackgroundRenderer",

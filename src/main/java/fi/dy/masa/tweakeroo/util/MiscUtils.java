@@ -173,7 +173,7 @@ public class MiscUtils
         MinecraftClient mc = MinecraftClient.getInstance();
 
         double fov = Configs.Generic.ZOOM_FOV.getDoubleValue();
-        double origFov = mc.options.getFovEffectScale().getValue();
+        double origFov = mc.options.getFov().getValue();
 
         if (fov < origFov)
         {
@@ -284,7 +284,7 @@ public class MiscUtils
 
                 if (guiLines != null)
                 {
-                    guiLines[i] = Text.Serializer.toJson(text);
+                    guiLines[i] = text.getString();//Text.Serializer.toJson(text);
                 }
             }
         }

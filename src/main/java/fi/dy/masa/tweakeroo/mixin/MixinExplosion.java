@@ -16,7 +16,7 @@ public abstract class MixinExplosion
               slice = @Slice(
                             from = @At("HEAD"),
                             to = @At(value = "FIELD",
-                                     target = "Lnet/minecraft/world/explosion/Explosion;affectedBlocks:Ljava/util/List;")),
+                                     target = "Lnet/minecraft/world/explosion/Explosion;affectedBlocks:Lit/unimi/dsi/fastutil/objects/ObjectArrayList;")),
               at = @At(value = "FIELD",
                        target = "Lnet/minecraft/particle/ParticleTypes;EXPLOSION_EMITTER:Lnet/minecraft/particle/DefaultParticleType;"))
     private DefaultParticleType redirectSpawnParticles()

@@ -30,7 +30,6 @@ public abstract class MixinGameRenderer
 {
     @Shadow @Final private MinecraftClient client;
 
-    @Shadow public abstract void render(float tickDelta, long startTime, boolean tick);
     @Shadow protected abstract void bobView(MatrixStack matrices, float tickDelta);
 
     private float realYaw;
@@ -64,7 +63,7 @@ public abstract class MixinGameRenderer
         }
         else if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
         {
-            cir.setReturnValue(this.client.options.getFovEffectScale().getValue());
+            cir.setReturnValue((double) this.client.options.getFov().getValue());
         }
     }
 

@@ -1,5 +1,7 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import javax.annotation.Nullable;
+import com.mojang.authlib.GameProfile;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -9,13 +11,13 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.Hand;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -36,9 +38,9 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     private Input realInput;
     private float realNextNauseaStrength;
 
-    public MixinClientPlayerEntity(ClientWorld worldIn, GameProfile playerProfile)
+    private MixinClientPlayerEntity(ClientWorld world, GameProfile profile, @Nullable PlayerPublicKey publicKey)
     {
-        super(worldIn, playerProfile);
+        super(world, profile, publicKey);
     }
 
     @Redirect(method = "updateNausea()V",

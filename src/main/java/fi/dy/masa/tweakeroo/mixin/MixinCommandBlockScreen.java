@@ -60,7 +60,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             int widthBtn = this.textRenderer.getWidth(str) + 10;
 
             y = 181;
-            this.textFieldName = new TextFieldWidget(this.textRenderer, x1, y, width, 20, Text.empty());
+            this.textFieldName = new TextFieldWidget(this.textRenderer, x1, y, width, 20, Text.of(""));
             this.textFieldName.setText(this.blockEntity.getCommandExecutor().getCustomName().getString());
             this.addSelectableChild(this.textFieldName);
             final TextFieldWidget tf = this.textFieldName;

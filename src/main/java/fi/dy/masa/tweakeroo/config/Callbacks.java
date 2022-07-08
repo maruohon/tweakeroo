@@ -23,6 +23,7 @@ import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.malilib.util.StringUtils;
 import fi.dy.masa.tweakeroo.gui.GuiConfigs;
 import fi.dy.masa.tweakeroo.mixin.IMixinAbstractBlock;
+import fi.dy.masa.tweakeroo.mixin.IMixinSimpleOption;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
 import fi.dy.masa.tweakeroo.util.CreativeExtraItems;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
@@ -156,23 +157,33 @@ public class Callbacks
             // If the feature is enabled on game launch, apply it here
             if (feature.getBooleanValue())
             {
-                this.mc.options.getGamma().setValue(Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue());
+                this.applyValue(Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue());
             }
         }
 
         @Override
         public void onValueChanged(IConfigBoolean config)
         {
+            double gamma;
+
             if (config.getBooleanValue())
             {
-                double gamma = this.mc.options.getGamma().getValue();
-                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(gamma);
-                this.mc.options.getGamma().setValue(Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue());
+                Configs.Internal.GAMMA_VALUE_ORIGINAL.setDoubleValue(this.mc.options.getGamma().getValue());
+                gamma = Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue();
             }
             else
             {
-                this.mc.options.getGamma().setValue(Configs.Internal.GAMMA_VALUE_ORIGINAL.getDoubleValue());
+                gamma = Configs.Internal.GAMMA_VALUE_ORIGINAL.getDoubleValue();
             }
+
+            this.applyValue(gamma);
+        }
+
+        private void applyValue(double gamma)
+        {
+            @SuppressWarnings("unchecked")
+            IMixinSimpleOption<Double> opt = (IMixinSimpleOption<Double>) (Object) this.mc.options.getGamma();
+            opt.tweakeroo_setValueWithoutCheck(gamma);
         }
     }
 

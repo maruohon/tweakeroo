@@ -104,7 +104,7 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
             Hand hand,
             BlockHitResult hitResult)
     {
-        return PlacementTweaks.onProcessRightClickBlock(controller, player, player.clientWorld, hand, hitResult);
+        return PlacementTweaks.onProcessRightClickBlock(controller, player, this.world, hand, hitResult);
     }
 
     @Inject(method = "handleInputEvents", at = @At("HEAD"))
