@@ -7,17 +7,6 @@ import net.minecraft.client.gui.screen.PresetsScreen;
 public abstract class MixinPresetsScreen
 {
     /*
-    @Shadow @Final static List<Object> PRESETS;
-
-    @Shadow
-    private static void addPreset(Text presetName,
-                                  ItemConvertible icon,
-                                  RegistryKey<Biome> presetBiome,
-                                  Set<RegistryKey<StructureSet>> structureKeys,
-                                  boolean generateStronghold,
-                                  boolean generateFeatures,
-                                  FlatChunkGeneratorLayer... layers) {};
-
     @Inject(method = "init", at = @At("HEAD"))
     private void addCustomEntries(CallbackInfo ci)
     {
@@ -93,8 +82,9 @@ public abstract class MixinPresetsScreen
                 Tweakeroo.logger.error("Failed to get the layers for the flat world preset");
                 return false;
             }
+            //new PresetsScreen.SuperflatPresetsListWidget.SuperflatPresetEntry(null);
 
-            addPreset(Text.translatable(name), item, biome, ImmutableSet.of(), false, false, layers);
+            //addPreset(Text.translatable(name), item, biome, ImmutableSet.of(), false, false, layers);
 
             return true;
         }
