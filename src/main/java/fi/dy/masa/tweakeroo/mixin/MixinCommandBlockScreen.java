@@ -70,7 +70,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             {
                 String name = tf.getText();
                 name = String.format("{\"CustomName\":\"{\\\"text\\\":\\\"%s\\\"}\"}", name);
-                this.client.player.sendCommand(String.format("/data merge block %d %d %d %s", pos.getX(), pos.getY(), pos.getZ(), name));
+                this.client.player.sendCommand(String.format("data merge block %d %d %d %s", pos.getX(), pos.getY(), pos.getZ(), name));
             }));
 
             this.updateExecValue = MiscUtils.getUpdateExec(this.blockEntity);
@@ -87,7 +87,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
                 this.updateExecValue = val;
                 MiscUtils.setUpdateExec(this.blockEntity, this.updateExecValue);
 
-                String cmd = String.format("/data merge block %d %d %d {\"UpdateLastExecution\":%s}",
+                String cmd = String.format("data merge block %d %d %d {\"UpdateLastExecution\":%s}",
                         pos.getX(), pos.getY(), pos.getZ(), this.updateExecValue ? "1b" : "0b");
                 this.client.player.sendCommand(cmd);
             });
