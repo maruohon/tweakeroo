@@ -67,7 +67,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     }
 
     @Inject(method = "updateNausea", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/network/ClientPlayerEntity;tickNetherPortalCooldown()V"))
+            target = "Lnet/minecraft/client/network/ClientPlayerEntity;tickPortalCooldown()V"))
     private void disableNauseaEffectPost(CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_NAUSEA_EFFECT.getBooleanValue())
