@@ -46,7 +46,7 @@ public abstract class MixinSignEditScreen extends Screen implements IGuiEditSign
         }
     }
 
-    @Inject(method = "init", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "init", at = @At("RETURN"))
     private void preventGuiOpen(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue())
@@ -56,8 +56,6 @@ public abstract class MixinSignEditScreen extends Screen implements IGuiEditSign
 
         if (Configs.Disable.DISABLE_SIGN_GUI.getBooleanValue())
         {
-            this.removed();
-
             // Update the keybind state, because opening a GUI resets them all.
             // Also, KeyBinding.updateKeyBindState() only works for keyboard keys
             KeyBinding keybind = MinecraftClient.getInstance().options.useKey;
@@ -69,8 +67,6 @@ public abstract class MixinSignEditScreen extends Screen implements IGuiEditSign
             }
 
             GuiBase.openGui(null);
-
-            ci.cancel();
         }
     }
 }
