@@ -30,6 +30,7 @@
 		"MixinClientPlayerInteractionManager",
 		"MixinClientPlayNetworkHandler",
 		"MixinClientWorld",
+		"MixinClientWorld_Properties",
 		"MixinCloneCommand",
 		"MixinCommandBlockScreen",
 		"MixinCreativeInventoryScreen",
