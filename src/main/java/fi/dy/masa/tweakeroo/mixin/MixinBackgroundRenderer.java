@@ -6,11 +6,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.world.ClientWorld;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.renderer.RenderUtils;
@@ -89,6 +91,14 @@ public abstract class MixinBackgroundRenderer
         return original;
     }
     */
+
+    @Redirect(method = "render",
+              at = @At(value = "INVOKE",
+                       target = "Lnet/minecraft/client/world/ClientWorld$Properties;getHorizonShadingRatio()F"))
+    private static float tweakeroo_disableSkyDarkness(ClientWorld.Properties props)
+    {
+        return Configs.Disable.DISABLE_SKY_DARKNESS.getBooleanValue() ? 1.0F : props.getHorizonShadingRatio();
+    }
 
     @Inject(method = "applyFog",
             require = 0,
