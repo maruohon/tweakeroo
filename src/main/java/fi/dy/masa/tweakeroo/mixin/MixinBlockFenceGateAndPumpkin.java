@@ -4,12 +4,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import net.minecraft.block.BlockFenceGate;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockPumpkin;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin({ BlockFenceGate.class, BlockPumpkin.class })

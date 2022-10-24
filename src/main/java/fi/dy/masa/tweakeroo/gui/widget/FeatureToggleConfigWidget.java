@@ -1,8 +1,8 @@
 package fi.dy.masa.tweakeroo.gui.widget;
 
-import fi.dy.masa.malilib.gui.config.ConfigWidgetContext;
-import fi.dy.masa.malilib.gui.widget.list.entry.DataListEntryWidgetData;
-import fi.dy.masa.malilib.gui.widget.list.entry.config.BaseHotkeyedBooleanConfigWidget;
+import malilib.gui.config.ConfigWidgetContext;
+import malilib.gui.widget.list.entry.DataListEntryWidgetData;
+import malilib.gui.widget.list.entry.config.BaseHotkeyedBooleanConfigWidget;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class FeatureToggleConfigWidget extends BaseHotkeyedBooleanConfigWidget<FeatureToggle>

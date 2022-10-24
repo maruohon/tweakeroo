@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import javax.annotation.Nullable;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -23,10 +24,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import fi.dy.masa.malilib.overlay.message.MessageUtils;
-import fi.dy.masa.malilib.util.game.wrap.GameUtils;
-import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
-import fi.dy.masa.malilib.util.game.wrap.NbtWrap;
+
+import malilib.overlay.message.MessageUtils;
+import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.ItemWrap;
+import malilib.util.game.wrap.NbtWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
@@ -156,7 +158,7 @@ public class InventoryUtils
 
         for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++)
         {
-            fi.dy.masa.malilib.util.inventory.InventoryUtils.swapSlots(container, slot, hotbarSlot);
+            malilib.util.inventory.InventoryUtils.swapSlots(container, slot, hotbarSlot);
             slot++;
         }
     }
@@ -186,7 +188,7 @@ public class InventoryUtils
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() && Configs.Generic.HAND_RESTOCK_PRE.getBooleanValue())
         {
             int threshold = Configs.Generic.HAND_RESTOCK_PRE_THRESHOLD.getIntegerValue();
-            fi.dy.masa.malilib.util.inventory.InventoryUtils.preRestockHand(player, hand, threshold, allowHotbar);
+            malilib.util.inventory.InventoryUtils.preRestockHand(player, hand, threshold, allowHotbar);
         }
     }
 
@@ -258,7 +260,7 @@ public class InventoryUtils
             return;
         }
 
-        slotWithItem = fi.dy.masa.malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false);
+        slotWithItem = malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false);
 
         if (slotWithItem != -1)
         {
@@ -381,9 +383,9 @@ public class InventoryUtils
         {
             Slot slot = container.inventorySlots.get(slotNum);
 
-            if ((isPlayerInv == false || fi.dy.masa.malilib.util.inventory.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false)) &&
+            if ((isPlayerInv == false || malilib.util.inventory.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false)) &&
                 (allowHotbar || isHotbarSlot(slot) == false) &&
-                fi.dy.masa.malilib.util.inventory.InventoryUtils.areStacksEqualIgnoreDurability(slot.getStack(), stackReference))
+                malilib.util.inventory.InventoryUtils.areStacksEqualIgnoreDurability(slot.getStack(), stackReference))
             {
                 return slot.slotNumber;
             }
@@ -480,7 +482,7 @@ public class InventoryUtils
             ItemStack stackSlot = slot.getStack();
 
             // Only accept regular inventory slots (no crafting, armor slots, or offhand)
-            if (fi.dy.masa.malilib.util.inventory.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false) &&
+            if (malilib.util.inventory.InventoryUtils.isRegularInventorySlot(slot.slotNumber, false) &&
                 stackSlot.isItemEqualIgnoreDurability(stackReference) &&
                 stackSlot.getMaxDamage() - stackSlot.getItemDamage() > minDurabilityLeft &&
                 hasSameIshEnchantments(stackReference, stackSlot))
@@ -567,7 +569,7 @@ public class InventoryUtils
 
             ItemStack stack = slot.getStack();
 
-            if (stack.getCount() < stack.getMaxStackSize() && fi.dy.masa.malilib.util.inventory.InventoryUtils.areStacksEqual(stackReference, stack))
+            if (stack.getCount() < stack.getMaxStackSize() && malilib.util.inventory.InventoryUtils.areStacksEqual(stackReference, stack))
             {
                 slots.add(slot);
             }
@@ -615,11 +617,11 @@ public class InventoryUtils
             stack.getCount() > 1 &&
             UNSTACKING_ITEMS.contains(stack.getItem()))
         {
-            if (fi.dy.masa.malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1)
+            if (malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1)
             {
                 tryCombineStacksInInventory(player, stack);
 
-                return fi.dy.masa.malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1;
+                return malilib.util.inventory.InventoryUtils.findEmptySlotInPlayerInventory(player.inventoryContainer, false, false) == -1;
             }
         }
 
@@ -661,7 +663,7 @@ public class InventoryUtils
                 }
                 else
                 {
-                    int slot = fi.dy.masa.malilib.util.inventory.InventoryUtils.findPlayerInventorySlotWithItem(player.inventoryContainer, stack, true); //player.inventory.getSlotFor(stack);
+                    int slot = malilib.util.inventory.InventoryUtils.findPlayerInventorySlotWithItem(player.inventoryContainer, stack, true); //player.inventory.getSlotFor(stack);
 
                     if (slot != -1)
                     {

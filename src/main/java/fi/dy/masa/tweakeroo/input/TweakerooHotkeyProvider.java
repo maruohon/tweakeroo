@@ -2,9 +2,10 @@ package fi.dy.masa.tweakeroo.input;
 
 import java.util.List;
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.input.Hotkey;
-import fi.dy.masa.malilib.input.HotkeyCategory;
-import fi.dy.masa.malilib.input.HotkeyProvider;
+
+import malilib.input.Hotkey;
+import malilib.input.HotkeyCategory;
+import malilib.input.HotkeyProvider;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;

@@ -2,14 +2,15 @@ package fi.dy.masa.tweakeroo.gui;
 
 import java.util.ArrayList;
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.option.ConfigInfo;
-import fi.dy.masa.malilib.config.util.ConfigUtils;
-import fi.dy.masa.malilib.gui.BaseScreen;
-import fi.dy.masa.malilib.gui.config.BaseConfigScreen;
-import fi.dy.masa.malilib.gui.config.BaseConfigTab;
-import fi.dy.masa.malilib.gui.config.ConfigTab;
-import fi.dy.masa.malilib.gui.tab.ScreenTab;
-import fi.dy.masa.malilib.util.data.ModInfo;
+
+import malilib.config.option.ConfigInfo;
+import malilib.config.util.ConfigUtils;
+import malilib.gui.BaseScreen;
+import malilib.gui.config.BaseConfigScreen;
+import malilib.gui.config.BaseConfigTab;
+import malilib.gui.config.ConfigTab;
+import malilib.gui.tab.ScreenTab;
+import malilib.util.data.ModInfo;
 import fi.dy.masa.tweakeroo.Reference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;

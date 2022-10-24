@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.event;
 
 import java.util.function.Supplier;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -9,15 +10,16 @@ import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
-import fi.dy.masa.malilib.config.value.ActiveMode;
-import fi.dy.masa.malilib.event.PostGameOverlayRenderer;
-import fi.dy.masa.malilib.event.PostItemTooltipRenderer;
-import fi.dy.masa.malilib.event.PostWorldRenderer;
-import fi.dy.masa.malilib.gui.BaseScreen;
-import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
-import fi.dy.masa.malilib.util.data.Color4f;
-import fi.dy.masa.malilib.util.game.wrap.GameUtils;
-import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
+
+import malilib.config.value.ActiveMode;
+import malilib.event.PostGameOverlayRenderer;
+import malilib.event.PostItemTooltipRenderer;
+import malilib.event.PostWorldRenderer;
+import malilib.gui.BaseScreen;
+import malilib.render.inventory.InventoryRenderUtils;
+import malilib.util.data.Color4f;
+import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.ItemWrap;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -92,7 +94,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
                 if (render)
                 {
                     int dimensions = Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue();
-                    fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, z, dimensions);
+                    malilib.render.RenderUtils.renderMapPreview(stack, x, y, z, dimensions);
                 }
             }
         }
@@ -138,11 +140,11 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
             GlStateManager.disableDepth();
             GlStateManager.disableTexture2D();
 
-            fi.dy.masa.malilib.render.RenderUtils.setupBlend();
+            malilib.render.RenderUtils.setupBlend();
 
             Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
 
-            fi.dy.masa.malilib.render.RenderUtils.renderBlockTargetingOverlay(
+            malilib.render.RenderUtils.renderBlockTargetingOverlay(
                     entity,
                     hitResult.getBlockPos(),
                     hitResult.sideHit,

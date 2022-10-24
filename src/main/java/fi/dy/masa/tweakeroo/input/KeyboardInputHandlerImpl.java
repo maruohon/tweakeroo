@@ -3,9 +3,10 @@ package fi.dy.masa.tweakeroo.input;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.MovementInput;
-import fi.dy.masa.malilib.gui.util.GuiUtils;
-import fi.dy.masa.malilib.input.KeyboardInputHandler;
-import fi.dy.masa.malilib.util.game.wrap.GameUtils;
+
+import malilib.gui.util.GuiUtils;
+import malilib.input.KeyboardInputHandler;
+import malilib.util.game.wrap.GameUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
 public class KeyboardInputHandlerImpl implements KeyboardInputHandler

@@ -2,14 +2,15 @@ package fi.dy.masa.tweakeroo;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.tuple.Pair;
-import fi.dy.masa.malilib.config.JsonModConfig;
-import fi.dy.masa.malilib.config.JsonModConfig.ConfigDataUpdater;
-import fi.dy.masa.malilib.config.util.ConfigUpdateUtils.ChainedConfigDataUpdater;
-import fi.dy.masa.malilib.config.util.ConfigUpdateUtils.ConfigCategoryRenamer;
-import fi.dy.masa.malilib.config.util.ConfigUpdateUtils.KeyBindSettingsResetter;
-import fi.dy.masa.malilib.event.InitializationHandler;
-import fi.dy.masa.malilib.gui.config.ConfigSearchInfo;
-import fi.dy.masa.malilib.registry.Registry;
+
+import malilib.config.JsonModConfig;
+import malilib.config.JsonModConfig.ConfigDataUpdater;
+import malilib.config.util.ConfigUpdateUtils.ChainedConfigDataUpdater;
+import malilib.config.util.ConfigUpdateUtils.ConfigCategoryRenamer;
+import malilib.config.util.ConfigUpdateUtils.KeyBindSettingsResetter;
+import malilib.event.InitializationHandler;
+import malilib.gui.config.ConfigSearchInfo;
+import malilib.registry.Registry;
 import fi.dy.masa.tweakeroo.config.Callbacks;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;

@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.tweaks;
 
 import java.util.Optional;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRedstoneComparator;
 import net.minecraft.block.BlockRedstoneRepeater;
@@ -14,7 +15,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import fi.dy.masa.malilib.util.game.BlockUtils;
+
+import malilib.util.game.BlockUtils;
 
 public class PlacementHandler
 {

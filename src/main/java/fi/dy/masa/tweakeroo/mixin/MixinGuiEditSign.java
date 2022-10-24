@@ -6,12 +6,14 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.tileentity.TileEntitySign;
-import fi.dy.masa.malilib.gui.BaseScreen;
-import fi.dy.masa.malilib.input.Keys;
-import fi.dy.masa.malilib.util.game.wrap.GameUtils;
+
+import malilib.gui.BaseScreen;
+import malilib.input.Keys;
+import malilib.util.game.wrap.GameUtils;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.MiscUtils;

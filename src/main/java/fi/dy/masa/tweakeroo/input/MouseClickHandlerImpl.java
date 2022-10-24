@@ -9,11 +9,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import fi.dy.masa.malilib.gui.util.GuiUtils;
-import fi.dy.masa.malilib.input.MouseClickHandler;
-import fi.dy.masa.malilib.util.game.wrap.GameUtils;
-import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
-import fi.dy.masa.malilib.util.position.PositionUtils;
+
+import malilib.gui.util.GuiUtils;
+import malilib.input.MouseClickHandler;
+import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.ItemWrap;
+import malilib.util.position.PositionUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class MouseClickHandlerImpl implements MouseClickHandler

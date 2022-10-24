@@ -1,9 +1,11 @@
 package fi.dy.masa.tweakeroo.util;
 
 import com.google.common.collect.ImmutableList;
+
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import fi.dy.masa.malilib.config.value.BaseOptionListConfigValue;
+
+import malilib.config.value.BaseOptionListConfigValue;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 
 public class PlacementRestrictionMode extends BaseOptionListConfigValue

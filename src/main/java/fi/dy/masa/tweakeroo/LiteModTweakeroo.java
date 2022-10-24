@@ -7,8 +7,10 @@ import com.mumfrey.liteloader.Tickable;
 import com.mumfrey.liteloader.modconfig.ConfigPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.Minecraft;
-import fi.dy.masa.malilib.registry.Registry;
+
+import malilib.registry.Registry;
 import fi.dy.masa.tweakeroo.gui.TweakerooConfigPanel;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
 

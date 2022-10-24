@@ -5,15 +5,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.option.BooleanConfig;
-import fi.dy.masa.malilib.config.option.ConfigInfo;
-import fi.dy.masa.malilib.config.option.HotkeyConfig;
-import fi.dy.masa.malilib.input.KeyBind;
-import fi.dy.masa.malilib.input.KeyBindSettings;
-import fi.dy.masa.malilib.input.callback.HotkeyCallback;
-import fi.dy.masa.malilib.input.callback.ToggleBooleanWithMessageKeyCallback;
-import fi.dy.masa.malilib.overlay.message.MessageHelpers.BooleanConfigMessageFactory;
-import fi.dy.masa.malilib.util.data.ModInfo;
+
+import malilib.config.option.BooleanConfig;
+import malilib.config.option.ConfigInfo;
+import malilib.config.option.HotkeyConfig;
+import malilib.input.KeyBind;
+import malilib.input.KeyBindSettings;
+import malilib.input.callback.HotkeyCallback;
+import malilib.input.callback.ToggleBooleanWithMessageKeyCallback;
+import malilib.overlay.message.MessageHelpers.BooleanConfigMessageFactory;
+import malilib.util.data.ModInfo;
 import fi.dy.masa.tweakeroo.Reference;
 
 public enum FeatureToggle implements ConfigInfo

@@ -1,11 +1,13 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
-import fi.dy.masa.malilib.util.inventory.StorageItemInventoryUtils;
+
+import malilib.util.inventory.StorageItemInventoryUtils;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IItemStackLimit;
 

@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.tweaks;
 
 import java.util.Optional;
 import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -26,17 +27,18 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import fi.dy.masa.malilib.config.value.BlackWhiteList;
-import fi.dy.masa.malilib.gui.util.GuiUtils;
-import fi.dy.masa.malilib.input.Keys;
-import fi.dy.masa.malilib.util.game.BlockUtils;
-import fi.dy.masa.malilib.util.game.PlacementUtils;
-import fi.dy.masa.malilib.util.game.wrap.EntityWrap;
-import fi.dy.masa.malilib.util.game.wrap.GameUtils;
-import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
-import fi.dy.masa.malilib.util.position.PositionUtils;
-import fi.dy.masa.malilib.util.position.PositionUtils.HitPart;
-import fi.dy.masa.malilib.util.restriction.UsageRestriction;
+
+import malilib.config.value.BlackWhiteList;
+import malilib.gui.util.GuiUtils;
+import malilib.input.Keys;
+import malilib.util.game.BlockUtils;
+import malilib.util.game.PlacementUtils;
+import malilib.util.game.wrap.EntityWrap;
+import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.ItemWrap;
+import malilib.util.position.PositionUtils;
+import malilib.util.position.PositionUtils.HitPart;
+import malilib.util.restriction.UsageRestriction;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -621,7 +623,7 @@ public class PlacementTweaks
             {
                 ItemStack stack = state.getBlock().getItem(world, pos, state);
 
-                if (fi.dy.masa.malilib.util.inventory.InventoryUtils.areStacksEqual(stackClickedOn, stack) == false)
+                if (malilib.util.inventory.InventoryUtils.areStacksEqual(stackClickedOn, stack) == false)
                 {
                     return false;
                 }
@@ -641,7 +643,7 @@ public class PlacementTweaks
             ItemStack stackClicked = state.getBlock().getItem(world, pos, state);
             ItemStack stackHand = player.getHeldItem(hand);
 
-            if (fi.dy.masa.malilib.util.inventory.InventoryUtils.areStacksEqual(stackClicked, stackHand) == false)
+            if (malilib.util.inventory.InventoryUtils.areStacksEqual(stackClicked, stackHand) == false)
             {
                 return false;
             }

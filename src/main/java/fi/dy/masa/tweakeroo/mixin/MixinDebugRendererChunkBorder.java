@@ -3,10 +3,12 @@ package fi.dy.masa.tweakeroo.mixin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.debug.DebugRendererChunkBorder;
 import net.minecraft.entity.Entity;
+
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 @Mixin(DebugRendererChunkBorder.class)

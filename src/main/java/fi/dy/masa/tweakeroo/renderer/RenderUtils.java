@@ -1,6 +1,7 @@
 package fi.dy.masa.tweakeroo.renderer;
 
 import org.apache.commons.lang3.tuple.Pair;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -13,22 +14,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import fi.dy.masa.malilib.config.value.HorizontalAlignment;
-import fi.dy.masa.malilib.config.value.HudAlignment;
-import fi.dy.masa.malilib.config.value.VerticalAlignment;
-import fi.dy.masa.malilib.gui.util.GuiUtils;
-import fi.dy.masa.malilib.render.ItemRenderUtils;
-import fi.dy.masa.malilib.render.ShapeRenderUtils;
-import fi.dy.masa.malilib.render.inventory.BuiltinInventoryRenderDefinitions;
-import fi.dy.masa.malilib.render.inventory.InventoryRenderDefinition;
-import fi.dy.masa.malilib.render.inventory.InventoryRenderUtils;
-import fi.dy.masa.malilib.util.game.wrap.EntityWrap;
-import fi.dy.masa.malilib.util.game.wrap.GameUtils;
-import fi.dy.masa.malilib.util.game.wrap.ItemWrap;
-import fi.dy.masa.malilib.util.inventory.InventoryView;
-import fi.dy.masa.malilib.util.inventory.SlicedInventoryView;
-import fi.dy.masa.malilib.util.inventory.VanillaInventoryView;
-import fi.dy.masa.malilib.util.position.Vec2i;
+
+import malilib.config.value.HorizontalAlignment;
+import malilib.config.value.HudAlignment;
+import malilib.config.value.VerticalAlignment;
+import malilib.gui.util.GuiUtils;
+import malilib.render.ItemRenderUtils;
+import malilib.render.ShapeRenderUtils;
+import malilib.render.inventory.BuiltinInventoryRenderDefinitions;
+import malilib.render.inventory.InventoryRenderDefinition;
+import malilib.render.inventory.InventoryRenderUtils;
+import malilib.util.game.wrap.EntityWrap;
+import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.ItemWrap;
+import malilib.util.inventory.InventoryView;
+import malilib.util.inventory.SlicedInventoryView;
+import malilib.util.inventory.VanillaInventoryView;
+import malilib.util.position.Vec2i;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
@@ -77,8 +79,8 @@ public class RenderUtils
             int z = 0;
             FontRenderer textRenderer = mc.fontRenderer;
 
-            fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
-            fi.dy.masa.malilib.render.RenderUtils.bindTexture(GuiInventory.INVENTORY_BACKGROUND);
+            malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
+            malilib.render.RenderUtils.bindTexture(GuiInventory.INVENTORY_BACKGROUND);
             ShapeRenderUtils.renderTexturedRectangle256(x - 1, y - 1, z, 7, 83, 9 * 18, 3 * 18);
 
             for (int row = 1; row <= 3; row++)
@@ -241,7 +243,7 @@ public class RenderUtils
         final int z = 0;
         int lineX = x + (int) ((MathHelper.wrapDegrees(realYaw - startYaw)) / step * width);
 
-        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
+        malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
 
@@ -326,7 +328,7 @@ public class RenderUtils
         double angleUp = centerPitch - printedRange;
         double angleDown = centerPitch + printedRange;
 
-        fi.dy.masa.malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
+        malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
         if (isSnapRange)
         {

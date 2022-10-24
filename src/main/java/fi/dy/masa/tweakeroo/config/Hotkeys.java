@@ -2,10 +2,11 @@ package fi.dy.masa.tweakeroo.config;
 
 import java.util.List;
 import com.google.common.collect.ImmutableList;
-import fi.dy.masa.malilib.config.option.HotkeyConfig;
-import fi.dy.masa.malilib.input.Context;
-import fi.dy.masa.malilib.input.KeyBindSettings;
-import fi.dy.masa.malilib.overlay.message.MessageOutput;
+
+import malilib.config.option.HotkeyConfig;
+import malilib.input.Context;
+import malilib.input.KeyBindSettings;
+import malilib.overlay.message.MessageOutput;
 
 public class Hotkeys
 {

@@ -5,7 +5,8 @@ import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.renderer.ViewFrustum;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
-import fi.dy.masa.malilib.util.game.wrap.GameUtils;
+
+import malilib.util.game.wrap.GameUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 

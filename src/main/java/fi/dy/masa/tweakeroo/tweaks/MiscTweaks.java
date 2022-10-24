@@ -2,6 +2,7 @@ package fi.dy.masa.tweakeroo.tweaks;
 
 import java.util.Collection;
 import javax.annotation.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -13,11 +14,12 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.gen.FlatLayerInfo;
-import fi.dy.masa.malilib.config.value.BlackWhiteList;
-import fi.dy.masa.malilib.gui.util.GuiUtils;
-import fi.dy.masa.malilib.overlay.message.MessageUtils;
-import fi.dy.masa.malilib.util.StringUtils;
-import fi.dy.masa.malilib.util.restriction.UsageRestriction;
+
+import malilib.config.value.BlackWhiteList;
+import malilib.gui.util.GuiUtils;
+import malilib.overlay.message.MessageUtils;
+import malilib.util.StringUtils;
+import malilib.util.restriction.UsageRestriction;
 import fi.dy.masa.tweakeroo.LiteModTweakeroo;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.DisableToggle;
