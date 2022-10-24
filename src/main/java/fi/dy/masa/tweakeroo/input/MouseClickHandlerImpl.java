@@ -30,7 +30,7 @@ public class MouseClickHandlerImpl implements MouseClickHandler
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
             hitResult != null && hitResult.typeOfHit == RayTraceResult.Type.MISS)
         {
-            BlockPos posFront = PositionUtils.getPositionInfrontOfEntity(player);
+            BlockPos posFront = PositionUtils.getPositionInFrontOfEntity(player);
 
             if (world.isAirBlock(posFront))
             {
