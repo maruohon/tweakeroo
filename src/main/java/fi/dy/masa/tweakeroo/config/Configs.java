@@ -46,6 +46,7 @@ public class Configs implements IConfigHandler
         public static final ConfigString        CHAT_TIME_FORMAT                    = new ConfigString      ("chatTimeFormat", "[HH:mm:ss]", "The time format for chat messages, if tweakChatTimestamp is enabled\nUses the Java SimpleDateFormat format specifiers.");
         public static final ConfigBoolean       CARPET_ACCURATE_PLACEMENT_PROTOCOL  = new ConfigBoolean     ("carpetAccuratePlacementProtocol", true, "If enabled, then the Flexible Block Placement and the\nAccurate Block Placement use the protocol implemented in Carpet mod.\n§6Note: This is required for any block rotations to work, other than\n§6blocks that only care about the block side you click on (Hoppers, Logs etc.)");
         public static final ConfigBoolean       CLIENT_PLACEMENT_ROTATION           = new ConfigBoolean     ("clientPlacementRotation", true, "Enable single player and client side placement rotations,\nsuch as Accurate Placement working in single player without Carpet mod");
+        public static final ConfigInteger       CUSTOM_INVENTORY_GUI_SCALE          = new ConfigInteger     ("customInventoryGuiScale", 2, 1, 10, "The GUI scale value to use for inventory screens, if\n§etweakCustomInventoryScreenScale§r is enabled.");
         public static final ConfigOptionList    ELYTRA_CAMERA_INDICATOR             = new ConfigOptionList  ("elytraCameraIndicator", ActiveMode.WITH_KEY, "Whether or not to render the real pitch angle\nindicator when the elytra camera mode is active");
         public static final ConfigOptionList    ENTITY_TYPE_ATTACK_RESTRICTION_WARN = new ConfigOptionList  ("entityTypeAttackRestrictionWarn", MessageOutputType.MESSAGE, "Selects which type of warning message to show (if any)\nwhen the Entity Type Attack Restriction feature prevents attacking an entity");
         public static final ConfigInteger       FAST_BLOCK_PLACEMENT_COUNT          = new ConfigInteger     ("fastBlockPlacementCount", 2, 1, 16, "The maximum number of blocks to place per game tick\nwith the Fast Block Placement tweak");
@@ -149,6 +150,7 @@ public class Configs implements IConfigHandler
                 AFTER_CLICKER_CLICK_COUNT,
                 BLOCK_REACH_DISTANCE,
                 BREAKING_GRID_SIZE,
+                CUSTOM_INVENTORY_GUI_SCALE,
                 FAST_BLOCK_PLACEMENT_COUNT,
                 FAST_LEFT_CLICK_COUNT,
                 FAST_RIGHT_CLICK_COUNT,
