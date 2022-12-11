@@ -14,15 +14,14 @@ import fi.dy.masa.tweakeroo.util.CreativeExtraItems;
 @Mixin(CreativeInventoryScreen.class)
 public abstract class MixinCreativeInventoryScreen extends AbstractInventoryScreen<CreativeInventoryScreen.CreativeScreenHandler>
 {
-    private MixinCreativeInventoryScreen(CreativeInventoryScreen.CreativeScreenHandler screenHandler,
-                                         PlayerInventory playerInventory, Text text)
+    private MixinCreativeInventoryScreen(CreativeInventoryScreen.CreativeScreenHandler screenHandler, PlayerInventory playerInventory, Text text)
     {
         super(screenHandler, playerInventory, text);
     }
 
     // This needs to happen before the `this.handler.scrollItems(0.0F);` call.
-    @Inject(method = "search", at = @At(value = "INVOKE", shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/util/collection/DefaultedList;addAll(Ljava/util/Collection;)Z"))
+    @Inject(method = "search", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/gui/screen/ingame/CreativeInventoryScreen$CreativeScreenHandler;scrollItems(F)V"))
     private void tweakeroo_removeInfestedStoneFromCreativeSearchInventory(CallbackInfo ci)
     {
         if (Configs.Disable.DISABLE_CREATIVE_INFESTED_BLOCKS.getBooleanValue())

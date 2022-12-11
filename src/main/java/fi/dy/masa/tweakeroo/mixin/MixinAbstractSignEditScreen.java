@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.SignEditScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -20,21 +20,21 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IGuiEditSign;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
-@Mixin(SignEditScreen.class)
-public abstract class MixinSignEditScreen extends Screen implements IGuiEditSign
+@Mixin(AbstractSignEditScreen.class)
+public abstract class MixinAbstractSignEditScreen extends Screen implements IGuiEditSign
 {
-    protected MixinSignEditScreen(Text textComponent)
+    protected MixinAbstractSignEditScreen(Text textComponent)
     {
         super(textComponent);
     }
 
-    @Shadow @Final private SignBlockEntity sign;
-    @Shadow @Final private String[] text;
+    @Shadow @Final protected SignBlockEntity blockEntity;
+    @Shadow @Final protected String[] text;
 
     @Override
     public SignBlockEntity getTile()
     {
-        return this.sign;
+        return this.blockEntity;
     }
 
     @Inject(method = "removed", at = @At("HEAD"))
@@ -42,7 +42,7 @@ public abstract class MixinSignEditScreen extends Screen implements IGuiEditSign
     {
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue())
         {
-            MiscUtils.copyTextFromSign(this.sign);
+            MiscUtils.copyTextFromSign(this.blockEntity);
         }
     }
 
@@ -51,7 +51,7 @@ public abstract class MixinSignEditScreen extends Screen implements IGuiEditSign
     {
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue())
         {
-            MiscUtils.applyPreviousTextToSign(this.sign, this.text);
+            MiscUtils.applyPreviousTextToSign(this.blockEntity, this.text);
         }
 
         if (Configs.Disable.DISABLE_SIGN_GUI.getBooleanValue())

@@ -3,8 +3,8 @@ package fi.dy.masa.tweakeroo.util;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 
@@ -25,7 +25,7 @@ public class PotionRestriction extends UsageRestriction<StatusEffect>
             {
             }
 
-            StatusEffect effect = rl != null ? Registry.STATUS_EFFECT.get(rl) : null;
+            StatusEffect effect = rl != null ? Registries.STATUS_EFFECT.get(rl) : null;
 
             if (effect != null)
             {

@@ -1,6 +1,5 @@
 package fi.dy.masa.tweakeroo.mixin;
 
-import javax.annotation.Nullable;
 import com.mojang.authlib.GameProfile;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +16,6 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.Hand;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -38,9 +36,9 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     private Input realInput;
     private float realNextNauseaStrength;
 
-    private MixinClientPlayerEntity(ClientWorld world, GameProfile profile, @Nullable PlayerPublicKey publicKey)
+    private MixinClientPlayerEntity(ClientWorld world, GameProfile profile)
     {
-        super(world, profile, publicKey);
+        super(world, profile);
     }
 
     @Redirect(method = "updateNausea()V",
@@ -80,8 +78,9 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         }
     }
 
-    @Inject(method = "tickMovement", at = @At(value = "FIELD",
-                target = "Lnet/minecraft/entity/player/PlayerAbilities;allowFlying:Z", ordinal = 1))
+    @Inject(method = "tickMovement",
+            at = @At(value = "FIELD",
+                     target = "Lnet/minecraft/client/network/ClientPlayerEntity;falling:Z"))
     private void overrideSprint(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_PERMANENT_SPRINT.getBooleanValue() &&
@@ -106,9 +105,8 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     }
 
     @Inject(method = "tickMovement",
-            slice = @Slice(from = @At(value = "INVOKE",
-                                      target = "Lnet/minecraft/client/network/ClientPlayerEntity;getHungerManager()" +
-                                               "Lnet/minecraft/entity/player/HungerManager;")),
+            slice = @Slice(from = @At(value = "FIELD",
+                                      target = "Lnet/minecraft/client/option/GameOptions;sprintKey:Lnet/minecraft/client/option/KeyBinding;")),
             at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, ordinal = 0, shift = At.Shift.AFTER,
                      target = "Lnet/minecraft/client/network/ClientPlayerEntity;ticksLeftToDoubleTapSprint:I"))
     private void disableDoubleTapSprint(CallbackInfo ci)

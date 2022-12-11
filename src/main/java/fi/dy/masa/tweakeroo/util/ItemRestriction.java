@@ -5,8 +5,8 @@ import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction.ListType;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 
@@ -32,7 +32,7 @@ public class ItemRestriction
         {
             try
             {
-                Item item = Registry.ITEM.get(new Identifier(name));
+                Item item = Registries.ITEM.get(new Identifier(name));
 
                 if (item != null && item != Items.AIR)
                 {

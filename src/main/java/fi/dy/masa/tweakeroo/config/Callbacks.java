@@ -25,7 +25,6 @@ import fi.dy.masa.tweakeroo.gui.GuiConfigs;
 import fi.dy.masa.tweakeroo.mixin.IMixinAbstractBlock;
 import fi.dy.masa.tweakeroo.mixin.IMixinSimpleOption;
 import fi.dy.masa.tweakeroo.util.CameraEntity;
-import fi.dy.masa.tweakeroo.util.CreativeExtraItems;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.PlacementRestrictionMode;
@@ -101,7 +100,8 @@ public class Callbacks
         Hotkeys.SKIP_WORLD_RENDERING.getKeybind().setCallback(callbackMessage);
 
         Configs.Generic.TOOL_SWITCHABLE_SLOTS.setValueChangeCallback((cfg) -> InventoryUtils.setToolSwitchableSlots(cfg.getStringValue()));
-        Configs.Lists.CREATIVE_EXTRA_ITEMS.setValueChangeCallback((cfg) -> CreativeExtraItems.setCreativeExtraItems(cfg.getStrings()));
+        // TODO 1.19.3+
+        //Configs.Lists.CREATIVE_EXTRA_ITEMS.setValueChangeCallback((cfg) -> CreativeExtraItems.setCreativeExtraItems(cfg.getStrings()));
 
         FeatureToggle.TWEAK_AFTER_CLICKER.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_AFTER_CLICKER));
         FeatureToggle.TWEAK_BREAKING_GRID.getKeybind().setCallback(KeyCallbackAdjustableFeature.createCallback(FeatureToggle.TWEAK_BREAKING_GRID));

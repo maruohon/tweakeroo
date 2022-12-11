@@ -6,14 +6,16 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ArrayListMultimap;
 import com.mojang.brigadier.StringReader;
 import net.minecraft.block.InfestedBlock;
-import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.TextContent;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 
 public class CreativeExtraItems
@@ -34,13 +36,34 @@ public class CreativeExtraItems
 
     public static void setCreativeExtraItems(List<String> items)
     {
-        setCreativeExtraItems(ItemGroup.TRANSPORTATION, items);
+        // The references are private without Fabric API module fabric-item-group-api-v1
+        // So use an ugly workaround for now to find the correct group, to avoid the API
+        // dependency and an extra Mixin accessor.
+        // TODO 1.19.3+ ?
+        for (ItemGroup group : ItemGroups.getGroups())
+        {
+            TextContent content = group.getDisplayName().getContent();
+
+            if (content instanceof TranslatableTextContent translatableTextContent &&
+                translatableTextContent.getKey().equals("itemGroup.op"))
+            {
+                setCreativeExtraItems(group, items);
+                break;
+            }
+        }
     }
 
     private static void setCreativeExtraItems(ItemGroup group, List<String> items)
     {
         ADDED_ITEMS.clear();
         OVERRIDDEN_GROUPS.clear();
+
+        if (items.isEmpty())
+        {
+            return;
+        }
+
+        Tweakeroo.logger.info("Adding extra items to creative inventory group '{}'", group.getDisplayName().getString());
 
         for (String str : items)
         {
@@ -64,7 +87,7 @@ public class CreativeExtraItems
     {
         try
         {
-            ItemStringReader.ItemResult itemResult = ItemStringReader.item(CommandRegistryWrapper.of(Registry.ITEM), new StringReader(str));
+            ItemStringReader.ItemResult itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(str));
             Item item = itemResult.item().value();
 
             if (item != null)

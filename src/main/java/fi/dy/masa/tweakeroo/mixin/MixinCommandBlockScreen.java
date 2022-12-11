@@ -48,13 +48,13 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             int width = 200;
 
             // Move the vanilla buttons a little bit tighter, otherwise the large GUI scale is a mess
-            this.modeButton.y = y;
-            this.conditionalModeButton.y = y;
-            this.redstoneTriggerButton.y = y;
+            this.modeButton.setY(y);
+            this.conditionalModeButton.setY(y);
+            this.redstoneTriggerButton.setY(y);
 
             y += 46;
-            this.doneButton.y = y;
-            this.cancelButton.y = y;
+            this.doneButton.setY(y);
+            this.cancelButton.setY(y);
 
             Text str = Text.translatable("tweakeroo.gui.button.misc.command_block.set_name");
             int widthBtn = this.textRenderer.getWidth(str) + 10;
@@ -66,12 +66,15 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
             final TextFieldWidget tf = this.textFieldName;
             final BlockPos pos = this.blockEntity.getPos();
 
-            this.addDrawableChild(new ButtonWidget(x2, y, widthBtn, 20, str, (button) ->
+            ButtonWidget.Builder builder = ButtonWidget.builder(str, (button) ->
             {
                 String name = tf.getText();
                 name = String.format("{\"CustomName\":\"{\\\"text\\\":\\\"%s\\\"}\"}", name);
-                this.client.player.sendCommand(String.format("data merge block %d %d %d %s", pos.getX(), pos.getY(), pos.getZ(), name));
-            }));
+                this.client.player.networkHandler.sendCommand(String.format("data merge block %d %d %d %s", pos.getX(), pos.getY(), pos.getZ(), name));
+            });
+
+            builder.position(x2, y).size(widthBtn, 20);
+            this.addDrawableChild(builder.build());
 
             this.updateExecValue = MiscUtils.getUpdateExec(this.blockEntity);
 
@@ -89,7 +92,7 @@ public abstract class MixinCommandBlockScreen extends AbstractCommandBlockScreen
 
                 String cmd = String.format("data merge block %d %d %d {\"UpdateLastExecution\":%s}",
                         pos.getX(), pos.getY(), pos.getZ(), this.updateExecValue ? "1b" : "0b");
-                this.client.player.sendCommand(cmd);
+                this.client.player.networkHandler.sendCommand(cmd);
             });
 
             this.addDrawableChild(this.buttonUpdateExec);
