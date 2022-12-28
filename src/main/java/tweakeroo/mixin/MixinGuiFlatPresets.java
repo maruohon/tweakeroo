@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.FlatLayerInfo;
 
+import malilib.util.game.wrap.RegistryUtils;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.tweaks.MiscTweaks;
@@ -115,7 +116,7 @@ public abstract class MixinGuiFlatPresets
                 iconItemName = iconString;
             }
 
-            Item item = Item.REGISTRY.getObject(new ResourceLocation(iconItemName));
+            Item item = RegistryUtils.getItemByIdStr(iconItemName);
 
             if (item == null)
             {

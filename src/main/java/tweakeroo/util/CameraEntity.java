@@ -172,7 +172,7 @@ public class CameraEntity extends EntityPlayerSP
 
     private static CameraEntity createCameraEntity(Minecraft mc)
     {
-        EntityPlayerSP player = mc.player;
+        EntityPlayerSP player = GameUtils.getClientPlayer();
         CameraEntity camera = new CameraEntity(mc, mc.world, player.connection, player.getStatFileWriter(), player.getRecipeBook());
 
         camera.noClip = true;
@@ -201,7 +201,7 @@ public class CameraEntity extends EntityPlayerSP
     {
         Minecraft mc = GameUtils.getClient();
 
-        if (mc.world != null && mc.player != null)
+        if (GameUtils.getClientWorld() != null && GameUtils.getClientPlayer() != null)
         {
             if (enabled)
             {
@@ -229,7 +229,7 @@ public class CameraEntity extends EntityPlayerSP
 
     private static void removeCamera(Minecraft mc)
     {
-        if (mc.world != null && camera != null)
+        if (GameUtils.getClientWorld() != null && camera != null)
         {
             mc.setRenderViewEntity(originalRenderViewEntity);
             mc.renderChunksMany = cullChunksOriginal;

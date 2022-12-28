@@ -123,7 +123,7 @@ public abstract class MixinMinecraft implements IMinecraftAccessor
             at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;world:Lnet/minecraft/client/multiplayer/WorldClient;", ordinal = 0))
     private void onRunTick(CallbackInfo ci)
     {
-        MiscTweaks.onTick((Minecraft) (Object) this);
+        MiscTweaks.onTick();
     }
 
     @Inject(method = "displayDebugInfo", at = @At(value = "INVOKE",

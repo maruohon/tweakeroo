@@ -2,7 +2,6 @@ package tweakeroo.event;
 
 import java.util.function.Supplier;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,29 +37,27 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     @Override
     public void onPostGameOverlayRender()
     {
-        Minecraft mc = GameUtils.getClient();
-
         if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
             Hotkeys.HOTBAR_SWAP_BASE.getKeyBind().isKeyBindHeld())
         {
-            RenderUtils.renderHotbarSwapOverlay(mc);
+            RenderUtils.renderHotbarSwapOverlay();
         }
         else if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() &&
                  Hotkeys.HOTBAR_SCROLL.getKeyBind().isKeyBindHeld())
         {
-            RenderUtils.renderHotbarScrollOverlay(mc);
+            RenderUtils.renderHotbarScrollOverlay();
         }
 
         if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
             Hotkeys.INVENTORY_PREVIEW.getKeyBind().isKeyBindHeld())
         {
-            RenderUtils.renderPointedInventoryOverlay(mc);
+            RenderUtils.renderPointedInventoryOverlay();
         }
 
         if (FeatureToggle.TWEAK_PLAYER_INVENTORY_PEEK.getBooleanValue() &&
             Hotkeys.PLAYER_INVENTORY_PEEK.getKeyBind().isKeyBindHeld())
         {
-            RenderUtils.renderPlayerInventoryPeekOverlay(mc);
+            RenderUtils.renderPlayerInventoryPeekOverlay();
         }
 
         if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue() &&

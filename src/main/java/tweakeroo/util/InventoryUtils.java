@@ -9,6 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
@@ -631,19 +632,21 @@ public class InventoryUtils
     public static void switchToPickedBlock()
     {
         Minecraft mc  = GameUtils.getClient();
-        EntityPlayer player = mc.player;
-        World world = mc.world;
-        double reach = mc.playerController.getBlockReachDistance();
+        EntityPlayer player = GameUtils.getClientPlayer();
+        double reach = GameUtils.getInteractionManager().getBlockReachDistance();
         RayTraceResult trace = player.rayTrace(reach, mc.getRenderPartialTicks());
 
         if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
         {
+            World world = GameUtils.getClientWorld();
             BlockPos pos = trace.getBlockPos();
             IBlockState stateTargeted = world.getBlockState(pos);
             ItemStack stack = stateTargeted.getBlock().getItem(world, pos, stateTargeted);
 
             if (ItemWrap.notEmpty(stack))
             {
+                InventoryPlayer inventory = GameUtils.getPlayerInventory();
+
                 /*
                 if (isCreative)
                 {
@@ -658,17 +661,18 @@ public class InventoryUtils
 
                 if (GameUtils.isCreativeMode())
                 {
-                    player.inventory.setPickedItemStack(stack);
-                    mc.playerController.sendSlotPacket(player.getHeldItem(EnumHand.MAIN_HAND), 36 + player.inventory.currentItem);
+                    inventory.setPickedItemStack(stack);
+                    GameUtils.getInteractionManager().sendSlotPacket(player.getHeldItem(EnumHand.MAIN_HAND), 36 + inventory.currentItem);
                 }
                 else
                 {
-                    int slot = malilib.util.inventory.InventoryUtils.findPlayerInventorySlotWithItem(player.inventoryContainer, stack, true); //player.inventory.getSlotFor(stack);
+                    Container container = GameUtils.getPlayerInventoryContainer();
+                    int slot = malilib.util.inventory.InventoryUtils.findPlayerInventorySlotWithItem(container, stack, true); //player.inventory.getSlotFor(stack);
 
                     if (slot != -1)
                     {
-                        int currentHotbarSlot = player.inventory.currentItem;
-                        mc.playerController.windowClick(player.inventoryContainer.windowId, slot, currentHotbarSlot, ClickType.SWAP, mc.player);
+                        int currentHotbarSlot = inventory.currentItem;
+                        GameUtils.getInteractionManager().windowClick(container.windowId, slot, currentHotbarSlot, ClickType.SWAP, player);
 
                         /*
                         if (InventoryPlayer.isHotbar(slot))

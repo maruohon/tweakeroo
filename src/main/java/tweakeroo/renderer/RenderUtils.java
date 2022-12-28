@@ -2,7 +2,6 @@ package tweakeroo.renderer;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
@@ -39,9 +38,9 @@ public class RenderUtils
 {
     private static long lastRotationChangeTime;
 
-    public static void renderHotbarSwapOverlay(Minecraft mc)
+    public static void renderHotbarSwapOverlay()
     {
-        EntityPlayer player = mc.player;
+        EntityPlayer player = GameUtils.getClientPlayer();
 
         if (player != null)
         {
@@ -77,7 +76,7 @@ public class RenderUtils
             int x = startX;
             int y = startY;
             int z = 0;
-            FontRenderer textRenderer = mc.fontRenderer;
+            FontRenderer textRenderer = GameUtils.getClient().fontRenderer;
 
             malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
             malilib.render.RenderUtils.bindTexture(GuiInventory.INVENTORY_BACKGROUND);
@@ -93,7 +92,7 @@ public class RenderUtils
 
                     if (ItemWrap.notEmpty(stack))
                     {
-                        ItemRenderUtils.renderStackAt(stack, x, y, z, 1f, mc);
+                        ItemRenderUtils.renderStackAt(stack, x, y, z, 1f);
                     }
 
                     x += 18;
@@ -105,9 +104,9 @@ public class RenderUtils
         }
     }
 
-    public static void renderPointedInventoryOverlay(Minecraft mc)
+    public static void renderPointedInventoryOverlay()
     {
-        Pair<InventoryView, InventoryRenderDefinition> pair = InventoryRenderUtils.getPointedInventory(mc);
+        Pair<InventoryView, InventoryRenderDefinition> pair = InventoryRenderUtils.getPointedInventory();
 
         if (pair != null)
         {
@@ -120,18 +119,18 @@ public class RenderUtils
         }
     }
 
-    public static void renderPlayerInventoryPeekOverlay(Minecraft mc)
+    public static void renderPlayerInventoryPeekOverlay()
     {
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
-        InventoryView inv = new SlicedInventoryView(new VanillaInventoryView(mc.player.inventory), 9, 27);
+        InventoryView inv = new SlicedInventoryView(new VanillaInventoryView(GameUtils.getPlayerInventory()), 9, 27);
 
         InventoryRenderDefinition renderer = BuiltinInventoryRenderDefinitions.GENERIC_27;
         InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, yCenter, 300, 0xFFFFFFFF,
                                                     HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM);
     }
 
-    public static void renderHotbarScrollOverlay(Minecraft mc)
+    public static void renderHotbarScrollOverlay()
     {
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
@@ -139,7 +138,7 @@ public class RenderUtils
         final int y = yCenter + 6;
         final int z = 300;
 
-        InventoryView inv = new VanillaInventoryView(mc.player.inventory);
+        InventoryView inv = new VanillaInventoryView(GameUtils.getPlayerInventory());
 
         InventoryRenderDefinition renderer = BuiltinInventoryRenderDefinitions.PLAYER_INVENTORY;
         InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, y, z, 0xFFFFFFFF,

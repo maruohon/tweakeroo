@@ -1,7 +1,7 @@
 package tweakeroo.util;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ChunkProviderClient;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.ViewFrustum;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
@@ -86,8 +86,7 @@ public class CameraUtils
             return;
         }
 
-        Minecraft mc = GameUtils.getClient();
-        ChunkProviderClient provider = mc.world.getChunkProvider();
+        ChunkProviderClient provider = GameUtils.getClientWorld().getChunkProvider();
         final int viewDistance = GameUtils.getRenderDistanceChunks();
 
         if (chunkX != lastChunkX)
@@ -131,9 +130,9 @@ public class CameraUtils
 
     public static void markChunksForRebuildOnDeactivation(int lastChunkX, int lastChunkZ)
     {
-        Minecraft mc = GameUtils.getClient();
         Entity entity = GameUtils.getCameraEntity();
-        ChunkProviderClient provider = mc.world.getChunkProvider();
+        WorldClient world = GameUtils.getClientWorld();
+        ChunkProviderClient provider = world.getChunkProvider();
         final int viewDistance = GameUtils.getRenderDistanceChunks();
         final int chunkX = entity.chunkCoordX;
         final int chunkZ = entity.chunkCoordZ;
@@ -157,7 +156,7 @@ public class CameraUtils
                 {
                     int x = cx << 4;
                     int z = cz << 4;
-                    mc.world.markBlockRangeForRenderUpdate(x, 0, z, x, 255, z);
+                    world.markBlockRangeForRenderUpdate(x, 0, z, x, 255, z);
                 }
             }
         }

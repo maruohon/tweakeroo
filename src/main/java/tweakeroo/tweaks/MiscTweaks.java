@@ -19,6 +19,7 @@ import malilib.config.value.BlackWhiteList;
 import malilib.gui.util.GuiUtils;
 import malilib.overlay.message.MessageUtils;
 import malilib.util.StringUtils;
+import malilib.util.game.wrap.GameUtils;
 import malilib.util.restriction.UsageRestriction;
 import tweakeroo.LiteModTweakeroo;
 import tweakeroo.config.Configs;
@@ -47,16 +48,16 @@ public class MiscTweaks
     private static int periodicAttackCounter;
     private static int periodicUseCounter;
 
-    public static void onTick(Minecraft mc)
+    public static void onTick()
     {
-        EntityPlayerSP player = mc.player;
+        EntityPlayerSP player = GameUtils.getClientPlayer();
 
         if (player == null)
         {
             return;
         }
 
-        doPeriodicClicks(mc);
+        doPeriodicClicks();
         doPotionWarnings(player);
 
         if (FeatureToggle.TWEAK_REPAIR_MODE.getBooleanValue())
@@ -67,10 +68,12 @@ public class MiscTweaks
         CameraEntity.movementTick(player.movementInput.sneak, player.movementInput.jump);
     }
 
-    private static void doPeriodicClicks(Minecraft mc)
+    private static void doPeriodicClicks()
     {
         if (GuiUtils.getCurrentScreen() == null)
         {
+            Minecraft mc = GameUtils.getClient();
+
             if (FeatureToggle.TWEAK_PERIODIC_ATTACK.getBooleanValue() &&
                 ++periodicAttackCounter >= Configs.Generic.PERIODIC_ATTACK_INTERVAL.getIntegerValue())
             {
