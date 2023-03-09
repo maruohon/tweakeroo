@@ -56,7 +56,8 @@ public class ConfigScreen
     {
         // The parent screen should not be set here, to prevent infinite recursion via
         // the call to the parent's setWorldAndResolution -> initScreen -> switch tab -> etc.
-        return new BaseConfigScreen(MOD_INFO, ALL_TABS, TWEAK_TOGGLES, "tweakeroo.title.screen.configs", Reference.MOD_VERSION);
+        return BaseConfigScreen.withExtensionModTabs(MOD_INFO, ALL_TABS, TWEAK_TOGGLES,
+                                                     "tweakeroo.title.screen.configs", Reference.MOD_VERSION);
     }
 
     public static ImmutableList<ConfigTab> getConfigTabs()
