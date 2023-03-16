@@ -42,7 +42,7 @@ public abstract class MixinInGameHud extends DrawableHelper
     {
         if (FeatureToggle.TWEAK_F3_CURSOR.getBooleanValue())
         {
-            RenderUtils.renderDirectionsCursor(this.getZOffset(), this.client.getTickDelta());
+            RenderUtils.renderDirectionsCursor(0, this.client.getTickDelta());
             ci.cancel();
         }
     }

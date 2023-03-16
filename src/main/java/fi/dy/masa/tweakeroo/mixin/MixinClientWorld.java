@@ -1,6 +1,8 @@
 package fi.dy.masa.tweakeroo.mixin;
 
 import java.util.function.Supplier;
+
+import net.minecraft.registry.DynamicRegistryManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,11 +25,12 @@ public abstract class MixinClientWorld extends World
 {
     private MixinClientWorld(MutableWorldProperties properties,
                              RegistryKey<World> registryRef,
+                             DynamicRegistryManager registryManager,
                              RegistryEntry<DimensionType> dimension,
                              Supplier<Profiler> supplier,
                              boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates)
     {
-        super(properties, registryRef, dimension, supplier, isClient, debugWorld, seed, maxChainedNeighborUpdates);
+        super(properties, registryRef, registryManager, dimension, supplier, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
     @Inject(method = "tickEntity", at = @At("HEAD"), cancellable = true)
