@@ -19,6 +19,7 @@ import malilib.config.value.HudAlignment;
 import malilib.config.value.VerticalAlignment;
 import malilib.gui.util.GuiUtils;
 import malilib.render.ItemRenderUtils;
+import malilib.render.RenderContext;
 import malilib.render.ShapeRenderUtils;
 import malilib.render.inventory.BuiltinInventoryRenderDefinitions;
 import malilib.render.inventory.InventoryRenderDefinition;
@@ -92,7 +93,7 @@ public class RenderUtils
 
                     if (ItemWrap.notEmpty(stack))
                     {
-                        ItemRenderUtils.renderStackAt(stack, x, y, z, 1f);
+                        ItemRenderUtils.renderStackAt(stack, x, y, z, 1f, RenderContext.DUMMY);
                     }
 
                     x += 18;
@@ -115,7 +116,7 @@ public class RenderUtils
             InventoryView inv = pair.getLeft();
             InventoryRenderDefinition renderer = pair.getRight();
             InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, yCenter, 300, 0xFFFFFFFF,
-                                                        HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM);
+                                                        HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM, RenderContext.DUMMY);
         }
     }
 
@@ -127,7 +128,7 @@ public class RenderUtils
 
         InventoryRenderDefinition renderer = BuiltinInventoryRenderDefinitions.GENERIC_27;
         InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, yCenter, 300, 0xFFFFFFFF,
-                                                    HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM);
+                                                    HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM, RenderContext.DUMMY);
     }
 
     public static void renderHotbarScrollOverlay()
@@ -142,7 +143,7 @@ public class RenderUtils
 
         InventoryRenderDefinition renderer = BuiltinInventoryRenderDefinitions.PLAYER_INVENTORY;
         InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, y, z, 0xFFFFFFFF,
-                                                    HorizontalAlignment.CENTER, VerticalAlignment.TOP);
+                                                    HorizontalAlignment.CENTER, VerticalAlignment.TOP, RenderContext.DUMMY);
 
         int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
         ShapeRenderUtils.renderOutline(x + 5, y + currentRow * 18 + 5, z + 1f, 9 * 18 + 4, 22, 2, 0xFFFF2020);

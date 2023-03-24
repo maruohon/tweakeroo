@@ -15,6 +15,7 @@ import malilib.event.PostGameOverlayRenderer;
 import malilib.event.PostItemTooltipRenderer;
 import malilib.event.PostWorldRenderer;
 import malilib.gui.BaseScreen;
+import malilib.render.RenderContext;
 import malilib.render.inventory.InventoryRenderUtils;
 import malilib.util.data.Color4f;
 import malilib.util.game.wrap.GameUtils;
@@ -35,7 +36,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     }
 
     @Override
-    public void onPostGameOverlayRender()
+    public void onPostGameOverlayRender(RenderContext ctx)
     {
         if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
             Hotkeys.HOTBAR_SWAP_BASE.getKeyBind().isKeyBindHeld())
@@ -78,7 +79,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     }
 
     @Override
-    public void onPostRenderItemTooltip(ItemStack stack, int x, int y)
+    public void onPostRenderItemTooltip(ItemStack stack, int x, int y, RenderContext ctx)
     {
         float z = Configs.Generic.ITEM_PREVIEW_Z.getIntegerValue();
 
@@ -104,18 +105,18 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
                 boolean background = Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue();
                 x += 8;
                 y -= 10;
-                InventoryRenderUtils.renderItemInventoryPreview(stack, x, y, z, background);
+                InventoryRenderUtils.renderItemInventoryPreview(stack, x, y, z, background, ctx);
             }
         }
     }
 
     @Override
-    public void onPostWorldRender(float tickDelta)
+    public void onPostWorldRender(RenderContext ctx, float tickDelta)
     {
-        this.renderOverlays(tickDelta);
+        this.renderOverlays(ctx, tickDelta);
     }
 
-    private void renderOverlays(float tickDelta)
+    private void renderOverlays(RenderContext ctx, float tickDelta)
     {
         EntityPlayer player = GameUtils.getClientPlayer();
         RayTraceResult hitResult = GameUtils.getHitResult();
