@@ -426,6 +426,7 @@ public class PlacementTweaks
             if (adjacent && hitPart != null && hitPart != HitPart.CENTER)
             {
                 posNew = posNew.offset(sideRotatedIn.getOpposite()).offset(sideIn.getOpposite());
+                hitVec = hitVec.add(Vec3d.of(sideRotatedIn.getOpposite().getVector().add(sideIn.getOpposite().getVector())));
                 handleFlexible = true;
             }
 
@@ -445,6 +446,7 @@ public class PlacementTweaks
             if (offset)
             {
                 posNew = posNew.offset(sideRotatedIn.getOpposite());
+                hitVec = hitVec.add(Vec3d.of(sideRotatedIn.getOpposite().getVector()));
                 handleFlexible = true;
             }
         }
