@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import malilib.render.RenderContext;
 import malilib.render.TextRenderUtils;
+import malilib.render.text.StyledText;
 import malilib.util.StringUtils;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.util.MiscUtils;
@@ -111,8 +112,8 @@ public abstract class MixinGuiCommandBlock extends net.minecraft.client.gui.GuiS
 
         if (this.buttonUpdateExec != null && this.buttonUpdateExec.isMouseOver())
         {
-            String hover = "tweakeroo.gui.button.misc.command_block.hover.update_execution";
-            TextRenderUtils.renderHoverText(mouseX, mouseY, 1, StringUtils.translate(hover), RenderContext.DUMMY);
+            StyledText hover = StyledText.translate("tweakeroo.gui.button.misc.command_block.hover.update_execution");
+            TextRenderUtils.renderStyledHoverText(mouseX, mouseY, 1, hover, RenderContext.DUMMY);
         }
     }
 
