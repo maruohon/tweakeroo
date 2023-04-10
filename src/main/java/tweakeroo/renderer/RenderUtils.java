@@ -206,14 +206,14 @@ public class RenderUtils
 
     public static void notifyRotationChanged()
     {
-        lastRotationChangeTime = System.currentTimeMillis();
+        lastRotationChangeTime = System.nanoTime();
     }
 
     public static void renderSnapAimAngleIndicator()
     {
-        long current = System.currentTimeMillis();
+        long current = System.nanoTime();
 
-        if (current - lastRotationChangeTime < 750)
+        if (current - lastRotationChangeTime < 750000000L)
         {
             final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
             final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
