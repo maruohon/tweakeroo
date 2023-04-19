@@ -1,16 +1,16 @@
 [
-    {
-        "modid": "tweakeroo",
-        "name": "Tweakeroo",
-        "description": "Adds a bunch of configurable client-side tweaks",
-        "version": "${mod_version}",
-        "mcversion": "${minecraft_version}",
-        "url": "http://minecraft.curseforge.com/projects/tweakeroo",
-        "updateUrl": "",
-        "authorList": ["masa"],
-        "credits": "",
-        "logoFile": "",
-        "screenshots": [],
-        "dependencies": []
-    }
+	{
+		"modid": "tweakeroo",
+		"name": "Tweakeroo",
+		"description": "Adds a bunch of configurable client-side tweaks",
+		"version": "${mod_version}",
+		"mcversion": "${minecraft_version}",
+		"url": "https://www.curseforge.com/minecraft/mc-mods/tweakeroo",
+		"updateUrl": "",
+		"authorList": [ "masa" ],
+		"credits": "",
+		"logoFile": "",
+		"screenshots": [],
+		"dependencies": []
+	}
 ]
