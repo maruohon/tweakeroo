@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 
 import malilib.action.Action;
 import malilib.action.ActionContext;
-import malilib.action.ActionUtils;
-import malilib.action.ConfigActions;
+import malilib.action.util.ActionUtils;
+import malilib.action.builtin.ConfigActions;
 import malilib.action.NamedAction;
 import malilib.action.ParameterizedAction;
 import malilib.input.ActionResult;
