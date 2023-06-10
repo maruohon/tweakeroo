@@ -281,7 +281,7 @@ public class Callbacks
 
                     if (te instanceof SignBlockEntity)
                     {
-                        MiscUtils.copyTextFromSign((SignBlockEntity) te);
+                        MiscUtils.copyTextFromSign((SignBlockEntity) te, ((SignBlockEntity) te).isPlayerFacingFront(mc.player));
                         InfoUtils.printActionbarMessage("tweakeroo.message.sign_text_copied");
                     }
                 }

@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -42,6 +43,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
+
 import fi.dy.masa.malilib.gui.Message;
 import fi.dy.masa.malilib.util.Constants;
 import fi.dy.masa.malilib.util.GuiUtils;
@@ -916,7 +918,7 @@ public class InventoryUtils
 
             // Only accept regular inventory slots (no crafting, armor slots, or offhand)
             if (fi.dy.masa.malilib.util.InventoryUtils.isRegularInventorySlot(slot.id, false) &&
-                stackSlot.isItemEqual(stackReference) &&
+                ItemStack.areItemsEqual(stackSlot, stackReference) &&
                 stackSlot.getMaxDamage() - stackSlot.getDamage() >= minDurabilityLeft &&
                 hasSameIshEnchantments(stackReference, stackSlot))
             {

@@ -10,11 +10,14 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.GameOptions;
@@ -36,6 +39,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.Message;
 import fi.dy.masa.malilib.util.FileUtils;
@@ -58,7 +62,7 @@ public class MiscUtils
     // name;blocks;biome;options;iconitem
     public static final Pattern PATTERN_WORLD_PRESET = Pattern.compile("^(?<name>[a-zA-Z0-9_/&*#!=()\\[\\]{} -]+);(?<blocks>[a-z0-9_:.*,-]+);(?<biome>[a-z0-9_:.-]+);(?<options>[a-z0-9_, ()=]*);(?<icon>[a-z0-9_:.-]+)$");
 
-    private static net.minecraft.text.Text[] previousSignText;
+    private static SignText previousSignText;
     private static String previousChatText = "";
     private static final Date DATE = new Date();
     private static double lastRealPitch;
@@ -259,33 +263,19 @@ public class MiscUtils
         return (newColor & 0x00FFFFFF) | ((int) (((newColor >>> 24) / 255.0) * ((colorOrig >>> 24) / 255.0) / 0.5 * 255) << 24);
     }
 
-    public static void copyTextFromSign(SignBlockEntity te)
+    public static void copyTextFromSign(SignBlockEntity te, boolean front)
     {
-        net.minecraft.text.Text[] text = ((ISignTextAccess) te).getText();
-        final int size = text.length;
-        previousSignText = new net.minecraft.text.Text[size];
-
-        for (int i = 0; i < size; ++i)
-        {
-            previousSignText[i] = text[i];
-        }
+        previousSignText = ((ISignTextAccess) te).getText(front);
     }
 
-    public static void applyPreviousTextToSign(SignBlockEntity te, @Nullable String[] guiLines)
+    public static void applyPreviousTextToSign(SignBlockEntity te, @Nullable AbstractSignEditScreen guiLines, boolean front)
     {
         if (previousSignText != null)
         {
-            final int size = previousSignText.length;
+            te.setText(previousSignText, front);
 
-            for (int i = 0; i < size; ++i)
-            {
-                net.minecraft.text.Text text = previousSignText[i];
-                te.setTextOnRow(i, text);
-
-                if (guiLines != null)
-                {
-                    guiLines[i] = text.getString();//Text.Serializer.toJson(text);
-                }
+            if (guiLines != null) {
+                ((IGuiEditSign) guiLines).applyText(previousSignText);
             }
         }
     }

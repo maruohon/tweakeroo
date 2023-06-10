@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -13,6 +14,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IEntityItem;
 import fi.dy.masa.tweakeroo.util.InventoryUtils;
@@ -85,7 +87,7 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
                 fi.dy.masa.malilib.util.InventoryUtils.shulkerBoxHasItems(stackSelf) == false &&
                 // Only stack up to 64, and don't steal from other stacks that are larger
                 stackSelf.getCount() < 64 && stackSelf.getCount() >= stackOther.getCount() &&
-                ItemStack.areNbtEqual(stackSelf, stackOther))
+                ItemStack.canCombine(stackSelf, stackOther))
             {
                 int amount = Math.min(stackOther.getCount(), 64 - stackSelf.getCount());
 

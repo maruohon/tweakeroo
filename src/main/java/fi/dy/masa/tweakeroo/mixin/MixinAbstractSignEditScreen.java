@@ -6,13 +6,16 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import fi.dy.masa.tweakeroo.config.Configs;
@@ -28,8 +31,12 @@ public abstract class MixinAbstractSignEditScreen extends Screen implements IGui
         super(textComponent);
     }
 
-    @Shadow @Final protected SignBlockEntity blockEntity;
-    @Shadow @Final protected String[] text;
+    @Shadow @Final private SignBlockEntity blockEntity;
+    @Shadow private SignText text;
+
+    @Shadow @Final private boolean front;
+
+    @Shadow @Final private String[] messages;
 
     @Override
     public SignBlockEntity getTile()
@@ -42,7 +49,7 @@ public abstract class MixinAbstractSignEditScreen extends Screen implements IGui
     {
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue())
         {
-            MiscUtils.copyTextFromSign(this.blockEntity);
+            MiscUtils.copyTextFromSign(this.blockEntity, this.front);
         }
     }
 
@@ -51,7 +58,7 @@ public abstract class MixinAbstractSignEditScreen extends Screen implements IGui
     {
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue())
         {
-            MiscUtils.applyPreviousTextToSign(this.blockEntity, this.text);
+            MiscUtils.applyPreviousTextToSign(this.blockEntity, ((AbstractSignEditScreen) (Object) this), this.front);
         }
 
         if (Configs.Disable.DISABLE_SIGN_GUI.getBooleanValue())
@@ -67,6 +74,17 @@ public abstract class MixinAbstractSignEditScreen extends Screen implements IGui
             }
 
             GuiBase.openGui(null);
+        }
+    }
+
+    @Override
+    public void applyText(SignText text)
+    {
+        this.text = text;
+
+        for (int i = 0; i < this.messages.length; i++)
+        {
+            this.messages[i] = text.getMessage(i, false).getString();
         }
     }
 }

@@ -1,20 +1,21 @@
 package fi.dy.masa.tweakeroo.mixin;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IGuiEditSign;
 import fi.dy.masa.tweakeroo.util.ISignTextAccess;
@@ -23,7 +24,8 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 @Mixin(SignBlockEntity.class)
 public abstract class MixinSignBlockEntity extends BlockEntity implements ISignTextAccess
 {
-    @Shadow @Final private Text[] texts;
+    @Shadow private SignText frontText;
+    @Shadow private SignText backText;
 
     private MixinSignBlockEntity(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState)
     {
@@ -40,14 +42,14 @@ public abstract class MixinSignBlockEntity extends BlockEntity implements ISignT
 
             if ((mc.currentScreen instanceof SignEditScreen) && ((IGuiEditSign) mc.currentScreen).getTile() == (Object) this)
             {
-                MiscUtils.applyPreviousTextToSign((SignBlockEntity) (Object) this, null);
+                MiscUtils.applyPreviousTextToSign((SignBlockEntity) (Object) this, null, ((SignBlockEntity) (Object) this).isPlayerFacingFront(mc.player));
             }
         }
     }
 
     @Override
-    public Text[] getText()
+    public SignText getText(boolean front)
     {
-        return this.texts;
+        return front ? this.frontText : this.backText;
     }
 }

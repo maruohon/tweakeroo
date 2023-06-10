@@ -1,8 +1,8 @@
 package fi.dy.masa.tweakeroo.util;
 
-import net.minecraft.text.Text;
+import net.minecraft.block.entity.SignText;
 
 public interface ISignTextAccess
 {
-    Text[] getText();
+    SignText getText(boolean front);
 }
