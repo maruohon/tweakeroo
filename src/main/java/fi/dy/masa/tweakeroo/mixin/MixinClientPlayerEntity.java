@@ -35,7 +35,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     @Shadow public float nauseaIntensity;
     private final DummyMovementInput dummyMovementInput = new DummyMovementInput(null);
     private Input realInput;
-    private float realNextNauseaStrength;
+    private float realNauseaIntensity;
 
     private MixinClientPlayerEntity(ClientWorld world, GameProfile profile)
     {
@@ -61,7 +61,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
     {
         if (Configs.Disable.DISABLE_NAUSEA_EFFECT.getBooleanValue())
         {
-            this.prevNauseaIntensity = this.nauseaIntensity;
+            this.nauseaIntensity = this.realNauseaIntensity;
         }
     }
 
@@ -73,7 +73,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         {
             // This is used to set the value to the correct value for the duration of the
             // updateNausea() method, so that the portal sound plays correctly only once.
-            this.realNextNauseaStrength = this.prevNauseaIntensity;
+            this.realNauseaIntensity = this.nauseaIntensity;
             this.prevNauseaIntensity = 0.0f;
             this.nauseaIntensity = 0.0f;
         }
