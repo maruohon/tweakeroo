@@ -459,6 +459,11 @@ public class Configs implements IConfigHandler
             // But only if we are currently not in a world, since changing configs also re-loads them when closing the menu.
             FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
         }
+        if(FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanValue())
+        {
+            // If the feature is enabled on game launch, apply it here
+            FeatureToggle.TWEAK_GAMMA_OVERRIDE.onValueChanged();
+        }
     }
 
     public static void saveToFile()
