@@ -66,7 +66,6 @@ public abstract class MixinClientPlayerInteractionManager
             player.getWorld().getBlockEntity(hitResult.getBlockPos()) instanceof SignBlockEntity sbe &&
             !sbe.isWaxed())
         {
-            sbe.runCommandClickEvent(player, player.getWorld(), hitResult.getBlockPos(), sbe.isPlayerFacingFront(player));
             cir.setReturnValue(ActionResult.SUCCESS);
             cir.cancel();
         }
