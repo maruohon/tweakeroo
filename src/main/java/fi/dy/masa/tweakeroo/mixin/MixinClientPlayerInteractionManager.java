@@ -1,5 +1,9 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.item.HoneycombItem;
+import net.minecraft.util.hit.BlockHitResult;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,6 +47,27 @@ public abstract class MixinClientPlayerInteractionManager
             PlacementTweaks.onProcessRightClickPre(player, hand))
         {
             cir.setReturnValue(ActionResult.PASS);
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "interactBlock", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;sendSequencedPacket(" +
+                     "Lnet/minecraft/client/world/ClientWorld;" +
+                     "Lnet/minecraft/client/network/SequencedPacketCreator;" +
+                     ")V"),
+                     cancellable = true)
+    private void onProcessRightClickFirst(ClientPlayerEntity player, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir)
+    {
+        if (!player.shouldCancelInteraction() &&
+            !(player.getStackInHand(hand).getItem() instanceof HoneycombItem) &&
+            Configs.Disable.DISABLE_SIGN_EDIT.getBooleanValue() &&
+            player.getWorld().getBlockEntity(hitResult.getBlockPos()) instanceof SignBlockEntity sbe &&
+            !sbe.isWaxed())
+        {
+            sbe.runCommandClickEvent(player, player.getWorld(), hitResult.getBlockPos(), sbe.isPlayerFacingFront(player));
+            cir.setReturnValue(ActionResult.SUCCESS);
             cir.cancel();
         }
     }
