@@ -21,6 +21,8 @@ import malilib.gui.util.GuiUtils;
 import malilib.render.ItemRenderUtils;
 import malilib.render.RenderContext;
 import malilib.render.ShapeRenderUtils;
+import malilib.render.buffer.VanillaWrappingVertexBuilder;
+import malilib.render.buffer.VertexBuilder;
 import malilib.render.inventory.BuiltinInventoryRenderDefinitions;
 import malilib.render.inventory.InventoryRenderDefinition;
 import malilib.render.inventory.InventoryRenderUtils;
@@ -39,7 +41,7 @@ public class RenderUtils
 {
     private static long lastRotationChangeTime;
 
-    public static void renderHotbarSwapOverlay()
+    public static void renderHotbarSwapOverlay(RenderContext ctx)
     {
         EntityPlayer player = GameUtils.getClientPlayer();
 
@@ -81,7 +83,7 @@ public class RenderUtils
 
             malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
             malilib.render.RenderUtils.bindTexture(GuiInventory.INVENTORY_BACKGROUND);
-            ShapeRenderUtils.renderTexturedRectangle256(x - 1, y - 1, z, 7, 83, 9 * 18, 3 * 18);
+            ShapeRenderUtils.renderTexturedRectangle256(x - 1, y - 1, z, 7, 83, 9 * 18, 3 * 18, ctx);
 
             for (int row = 1; row <= 3; row++)
             {
@@ -131,7 +133,7 @@ public class RenderUtils
                                                     HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM, RenderContext.DUMMY);
     }
 
-    public static void renderHotbarScrollOverlay()
+    public static void renderHotbarScrollOverlay(RenderContext ctx)
     {
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
@@ -146,7 +148,7 @@ public class RenderUtils
                                                     HorizontalAlignment.CENTER, VerticalAlignment.TOP, RenderContext.DUMMY);
 
         int currentRow = Configs.Internal.HOTBAR_SCROLL_CURRENT_ROW.getIntegerValue();
-        ShapeRenderUtils.renderOutline(x + 5, y + currentRow * 18 + 5, z + 1f, 9 * 18 + 4, 22, 2, 0xFFFF2020);
+        ShapeRenderUtils.renderOutline(x + 5, y + currentRow * 18 + 5, z + 1f, 9 * 18 + 4, 22, 2, 0xFFFF2020, ctx);
     }
 
     public static float getLavaFog(Entity entity, float originalFog)
@@ -209,7 +211,7 @@ public class RenderUtils
         lastRotationChangeTime = System.nanoTime();
     }
 
-    public static void renderSnapAimAngleIndicator()
+    public static void renderSnapAimAngleIndicator(RenderContext ctx)
     {
         long current = System.nanoTime();
 
@@ -222,17 +224,18 @@ public class RenderUtils
 
             if (mode != SnapAimMode.PITCH)
             {
-                renderSnapAimAngleIndicatorYaw(xCenter, yCenter, 80, 12, textRenderer);
+                renderSnapAimAngleIndicatorYaw(xCenter, yCenter, 80, 12, textRenderer, ctx);
             }
 
             if (mode != SnapAimMode.YAW)
             {
-                renderSnapAimAngleIndicatorPitch(xCenter, yCenter, 12, 50, textRenderer);
+                renderSnapAimAngleIndicatorPitch(xCenter, yCenter, 12, 50, textRenderer, ctx);
             }
         }
     }
 
-    private static void renderSnapAimAngleIndicatorYaw(int xCenter, int yCenter, int width, int height, FontRenderer textRenderer)
+    private static void renderSnapAimAngleIndicatorYaw(int xCenter, int yCenter, int width, int height,
+                                                       FontRenderer textRenderer, RenderContext ctx)
     {
         double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
         double realYaw = MathHelper.positiveModulo(MiscUtils.getLastRealYaw(), 360.0D);
@@ -245,11 +248,6 @@ public class RenderUtils
 
         malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
-        int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
-
-        // Draw the main box
-        ShapeRenderUtils.renderOutlinedRectangle(x, y, z, width, height, bgColor, 0xFFFFFFFF);
-
         String str = MathHelper.wrapDegrees(snappedYaw) + "°";
         textRenderer.drawString(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
@@ -259,26 +257,35 @@ public class RenderUtils
         str = MathHelper.wrapDegrees(snappedYaw + step) + "°  >";
         textRenderer.drawString(str, x + width, y + height + 2, 0xFFFFFFFF);
 
+        VertexBuilder builder = VanillaWrappingVertexBuilder.coloredQuads();
+        int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
+
+        // Draw the main box
+        ShapeRenderUtils.renderOutlinedRectangle(x, y, z, width, height, bgColor, 0xFFFFFFFF, builder);
+
         if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue())
         {
             double threshold = Configs.Generic.SNAP_AIM_THRESHOLD_YAW.getDoubleValue();
             int snapThreshOffset = (int) (width * threshold / step);
 
             // Draw the middle region
-            ShapeRenderUtils.renderRectangle(xCenter - snapThreshOffset, y + 1, z, snapThreshOffset * 2, height - 2, 0x6050FF50);
+            ShapeRenderUtils.renderRectangle(xCenter - snapThreshOffset, y + 1, z, snapThreshOffset * 2, height - 2, 0x6050FF50, builder);
 
             if (threshold < (step / 2.0))
             {
-                ShapeRenderUtils.renderRectangle(xCenter - snapThreshOffset, y + 1, z, 2, height - 2, 0xFF20FF20);
-                ShapeRenderUtils.renderRectangle(xCenter + snapThreshOffset, y + 1, z, 2, height - 2, 0xFF20FF20);
+                ShapeRenderUtils.renderRectangle(xCenter - snapThreshOffset, y + 1, z, 2, height - 2, 0xFF20FF20, builder);
+                ShapeRenderUtils.renderRectangle(xCenter + snapThreshOffset, y + 1, z, 2, height - 2, 0xFF20FF20, builder);
             }
         }
 
         // Draw the current angle indicator
-        ShapeRenderUtils.renderRectangle(lineX, y, z, 2, height, 0xFFFFFFFF);
+        ShapeRenderUtils.renderRectangle(lineX, y, z, 2, height, 0xFFFFFFFF, builder);
+
+        builder.draw();
     }
 
-    private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height, FontRenderer textRenderer)
+    private static void renderSnapAimAngleIndicatorPitch(int xCenter, int yCenter, int width, int height,
+                                                         FontRenderer textRenderer, RenderContext ctx)
     {
         double step = Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue();
         int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
@@ -300,10 +307,10 @@ public class RenderUtils
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
 
-        renderPitchIndicator(x, y, width, height, realPitch, snappedPitch, step, true, textRenderer);
+        renderPitchIndicator(x, y, width, height, realPitch, snappedPitch, step, true, textRenderer, ctx);
     }
 
-    public static void renderPitchLockIndicator()
+    public static void renderPitchLockIndicator(RenderContext ctx)
     {
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
@@ -315,11 +322,14 @@ public class RenderUtils
         double centerPitch = 0;
         double indicatorRange = 180;
 
-        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange, false, GameUtils.getClient().fontRenderer);
+        renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange,
+                             false, GameUtils.getClient().fontRenderer, ctx);
     }
 
     private static void renderPitchIndicator(int x, int y, int width, int height,
-            double currentPitch, double centerPitch, double indicatorRange, boolean isSnapRange, FontRenderer textRenderer)
+                                             double currentPitch, double centerPitch,
+                                             double indicatorRange, boolean isSnapRange,
+                                             FontRenderer textRenderer, RenderContext ctx)
     {
         double startPitch = centerPitch - (indicatorRange / 2.0);
         double printedRange = isSnapRange ? indicatorRange : indicatorRange / 2;
@@ -347,8 +357,10 @@ public class RenderUtils
         }
 
         int bgColor = Configs.Generic.SNAP_AIM_INDICATOR_COLOR.getIntegerValue();
+        VertexBuilder builder = VanillaWrappingVertexBuilder.coloredQuads();
+
         // Draw the main box
-        ShapeRenderUtils.renderOutlinedRectangle(x, y, z, width, height, bgColor, 0xFFFFFFFF);
+        ShapeRenderUtils.renderOutlinedRectangle(x, y, z, width, height, bgColor, 0xFFFFFFFF, builder);
 
         int yCenter = y + height / 2 - 1;
 
@@ -358,20 +370,22 @@ public class RenderUtils
             double threshold = Configs.Generic.SNAP_AIM_THRESHOLD_PITCH.getDoubleValue();
             int snapThreshOffset = (int) ((double) height * threshold / indicatorRange);
 
-            ShapeRenderUtils.renderRectangle(x + 1, yCenter - snapThreshOffset, z, width - 2, snapThreshOffset * 2, 0x6050FF50);
+            ShapeRenderUtils.renderRectangle(x + 1, yCenter - snapThreshOffset, z, width - 2, snapThreshOffset * 2, 0x6050FF50, builder);
 
             if (threshold < (step / 2.0))
             {
-                ShapeRenderUtils.renderRectangle(x + 1, yCenter - snapThreshOffset, z, width - 2, 2, 0xFF20FF20);
-                ShapeRenderUtils.renderRectangle(x + 1, yCenter + snapThreshOffset, z, width - 2, 2, 0xFF20FF20);
+                ShapeRenderUtils.renderRectangle(x + 1, yCenter - snapThreshOffset, z, width - 2, 2, 0xFF20FF20, builder);
+                ShapeRenderUtils.renderRectangle(x + 1, yCenter + snapThreshOffset, z, width - 2, 2, 0xFF20FF20, builder);
             }
         }
         else if (isSnapRange == false)
         {
-            ShapeRenderUtils.renderRectangle(x + 1, yCenter - 1, z, width - 2, 2, 0xFFC0C0C0);
+            ShapeRenderUtils.renderRectangle(x + 1, yCenter - 1, z, width - 2, 2, 0xFFC0C0C0, builder);
         }
 
         // Draw the current angle indicator
-        ShapeRenderUtils.renderRectangle(x, lineY - 1, z, width, 2, 0xFFFFFFFF);
+        ShapeRenderUtils.renderRectangle(x, lineY - 1, z, width, 2, 0xFFFFFFFF, builder);
+
+        builder.draw();
     }
 }

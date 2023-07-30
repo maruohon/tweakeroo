@@ -41,12 +41,12 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
         if (FeatureToggle.TWEAK_HOTBAR_SWAP.getBooleanValue() &&
             Hotkeys.HOTBAR_SWAP_BASE.getKeyBind().isKeyBindHeld())
         {
-            RenderUtils.renderHotbarSwapOverlay();
+            RenderUtils.renderHotbarSwapOverlay(ctx);
         }
         else if (FeatureToggle.TWEAK_HOTBAR_SCROLL.getBooleanValue() &&
                  Hotkeys.HOTBAR_SCROLL.getKeyBind().isKeyBindHeld())
         {
-            RenderUtils.renderHotbarScrollOverlay();
+            RenderUtils.renderHotbarScrollOverlay(ctx);
         }
 
         if (FeatureToggle.TWEAK_INVENTORY_PREVIEW.getBooleanValue() &&
@@ -64,7 +64,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
         if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue() &&
             Configs.Generic.SNAP_AIM_INDICATOR.getBooleanValue())
         {
-            RenderUtils.renderSnapAimAngleIndicator();
+            RenderUtils.renderSnapAimAngleIndicator(ctx);
         }
 
         if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue())
@@ -73,7 +73,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
 
             if (mode == ActiveMode.ALWAYS || (mode == ActiveMode.WITH_KEY && Hotkeys.ELYTRA_CAMERA.getKeyBind().isKeyBindHeld()))
             {
-                RenderUtils.renderPitchLockIndicator();
+                RenderUtils.renderPitchLockIndicator(ctx);
             }
         }
     }
@@ -92,7 +92,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
                 if (render)
                 {
                     int dimensions = Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue();
-                    malilib.render.RenderUtils.renderMapPreview(stack, x, y, z, dimensions);
+                    malilib.render.RenderUtils.renderMapPreview(stack, x, y, z, dimensions, ctx);
                 }
             }
         }
@@ -147,7 +147,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
                     hitResult.getBlockPos(),
                     hitResult.sideHit,
                     hitResult.hitVec,
-                    color, tickDelta);
+                    color, tickDelta, ctx);
 
             GlStateManager.enableTexture2D();
             GlStateManager.enableDepth();
