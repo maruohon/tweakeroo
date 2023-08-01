@@ -15,6 +15,7 @@ import malilib.event.PostGameOverlayRenderer;
 import malilib.event.PostItemTooltipRenderer;
 import malilib.event.PostWorldRenderer;
 import malilib.gui.BaseScreen;
+import malilib.render.BlockTargetingRenderUtils;
 import malilib.render.RenderContext;
 import malilib.render.inventory.InventoryRenderUtils;
 import malilib.util.data.Color4f;
@@ -119,11 +120,11 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     private void renderOverlays(RenderContext ctx, float tickDelta)
     {
         EntityPlayer player = GameUtils.getClientPlayer();
-        RayTraceResult hitResult = GameUtils.getHitResult();
+        RayTraceResult hit = GameUtils.getHitResult();
 
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
-            hitResult != null &&
-            hitResult.typeOfHit == RayTraceResult.Type.BLOCK &&
+            hit != null &&
+            hit.typeOfHit == RayTraceResult.Type.BLOCK &&
             player.isSpectator() == false &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld() ||
@@ -142,12 +143,8 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
 
             Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
 
-            malilib.render.RenderUtils.renderBlockTargetingOverlay(
-                    entity,
-                    hitResult.getBlockPos(),
-                    hitResult.sideHit,
-                    hitResult.hitVec,
-                    color, tickDelta, ctx);
+            BlockTargetingRenderUtils.render5WayBlockTargetingOverlay(entity, hit.getBlockPos(), hit.sideHit,
+                                                                      hit.hitVec, color, tickDelta, ctx);
 
             GlStateManager.enableTexture2D();
             GlStateManager.enableDepth();
