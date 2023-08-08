@@ -72,7 +72,7 @@ public class ConfigScreen
         list.add(ConfigUtils.extractOptionsToExpandableGroup(list, MOD_INFO, "fly_speed", c -> c.getName().startsWith("flySpeed")));
         list.add(ConfigUtils.extractOptionsToExpandableGroup(list, MOD_INFO, "snap_aim", c -> c.getName().startsWith("snapAim")));
 
-        ConfigUtils.sortConfigsByDisplayName(list);
+        ConfigUtils.sortConfigsInPlaceByDisplayName(list);
 
         return ImmutableList.copyOf(list);
     }
@@ -85,7 +85,7 @@ public class ConfigScreen
         list.add(ConfigUtils.extractOptionsToExpandableGroup(list, MOD_INFO, "hotkey.fly_speed",             c -> c.getName().startsWith("flySpeed")));
         list.add(ConfigUtils.extractOptionsToExpandableGroup(list, MOD_INFO, "hotkey.placement_restriction", c -> c.getName().startsWith("placementRestriction")));
 
-        ConfigUtils.sortConfigsByDisplayName(list);
+        ConfigUtils.sortConfigsInPlaceByDisplayName(list);
 
         return ImmutableList.copyOf(list);
     }
