@@ -17,8 +17,6 @@ import fi.dy.masa.tweakeroo.util.SnapAimMode;
 @Mixin(net.minecraft.entity.Entity.class)
 public abstract class MixinEntity
 {
-    @Shadow public net.minecraft.world.World world;
-
     @Shadow private float yaw;
     @Shadow private float pitch;
     @Shadow public float prevYaw;

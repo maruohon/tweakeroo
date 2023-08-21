@@ -1,5 +1,6 @@
 package fi.dy.masa.tweakeroo.mixin;
 
+import net.minecraft.scoreboard.ScoreboardDisplaySlot;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,8 +38,8 @@ public abstract class MixinInGameHud
         }
     }
 
-    @Inject(method = "renderCrosshair", at = @At(value = "FIELD",
-                target = "Lnet/minecraft/client/option/GameOptions;debugEnabled:Z", ordinal = 0), cancellable = true)
+    @Inject(method = "renderCrosshair", at = @At(value = "INVOKE",
+                target = "Lnet/minecraft/client/gui/hud/DebugHud;shouldShowDebugHud()Z", ordinal = 0), cancellable = true)
     private void overrideCursorRender(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_F3_CURSOR.getBooleanValue())
@@ -57,7 +58,7 @@ public abstract class MixinInGameHud
         if (FeatureToggle.TWEAK_PLAYER_LIST_ALWAYS_ON.getBooleanValue())
         {
             Scoreboard scoreboard = this.client.world.getScoreboard();
-            ScoreboardObjective objective = scoreboard.getObjectiveForSlot(0);
+            ScoreboardObjective objective = scoreboard.getObjectiveForSlot(ScoreboardDisplaySlot.LIST);
 
             this.playerListHud.setVisible(true);
             this.playerListHud.render(drawContext, this.scaledWidth, scoreboard, objective);

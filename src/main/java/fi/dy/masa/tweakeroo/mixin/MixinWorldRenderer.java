@@ -58,7 +58,7 @@ public abstract class MixinWorldRenderer
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE_STRING",
-            target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=compilechunks"))
+            target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=compile_sections"))
     private void postSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
     {
         CameraUtils.setFreeCameraSpectator(false);
@@ -81,7 +81,7 @@ public abstract class MixinWorldRenderer
     // rendering seems to work fine with Sodium without these anyway
     @Inject(method = "setupTerrain", require = 0,
             at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD,
-            target = "Lnet/minecraft/client/render/WorldRenderer;lastCameraChunkUpdateX:D"))
+            target = "Lnet/minecraft/client/render/WorldRenderer;lastCameraX:D"))
     private void rebuildChunksAroundCamera1(
             Camera camera, Frustum frustum, boolean hasForcedFrustum, boolean spectator, CallbackInfo ci)
     {
