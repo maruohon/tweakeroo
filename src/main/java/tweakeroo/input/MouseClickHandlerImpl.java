@@ -26,7 +26,7 @@ public class MouseClickHandlerImpl implements MouseClickHandler
         WorldClient world = GameUtils.getClientWorld();
         RayTraceResult hitResult = GameUtils.getHitResult();
 
-        if (GuiUtils.getCurrentScreen() == null && player != null && player.capabilities.isCreativeMode &&
+        if (GuiUtils.noScreenOpen() && player != null && player.capabilities.isCreativeMode &&
             buttonState && mouseButton == GameUtils.getClient().gameSettings.keyBindUseItem.getKeyCode() + 100 &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
             hitResult != null && hitResult.typeOfHit == RayTraceResult.Type.MISS)

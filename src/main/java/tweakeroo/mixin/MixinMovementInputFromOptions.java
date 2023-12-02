@@ -32,7 +32,7 @@ public abstract class MixinMovementInputFromOptions extends MovementInput
         }
 
         if (FeatureToggle.TWEAK_PERMANENT_SNEAK.getBooleanValue() &&
-            (Configs.Generic.PERMANENT_SNEAK_ALLOW_IN_GUIS.getBooleanValue() || GuiUtils.getCurrentScreen() == null))
+            (Configs.Generic.PERMANENT_SNEAK_ALLOW_IN_GUIS.getBooleanValue() || GuiUtils.noScreenOpen()))
         {
             this.sneak = true;
         }

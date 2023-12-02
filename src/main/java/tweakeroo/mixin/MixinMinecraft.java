@@ -106,12 +106,12 @@ public abstract class MixinMinecraft implements IMinecraftAccessor
     {
         Minecraft mc = (Minecraft) (Object) this;
 
-        if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue() && GuiUtils.getCurrentScreen() == null)
+        if (FeatureToggle.TWEAK_HOLD_ATTACK.getBooleanValue() && GuiUtils.noScreenOpen())
         {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), true);
         }
 
-        if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue() && GuiUtils.getCurrentScreen() == null)
+        if (FeatureToggle.TWEAK_HOLD_USE.getBooleanValue() && GuiUtils.noScreenOpen())
         {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
         }

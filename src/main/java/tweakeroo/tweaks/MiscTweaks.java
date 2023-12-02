@@ -70,7 +70,7 @@ public class MiscTweaks
 
     private static void doPeriodicClicks()
     {
-        if (GuiUtils.getCurrentScreen() == null)
+        if (GuiUtils.noScreenOpen())
         {
             Minecraft mc = GameUtils.getClient();
 

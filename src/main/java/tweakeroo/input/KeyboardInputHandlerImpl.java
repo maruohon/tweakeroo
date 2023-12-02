@@ -20,7 +20,7 @@ public class KeyboardInputHandlerImpl implements KeyboardInputHandler
     public boolean onKeyInput(int keyCode, int scanCode, int modifiers, boolean eventKeyState)
     {
         // Not in a GUI
-        if (GuiUtils.getCurrentScreen() == null && eventKeyState)
+        if (GuiUtils.noScreenOpen() && eventKeyState)
         {
             this.storeLastMovementDirection(keyCode, GameUtils.getClient());
         }

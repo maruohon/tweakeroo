@@ -76,7 +76,7 @@ public class PlacementTweaks
         boolean attackHeld = isVanillaKeybindHeld(mc.gameSettings.keyBindAttack);
         boolean useHeld = isVanillaKeybindHeld(mc.gameSettings.keyBindUseItem);
 
-        if (GuiUtils.getCurrentScreen() == null)
+        if (GuiUtils.noScreenOpen())
         {
             if (useHeld)
             {
@@ -112,7 +112,7 @@ public class PlacementTweaks
             clearClickedBlockInfoAttack();
         }
 
-        if (Configs.Generic.HAND_RESTOCK_CONTINUOUS.getBooleanValue() && GuiUtils.getCurrentScreen() == null)
+        if (Configs.Generic.HAND_RESTOCK_CONTINUOUS.getBooleanValue() && GuiUtils.noScreenOpen())
         {
             InventoryUtils.preRestockHand(mc.player, EnumHand.MAIN_HAND, true);
             InventoryUtils.preRestockHand(mc.player, EnumHand.OFF_HAND, true);
