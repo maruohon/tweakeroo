@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlimeBlock;
 import net.minecraft.block.TranslucentBlock;
@@ -19,7 +19,7 @@ import fi.dy.masa.tweakeroo.config.Configs;
 @Mixin(SlimeBlock.class)
 public abstract class MixinSlimeBlock extends TranslucentBlock
 {
-    public MixinSlimeBlock(Block.Settings settings)
+    public MixinSlimeBlock(AbstractBlock.Settings settings)
     {
         super(settings);
     }
