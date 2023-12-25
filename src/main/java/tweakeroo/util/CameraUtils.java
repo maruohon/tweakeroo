@@ -1,11 +1,11 @@
 package tweakeroo.util;
 
-import net.minecraft.client.multiplayer.ChunkProviderClient;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.ViewFrustum;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
+import malilib.util.game.WorldUtils;
 import malilib.util.game.wrap.GameUtils;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
@@ -86,7 +86,7 @@ public class CameraUtils
             return;
         }
 
-        ChunkProviderClient provider = GameUtils.getClientWorld().getChunkProvider();
+        WorldClient world = GameUtils.getClientWorld();
         final int viewDistance = GameUtils.getRenderDistanceChunks();
 
         if (chunkX != lastChunkX)
@@ -98,7 +98,7 @@ public class CameraUtils
             {
                 for (int cz = chunkZ - viewDistance; cz <= chunkZ + viewDistance; ++cz)
                 {
-                    if (provider.isChunkGeneratedAt(cx, cz))
+                    if (WorldUtils.isClientChunkLoaded(cx, cz, world))
                     {
                         int x = cx << 4;
                         int z = cz << 4;
@@ -117,7 +117,7 @@ public class CameraUtils
             {
                 for (int cx = chunkX - viewDistance; cx <= chunkX + viewDistance; ++cx)
                 {
-                    if (provider.isChunkGeneratedAt(cx, cz))
+                    if (WorldUtils.isClientChunkLoaded(cx, cz, world))
                     {
                         int x = cx << 4;
                         int z = cz << 4;
@@ -132,7 +132,6 @@ public class CameraUtils
     {
         Entity entity = GameUtils.getCameraEntity();
         WorldClient world = GameUtils.getClientWorld();
-        ChunkProviderClient provider = world.getChunkProvider();
         final int viewDistance = GameUtils.getRenderDistanceChunks();
         final int chunkX = entity.chunkCoordX;
         final int chunkZ = entity.chunkCoordZ;
@@ -152,7 +151,7 @@ public class CameraUtils
             {
                 // Mark all chunks that were not in free camera range
                 if ((cx < minCameraCX || cx > maxCameraCX || cz < minCameraCZ || cz > maxCameraCZ) &&
-                    provider.isChunkGeneratedAt(cx, cz))
+                    WorldUtils.isClientChunkLoaded(cx, cz, world))
                 {
                     int x = cx << 4;
                     int z = cz << 4;
