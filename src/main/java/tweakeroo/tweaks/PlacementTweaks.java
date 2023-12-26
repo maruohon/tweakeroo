@@ -71,8 +71,9 @@ public class PlacementTweaks
     public static final UsageRestriction<Item> FAST_RIGHT_CLICK_ITEM_RESTRICTION = new UsageRestriction<>();
     public static final UsageRestriction<Item> FAST_PLACEMENT_ITEM_RESTRICTION = new UsageRestriction<>();
 
-    public static void onTick(Minecraft mc)
+    public static void onTick()
     {
+        Minecraft mc = GameUtils.getClient();
         boolean attackHeld = isVanillaKeybindHeld(mc.gameSettings.keyBindAttack);
         boolean useHeld = isVanillaKeybindHeld(mc.gameSettings.keyBindUseItem);
 

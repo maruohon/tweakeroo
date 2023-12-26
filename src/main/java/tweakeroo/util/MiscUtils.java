@@ -38,12 +38,16 @@ import tweakeroo.config.FeatureToggle;
 import tweakeroo.config.Hotkeys;
 import tweakeroo.mixin.IMixinCommandBlockBaseLogic;
 import tweakeroo.renderer.RenderUtils;
+import tweakeroo.tweaks.PlacementTweaks;
 
 public class MiscUtils
 {
     private static final HashMap<String, SimpleDateFormat> DATE_FORMATS = new HashMap<>();
 
     public static boolean skipWorldRendering;
+    public static int renderCountItems;
+    public static int renderCountXPOrbs;
+
     private static net.minecraft.util.text.ITextComponent[] previousSignText;
     private static String previousChatText = "";
     private static final Date DATE = new Date();
@@ -51,6 +55,14 @@ public class MiscUtils
     private static double lastRealYaw;
     private static float mouseSensitivity = -1.0F;
     private static boolean zoomActive;
+
+    public static void onClientTick()
+    {
+        PlacementTweaks.onTick();
+        // Reset the counters after rendering each frame
+        renderCountItems = 0;
+        renderCountXPOrbs = 0;
+    }
 
     public static boolean isZoomActive()
     {

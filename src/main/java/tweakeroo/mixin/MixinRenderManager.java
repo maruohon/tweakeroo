@@ -14,10 +14,10 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 
-import tweakeroo.LiteModTweakeroo;
 import tweakeroo.config.Configs;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.config.FeatureToggle;
+import tweakeroo.util.MiscUtils;
 
 @Mixin(RenderManager.class)
 public abstract class MixinRenderManager
@@ -39,7 +39,7 @@ public abstract class MixinRenderManager
             {
                 int max = Configs.Generic.RENDER_LIMIT_XP_ORB.getIntegerValue();
 
-                if (max >= 0 && ++LiteModTweakeroo.renderCountXPOrbs > max)
+                if (max >= 0 && ++MiscUtils.renderCountXPOrbs > max)
                 {
                     cir.setReturnValue(false);
                 }
@@ -51,7 +51,7 @@ public abstract class MixinRenderManager
             {
                 int max = Configs.Generic.RENDER_LIMIT_ITEM.getIntegerValue();
 
-                if (max >= 0 && ++LiteModTweakeroo.renderCountItems > max)
+                if (max >= 0 && ++MiscUtils.renderCountItems > max)
                 {
                     cir.setReturnValue(false);
                 }

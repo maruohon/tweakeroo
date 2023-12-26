@@ -27,6 +27,7 @@ import tweakeroo.input.KeyboardInputHandlerImpl;
 import tweakeroo.input.MouseClickHandlerImpl;
 import tweakeroo.input.TweakerooHotkeyProvider;
 import tweakeroo.tweaks.PlacementTweaks;
+import tweakeroo.util.MiscUtils;
 import tweakeroo.util.data.BlockRenderOverrides;
 
 public class InitHandler implements InitializationHandler
@@ -60,6 +61,7 @@ public class InitHandler implements InitializationHandler
         Registry.RENDER_EVENT_DISPATCHER.registerGameOverlayRenderer(renderer);
         Registry.RENDER_EVENT_DISPATCHER.registerTooltipPostRenderer(renderer);
         Registry.RENDER_EVENT_DISPATCHER.registerWorldPostRenderer(renderer);
+        Registry.TICK_EVENT_DISPATCHER.registerClientTickHandler(MiscUtils::onClientTick);
 
         Registry.BLOCK_PLACEMENT_POSITION_HANDLER.registerPositionProvider(PlacementTweaks::getOverriddenPlacementPosition);
         Registry.CLIENT_WORLD_CHANGE_EVENT_DISPATCHER.registerClientWorldChangeHandler(new ClientWorldChangeHandler());
