@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.event.ClickEvent;
 
 import malilib.util.game.wrap.GameUtils;
-import tweakeroo.LiteModTweakeroo;
+import tweakeroo.Tweakeroo;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.tweaks.PlacementTweaks;
@@ -50,7 +50,7 @@ public abstract class MixinNetHandlerPlayClient
             net.minecraft.util.text.TextComponentString message = new net.minecraft.util.text.TextComponentString(str);
             message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, pos.getX() + " " + pos.getY() + " " + pos.getZ()));
             GameUtils.getClient().ingameGUI.getChatGUI().printChatMessage(message);
-            LiteModTweakeroo.logger.info(str);
+            Tweakeroo.LOGGER.info(str);
         }
     }
 

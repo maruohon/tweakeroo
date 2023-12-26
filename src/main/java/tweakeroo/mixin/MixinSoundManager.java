@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import tweakeroo.LiteModTweakeroo;
+import tweakeroo.Tweakeroo;
 import tweakeroo.config.Configs;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.tweaks.MiscTweaks;
@@ -18,7 +18,7 @@ public abstract class MixinSoundManager
     {
         if (Configs.Generic.SOUND_NAME_OUTPUT.getBooleanValue())
         {
-            LiteModTweakeroo.logger.info("Sound: '{}'", sound.getSoundLocation());
+            Tweakeroo.LOGGER.info("Sound: '{}'", sound.getSoundLocation());
         }
 
         if (DisableToggle.DISABLE_SOUNDS_ALL.getBooleanValue() || MiscTweaks.shouldDisableSound(sound))
@@ -32,7 +32,7 @@ public abstract class MixinSoundManager
     {
         if (Configs.Generic.SOUND_NAME_OUTPUT.getBooleanValue())
         {
-            LiteModTweakeroo.logger.info("Sound: '{}'", sound.getSoundLocation());
+            Tweakeroo.LOGGER.info("Sound: '{}'", sound.getSoundLocation());
         }
 
         if (DisableToggle.DISABLE_SOUNDS_ALL.getBooleanValue() || MiscTweaks.shouldDisableSound(sound))

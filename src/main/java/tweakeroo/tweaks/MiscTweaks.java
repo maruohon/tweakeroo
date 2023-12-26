@@ -21,7 +21,7 @@ import malilib.overlay.message.MessageUtils;
 import malilib.util.StringUtils;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.restriction.UsageRestriction;
-import tweakeroo.LiteModTweakeroo;
+import tweakeroo.Tweakeroo;
 import tweakeroo.config.Configs;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.config.FeatureToggle;
@@ -40,7 +40,7 @@ public class MiscTweaks
          {
              return true;
          }
-         LiteModTweakeroo.logger.warn(StringUtils.translate("tweakeroo.error.invalid_sound_blacklist_entry", rl.toString()));
+         Tweakeroo.LOGGER.warn(StringUtils.translate("tweakeroo.error.invalid_sound_blacklist_entry", rl.toString()));
          return false;
     });
 
