@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "tweakeroo",
+	"name": "Tweakeroo",
+	"version": "${mod_version}",
+
+	"description": "Adds various configurable client-side tweaks",
+	"license": "LGPLv3",
+	"authors": [ "masa" ],
+	"contact": {
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/tweakeroo",
+		"issues": "https://github.com/maruohon/tweakeroo/issues",
+		"sources": "https://github.com/maruohon/tweakeroo",
+		"discord": "https://discordapp.com/channels/169369095538606080/775717305522192424"
+	},
+
+	"icon": "assets/tweakeroo/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client-init": [
+			"tweakeroo.Tweakeroo"
+		],
+		"modmenu": [
+			"tweakeroo.compat.modmenu.ModMenuImpl"
+		]
+	},
+
+	"mixins": [
+		{
+			"config": "mixins.tweakeroo.json",
+			"environment": "client"
+		}
+	],
+
+	"depends": {
+		"minecraft": "1.12.x",
+		"malilib": ">=0.55.0",
+		"osl-entrypoints": "*",
+		"osl-resource-loader": "*"
+	}
+}
