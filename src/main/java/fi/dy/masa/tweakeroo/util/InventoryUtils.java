@@ -825,13 +825,18 @@ public class InventoryUtils
     {
         if (sourceSlotNumber != -1 && player.currentScreenHandler == player.playerScreenHandler)
         {
-            MinecraftClient mc = MinecraftClient.getInstance();
-            ScreenHandler container = player.playerScreenHandler;
             int equipmentSlotNumber = getSlotNumberForEquipmentType(type, player);
-            int equipmentSlotInvIndex = container.getSlot(equipmentSlotNumber).getIndex();
-
-            mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, equipmentSlotInvIndex, SlotActionType.SWAP, mc.player);
+            swapSlots(player, sourceSlotNumber, equipmentSlotNumber);
         }
+    }
+
+    public static void swapSlots(PlayerEntity player, int slotNum, int otherSlot)
+    {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        ScreenHandler container = player.currentScreenHandler;
+        mc.interactionManager.clickSlot(container.syncId, slotNum, 0, SlotActionType.SWAP, player);
+        mc.interactionManager.clickSlot(container.syncId, otherSlot, 0, SlotActionType.SWAP, player);
+        mc.interactionManager.clickSlot(container.syncId, slotNum, 0, SlotActionType.SWAP, player);
     }
 
     private static void swapToolToHand(int slotNumber, MinecraftClient mc)
