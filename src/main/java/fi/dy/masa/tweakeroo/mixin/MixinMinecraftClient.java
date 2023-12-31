@@ -59,7 +59,11 @@ public abstract class MixinMinecraftClient implements IMinecraftClientInvoker
         this.doItemUse();
     }
 
-    @Inject(method = "render", at = @At("RETURN"))
+    @Inject(method = "render", at = @At(
+            value = "INVOKE",
+            ordinal = 2,
+            target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V"))
+    // inject before Thread.yield
     private void onGameLoop(boolean renderWorld, CallbackInfo ci)
     {
         if (this.player != null && this.world != null)
