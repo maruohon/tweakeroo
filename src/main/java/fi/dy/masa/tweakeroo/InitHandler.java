@@ -33,6 +33,7 @@ public class InitHandler implements IInitializationHandler
 
         TickHandler.getInstance().registerClientTickHandler(new ClientTickHandler());
         WorldLoadHandler.getInstance().registerWorldLoadPreHandler(new WorldLoadListener());
+        WorldLoadHandler.getInstance().registerWorldLoadPostHandler(new WorldLoadListener());
 
         Callbacks.init(MinecraftClient.getInstance());
     }
