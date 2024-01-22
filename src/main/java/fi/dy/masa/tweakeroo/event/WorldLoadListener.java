@@ -8,29 +8,11 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
 public class WorldLoadListener implements IWorldLoadListener
 {
-    private boolean gammaEnabled = false;
     @Override
     public void onWorldLoadPre(@Nullable ClientWorld worldBefore, @Nullable ClientWorld worldAfter, MinecraftClient mc)
     {
-        // Always disable the Free Camera mode when leaving the world or switching dimensions
+        // Always disable the Free Camera mode / Gamma Override when leaving the world or switching dimensions
         FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
-        if (FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanValue())
-        {
-            gammaEnabled = false;
-        }
-    }
-    @Override
-    public void onWorldLoadPost(@Nullable ClientWorld worldBefore, @Nullable ClientWorld worldAfter, MinecraftClient mc)
-    {
-        if (FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanValue())
-        {
-            if (!gammaEnabled)
-            {
-                // Hacky toggle for "fixing" gamma state automatically if left on from previous play session
-                FeatureToggle.TWEAK_GAMMA_OVERRIDE.setBooleanValue(false);
-                FeatureToggle.TWEAK_GAMMA_OVERRIDE.setBooleanValue(true);
-                gammaEnabled = true;
-            }
-        }
+        FeatureToggle.TWEAK_GAMMA_OVERRIDE.setBooleanValue(false);
     }
 }
