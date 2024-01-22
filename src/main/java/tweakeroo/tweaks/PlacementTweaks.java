@@ -23,7 +23,6 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -31,6 +30,7 @@ import net.minecraft.world.World;
 import malilib.config.value.BlackWhiteList;
 import malilib.gui.util.GuiUtils;
 import malilib.input.Keys;
+import malilib.util.MathUtils;
 import malilib.util.game.BlockUtils;
 import malilib.util.game.PlacementUtils;
 import malilib.util.game.wrap.EntityWrap;
@@ -576,7 +576,7 @@ public class PlacementTweaks
             {
                 // Carpet mod accurate block placement protocol support, for Carpet v18_04_24 or later
                 double x = handleAccurate && isFacingValidFor(facing, stack) ? facing.getIndex() + 2 + posNew.getX() : hitVec.x;
-                int afterClickerClickCount = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
+                int afterClickerClickCount = MathUtils.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
 
                 if (afterClicker)
                 {
@@ -765,7 +765,7 @@ public class PlacementTweaks
             return EnumActionResult.PASS;
         }
 
-        final int afterClickerClickCount = MathHelper.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
+        final int afterClickerClickCount = MathUtils.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
 
         EnumFacing facing = sideIn;
         boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
@@ -880,7 +880,7 @@ public class PlacementTweaks
             EnumHand hand,
             @Nullable HitPart hitPart)
     {
-        EnumFacing facing = EnumFacing.byHorizontalIndex(MathHelper.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3);
+        EnumFacing facing = EnumFacing.byHorizontalIndex(MathUtils.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3);
         float yawOrig = EntityWrap.getYaw(player);
         float pitchOrig = EntityWrap.getPitch(player);
 
@@ -900,7 +900,7 @@ public class PlacementTweaks
         EntityWrap.setYaw(player, facing.getHorizontalAngle());
         player.connection.sendPacket(new CPacketPlayer.Rotation(EntityWrap.getYaw(player), pitchOrig, player.onGround));
 
-        //System.out.printf("handleFlexibleBlockPlacement() pos: %s, side: %s, orig: %s new: %s, hv: %s\n", pos, side, EnumFacing.byHorizontalIndex(MathHelper.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3), facing, hitVec);
+        //System.out.printf("handleFlexibleBlockPlacement() pos: %s, side: %s, orig: %s new: %s, hv: %s\n", pos, side, EnumFacing.byHorizontalIndex(MathUtils.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3), facing, hitVec);
         EnumActionResult result = processRightClickBlockWrapper(controller, player, world, pos, side, hitVec, hand);
 
         EntityWrap.setYaw(player, yawOrig);

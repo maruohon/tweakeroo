@@ -19,7 +19,6 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -27,6 +26,7 @@ import malilib.action.ActionContext;
 import malilib.gui.util.GuiUtils;
 import malilib.input.ActionResult;
 import malilib.overlay.message.MessageUtils;
+import malilib.util.MathUtils;
 import malilib.util.game.RayTraceUtils;
 import malilib.util.game.RayTraceUtils.IRayPositionHandler;
 import malilib.util.game.wrap.EntityWrap;
@@ -351,7 +351,7 @@ public class MiscUtils
             int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
             double snappedPitch;
 
-            //realPitch = MathHelper.clamp(realPitch, -limit, limit);
+            //realPitch = MathUtils.clamp(realPitch, -limit, limit);
 
             if (realPitch < 0)
             {
@@ -362,13 +362,13 @@ public class MiscUtils
                 snappedPitch = calculateSnappedAngle(realPitch, step);
             }
 
-            double offset = Math.abs(MathHelper.wrapDegrees((float) (snappedPitch - realPitch)));
+            double offset = Math.abs(MathUtils.wrapDegrees((float) (snappedPitch - realPitch)));
 
             if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue() == false ||
                 offset <= Configs.Generic.SNAP_AIM_THRESHOLD_PITCH.getDoubleValue())
             {
-                snappedPitch = MathHelper.clamp(MathHelper.wrapDegrees(snappedPitch), -limit, limit);
-                float wrappedPitch = MathHelper.wrapDegrees((float) snappedPitch);
+                snappedPitch = MathUtils.clamp(MathUtils.wrapDegrees(snappedPitch), -limit, limit);
+                float wrappedPitch = MathUtils.wrapDegrees((float) snappedPitch);
 
                 if (Configs.Internal.SNAP_AIM_LAST_PITCH.getDoubleValue() != snappedPitch)
                 {
@@ -405,9 +405,9 @@ public class MiscUtils
             double snappedYaw = calculateSnappedAngle(realYaw, step);
 
             if (Configs.Generic.SNAP_AIM_ONLY_CLOSE_TO_ANGLE.getBooleanValue() == false ||
-                Math.abs(MathHelper.wrapDegrees((float) (snappedYaw - realYaw))) <= Configs.Generic.SNAP_AIM_THRESHOLD_YAW.getDoubleValue())
+                Math.abs(MathUtils.wrapDegrees((float) (snappedYaw - realYaw))) <= Configs.Generic.SNAP_AIM_THRESHOLD_YAW.getDoubleValue())
             {
-                float wrappedYaw = MathHelper.wrapDegrees((float) snappedYaw);
+                float wrappedYaw = MathUtils.wrapDegrees((float) snappedYaw);
 
                 if (Configs.Internal.SNAP_AIM_LAST_YAW.getDoubleValue() != snappedYaw)
                 {
@@ -427,8 +427,8 @@ public class MiscUtils
 
     public static double calculateSnappedAngle(double realRotation, double step)
     {
-        double offsetRealRotation = MathHelper.positiveModulo(realRotation, 360.0D) + (step / 2.0);
-        return MathHelper.positiveModulo(((int) (offsetRealRotation / step)) * step, 360.0D);
+        double offsetRealRotation = MathUtils.positiveModulo(realRotation, 360.0D) + (step / 2.0);
+        return MathUtils.positiveModulo(((int) (offsetRealRotation / step)) * step, 360.0D);
     }
 
     public static SimpleDateFormat getDateFormatFor(String format)

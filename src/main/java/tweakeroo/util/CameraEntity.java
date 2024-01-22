@@ -10,9 +10,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.stats.StatisticsManager;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import malilib.util.MathUtils;
 import malilib.util.game.wrap.EntityWrap;
 import malilib.util.game.wrap.GameUtils;
 import tweakeroo.config.Configs;
@@ -106,7 +106,7 @@ public class CameraEntity extends EntityPlayerSP
                 current = 0;
             }
 
-            current = MathHelper.clamp(current + rampAmount, -1f, 1f);
+            current = MathUtils.clamp(current + rampAmount, -1f, 1f);
         }
         else
         {
@@ -165,7 +165,7 @@ public class CameraEntity extends EntityPlayerSP
     public void updateCameraRotations(float yawChange, float pitchChange)
     {
         float yaw = EntityWrap.getYaw(this) + yawChange * 0.15F;
-        float pitch = MathHelper.clamp(EntityWrap.getPitch(this) - pitchChange * 0.15F, -90F, 90F);
+        float pitch = MathUtils.clamp(EntityWrap.getPitch(this) - pitchChange * 0.15F, -90F, 90F);
 
         this.setCameraRotations(yaw, pitch);
     }

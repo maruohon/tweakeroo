@@ -3,8 +3,8 @@ package tweakeroo.util;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.ViewFrustum;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
 
+import malilib.util.MathUtils;
 import malilib.util.game.WorldUtils;
 import malilib.util.game.wrap.GameUtils;
 import tweakeroo.config.Configs;
@@ -40,12 +40,12 @@ public class CameraUtils
 
     public static float getCameraYaw()
     {
-        return MathHelper.wrapDegrees(cameraYaw);
+        return MathUtils.wrapDegrees(cameraYaw);
     }
 
     public static float getCameraPitch()
     {
-        return MathHelper.wrapDegrees(cameraPitch);
+        return MathUtils.wrapDegrees(cameraPitch);
     }
 
     public static void setCameraYaw(float yaw)

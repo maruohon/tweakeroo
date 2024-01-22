@@ -22,11 +22,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.client.CPacketHeldItemChange;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import malilib.overlay.message.MessageUtils;
+import malilib.util.MathUtils;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.game.wrap.ItemWrap;
 import malilib.util.game.wrap.NbtWrap;
@@ -154,7 +154,7 @@ public class InventoryUtils
     public static void swapHotbarWithInventoryRow(EntityPlayer player, int row)
     {
         Container container = player.inventoryContainer;
-        row = MathHelper.clamp(row, 0, 2);
+        row = MathUtils.clamp(row, 0, 2);
         int slot = row * 9 + 9;
 
         for (int hotbarSlot = 0; hotbarSlot < 9; hotbarSlot++)

@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import malilib.util.MathUtils;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.config.Hotkeys;
@@ -142,7 +143,7 @@ public abstract class MixinEntity
 
         if (updatePitch)
         {
-            this.forcedPitch = net.minecraft.util.math.MathHelper.clamp(this.forcedPitch - (double) pitchChange * 0.15D, -pitchLimit, pitchLimit);
+            this.forcedPitch = MathUtils.clamp(this.forcedPitch - (double) pitchChange * 0.15D, -pitchLimit, pitchLimit);
         }
     }
 }

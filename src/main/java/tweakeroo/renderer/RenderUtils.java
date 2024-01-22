@@ -12,7 +12,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 
 import malilib.config.value.HorizontalAlignment;
 import malilib.config.value.HudAlignment;
@@ -26,6 +25,7 @@ import malilib.render.buffer.VertexBuilder;
 import malilib.render.inventory.BuiltinInventoryRenderDefinitions;
 import malilib.render.inventory.InventoryRenderDefinition;
 import malilib.render.inventory.InventoryRenderUtils;
+import malilib.util.MathUtils;
 import malilib.util.game.wrap.EntityWrap;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.game.wrap.ItemWrap;
@@ -238,23 +238,23 @@ public class RenderUtils
                                                        FontRenderer textRenderer, RenderContext ctx)
     {
         double step = Configs.Generic.SNAP_AIM_YAW_STEP.getDoubleValue();
-        double realYaw = MathHelper.positiveModulo(MiscUtils.getLastRealYaw(), 360.0D);
+        double realYaw = MathUtils.positiveModulo(MiscUtils.getLastRealYaw(), 360.0D);
         double snappedYaw = MiscUtils.calculateSnappedAngle(realYaw, step);
         double startYaw = snappedYaw - (step / 2.0);
         final int x = xCenter - width / 2;
         final int y = yCenter + 10;
         final int z = 0;
-        int lineX = x + (int) ((MathHelper.wrapDegrees(realYaw - startYaw)) / step * width);
+        int lineX = x + (int) ((MathUtils.wrapDegrees(realYaw - startYaw)) / step * width);
 
         malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
 
-        String str = MathHelper.wrapDegrees(snappedYaw) + "°";
+        String str = MathUtils.wrapDegrees(snappedYaw) + "°";
         textRenderer.drawString(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
 
-        str = "<  " + MathHelper.wrapDegrees(snappedYaw - step) + "°";
+        str = "<  " + MathUtils.wrapDegrees(snappedYaw - step) + "°";
         textRenderer.drawString(str, x - textRenderer.getStringWidth(str), y + height + 2, 0xFFFFFFFF);
 
-        str = MathHelper.wrapDegrees(snappedYaw + step) + "°  >";
+        str = MathUtils.wrapDegrees(snappedYaw + step) + "°  >";
         textRenderer.drawString(str, x + width, y + height + 2, 0xFFFFFFFF);
 
         VertexBuilder builder = VanillaWrappingVertexBuilder.coloredQuads();
@@ -289,8 +289,8 @@ public class RenderUtils
     {
         double step = Configs.Generic.SNAP_AIM_PITCH_STEP.getDoubleValue();
         int limit = Configs.Generic.SNAP_AIM_PITCH_OVERSHOOT.getBooleanValue() ? 180 : 90;
-        //double realPitch = MathHelper.clamp(MathHelper.wrapDegrees(MiscUtils.getLastRealPitch()), -limit, limit);
-        double realPitch = MathHelper.wrapDegrees(MiscUtils.getLastRealPitch());
+        //double realPitch = MathUtils.clamp(MathUtils.wrapDegrees(MiscUtils.getLastRealPitch()), -limit, limit);
+        double realPitch = MathUtils.wrapDegrees(MiscUtils.getLastRealPitch());
         double snappedPitch;
 
         if (realPitch < 0)
@@ -302,7 +302,7 @@ public class RenderUtils
             snappedPitch = MiscUtils.calculateSnappedAngle(realPitch, step);
         }
 
-        snappedPitch = MathHelper.clamp(MathHelper.wrapDegrees(snappedPitch), -limit, limit);
+        snappedPitch = MathUtils.clamp(MathUtils.wrapDegrees(snappedPitch), -limit, limit);
 
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
@@ -333,7 +333,7 @@ public class RenderUtils
     {
         double startPitch = centerPitch - (indicatorRange / 2.0);
         double printedRange = isSnapRange ? indicatorRange : indicatorRange / 2;
-        int lineY = y + (int) ((MathHelper.wrapDegrees(currentPitch) - startPitch) / indicatorRange * height);
+        int lineY = y + (int) ((MathUtils.wrapDegrees(currentPitch) - startPitch) / indicatorRange * height);
         int z = 0;
         double angleUp = centerPitch - printedRange;
         double angleDown = centerPitch + printedRange;
@@ -342,17 +342,17 @@ public class RenderUtils
 
         if (isSnapRange)
         {
-            String strUp   = String.format("%6.1f° ^", MathHelper.wrapDegrees(angleUp));
-            String strDown = String.format("%6.1f° v", MathHelper.wrapDegrees(angleDown));
+            String strUp   = String.format("%6.1f° ^", MathUtils.wrapDegrees(angleUp));
+            String strDown = String.format("%6.1f° v", MathUtils.wrapDegrees(angleDown));
             textRenderer.drawString(strUp, x + width + 4, y - 4, 0xFFFFFFFF);
             textRenderer.drawString(strDown, x + width + 4, y + height - 4, 0xFFFFFFFF);
 
-            String str = String.format("%6.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
+            String str = String.format("%6.1f°", MathUtils.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
             textRenderer.drawString(str, x + width + 4, y + height / 2 - 4, 0xFFFFFFFF);
         }
         else
         {
-            String str = String.format("%4.1f°", MathHelper.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
+            String str = String.format("%4.1f°", MathUtils.wrapDegrees(isSnapRange ? centerPitch : currentPitch));
             textRenderer.drawString(str, x + width + 4, lineY - 4, 0xFFFFFFFF);
         }
 
