@@ -20,11 +20,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.CPacketPlayer;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import malilib.config.value.BlackWhiteList;
@@ -36,8 +33,12 @@ import malilib.util.game.PlacementUtils;
 import malilib.util.game.wrap.EntityWrap;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.game.wrap.ItemWrap;
+import malilib.util.position.BlockPos;
+import malilib.util.position.Direction;
+import malilib.util.position.HitResult;
 import malilib.util.position.PositionUtils;
 import malilib.util.position.PositionUtils.HitPart;
+import malilib.util.position.Vec3d;
 import malilib.util.restriction.UsageRestriction;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
@@ -55,9 +56,9 @@ public class PlacementTweaks
     private static HitPart hitPartFirst = null;
     private static EnumHand handFirst = EnumHand.MAIN_HAND;
     private static Vec3d hitVecFirst = null;
-    private static EnumFacing sideFirst = null;
-    private static EnumFacing sideFirstBreaking = null;
-    private static EnumFacing sideRotatedFirst = null;
+    private static Direction sideFirst = null;
+    private static Direction sideFirstBreaking = null;
+    private static Direction sideRotatedFirst = null;
     private static float playerYawFirst;
     private static ItemStack[] stackBeforeUse = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY };
     private static boolean isFirstClick;
@@ -153,14 +154,14 @@ public class PlacementTweaks
     public static void onLeftClickMousePre()
     {
         Minecraft mc = GameUtils.getClient();
-        RayTraceResult trace = GameUtils.getHitResult();
+        HitResult trace = GameUtils.getHitResult();
 
         // Only set the position if it was null, otherwise the fast left click tweak
         // would just reset it every time.
-        if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK && posFirstBreaking == null)
+        if (trace.type == HitResult.Type.BLOCK && posFirstBreaking == null)
         {
-            posFirstBreaking = trace.getBlockPos();
-            sideFirstBreaking = trace.sideHit;
+            posFirstBreaking = trace.blockPos;
+            sideFirstBreaking = trace.side;
         }
 
         onProcessRightClickPre(mc.player, EnumHand.MAIN_HAND);
@@ -207,18 +208,16 @@ public class PlacementTweaks
     @Nullable
     public static BlockPos getOverriddenPlacementPosition()
     {
-        Minecraft mc = GameUtils.getClient();
-
-        if (mc.player != null)
+        if (GameUtils.getClientPlayer() != null)
         {
-            RayTraceResult trace = GameUtils.getHitResult();
+            HitResult trace = GameUtils.getHitResult();
 
-            if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+            if (trace.type == HitResult.Type.BLOCK)
             {
-                World world = mc.world;
-                EntityPlayer player = mc.player;
-                EnumFacing side = trace.sideHit;
-                BlockPos posTargeted = trace.getBlockPos();
+                World world = GameUtils.getClientWorld();
+                EntityPlayer player = GameUtils.getClientPlayer();
+                Direction side = trace.side;
+                BlockPos posTargeted = trace.blockPos;
 
                 if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue())
                 {
@@ -229,9 +228,9 @@ public class PlacementTweaks
 
                     if (offset || adjacentHeld)
                     {
-                        EnumFacing playerFacingH = player.getHorizontalFacing();
-                        HitPart hitPart = PositionUtils.getHitPart(side, playerFacingH, posTargeted, trace.hitVec);
-                        EnumFacing sideRotated = getRotatedFacing(side, playerFacingH, hitPart);
+                        Direction playerFacingH = EntityWrap.getClosestHorizontalLookingDirection(player);
+                        HitPart hitPart = PositionUtils.getHitPart(side, playerFacingH, posTargeted, trace.pos);
+                        Direction sideRotated = getRotatedFacing(side, playerFacingH, hitPart);
                         BlockPos posNew = isFirstClick && (offset || adjacentHeld) ? getPlacementPositionForTargetedPosition(posTargeted, side, world) : posTargeted;
                         boolean handleFlexible = false;
 
@@ -271,7 +270,7 @@ public class PlacementTweaks
                     if (pos.equals(posLast) == false &&
                         canPlaceBlockIntoPosition(pos, world) &&
                         isPositionAllowedByPlacementRestriction(pos, side) &&
-                        canPlaceBlockAgainst(world, posTargeted, mc.player, handFirst)
+                        canPlaceBlockAgainst(world, posTargeted, player, handFirst)
                     )
                     {
                         return pos;
@@ -305,16 +304,16 @@ public class PlacementTweaks
 
             for (int i = 0; i < maxCount; ++i)
             {
-                RayTraceResult trace = mc.objectMouseOver;
+                HitResult trace = GameUtils.getHitResult();
 
-                if (trace == null || trace.typeOfHit != RayTraceResult.Type.BLOCK)
+                if (trace == null || trace.type != HitResult.Type.BLOCK)
                 {
                     break;
                 }
 
                 EnumHand hand = handFirst;
-                EnumFacing side = trace.sideHit;
-                BlockPos pos = trace.getBlockPos();
+                Direction side = trace.side;
+                BlockPos pos = trace.blockPos;
                 BlockPos posNew = getPlacementPositionForTargetedPosition(pos, side, world);
 
                 if (hand != null &&
@@ -382,9 +381,9 @@ public class PlacementTweaks
     public static EnumActionResult onProcessRightClickBlock(
             PlayerControllerMP controller,
             EntityPlayerSP player,
-            WorldClient world,
+            World world,
             BlockPos posIn,
-            EnumFacing sideIn,
+            Direction sideIn,
             Vec3d hitVecIn,
             EnumHand hand)
     {
@@ -395,9 +394,9 @@ public class PlacementTweaks
 
         boolean restricted = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue() || FeatureToggle.TWEAK_PLACEMENT_GRID.getBooleanValue();
         ItemStack stackPre = player.getHeldItem(hand).copy();
-        EnumFacing playerFacingH = player.getHorizontalFacing();
+        Direction playerFacingH = EntityWrap.getClosestHorizontalLookingDirection(player);
         HitPart hitPart = PositionUtils.getHitPart(sideIn, playerFacingH, posIn, hitVecIn);
-        EnumFacing sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
+        Direction sideRotated = getRotatedFacing(sideIn, playerFacingH, hitPart);
 
         cacheStackInHand(hand);
 
@@ -447,17 +446,17 @@ public class PlacementTweaks
     private static EnumActionResult tryPlaceBlock(
             PlayerControllerMP controller,
             EntityPlayerSP player,
-            WorldClient world,
+            World world,
             BlockPos posIn,
-            EnumFacing sideIn,
-            EnumFacing sideRotatedIn,
+            Direction sideIn,
+            Direction sideRotatedIn,
             float playerYaw,
             Vec3d hitVec,
             EnumHand hand,
             HitPart hitPart,
             boolean isFirstClick)
     {
-        EnumFacing side = sideIn;
+        Direction side = sideIn;
         boolean handleFlexible = false;
         BlockPos posNew = null;
         boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
@@ -506,7 +505,7 @@ public class PlacementTweaks
 
         if (accurate && (accurateIn || accurateReverse || afterClicker))
         {
-            EnumFacing facing = side;
+            Direction facing = side;
             boolean handleAccurate = false;
 
             if (posNew == null)
@@ -544,9 +543,9 @@ public class PlacementTweaks
                     ItemBlock item = (ItemBlock) stack.getItem();
                     int meta = item.getMetadata(stack.getMetadata());
                     BlockPos posPlacement = getPlacementPositionForTargetedPosition(posNew, sideIn, world);
-                    IBlockState state = item.getBlock().getStateForPlacement(world, posPlacement, sideIn,
+                    IBlockState state = item.getBlock().getStateForPlacement(world, posPlacement, sideIn.getVanillaDirection(),
                             (float) hitVec.x, (float) hitVec.y, (float) hitVec.z, meta, player);
-                    Optional<EnumFacing> facingTmp = BlockUtils.getFirstPropertyFacingValue(state);
+                    Optional<Direction> facingTmp = BlockUtils.getFirstPropertyFacingValue(state);
                     //System.out.printf("accurate - sideIn: %s, state: %s, hit: %s, f: %s, posNew: %s\n", sideIn, state, hitVec, EnumFacing.getDirectionFromEntityLiving(posIn, player), posNew);
 
                     if (facingTmp.isPresent())
@@ -556,7 +555,7 @@ public class PlacementTweaks
                 }
                 else
                 {
-                    facing = player.getHorizontalFacing();
+                    facing = EntityWrap.getClosestHorizontalLookingDirection(player);
                 }
             }
 
@@ -711,9 +710,9 @@ public class PlacementTweaks
     private static EnumActionResult processRightClickBlockWrapper(
             PlayerControllerMP controller,
             EntityPlayerSP player,
-            WorldClient world,
+            World world,
             BlockPos posIn,
-            EnumFacing sideIn,
+            Direction sideIn,
             Vec3d hitVecIn,
             EnumHand hand)
     {
@@ -767,7 +766,7 @@ public class PlacementTweaks
 
         final int afterClickerClickCount = MathUtils.clamp(Configs.Generic.AFTER_CLICKER_CLICK_COUNT.getIntegerValue(), 0, 32);
 
-        EnumFacing facing = sideIn;
+        Direction facing = sideIn;
         boolean flexible = FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue();
         boolean rotationHeld = Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld();
         boolean rememberFlexible = Configs.Generic.REMEMBER_FLEXIBLE.getBooleanValue();
@@ -798,7 +797,7 @@ public class PlacementTweaks
             double y = 1 - hitVecIn.y + 2 * posIn.getY(); // = 1 - (hitVec.y - pos.getY()) + pos.getY();
             hitVecIn = new Vec3d(hitVecIn.x, y, hitVecIn.z);
 
-            if (sideIn.getAxis() == EnumFacing.Axis.Y)
+            if (sideIn.getAxis() == Direction.Axis.Y)
             {
                 posIn = posIn.offset(sideIn);
                 sideIn = sideIn.getOpposite();
@@ -814,6 +813,7 @@ public class PlacementTweaks
 
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
         EnumActionResult result;
+        WorldClient clientWorld = GameUtils.getClientWorld();
 
         if (InventoryUtils.canUnstackingItemNotFitInInventory(stackOriginal, player))
         {
@@ -822,7 +822,7 @@ public class PlacementTweaks
         else
         {
             //System.out.printf("processRightClickBlockWrapper() PLACE @ %s, side: %s, hit: %s\n", pos, side, hitVec);
-            result = controller.processRightClickBlock(player, world, posIn, sideIn, hitVecIn, hand);
+            result = controller.processRightClickBlock(player, clientWorld, posIn, sideIn.getVanillaDirection(), hitVecIn.toVanilla(), hand);
         }
 
         if (result == EnumActionResult.SUCCESS)
@@ -842,7 +842,7 @@ public class PlacementTweaks
             for (int i = 0; i < afterClickerClickCount; i++)
             {
                 //System.out.printf("processRightClickBlockWrapper() after-clicker - i: %d, pos: %s, side: %s, hitVec: %s\n", i, pos, side, hitVec);
-                controller.processRightClickBlock(player, world, posPlacement, sideIn, hitVecIn, hand);
+                controller.processRightClickBlock(player, clientWorld, posPlacement, sideIn.getVanillaDirection(), hitVecIn.toVanilla(), hand);
             }
         }
 
@@ -872,15 +872,15 @@ public class PlacementTweaks
     private static EnumActionResult handleFlexibleBlockPlacement(
             PlayerControllerMP controller,
             EntityPlayerSP player,
-            WorldClient world,
+            World world,
             BlockPos pos,
-            EnumFacing side,
+            Direction side,
             float playerYaw,
             Vec3d hitVec,
             EnumHand hand,
             @Nullable HitPart hitPart)
     {
-        EnumFacing facing = EnumFacing.byHorizontalIndex(MathUtils.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3);
+        Direction facing = Direction.byHorizontalIndex(MathUtils.floor((playerYaw * 4.0F / 360.0F) + 0.5D) & 3);
         float yawOrig = EntityWrap.getYaw(player);
         float pitchOrig = EntityWrap.getPitch(player);
 
@@ -930,7 +930,7 @@ public class PlacementTweaks
         sideFirstBreaking = null;
     }
 
-    private static EnumFacing getRotatedFacing(EnumFacing originalSide, EnumFacing playerFacingH, HitPart hitPart)
+    private static Direction getRotatedFacing(Direction originalSide, Direction playerFacingH, HitPart hitPart)
     {
         if (originalSide.getAxis().isVertical())
         {
@@ -938,8 +938,8 @@ public class PlacementTweaks
             {
                 case LEFT:      return playerFacingH.rotateY();
                 case RIGHT:     return playerFacingH.rotateYCCW();
-                case BOTTOM:    return originalSide == EnumFacing.UP   ? playerFacingH : playerFacingH.getOpposite();
-                case TOP:       return originalSide == EnumFacing.DOWN ? playerFacingH : playerFacingH.getOpposite();
+                case BOTTOM:    return originalSide == Direction.UP   ? playerFacingH : playerFacingH.getOpposite();
+                case TOP:       return originalSide == Direction.DOWN ? playerFacingH : playerFacingH.getOpposite();
                 case CENTER:    return originalSide.getOpposite();
                 default:        return originalSide;
             }
@@ -950,15 +950,15 @@ public class PlacementTweaks
             {
                 case LEFT:      return originalSide.rotateYCCW();
                 case RIGHT:     return originalSide.rotateY();
-                case BOTTOM:    return EnumFacing.UP;
-                case TOP:       return EnumFacing.DOWN;
+                case BOTTOM:    return Direction.UP;
+                case TOP:       return Direction.DOWN;
                 case CENTER:    return originalSide.getOpposite();
                 default:        return originalSide;
             }
         }
     }
 
-    private static boolean isPositionAllowedByPlacementRestriction(BlockPos pos, EnumFacing side)
+    private static boolean isPositionAllowedByPlacementRestriction(BlockPos pos, Direction side)
     {
         boolean restrictionEnabled = FeatureToggle.TWEAK_PLACEMENT_RESTRICTION.getBooleanValue();
         boolean gridEnabled = FeatureToggle.TWEAK_PLACEMENT_GRID.getBooleanValue();
@@ -974,7 +974,7 @@ public class PlacementTweaks
         return isPositionAllowedByRestrictions(pos, side, posFirst, sideFirst, restrictionEnabled, mode, gridEnabled, gridSize);
     }
 
-    public static boolean isPositionAllowedByBreakingRestriction(BlockPos pos, EnumFacing side)
+    public static boolean isPositionAllowedByBreakingRestriction(BlockPos pos, Direction side)
     {
         boolean restrictionEnabled = FeatureToggle.TWEAK_BREAKING_RESTRICTION.getBooleanValue();
         boolean gridEnabled = FeatureToggle.TWEAK_BREAKING_GRID.getBooleanValue();
@@ -990,8 +990,8 @@ public class PlacementTweaks
         return posFirstBreaking == null || isPositionAllowedByRestrictions(pos, side, posFirstBreaking, sideFirstBreaking, restrictionEnabled, mode, gridEnabled, gridSize);
     }
 
-    private static boolean isPositionAllowedByRestrictions(BlockPos pos, EnumFacing side,
-            BlockPos posFirst, EnumFacing sideFirst, boolean restrictionEnabled, PlacementRestrictionMode mode, boolean gridEnabled, int gridSize)
+    private static boolean isPositionAllowedByRestrictions(BlockPos pos, Direction side,
+            BlockPos posFirst, Direction sideFirst, boolean restrictionEnabled, PlacementRestrictionMode mode, boolean gridEnabled, int gridSize)
     {
         if (gridEnabled)
         {
@@ -1006,7 +1006,7 @@ public class PlacementTweaks
         return restrictionEnabled == false || mode.isPositionValid(pos, side, posFirst, sideFirst);
     }
 
-    private static boolean isFacingValidFor(EnumFacing facing, ItemStack stack)
+    private static boolean isFacingValidFor(Direction facing, ItemStack stack)
     {
         Item item = stack.getItem();
 
@@ -1027,7 +1027,7 @@ public class PlacementTweaks
         return false;
     }
 
-    private static BlockPos getPlacementPositionForTargetedPosition(BlockPos pos, EnumFacing side, World world)
+    private static BlockPos getPlacementPositionForTargetedPosition(BlockPos pos, Direction side, World world)
     {
         if (canPlaceBlockIntoPosition(pos, world))
         {
@@ -1043,9 +1043,9 @@ public class PlacementTweaks
         return state.getBlock().isReplaceable(world, pos) || state.getMaterial().isLiquid() || state.getMaterial().isReplaceable();
     }
 
-    public static boolean isNewPositionValidForColumnMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForColumnMode(BlockPos posNew, Direction side, BlockPos posFirst, Direction sideFirst)
     {
-        EnumFacing.Axis axis = sideFirst.getAxis();
+        Direction.Axis axis = sideFirst.getAxis();
 
         switch (axis)
         {
@@ -1058,9 +1058,9 @@ public class PlacementTweaks
         }
     }
 
-    public static boolean isNewPositionValidForDiagonalMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForDiagonalMode(BlockPos posNew, Direction side, BlockPos posFirst, Direction sideFirst)
     {
-        EnumFacing.Axis axis = sideFirst.getAxis();
+        Direction.Axis axis = sideFirst.getAxis();
         BlockPos relativePos = posNew.subtract(posFirst);
 
         switch (axis)
@@ -1074,19 +1074,19 @@ public class PlacementTweaks
         }
     }
 
-    public static boolean isNewPositionValidForFaceMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForFaceMode(BlockPos posNew, Direction side, BlockPos posFirst, Direction sideFirst)
     {
         return side == sideFirst;
     }
 
-    public static boolean isNewPositionValidForLayerMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForLayerMode(BlockPos posNew, Direction side, BlockPos posFirst, Direction sideFirst)
     {
         return posNew.getY() == posFirst.getY();
     }
 
-    public static boolean isNewPositionValidForLineMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForLineMode(BlockPos posNew, Direction side, BlockPos posFirst, Direction sideFirst)
     {
-        EnumFacing.Axis axis = sideFirst.getAxis();
+        Direction.Axis axis = sideFirst.getAxis();
 
         switch (axis)
         {
@@ -1099,9 +1099,9 @@ public class PlacementTweaks
         }
     }
 
-    public static boolean isNewPositionValidForPlaneMode(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
+    public static boolean isNewPositionValidForPlaneMode(BlockPos posNew, Direction side, BlockPos posFirst, Direction sideFirst)
     {
-        EnumFacing.Axis axis = sideFirst.getAxis();
+        Direction.Axis axis = sideFirst.getAxis();
 
         switch (axis)
         {
@@ -1217,6 +1217,6 @@ public class PlacementTweaks
 
     public interface PlacementRestrictionCheck
     {
-        boolean isPositionValid(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst);
+        boolean isPositionValid(BlockPos posNew, Direction side, BlockPos posFirst, Direction sideFirst);
     }
 }

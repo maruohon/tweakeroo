@@ -9,10 +9,10 @@ import net.minecraft.client.gui.GuiChat.ChatTabCompleter;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.TabCompleter;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 
 import malilib.util.game.wrap.EntityWrap;
 import malilib.util.game.wrap.GameUtils;
+import malilib.util.position.HitResult;
 import tweakeroo.config.FeatureToggle;
 
 @Mixin(ChatTabCompleter.class)
@@ -28,7 +28,8 @@ public abstract class MixinChatTabCompleter extends TabCompleter
     {
         if (FeatureToggle.TWEAK_TAB_COMPLETE_COORDINATE.getBooleanValue())
         {
-            if (GameUtils.getClientPlayer() != null && (GameUtils.getHitResult() == null || GameUtils.getHitResult().typeOfHit != RayTraceResult.Type.BLOCK))
+            if (GameUtils.getClientPlayer() != null &&
+                GameUtils.getHitResult().type != HitResult.Type.BLOCK)
             {
                 cir.setReturnValue(EntityWrap.getPlayerBlockPos());
                 cir.cancel();

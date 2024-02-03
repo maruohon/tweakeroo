@@ -2,10 +2,9 @@ package tweakeroo.util;
 
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-
 import malilib.config.value.BaseOptionListConfigValue;
+import malilib.util.position.BlockPos;
+import malilib.util.position.Direction;
 import tweakeroo.tweaks.PlacementTweaks;
 
 public class PlacementRestrictionMode extends BaseOptionListConfigValue
@@ -28,7 +27,7 @@ public class PlacementRestrictionMode extends BaseOptionListConfigValue
         this.check = check;
     }
 
-    public boolean isPositionValid(BlockPos posNew, EnumFacing side, BlockPos posFirst, EnumFacing sideFirst)
+    public boolean isPositionValid(BlockPos posNew, Direction side, BlockPos posFirst, Direction sideFirst)
     {
         return this.check.isPositionValid(posNew, side, posFirst, sideFirst);
     }

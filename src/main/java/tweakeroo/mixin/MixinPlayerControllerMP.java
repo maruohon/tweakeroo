@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
+import malilib.util.position.Direction;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.tweaks.PlacementTweaks;
@@ -134,7 +135,7 @@ public abstract class MixinPlayerControllerMP
     private void handleBreakingRestriction1(BlockPos pos, EnumFacing side, CallbackInfoReturnable<Boolean> cir)
     {
         if (CameraUtils.shouldPreventPlayerInputs() ||
-            PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
+            PlacementTweaks.isPositionAllowedByBreakingRestriction(malilib.util.position.BlockPos.of(pos), Direction.of(side)) == false)
         {
             cir.setReturnValue(false);
         }
@@ -144,7 +145,7 @@ public abstract class MixinPlayerControllerMP
     private void handleBreakingRestriction2(BlockPos pos, EnumFacing side, CallbackInfoReturnable<Boolean> cir)
     {
         if (CameraUtils.shouldPreventPlayerInputs() ||
-            PlacementTweaks.isPositionAllowedByBreakingRestriction(pos, side) == false)
+            PlacementTweaks.isPositionAllowedByBreakingRestriction(malilib.util.position.BlockPos.of(pos), Direction.of(side)) == false)
         {
             cir.setReturnValue(true);
         }

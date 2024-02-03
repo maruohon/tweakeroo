@@ -19,6 +19,7 @@ import malilib.config.value.BlackWhiteList;
 import malilib.gui.util.GuiUtils;
 import malilib.overlay.message.MessageUtils;
 import malilib.util.StringUtils;
+import malilib.util.data.Identifier;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.restriction.UsageRestriction;
 import tweakeroo.Tweakeroo;
@@ -160,7 +161,7 @@ public class MiscTweaks
         POTION_RESTRICTION.setListContents(list);
     }
 
-    public static void updateSoundRestrictionLists(BlackWhiteList<ResourceLocation> list)
+    public static void updateSoundRestrictionLists(BlackWhiteList<Identifier> list)
     {
         SOUND_RESTRICTION.setListContents(list);
     }

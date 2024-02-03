@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import malilib.gui.util.GuiUtils;
+import malilib.util.position.Direction;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.tweaks.MiscTweaks;
 import tweakeroo.tweaks.PlacementTweaks;
@@ -98,7 +99,10 @@ public abstract class MixinMinecraft implements IMinecraftAccessor
             Vec3d hitVec,
             EnumHand hand)
     {
-        return PlacementTweaks.onProcessRightClickBlock(controller, player, world, pos, side, hitVec, hand);
+        return PlacementTweaks.onProcessRightClickBlock(controller, player, world,
+                                                        malilib.util.position.BlockPos.of(pos),
+                                                        Direction.of(side),
+                                                        malilib.util.position.Vec3d.of(hitVec), hand);
     }
 
     @Inject(method = "processKeyBinds", at = @At("HEAD"))

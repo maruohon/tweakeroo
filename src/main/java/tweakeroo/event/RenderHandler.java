@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
 
 import malilib.config.value.ActiveMode;
 import malilib.event.PostGameOverlayRenderer;
@@ -21,6 +20,7 @@ import malilib.render.inventory.InventoryRenderUtils;
 import malilib.util.data.Color4f;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.game.wrap.ItemWrap;
+import malilib.util.position.HitResult;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.config.Hotkeys;
@@ -120,11 +120,10 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
     private void renderOverlays(RenderContext ctx, float tickDelta)
     {
         EntityPlayer player = GameUtils.getClientPlayer();
-        RayTraceResult hit = GameUtils.getHitResult();
+        HitResult hit = GameUtils.getHitResult();
 
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
-            hit != null &&
-            hit.typeOfHit == RayTraceResult.Type.BLOCK &&
+            hit.type == HitResult.Type.BLOCK &&
             player.isSpectator() == false &&
             (Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_ROTATION.getKeyBind().isKeyBindHeld() ||
              Hotkeys.FLEXIBLE_BLOCK_PLACEMENT_OFFSET.getKeyBind().isKeyBindHeld() ||
@@ -143,8 +142,8 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
 
             Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
 
-            BlockTargetingRenderUtils.render5WayBlockTargetingOverlay(entity, hit.getBlockPos(), hit.sideHit,
-                                                                      hit.hitVec, color, tickDelta, ctx);
+            BlockTargetingRenderUtils.render5WayBlockTargetingOverlay(entity, hit.blockPos, hit.side,
+                                                                      hit.pos, color, tickDelta, ctx);
 
             GlStateManager.enableTexture2D();
             GlStateManager.enableDepth();

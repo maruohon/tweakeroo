@@ -26,6 +26,7 @@ import malilib.render.inventory.BuiltinInventoryRenderDefinitions;
 import malilib.render.inventory.InventoryRenderDefinition;
 import malilib.render.inventory.InventoryRenderUtils;
 import malilib.util.MathUtils;
+import malilib.util.data.Identifier;
 import malilib.util.game.wrap.EntityWrap;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.game.wrap.ItemWrap;
@@ -39,6 +40,7 @@ import tweakeroo.util.SnapAimMode;
 
 public class RenderUtils
 {
+    private static final Identifier INVENTORY_BACKGROUND = new Identifier(GuiInventory.INVENTORY_BACKGROUND);
     private static long lastRotationChangeTime;
 
     public static void renderHotbarSwapOverlay(RenderContext ctx)
@@ -82,7 +84,7 @@ public class RenderUtils
             FontRenderer textRenderer = GameUtils.getClient().fontRenderer;
 
             malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
-            malilib.render.RenderUtils.bindTexture(GuiInventory.INVENTORY_BACKGROUND);
+            malilib.render.RenderUtils.bindTexture(INVENTORY_BACKGROUND);
             ShapeRenderUtils.renderTexturedRectangle256(x - 1, y - 1, z, 7, 83, 9 * 18, 3 * 18, ctx);
 
             for (int row = 1; row <= 3; row++)

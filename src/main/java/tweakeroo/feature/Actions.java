@@ -4,17 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import malilib.action.Action;
 import malilib.action.ActionContext;
-import malilib.action.util.ActionUtils;
-import malilib.action.builtin.ConfigActions;
 import malilib.action.NamedAction;
 import malilib.action.ParameterizedAction;
+import malilib.action.builtin.ConfigActions;
+import malilib.action.util.ActionUtils;
 import malilib.input.ActionResult;
 import malilib.listener.EventListener;
 import malilib.overlay.message.MessageDispatcher;
@@ -24,7 +21,10 @@ import malilib.util.StringUtils;
 import malilib.util.game.RayTraceUtils;
 import malilib.util.game.wrap.EntityWrap;
 import malilib.util.game.wrap.GameUtils;
+import malilib.util.position.BlockPos;
+import malilib.util.position.HitResult;
 import malilib.util.position.PositionUtils;
+import malilib.util.position.Vec3d;
 import tweakeroo.Reference;
 import tweakeroo.config.Configs;
 import tweakeroo.config.DisableToggle;
@@ -126,13 +126,13 @@ public class Actions
 
         if (world != null && player != null && player.capabilities.isCreativeMode)
         {
-            RayTraceResult trace = RayTraceUtils.getRayTraceFromEntity(world, GameUtils.getCameraEntity(),
-                                                                       RayTraceUtils.RayTraceFluidHandling.SOURCE_ONLY, false,
-                                                                       Math.max(GameUtils.getRenderDistanceChunks() * 16, world.getHeight()) + 32);
+            HitResult trace = RayTraceUtils.getRayTraceFromEntity(world, GameUtils.getCameraEntity(),
+                                                                  RayTraceUtils.RayTraceFluidHandling.SOURCE_ONLY, false,
+                                                                  Math.max(GameUtils.getRenderDistanceChunks() * 16, world.getHeight()) + 32);
 
-            if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+            if (trace != null && trace.type == HitResult.Type.BLOCK)
             {
-                Vec3d pos = PositionUtils.adjustPositionToSideOfEntity(trace.hitVec, player, trace.sideHit);
+                Vec3d pos = PositionUtils.adjustPositionToSideOfEntity(trace.pos, player, trace.side);
                 double y = maintainY ? EntityWrap.getY(player) : pos.y;
                 player.sendChatMessage(String.format("/tp @p %s %s %s", pos.x, y, pos.z));
             }
@@ -145,11 +145,11 @@ public class Actions
 
     private static ActionResult copySignText(ActionContext ctx)
     {
-        RayTraceResult trace = GameUtils.getHitResult();
+        HitResult trace = GameUtils.getHitResult();
 
-        if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        if (trace.type == HitResult.Type.BLOCK)
         {
-            BlockPos pos = trace.getBlockPos();
+            BlockPos pos = trace.blockPos;
             TileEntity te = ctx.getWorld().getTileEntity(pos);
 
             if (te instanceof TileEntitySign)
@@ -285,11 +285,11 @@ public class Actions
 
     private static ActionResult toolPick()
     {
-        RayTraceResult trace = GameUtils.getHitResult();
+        HitResult trace = GameUtils.getHitResult();
 
-        if (trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK)
+        if (trace.type == HitResult.Type.BLOCK)
         {
-            InventoryUtils.trySwitchToEffectiveTool(trace.getBlockPos());
+            InventoryUtils.trySwitchToEffectiveTool(trace.blockPos);
             return ActionResult.SUCCESS;
         }
 

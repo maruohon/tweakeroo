@@ -1,8 +1,8 @@
 package tweakeroo.config;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
@@ -11,7 +11,6 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 
 import malilib.config.category.BaseConfigOptionCategory;
@@ -34,6 +33,7 @@ import malilib.config.value.ActiveMode;
 import malilib.config.value.BlackWhiteList;
 import malilib.config.value.HudAlignment;
 import malilib.input.Hotkey;
+import malilib.util.data.Identifier;
 import malilib.util.restriction.UsageRestriction.ListType;
 import tweakeroo.Reference;
 import tweakeroo.util.PlacementRestrictionMode;
@@ -233,7 +233,7 @@ public class Configs
         public static final BlackWhiteListConfig<Item>              FAST_RIGHT_CLICK_ITEM_LIST      = new BlackWhiteListConfig<>("fastRightClickItemList", BlackWhiteList.items(ListType.BLACKLIST, ImmutableList.of(Items.FIREWORKS), ImmutableList.of(Items.BUCKET, Items.WATER_BUCKET, Items.LAVA_BUCKET, Items.GLASS_BOTTLE)));
         public static final BlackWhiteListConfig<Item>              ITEM_GLINT_ITEM_LIST            = new BlackWhiteListConfig<>("itemGlintItemList", BlackWhiteList.items(ListType.BLACKLIST, ImmutableList.of(Items.POTIONITEM, Items.SPLASH_POTION, Items.LINGERING_POTION), ImmutableList.of()));
         public static final BlackWhiteListConfig<Potion>            POTION_WARNING_LIST             = new BlackWhiteListConfig<>("potionWarningList", BlackWhiteList.effects(ListType.NONE, ImmutableList.of("minecraft:hunger", "minecraft:mining_fatigue", "minecraft:nausea", "minecraft:poison", "minecraft:slowness", "minecraft:weakness"), ImmutableList.of("minecraft:fire_resistance", "minecraft:invisibility", "minecraft:water_breathing")));
-        public static final BlackWhiteListConfig<ResourceLocation>  SOUND_DISABLE_LIST              = new BlackWhiteListConfig<>("soundDisableList", new BlackWhiteList<>(ListType.NONE, IdentifierListConfig.create("malilib.label.list_type.blacklist", getSortedSoundNamesList()), IdentifierListConfig.create("malilib.label.list_type.whitelist", getSortedSoundNamesList())));
+        public static final BlackWhiteListConfig<Identifier>        SOUND_DISABLE_LIST              = new BlackWhiteListConfig<>("soundDisableList", new BlackWhiteList<>(ListType.NONE, IdentifierListConfig.create("malilib.label.list_type.blacklist", getSortedSoundNamesList()), IdentifierListConfig.create("malilib.label.list_type.whitelist", getSortedSoundNamesList())));
 
         public static final ImmutableList<ConfigOption<?>> OPTIONS = ImmutableList.of(
                 FAST_PLACEMENT_ITEM_LIST,
@@ -248,11 +248,9 @@ public class Configs
                 UNSTACKING_ITEMS
         );
 
-        public static List<ResourceLocation> getSortedSoundNamesList()
+        public static List<Identifier> getSortedSoundNamesList()
         {
-            List<ResourceLocation> names = new ArrayList<>(SoundEvent.REGISTRY.getKeys());
-            names.sort(Comparator.comparing(ResourceLocation::toString));
-            return names;
+            return SoundEvent.REGISTRY.getKeys().stream().map(Identifier::new).sorted(Comparator.comparing(Identifier::toString)).collect(Collectors.toList());
         }
     }
 

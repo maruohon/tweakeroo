@@ -161,9 +161,9 @@ public class MiscUtils
         }
 
         double range = mc.playerController.getBlockReachDistance();
-        Vec3d eyesPos = player.getPositionEyes(1f);
-        Vec3d rangedLookRot = player.getLook(1f).scale(range);
-        Vec3d lookEndPos = eyesPos.add(rangedLookRot);
+        malilib.util.position.Vec3d eyesPos = EntityWrap.getEntityEyePos(player);
+        malilib.util.position.Vec3d rangedLook = EntityWrap.getScaledLookVector(player, range);
+        malilib.util.position.Vec3d lookEndPos = eyesPos.add(rangedLook);
         int swappedSlotMain = -1;
         int swappedSlotOff = -1;
         int hotbarSlot = player.inventory.currentItem;
@@ -193,12 +193,12 @@ public class MiscUtils
 
         // Use a custom "collision checker" that just right clicks on all air blocks, and aborts when hitting an existing non-air block
         IRayPositionHandler handler = (data, world, ignore) -> {
-            IBlockState state = world.getBlockState(data.blockPosMutable);
+            IBlockState state = world.getBlockState(data.mutablePos);
 
             if (state.getMaterial() == Material.AIR)
             {
                 Vec3d vec = new Vec3d(data.blockX + 0.5, data.blockY + 1.0, data.blockZ + 0.5);
-                mc.playerController.processRightClickBlock(mc.player, mc.world, data.blockPosMutable.toImmutable(), EnumFacing.UP, vec, EnumHand.MAIN_HAND);
+                mc.playerController.processRightClickBlock(mc.player, mc.world, data.mutablePos.toImmutable(), EnumFacing.UP, vec, EnumHand.MAIN_HAND);
             }
             else
             {
