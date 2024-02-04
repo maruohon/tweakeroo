@@ -30,7 +30,7 @@ import malilib.util.MathUtils;
 import malilib.util.game.RayTraceUtils;
 import malilib.util.game.RayTraceUtils.IRayPositionHandler;
 import malilib.util.game.wrap.EntityWrap;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import malilib.util.game.wrap.ItemWrap;
 import malilib.util.game.wrap.RenderWrap;
 import malilib.util.inventory.InventoryUtils;
@@ -96,7 +96,7 @@ public class MiscUtils
             resetMouseSensitivityForZoom();
 
             // Refresh the rendered chunks when exiting zoom mode
-            GameUtils.getClient().renderGlobal.setDisplayListEntitiesDirty();
+            GameWrap.getClient().renderGlobal.setDisplayListEntitiesDirty();
 
             zoomActive = false;
         }
@@ -104,7 +104,7 @@ public class MiscUtils
 
     public static void setMouseSensitivityForZoom()
     {
-        Minecraft mc = GameUtils.getClient();
+        Minecraft mc = GameWrap.getClient();
 
         float fov = Configs.Generic.ZOOM_FOV.getFloatValue();
         float origFov = mc.gameSettings.fovSetting;
@@ -127,7 +127,7 @@ public class MiscUtils
     {
         if (mouseSensitivity > 0.0F)
         {
-            GameUtils.getClient().gameSettings.mouseSensitivity = mouseSensitivity;
+            GameWrap.getClient().gameSettings.mouseSensitivity = mouseSensitivity;
             mouseSensitivity = -1.0F;
         }
     }
@@ -152,7 +152,7 @@ public class MiscUtils
 
     public static ActionResult antiGhostBlock(ActionContext ctx)
     {
-        Minecraft mc = GameUtils.getClient();
+        Minecraft mc = GameWrap.getClient();
         EntityPlayer player = ctx.getPlayer();
         World worldIn = ctx.getWorld();
 

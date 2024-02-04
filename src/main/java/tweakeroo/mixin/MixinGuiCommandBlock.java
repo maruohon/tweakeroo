@@ -11,6 +11,7 @@ import malilib.render.RenderContext;
 import malilib.render.TextRenderUtils;
 import malilib.render.text.StyledText;
 import malilib.util.StringUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.util.MiscUtils;
 
@@ -130,7 +131,7 @@ public abstract class MixinGuiCommandBlock extends net.minecraft.client.gui.GuiS
                 if (button.id == 101 && this.textFieldName != null)
                 {
                     String name = this.textFieldName.getText();
-                    this.mc.player.sendChatMessage(String.format("/blockdata %d %d %d {\"CustomName\":\"%s\"}", pos.getX(), pos.getY(), pos.getZ(), name));
+                    GameWrap.sendChatMessage(String.format("/blockdata %d %d %d {\"CustomName\":\"%s\"}", pos.getX(), pos.getY(), pos.getZ(), name));
                 }
                 // Toggle Update Last Execution
                 else if (button.id == 102 && this.buttonUpdateExec != null)
@@ -141,7 +142,7 @@ public abstract class MixinGuiCommandBlock extends net.minecraft.client.gui.GuiS
 
                     String cmd = String.format("/blockdata %d %d %d {\"UpdateLastExecution\":%s}",
                             pos.getX(), pos.getY(), pos.getZ(), this.updateExecValue ? "1b" : "0b");
-                    this.mc.player.sendChatMessage(cmd);
+                    GameWrap.sendChatMessage(cmd);
                 }
             }
         }

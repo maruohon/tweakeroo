@@ -6,7 +6,7 @@ import net.minecraft.util.MovementInput;
 
 import malilib.gui.util.GuiUtils;
 import malilib.input.KeyboardInputHandler;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.util.MiscUtils;
 
 public class KeyboardInputHandlerImpl implements KeyboardInputHandler
@@ -22,7 +22,7 @@ public class KeyboardInputHandlerImpl implements KeyboardInputHandler
         // Not in a GUI
         if (GuiUtils.noScreenOpen() && eventKeyState)
         {
-            this.storeLastMovementDirection(keyCode, GameUtils.getClient());
+            this.storeLastMovementDirection(keyCode, GameWrap.getClient());
         }
 
         MiscUtils.checkZoomStatus();
@@ -62,7 +62,7 @@ public class KeyboardInputHandlerImpl implements KeyboardInputHandler
 
     public void handleMovementKeys(MovementInput movement)
     {
-        GameSettings settings = GameUtils.getClient().gameSettings;
+        GameSettings settings = GameWrap.getClient().gameSettings;
 
         if (settings.keyBindLeft.isKeyDown() && settings.keyBindRight.isKeyDown())
         {

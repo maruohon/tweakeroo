@@ -5,8 +5,8 @@ import net.minecraft.client.renderer.ViewFrustum;
 import net.minecraft.entity.Entity;
 
 import malilib.util.MathUtils;
-import malilib.util.game.WorldUtils;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.WorldWrap;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
 
@@ -86,8 +86,8 @@ public class CameraUtils
             return;
         }
 
-        WorldClient world = GameUtils.getClientWorld();
-        final int viewDistance = GameUtils.getRenderDistanceChunks();
+        WorldClient world = GameWrap.getClientWorld();
+        final int viewDistance = GameWrap.getRenderDistanceChunks();
 
         if (chunkX != lastChunkX)
         {
@@ -98,7 +98,7 @@ public class CameraUtils
             {
                 for (int cz = chunkZ - viewDistance; cz <= chunkZ + viewDistance; ++cz)
                 {
-                    if (WorldUtils.isClientChunkLoaded(cx, cz, world))
+                    if (WorldWrap.isClientChunkLoaded(cx, cz, world))
                     {
                         int x = cx << 4;
                         int z = cz << 4;
@@ -117,7 +117,7 @@ public class CameraUtils
             {
                 for (int cx = chunkX - viewDistance; cx <= chunkX + viewDistance; ++cx)
                 {
-                    if (WorldUtils.isClientChunkLoaded(cx, cz, world))
+                    if (WorldWrap.isClientChunkLoaded(cx, cz, world))
                     {
                         int x = cx << 4;
                         int z = cz << 4;
@@ -130,9 +130,9 @@ public class CameraUtils
 
     public static void markChunksForRebuildOnDeactivation(int lastChunkX, int lastChunkZ)
     {
-        Entity entity = GameUtils.getCameraEntity();
-        WorldClient world = GameUtils.getClientWorld();
-        final int viewDistance = GameUtils.getRenderDistanceChunks();
+        Entity entity = GameWrap.getCameraEntity();
+        WorldClient world = GameWrap.getClientWorld();
+        final int viewDistance = GameWrap.getRenderDistanceChunks();
         final int chunkX = entity.chunkCoordX;
         final int chunkZ = entity.chunkCoordZ;
 
@@ -151,7 +151,7 @@ public class CameraUtils
             {
                 // Mark all chunks that were not in free camera range
                 if ((cx < minCameraCX || cx > maxCameraCX || cz < minCameraCZ || cz > maxCameraCZ) &&
-                    WorldUtils.isClientChunkLoaded(cx, cz, world))
+                    WorldWrap.isClientChunkLoaded(cx, cz, world))
                 {
                     int x = cx << 4;
                     int z = cz << 4;

@@ -17,7 +17,7 @@ import malilib.render.BlockTargetingRenderUtils;
 import malilib.render.RenderContext;
 import malilib.render.inventory.InventoryRenderUtils;
 import malilib.util.data.Color4f;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import malilib.util.game.wrap.ItemWrap;
 import malilib.util.game.wrap.RenderWrap;
 import malilib.util.position.HitResult;
@@ -119,8 +119,8 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
 
     private void renderOverlays(RenderContext ctx, float tickDelta)
     {
-        EntityPlayer player = GameUtils.getClientPlayer();
-        HitResult hit = GameUtils.getHitResult();
+        EntityPlayer player = GameWrap.getClientPlayer();
+        HitResult hit = GameWrap.getHitResult();
 
         if (FeatureToggle.TWEAK_FLEXIBLE_BLOCK_PLACEMENT.getBooleanValue() &&
             hit.type == HitResult.Type.BLOCK &&
@@ -131,7 +131,7 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
             (ItemWrap.notEmpty(player.getHeldItem(EnumHand.MAIN_HAND)) ||
              ItemWrap.notEmpty(player.getHeldItem(EnumHand.OFF_HAND))))
         {
-            Entity entity = GameUtils.getCameraEntity();
+            Entity entity = GameWrap.getCameraEntity();
             RenderWrap.depthMask(false);
             RenderWrap.disableLighting();
             RenderWrap.disableCull();

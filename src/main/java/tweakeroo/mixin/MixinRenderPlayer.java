@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.FeatureToggle;
 
 @Mixin(RenderPlayer.class)
@@ -19,7 +19,7 @@ public abstract class MixinRenderPlayer
     private boolean overrideIsUser(AbstractClientPlayer entity)
     {
         // This allows the real player entity to be rendered in the free camera mode
-        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && entity == GameUtils.getClientPlayer())
+        if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue() && entity == GameWrap.getClientPlayer())
         {
             return false;
         }

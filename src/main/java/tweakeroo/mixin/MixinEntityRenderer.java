@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import malilib.util.game.wrap.EntityWrap;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.Configs;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.config.FeatureToggle;
@@ -166,7 +166,7 @@ public abstract class MixinEntityRenderer
     {
         if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeyBind().isKeyBindHeld())
         {
-            net.minecraft.entity.Entity entity = GameUtils.getCameraEntity();
+            net.minecraft.entity.Entity entity = GameWrap.getCameraEntity();
 
             if (entity != null)
             {

@@ -21,7 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.Configs;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.config.FeatureToggle;
@@ -42,7 +42,7 @@ public abstract class MixinWorld
 
             if (world.provider.hasSkyLight() && world.isRaining() == false)
             {
-                Minecraft mc = GameUtils.getClient();
+                Minecraft mc = GameWrap.getClient();
                 cir.setReturnValue(world.getSkyColor(mc.getRenderViewEntity(), mc.getRenderPartialTicks()));
             }
         }

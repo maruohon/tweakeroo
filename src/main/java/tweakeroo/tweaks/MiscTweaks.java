@@ -20,7 +20,7 @@ import malilib.gui.util.GuiUtils;
 import malilib.overlay.message.MessageUtils;
 import malilib.util.StringUtils;
 import malilib.util.data.Identifier;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import malilib.util.restriction.UsageRestriction;
 import tweakeroo.Tweakeroo;
 import tweakeroo.config.Configs;
@@ -51,7 +51,7 @@ public class MiscTweaks
 
     public static void onTick()
     {
-        EntityPlayerSP player = GameUtils.getClientPlayer();
+        EntityPlayerSP player = GameWrap.getClientPlayer();
 
         if (player == null)
         {
@@ -73,7 +73,7 @@ public class MiscTweaks
     {
         if (GuiUtils.noScreenOpen())
         {
-            Minecraft mc = GameUtils.getClient();
+            Minecraft mc = GameWrap.getClient();
 
             if (FeatureToggle.TWEAK_PERIODIC_ATTACK.getBooleanValue() &&
                 ++periodicAttackCounter >= Configs.Generic.PERIODIC_ATTACK_INTERVAL.getIntegerValue())

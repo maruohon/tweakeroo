@@ -11,7 +11,7 @@ import net.minecraft.util.TabCompleter;
 import net.minecraft.util.math.BlockPos;
 
 import malilib.util.game.wrap.EntityWrap;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import malilib.util.position.HitResult;
 import tweakeroo.config.FeatureToggle;
 
@@ -28,8 +28,8 @@ public abstract class MixinChatTabCompleter extends TabCompleter
     {
         if (FeatureToggle.TWEAK_TAB_COMPLETE_COORDINATE.getBooleanValue())
         {
-            if (GameUtils.getClientPlayer() != null &&
-                GameUtils.getHitResult().type != HitResult.Type.BLOCK)
+            if (GameWrap.getClientPlayer() != null &&
+                GameWrap.getHitResult().type != HitResult.Type.BLOCK)
             {
                 cir.setReturnValue(EntityWrap.getPlayerBlockPos());
                 cir.cancel();

@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import net.minecraft.client.renderer.GlStateManager;
 
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.renderer.RenderUtils;
@@ -25,7 +25,7 @@ public abstract class MixinGlStateManager
             FeatureToggle.TWEAK_LAVA_VISIBILITY.getBooleanValue() &&
             Configs.Generic.LAVA_VISIBILITY_OPTIFINE.getBooleanValue())
         {
-            return RenderUtils.getLavaFog(GameUtils.getClientPlayer(), fogDensity);
+            return RenderUtils.getLavaFog(GameWrap.getClientPlayer(), fogDensity);
         }
         else
         {

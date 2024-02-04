@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 import malilib.util.MathUtils;
 import malilib.util.game.wrap.EntityWrap;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
 
@@ -52,7 +52,7 @@ public class CameraEntity extends EntityPlayerSP
             float vertical = 0;
             float strafe = 0;
 
-            GameSettings options = GameUtils.getClient().gameSettings;
+            GameSettings options = GameWrap.getClient().gameSettings;
             if (options.keyBindForward.isKeyDown()) { forward++;  }
             if (options.keyBindBack.isKeyDown())    { forward--;  }
             if (options.keyBindLeft.isKeyDown())    { strafe++;   }
@@ -172,7 +172,7 @@ public class CameraEntity extends EntityPlayerSP
 
     private static CameraEntity createCameraEntity(Minecraft mc)
     {
-        EntityPlayerSP player = GameUtils.getClientPlayer();
+        EntityPlayerSP player = GameWrap.getClientPlayer();
         CameraEntity camera = new CameraEntity(mc, mc.world, player.connection, player.getStatFileWriter(), player.getRecipeBook());
 
         camera.noClip = true;
@@ -199,9 +199,9 @@ public class CameraEntity extends EntityPlayerSP
 
     public static void setCameraState(boolean enabled)
     {
-        Minecraft mc = GameUtils.getClient();
+        Minecraft mc = GameWrap.getClient();
 
-        if (GameUtils.getClientWorld() != null && GameUtils.getClientPlayer() != null)
+        if (GameWrap.getClientWorld() != null && GameWrap.getClientPlayer() != null)
         {
             if (enabled)
             {
@@ -229,7 +229,7 @@ public class CameraEntity extends EntityPlayerSP
 
     private static void removeCamera(Minecraft mc)
     {
-        if (GameUtils.getClientWorld() != null && camera != null)
+        if (GameWrap.getClientWorld() != null && camera != null)
         {
             mc.setRenderViewEntity(originalRenderViewEntity);
             mc.renderChunksMany = cullChunksOriginal;

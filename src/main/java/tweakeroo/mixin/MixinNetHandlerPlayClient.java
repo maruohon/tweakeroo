@@ -17,7 +17,7 @@ import net.minecraft.network.play.server.SPacketSetSlot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.event.ClickEvent;
 
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.Tweakeroo;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.config.FeatureToggle;
@@ -49,7 +49,7 @@ public abstract class MixinNetHandlerPlayClient
             String str = String.format("You died @ %d, %d, %d", pos.getX(), pos.getY(), pos.getZ());
             net.minecraft.util.text.TextComponentString message = new net.minecraft.util.text.TextComponentString(str);
             message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, pos.getX() + " " + pos.getY() + " " + pos.getZ()));
-            GameUtils.getClient().ingameGUI.getChatGUI().printChatMessage(message);
+            GameWrap.getClient().ingameGUI.getChatGUI().printChatMessage(message);
             Tweakeroo.LOGGER.info(str);
         }
     }

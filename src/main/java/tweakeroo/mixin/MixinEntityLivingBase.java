@@ -11,7 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.Configs;
 import tweakeroo.config.DisableToggle;
 
@@ -36,8 +36,8 @@ public abstract class MixinEntityLivingBase extends Entity
     private void removeOwnPotionEffects(CallbackInfo ci)
     {
         if (DisableToggle.DISABLE_FP_POTION_EFFECTS.getBooleanValue() &&
-            ((Object) this) == GameUtils.getClientPlayer() &&
-            GameUtils.getClient().gameSettings.thirdPersonView == 0)
+            ((Object) this) == GameWrap.getClientPlayer() &&
+            GameWrap.getClient().gameSettings.thirdPersonView == 0)
         {
             ci.cancel();
         }

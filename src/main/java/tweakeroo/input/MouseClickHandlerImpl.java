@@ -10,7 +10,7 @@ import net.minecraft.util.EnumHand;
 import malilib.gui.util.GuiUtils;
 import malilib.input.MouseClickHandler;
 import malilib.util.game.wrap.EntityWrap;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import malilib.util.game.wrap.ItemWrap;
 import malilib.util.position.BlockPos;
 import malilib.util.position.Direction;
@@ -24,12 +24,12 @@ public class MouseClickHandlerImpl implements MouseClickHandler
     @Override
     public boolean onMouseClick(int mouseX, int mouseY, int mouseButton, boolean buttonState)
     {
-        EntityPlayerSP player = GameUtils.getClientPlayer();
-        WorldClient world = GameUtils.getClientWorld();
-        HitResult hitResult = GameUtils.getHitResult();
+        EntityPlayerSP player = GameWrap.getClientPlayer();
+        WorldClient world = GameWrap.getClientWorld();
+        HitResult hitResult = GameWrap.getHitResult();
 
         if (GuiUtils.noScreenOpen() && player != null && player.capabilities.isCreativeMode &&
-            buttonState && mouseButton == GameUtils.getClient().gameSettings.keyBindUseItem.getKeyCode() + 100 &&
+            buttonState && mouseButton == GameWrap.getClient().gameSettings.keyBindUseItem.getKeyCode() + 100 &&
             FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() &&
             hitResult.type == HitResult.Type.MISS)
         {
@@ -45,7 +45,7 @@ public class MouseClickHandlerImpl implements MouseClickHandler
 
                 if (ItemWrap.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
                 {
-                    GameUtils.getInteractionManager().processRightClickBlock(player, world, posFront, facing, pos, EnumHand.MAIN_HAND);
+                    GameWrap.getInteractionManager().processRightClickBlock(player, world, posFront, facing, pos, EnumHand.MAIN_HAND);
                     return true;
                 }
 
@@ -53,7 +53,7 @@ public class MouseClickHandlerImpl implements MouseClickHandler
 
                 if (ItemWrap.notEmpty(stack) && stack.getItem() instanceof ItemBlock)
                 {
-                    GameUtils.getInteractionManager().processRightClickBlock(player, world, posFront, facing, pos, EnumHand.OFF_HAND);
+                    GameWrap.getInteractionManager().processRightClickBlock(player, world, posFront, facing, pos, EnumHand.OFF_HAND);
                     return true;
                 }
             }

@@ -27,7 +27,7 @@ import malilib.render.inventory.InventoryRenderUtils;
 import malilib.util.MathUtils;
 import malilib.util.data.Identifier;
 import malilib.util.game.wrap.EntityWrap;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import malilib.util.game.wrap.ItemWrap;
 import malilib.util.game.wrap.RenderWrap;
 import malilib.util.inventory.InventoryView;
@@ -45,7 +45,7 @@ public class RenderUtils
 
     public static void renderHotbarSwapOverlay(RenderContext ctx)
     {
-        EntityPlayer player = GameUtils.getClientPlayer();
+        EntityPlayer player = GameWrap.getClientPlayer();
 
         if (player != null)
         {
@@ -81,7 +81,7 @@ public class RenderUtils
             int x = startX;
             int y = startY;
             int z = 0;
-            FontRenderer textRenderer = GameUtils.getClient().fontRenderer;
+            FontRenderer textRenderer = GameWrap.getClient().fontRenderer;
 
             RenderWrap.color(1f, 1f, 1f, 1f);
             RenderWrap.bindTexture(INVENTORY_BACKGROUND);
@@ -128,7 +128,7 @@ public class RenderUtils
     {
         final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
         final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
-        InventoryView inv = new SlicedInventoryView(new VanillaInventoryView(GameUtils.getPlayerInventory()), 9, 27);
+        InventoryView inv = new SlicedInventoryView(new VanillaInventoryView(GameWrap.getPlayerInventory()), 9, 27);
 
         InventoryRenderDefinition renderer = BuiltinInventoryRenderDefinitions.GENERIC_27;
         InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, yCenter, 300, 0xFFFFFFFF,
@@ -143,7 +143,7 @@ public class RenderUtils
         final int y = yCenter + 6;
         final int z = 300;
 
-        InventoryView inv = new VanillaInventoryView(GameUtils.getPlayerInventory());
+        InventoryView inv = new VanillaInventoryView(GameWrap.getPlayerInventory());
 
         InventoryRenderDefinition renderer = BuiltinInventoryRenderDefinitions.PLAYER_INVENTORY;
         InventoryRenderUtils.renderInventoryPreview(inv, renderer, xCenter, y, z, 0xFFFFFFFF,
@@ -198,7 +198,7 @@ public class RenderUtils
 
         int width = GuiUtils.getScaledWindowWidth();
         int height = GuiUtils.getScaledWindowHeight();
-        Entity entity = GameUtils.getCameraEntity();
+        Entity entity = GameWrap.getCameraEntity();
 
         RenderWrap.translate(width / 2.0F, height / 2.0F, zLevel, ctx);
         RenderWrap.rotate(EntityWrap.lerpPitch(entity, partialTicks), -1.0F, 0.0F, 0.0F, ctx);
@@ -224,7 +224,7 @@ public class RenderUtils
             final int xCenter = GuiUtils.getScaledWindowWidth() / 2;
             final int yCenter = GuiUtils.getScaledWindowHeight() / 2;
             SnapAimMode mode = Configs.Generic.SNAP_AIM_MODE.getValue();
-            FontRenderer textRenderer = GameUtils.getClient().fontRenderer;
+            FontRenderer textRenderer = GameWrap.getClient().fontRenderer;
 
             if (mode != SnapAimMode.PITCH)
             {
@@ -322,12 +322,12 @@ public class RenderUtils
         int height = 50;
         int x = xCenter - width / 2;
         int y = yCenter - height - 10;
-        double currentPitch = EntityWrap.getPitch(GameUtils.getClientPlayer());
+        double currentPitch = EntityWrap.getPitch(GameWrap.getClientPlayer());
         double centerPitch = 0;
         double indicatorRange = 180;
 
         renderPitchIndicator(x, y, width, height, currentPitch, centerPitch, indicatorRange,
-                             false, GameUtils.getClient().fontRenderer, ctx);
+                             false, GameWrap.getClient().fontRenderer, ctx);
     }
 
     private static void renderPitchIndicator(int x, int y, int width, int height,

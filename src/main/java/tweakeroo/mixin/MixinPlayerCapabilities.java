@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.PlayerCapabilities;
 
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
 
@@ -18,7 +18,7 @@ public abstract class MixinPlayerCapabilities
     @Inject(method = "getFlySpeed", at = @At("HEAD"), cancellable = true)
     private void overrideFlySpeed(CallbackInfoReturnable<Float> cir)
     {
-        EntityPlayer player = GameUtils.getClientPlayer();
+        EntityPlayer player = GameWrap.getClientPlayer();
 
         if (FeatureToggle.TWEAK_FLY_SPEED.getBooleanValue() &&
             player != null && player.capabilities.allowFlying)

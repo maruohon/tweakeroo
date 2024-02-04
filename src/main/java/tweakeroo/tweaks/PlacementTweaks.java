@@ -31,7 +31,7 @@ import malilib.util.MathUtils;
 import malilib.util.game.BlockUtils;
 import malilib.util.game.PlacementUtils;
 import malilib.util.game.wrap.EntityWrap;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import malilib.util.game.wrap.ItemWrap;
 import malilib.util.position.BlockPos;
 import malilib.util.position.Direction;
@@ -74,7 +74,7 @@ public class PlacementTweaks
 
     public static void onTick()
     {
-        Minecraft mc = GameUtils.getClient();
+        Minecraft mc = GameWrap.getClient();
         boolean attackHeld = isVanillaKeybindHeld(mc.gameSettings.keyBindAttack);
         boolean useHeld = isVanillaKeybindHeld(mc.gameSettings.keyBindUseItem);
 
@@ -153,8 +153,8 @@ public class PlacementTweaks
 
     public static void onLeftClickMousePre()
     {
-        Minecraft mc = GameUtils.getClient();
-        HitResult trace = GameUtils.getHitResult();
+        Minecraft mc = GameWrap.getClient();
+        HitResult trace = GameWrap.getHitResult();
 
         // Only set the position if it was null, otherwise the fast left click tweak
         // would just reset it every time.
@@ -169,12 +169,12 @@ public class PlacementTweaks
 
     public static void onLeftClickMousePost()
     {
-        onProcessRightClickPost(GameUtils.getClientPlayer(), EnumHand.MAIN_HAND);
+        onProcessRightClickPost(GameWrap.getClientPlayer(), EnumHand.MAIN_HAND);
     }
 
     public static void cacheStackInHand(EnumHand hand)
     {
-        ItemStack stackOriginal = GameUtils.getClientPlayer().getHeldItem(hand);
+        ItemStack stackOriginal = GameWrap.getClientPlayer().getHeldItem(hand);
 
         if (FeatureToggle.TWEAK_HAND_RESTOCK.getBooleanValue() &&
             ItemWrap.notEmpty(stackOriginal))
@@ -208,14 +208,14 @@ public class PlacementTweaks
     @Nullable
     public static BlockPos getOverriddenPlacementPosition()
     {
-        if (GameUtils.getClientPlayer() != null)
+        if (GameWrap.getClientPlayer() != null)
         {
-            HitResult trace = GameUtils.getHitResult();
+            HitResult trace = GameWrap.getHitResult();
 
             if (trace.type == HitResult.Type.BLOCK)
             {
-                World world = GameUtils.getClientWorld();
-                EntityPlayer player = GameUtils.getClientPlayer();
+                World world = GameWrap.getClientWorld();
+                EntityPlayer player = GameWrap.getClientPlayer();
                 Direction side = trace.side;
                 BlockPos posTargeted = trace.blockPos;
 
@@ -284,19 +284,19 @@ public class PlacementTweaks
 
     private static void onUsingTick()
     {
-        EntityPlayerSP player = GameUtils.getClientPlayer();
+        EntityPlayerSP player = GameWrap.getClientPlayer();
 
         if (player == null)
         {
             return;
         }
 
-        Minecraft mc = GameUtils.getClient();
+        Minecraft mc = GameWrap.getClient();
 
         if (posFirst != null && FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getBooleanValue() &&
             canUseItemWithRestriction(FAST_PLACEMENT_ITEM_RESTRICTION, player))
         {
-            World world = GameUtils.getClientWorld();
+            World world = GameWrap.getClientWorld();
             final double reach = mc.playerController.getBlockReachDistance();
             final int maxCount = Configs.Generic.FAST_BLOCK_PLACEMENT_COUNT.getIntegerValue();
 
@@ -304,7 +304,7 @@ public class PlacementTweaks
 
             for (int i = 0; i < maxCount; ++i)
             {
-                HitResult trace = GameUtils.getHitResult();
+                HitResult trace = GameWrap.getHitResult();
 
                 if (trace == null || trace.type != HitResult.Type.BLOCK)
                 {
@@ -685,7 +685,7 @@ public class PlacementTweaks
             return FAST_RIGHT_CLICK_BLOCK_RESTRICTION.isAllowed(Blocks.AIR);
         }
 
-        Block block = GameUtils.getClientWorld().getBlockState(trace.getBlockPos()).getBlock();
+        Block block = GameWrap.getClientWorld().getBlockState(trace.getBlockPos()).getBlock();
 
         return FAST_RIGHT_CLICK_BLOCK_RESTRICTION.isAllowed(block);
     }
@@ -813,7 +813,7 @@ public class PlacementTweaks
 
         //System.out.printf("processRightClickBlockWrapper() pos: %s, side: %s, hitVec: %s\n", pos, side, hitVec);
         EnumActionResult result;
-        WorldClient clientWorld = GameUtils.getClientWorld();
+        WorldClient clientWorld = GameWrap.getClientWorld();
 
         if (InventoryUtils.canUnstackingItemNotFitInInventory(stackOriginal, player))
         {
@@ -1173,7 +1173,7 @@ public class PlacementTweaks
 
     public static boolean shouldSkipSlotSync(int slotNumber, ItemStack newStack)
     {
-        Minecraft mc = GameUtils.getClient();
+        Minecraft mc = GameWrap.getClient();
         EntityPlayer player = mc.player;
         Container container = player != null ? player.openContainer : null;
 

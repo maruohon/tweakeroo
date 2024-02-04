@@ -1,7 +1,7 @@
 package tweakeroo.feature;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.World;
@@ -20,7 +20,7 @@ import malilib.overlay.message.MessageUtils;
 import malilib.util.StringUtils;
 import malilib.util.game.RayTraceUtils;
 import malilib.util.game.wrap.EntityWrap;
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import malilib.util.position.BlockPos;
 import malilib.util.position.HitResult;
 import malilib.util.position.PositionUtils;
@@ -121,20 +121,20 @@ public class Actions
 
     private static ActionResult blinkDriveTeleport(boolean maintainY)
     {
-        World world = GameUtils.getClientWorld();
-        EntityPlayerSP player = GameUtils.getClientPlayer();
+        World world = GameWrap.getClientWorld();
 
-        if (world != null && player != null && player.capabilities.isCreativeMode)
+        if (world != null && GameWrap.isCreativeMode())
         {
-            HitResult trace = RayTraceUtils.getRayTraceFromEntity(world, GameUtils.getCameraEntity(),
+            EntityPlayer player = GameWrap.getClientPlayer();
+            HitResult trace = RayTraceUtils.getRayTraceFromEntity(world, GameWrap.getCameraEntity(),
                                                                   RayTraceUtils.RayTraceFluidHandling.SOURCE_ONLY, false,
-                                                                  Math.max(GameUtils.getRenderDistanceChunks() * 16, world.getHeight()) + 32);
+                                                                  Math.max(GameWrap.getRenderDistanceChunks() * 16, world.getHeight()) + 32);
 
             if (trace != null && trace.type == HitResult.Type.BLOCK)
             {
                 Vec3d pos = PositionUtils.adjustPositionToSideOfEntity(trace.pos, player, trace.side);
                 double y = maintainY ? EntityWrap.getY(player) : pos.y;
-                player.sendChatMessage(String.format("/tp @p %s %s %s", pos.x, y, pos.z));
+                GameWrap.sendChatMessage(String.format("/tp @p %s %s %s", pos.x, y, pos.z));
             }
 
             return ActionResult.SUCCESS;
@@ -145,7 +145,7 @@ public class Actions
 
     private static ActionResult copySignText(ActionContext ctx)
     {
-        HitResult trace = GameUtils.getHitResult();
+        HitResult trace = GameWrap.getHitResult();
 
         if (trace.type == HitResult.Type.BLOCK)
         {
@@ -188,7 +188,7 @@ public class Actions
 
     private static ActionResult reloadLanguagePacks()
     {
-        Minecraft mc = GameUtils.getClient();
+        Minecraft mc = GameWrap.getClient();
         mc.getLanguageManager().onResourceManagerReload(mc.getResourceManager());
         MessageDispatcher.success("tweakeroo.message.language_packs_reloaded");
         return ActionResult.SUCCESS;
@@ -242,7 +242,7 @@ public class Actions
 
     private static ActionResult toggleGrabCursor()
     {
-        Minecraft mc = GameUtils.getClient();
+        Minecraft mc = GameWrap.getClient();
 
         if (mc.inGameHasFocus)
         {
@@ -260,7 +260,7 @@ public class Actions
 
     private static ActionResult toggleSkipAllRendering()
     {
-        Minecraft mc = GameUtils.getClient();
+        Minecraft mc = GameWrap.getClient();
         mc.skipRenderWorld = ! mc.skipRenderWorld;
 
         boolean enabled = mc.skipRenderWorld;
@@ -285,7 +285,7 @@ public class Actions
 
     private static ActionResult toolPick()
     {
-        HitResult trace = GameUtils.getHitResult();
+        HitResult trace = GameWrap.getHitResult();
 
         if (trace.type == HitResult.Type.BLOCK)
         {

@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLivingBase;
 
-import malilib.util.game.wrap.GameUtils;
+import malilib.util.game.wrap.GameWrap;
 import tweakeroo.config.Configs;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.config.FeatureToggle;
@@ -26,7 +26,7 @@ public abstract class MixinEntityRenderer_Predicate
             ||
             (FeatureToggle.TWEAK_HANGABLE_ENTITY_BYPASS.getBooleanValue()
                 && (entity instanceof EntityHanging)
-                && GameUtils.getClientPlayer().isSneaking() == Configs.Generic.HANGABLE_ENTITY_BYPASS_INVERSE.getBooleanValue()))
+                && GameWrap.getClientPlayer().isSneaking() == Configs.Generic.HANGABLE_ENTITY_BYPASS_INVERSE.getBooleanValue()))
         {
             cir.setReturnValue(false);
         }
