@@ -4,7 +4,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -30,6 +29,7 @@ import malilib.util.data.Identifier;
 import malilib.util.game.wrap.EntityWrap;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.game.wrap.ItemWrap;
+import malilib.util.game.wrap.RenderWrap;
 import malilib.util.inventory.InventoryView;
 import malilib.util.inventory.SlicedInventoryView;
 import malilib.util.inventory.VanillaInventoryView;
@@ -83,8 +83,8 @@ public class RenderUtils
             int z = 0;
             FontRenderer textRenderer = GameUtils.getClient().fontRenderer;
 
-            malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
-            malilib.render.RenderUtils.bindTexture(INVENTORY_BACKGROUND);
+            RenderWrap.color(1f, 1f, 1f, 1f);
+            RenderWrap.bindTexture(INVENTORY_BACKGROUND);
             ShapeRenderUtils.renderTexturedRectangle256(x - 1, y - 1, z, 7, 83, 9 * 18, 3 * 18, ctx);
 
             for (int row = 1; row <= 3; row++)
@@ -188,24 +188,26 @@ public class RenderUtils
 
         if (fog < 2.0F)
         {
-            GlStateManager.setFogDensity(fog);
+            RenderWrap.setFogDensity(fog);
         }
     }
 
-    public static void renderDirectionsCursor(float zLevel, float partialTicks)
+    public static void renderDirectionsCursor(float zLevel, float partialTicks, RenderContext ctx)
     {
-        GlStateManager.pushMatrix();
+        RenderWrap.pushMatrix(ctx);
 
         int width = GuiUtils.getScaledWindowWidth();
         int height = GuiUtils.getScaledWindowHeight();
-        GlStateManager.translate(width / 2.0F, height / 2.0F, zLevel);
         Entity entity = GameUtils.getCameraEntity();
-        GlStateManager.rotate(entity.prevRotationPitch + (EntityWrap.getPitch(entity) - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(entity.prevRotationYaw + (EntityWrap.getYaw(entity) - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
-        GlStateManager.scale(-1.0F, -1.0F, -1.0F);
+
+        RenderWrap.translate(width / 2.0F, height / 2.0F, zLevel, ctx);
+        RenderWrap.rotate(EntityWrap.lerpPitch(entity, partialTicks), -1.0F, 0.0F, 0.0F, ctx);
+        RenderWrap.rotate(EntityWrap.lerpYaw(entity, partialTicks), 0.0F, 1.0F, 0.0F, ctx);
+        RenderWrap.scale(-1.0F, -1.0F, -1.0F, ctx);
+
         OpenGlHelper.renderDirections(10);
 
-        GlStateManager.popMatrix();
+        RenderWrap.popMatrix(ctx);
     }
 
     public static void notifyRotationChanged()
@@ -248,7 +250,7 @@ public class RenderUtils
         final int z = 0;
         int lineX = x + (int) ((MathUtils.wrapDegrees(realYaw - startYaw)) / step * width);
 
-        malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
+        RenderWrap.color(1f, 1f, 1f, 1f);
 
         String str = MathUtils.wrapDegrees(snappedYaw) + "°";
         textRenderer.drawString(str, xCenter - textRenderer.getStringWidth(str) / 2, y + height + 2, 0xFFFFFFFF);
@@ -340,7 +342,7 @@ public class RenderUtils
         double angleUp = centerPitch - printedRange;
         double angleDown = centerPitch + printedRange;
 
-        malilib.render.RenderUtils.color(1f, 1f, 1f, 1f);
+        RenderWrap.color(1f, 1f, 1f, 1f);
 
         if (isSnapRange)
         {

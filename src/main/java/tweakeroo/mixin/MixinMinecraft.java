@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import malilib.gui.util.GuiUtils;
+import malilib.render.RenderContext;
 import malilib.util.position.Direction;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.tweaks.MiscTweaks;
@@ -136,7 +137,7 @@ public abstract class MixinMinecraft implements IMinecraftAccessor
     {
         if (FeatureToggle.TWEAK_DEBUG_PIE_CHART_SCALE.getBooleanValue())
         {
-            MiscUtils.applyDebugPieChartScale();
+            MiscUtils.applyDebugPieChartScale(RenderContext.DUMMY);
         }
     }
 }

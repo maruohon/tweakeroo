@@ -2,7 +2,6 @@ package tweakeroo.event;
 
 import java.util.function.Supplier;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
@@ -20,6 +19,7 @@ import malilib.render.inventory.InventoryRenderUtils;
 import malilib.util.data.Color4f;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.game.wrap.ItemWrap;
+import malilib.util.game.wrap.RenderWrap;
 import malilib.util.position.HitResult;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
@@ -132,24 +132,24 @@ public class RenderHandler implements PostGameOverlayRenderer, PostItemTooltipRe
              ItemWrap.notEmpty(player.getHeldItem(EnumHand.OFF_HAND))))
         {
             Entity entity = GameUtils.getCameraEntity();
-            GlStateManager.depthMask(false);
-            GlStateManager.disableLighting();
-            GlStateManager.disableCull();
-            GlStateManager.disableDepth();
-            GlStateManager.disableTexture2D();
+            RenderWrap.depthMask(false);
+            RenderWrap.disableLighting();
+            RenderWrap.disableCull();
+            RenderWrap.disableDepthTest();
+            RenderWrap.disableTexture2D();
 
-            malilib.render.RenderUtils.setupBlend();
+            RenderWrap.setupBlendSeparate();
 
             Color4f color = Configs.Generic.FLEXIBLE_PLACEMENT_OVERLAY_COLOR.getColor();
 
             BlockTargetingRenderUtils.render5WayBlockTargetingOverlay(entity, hit.blockPos, hit.side,
                                                                       hit.pos, color, tickDelta, ctx);
 
-            GlStateManager.enableTexture2D();
-            GlStateManager.enableDepth();
-            GlStateManager.disableBlend();
-            GlStateManager.enableCull();
-            GlStateManager.depthMask(true);
+            RenderWrap.enableTexture2D();
+            RenderWrap.enableDepthTest();
+            RenderWrap.disableBlend();
+            RenderWrap.enableCull();
+            RenderWrap.depthMask(true);
         }
     }
 }

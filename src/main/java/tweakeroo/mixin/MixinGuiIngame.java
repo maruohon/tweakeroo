@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import malilib.gui.util.GuiUtils;
+import malilib.render.RenderContext;
 import tweakeroo.config.Configs;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.config.FeatureToggle;
@@ -41,7 +42,7 @@ public abstract class MixinGuiIngame extends net.minecraft.client.gui.Gui
     {
         if (FeatureToggle.TWEAK_F3_CURSOR.getBooleanValue())
         {
-            RenderUtils.renderDirectionsCursor(this.zLevel, partialTicks);
+            RenderUtils.renderDirectionsCursor(this.zLevel, partialTicks, RenderContext.DUMMY);
             ci.cancel();
         }
     }

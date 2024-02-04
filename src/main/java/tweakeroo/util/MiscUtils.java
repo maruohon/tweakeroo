@@ -9,7 +9,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,12 +25,14 @@ import malilib.action.ActionContext;
 import malilib.gui.util.GuiUtils;
 import malilib.input.ActionResult;
 import malilib.overlay.message.MessageUtils;
+import malilib.render.RenderContext;
 import malilib.util.MathUtils;
 import malilib.util.game.RayTraceUtils;
 import malilib.util.game.RayTraceUtils.IRayPositionHandler;
 import malilib.util.game.wrap.EntityWrap;
 import malilib.util.game.wrap.GameUtils;
 import malilib.util.game.wrap.ItemWrap;
+import malilib.util.game.wrap.RenderWrap;
 import malilib.util.inventory.InventoryUtils;
 import tweakeroo.config.Configs;
 import tweakeroo.config.FeatureToggle;
@@ -131,7 +132,7 @@ public class MiscUtils
         }
     }
 
-    public static void applyDebugPieChartScale()
+    public static void applyDebugPieChartScale(RenderContext ctx)
     {
         double scale = Configs.Generic.DEBUG_PIE_CHART_SCALE.getDoubleValue();
 
@@ -144,8 +145,8 @@ public class MiscUtils
             double xOff = (1.0 - scale) * (origX + width / 2.0);
             double yOff = (1.0 - scale) * (origY + height / 2.0);
 
-            GlStateManager.translate(xOff, yOff, 0.0);
-            GlStateManager.scale(scale, scale, 1);
+            RenderWrap.translate(xOff, yOff, 0.0, ctx);
+            RenderWrap.scale(scale, scale, 1, ctx);
         }
     }
 
@@ -279,16 +280,16 @@ public class MiscUtils
         return (newColor & 0x00FFFFFF) | ((int) (((newColor >>> 24) / 255.0) * ((colorOrig >>> 24) / 255.0) / 0.5 * 255) << 24);
     }
 
-    public static void doPlayerOnFireRenderModifications()
+    public static void doPlayerOnFireRenderModifications(RenderContext ctx)
     {
         float scale = Configs.Generic.PLAYER_ON_FIRE_SCALE.getFloatValue();
 
         if (scale > 1)
         {
-            GlStateManager.translate(0, scale / 8, 0);
+            RenderWrap.translate(0, scale / 8, 0, ctx);
         }
 
-        GlStateManager.scale(scale, scale, 1);
+        RenderWrap.scale(scale, scale, 1, ctx);
     }
 
     public static void copyTextFromSign(TileEntitySign te)

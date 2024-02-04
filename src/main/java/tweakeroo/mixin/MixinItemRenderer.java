@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.ItemRenderer;
 
+import malilib.render.RenderContext;
 import tweakeroo.config.DisableToggle;
 import tweakeroo.config.FeatureToggle;
 import tweakeroo.util.MiscUtils;
@@ -44,7 +45,7 @@ public abstract class MixinItemRenderer
     {
         if (FeatureToggle.TWEAK_PLAYER_ON_FIRE_SCALE.getBooleanValue())
         {
-            MiscUtils.doPlayerOnFireRenderModifications();
+            MiscUtils.doPlayerOnFireRenderModifications(RenderContext.DUMMY);
         }
     }
 }
