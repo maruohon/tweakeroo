@@ -73,6 +73,7 @@ public class Configs implements IConfigHandler
         public static final ConfigInteger       HOTBAR_SWAP_OVERLAY_OFFSET_Y        = new ConfigInteger     ("hotbarSwapOverlayOffsetY", 4, "The vertical offset of the hotbar swap overlay");
         public static final ConfigInteger       ITEM_SWAP_DURABILITY_THRESHOLD      = new ConfigInteger     ("itemSwapDurabilityThreshold", 20, 5, 10000, "This is the durability threshold (in uses left)\nfor the low-durability item swap feature.\nNote that items with low total durability will go lower\nand be swapped at 5%% left.");
         public static final ConfigBoolean       ITEM_USE_PACKET_CHECK_BYPASS        = new ConfigBoolean     ("itemUsePacketCheckBypass", true, "Bypass the new distance/coordinate check that was added in 1.18.2.\n\nThat check breaks the \"accurate placement protocol\" and causes\nany blocks placed with a rotation (or other property) request to just become ghost blocks.\n\nThere is basically no need to ever disable this.\nThe check didn't even exist ever before 1.18.2.");
+        public static final ConfigBoolean       MAP_PREVIEW_REQUIRE_SHIFT           = new ConfigBoolean     ("mapPreviewRequireShift", true, "Whether holding shift is required for the Map Preview");
         public static final ConfigInteger       MAP_PREVIEW_SIZE                    = new ConfigInteger     ("mapPreviewSize", 160, 16, 512, "The size of the rendered map previews");
         public static final ConfigInteger       PERIODIC_ATTACK_INTERVAL            = new ConfigInteger     ("periodicAttackInterval", 20, 0, Integer.MAX_VALUE, "The number of game ticks between automatic attacks (left clicks)");
         public static final ConfigInteger       PERIODIC_USE_INTERVAL               = new ConfigInteger     ("periodicUseInterval", 20, 0, Integer.MAX_VALUE, "The number of game ticks between automatic uses (right clicks)");
@@ -120,6 +121,7 @@ public class Configs implements IConfigHandler
                 HAND_RESTOCK_PRE,
                 HANGABLE_ENTITY_BYPASS_INVERSE,
                 ITEM_USE_PACKET_CHECK_BYPASS,
+                MAP_PREVIEW_REQUIRE_SHIFT,
                 PERMANENT_SNEAK_ALLOW_IN_GUIS,
                 PLACEMENT_RESTRICTION_TIED_TO_FAST,
                 POTION_WARNING_BENEFICIAL_ONLY,
