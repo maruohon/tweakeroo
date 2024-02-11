@@ -301,6 +301,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBooleanHotkeyed       DISABLE_SCOREBOARD_RENDERING    = new ConfigBooleanHotkeyed("disableScoreboardRendering",           false, "", "Removes the sidebar scoreboard rendering");
         public static final ConfigBooleanHotkeyed       DISABLE_SHULKER_BOX_TOOLTIP     = new ConfigBooleanHotkeyed("disableShulkerBoxTooltip",             false, "", "Disables the vanilla text tooltip for Shulker Box contents");
         public static final ConfigBooleanHotkeyed       DISABLE_SHOVEL_PATHING          = new ConfigBooleanHotkeyed("disableShovelPathing",                 false, "", "Disables converting grass etc. to Path Blocks with a shovel");
+        public static final ConfigBooleanHotkeyed       DISABLE_SIGN_EDIT               = new ConfigBooleanHotkeyed("disableSignEdit",                      false, "", "Disables the sign edit gui when a sign is right clicked\n(Sneak + right click to edit)");
         public static final ConfigBooleanHotkeyed       DISABLE_SIGN_GUI                = new ConfigBooleanHotkeyed("disableSignGui",                       false, "", "Prevent the Sign edit GUI from opening");
         public static final ConfigBooleanHotkeyed       DISABLE_SKY_DARKNESS            = new ConfigBooleanHotkeyed("disableSkyDarkness",                   false, "", "Disables the sky darkness below y = 63\n\n(By moving the threshold y to 2 blocks below the bottom of the world instead)");
         public static final ConfigBooleanHotkeyed       DISABLE_SLIME_BLOCK_SLOWDOWN    = new ConfigBooleanHotkeyed("disableSlimeBlockSlowdown",            false, "", "Removes the slowdown from walking on Slime Blocks.\n(This is originally from usefulmod by nessie.)");
@@ -347,6 +348,7 @@ public class Configs implements IConfigHandler
                 DISABLE_SCOREBOARD_RENDERING,
                 DISABLE_SHULKER_BOX_TOOLTIP,
                 DISABLE_SHOVEL_PATHING,
+                DISABLE_SIGN_EDIT,
                 DISABLE_SIGN_GUI,
                 DISABLE_SKY_DARKNESS,
                 DISABLE_SLIME_BLOCK_SLOWDOWN,
