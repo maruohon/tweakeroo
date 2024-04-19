@@ -1,34 +1,25 @@
 package fi.dy.masa.tweakeroo.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.AttributeModifiersComponent;
+import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ElytraItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MiningToolItem;
-import net.minecraft.item.SwordItem;
-import net.minecraft.item.ToolItem;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.item.*;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -45,7 +36,6 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
 
 import fi.dy.masa.malilib.gui.Message;
-import fi.dy.masa.malilib.util.Constants;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.Tweakeroo;
@@ -316,7 +306,7 @@ public class InventoryUtils
     {
         int slotWithItem;
 
-        if (stackReference.getItem().isDamageable())
+        if (stackReference.isDamageable())
         {
             int minDurability = getMinDurability(stackReference);
             slotWithItem = findSlotWithSuitableReplacementToolWithDurabilityLeft(player.playerScreenHandler, stackReference, minDurability);
@@ -450,14 +440,22 @@ public class InventoryUtils
     private static float getBaseAttackDamage(ItemStack stack)
     {
         Item item = stack.getItem();
+        if ((item instanceof SwordItem) == false && (item instanceof MiningToolItem) == false)
+            return 0F;
 
-        if (item instanceof SwordItem)
+        AttributeModifiersComponent itemAttribute = stack.getComponents().get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
+
+        if (itemAttribute != null && itemAttribute.equals(AttributeModifiersComponent.DEFAULT) == false)
         {
-            return ((SwordItem) item).getAttackDamage();
-        }
-        else if (item instanceof MiningToolItem)
-        { 
-            return ((MiningToolItem) item).getAttackDamage();
+            List<AttributeModifiersComponent.Entry> modifiers = itemAttribute.modifiers();
+
+            for (AttributeModifiersComponent.Entry entry : modifiers)
+            {
+                if (entry.attribute().equals(EntityAttributes.GENERIC_ATTACK_DAMAGE))
+                {
+                    return (float) entry.modifier().value();
+                }
+            }
         }
 
         return 0F;
@@ -820,23 +818,17 @@ public class InventoryUtils
         }
     }
 
-
     private static void swapItemToEquipmentSlot(PlayerEntity player, EquipmentSlot type, int sourceSlotNumber)
     {
         if (sourceSlotNumber != -1 && player.currentScreenHandler == player.playerScreenHandler)
         {
+            MinecraftClient mc = MinecraftClient.getInstance();
+            ScreenHandler container = player.playerScreenHandler;
             int equipmentSlotNumber = getSlotNumberForEquipmentType(type, player);
-            swapSlots(player, sourceSlotNumber, equipmentSlotNumber);
-        }
-    }
+            int equipmentSlotInvIndex = container.getSlot(equipmentSlotNumber).getIndex();
 
-    public static void swapSlots(PlayerEntity player, int slotNum, int otherSlot)
-    {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        ScreenHandler container = player.currentScreenHandler;
-        mc.interactionManager.clickSlot(container.syncId, slotNum, 0, SlotActionType.SWAP, player);
-        mc.interactionManager.clickSlot(container.syncId, otherSlot, 0, SlotActionType.SWAP, player);
-        mc.interactionManager.clickSlot(container.syncId, slotNum, 0, SlotActionType.SWAP, player);
+            mc.interactionManager.clickSlot(container.syncId, sourceSlotNumber, equipmentSlotInvIndex, SlotActionType.SWAP, mc.player);
+        }
     }
 
     private static void swapToolToHand(int slotNumber, MinecraftClient mc)
@@ -1079,7 +1071,7 @@ public class InventoryUtils
             return;
         }
 
-        double reach = mc.interactionManager.getReachDistance();
+        double reach = mc.player.getBlockInteractionRange();
         boolean isCreative = player.isCreative();
         HitResult trace = player.raycast(reach, mc.getTickDelta(), false);
 
@@ -1127,32 +1119,22 @@ public class InventoryUtils
 
     public static boolean cleanUpShulkerBoxNBT(ItemStack stack)
     {
+        ContainerComponent itemContainer = stack.getComponents().get(DataComponentTypes.CONTAINER);
         boolean changed = false;
-        NbtCompound nbt = stack.getNbt();
 
-        if (nbt != null)
+        if (itemContainer != null)
         {
-            if (nbt.contains("BlockEntityTag", Constants.NBT.TAG_COMPOUND))
-            {
-                NbtCompound tag = nbt.getCompound("BlockEntityTag");
+            Iterator<ItemStack> iter = itemContainer.stream().iterator();
 
-                if (tag.contains("Items", Constants.NBT.TAG_LIST) &&
-                    tag.getList("Items", Constants.NBT.TAG_COMPOUND).size() == 0)
+            while (iter.hasNext())
+            {
+                ItemStack item = iter.next();
+
+                if (item.isEmpty())
                 {
-                    tag.remove("Items");
+                    iter.remove();
                     changed = true;
                 }
-
-                if (tag.isEmpty())
-                {
-                    nbt.remove("BlockEntityTag");
-                }
-            }
-
-            if (nbt.isEmpty())
-            {
-                stack.setNbt(null);
-                changed = true;
             }
         }
 

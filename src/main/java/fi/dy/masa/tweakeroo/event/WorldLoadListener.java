@@ -14,4 +14,17 @@ public class WorldLoadListener implements IWorldLoadListener
         // Always disable the Free Camera mode when leaving the world or switching dimensions
         FeatureToggle.TWEAK_FREE_CAMERA.setBooleanValue(false);
     }
+
+    @Override
+    public void onWorldLoadPost(@Nullable ClientWorld worldBefore, @Nullable ClientWorld worldAfter, MinecraftClient mc)
+    {
+        if (worldBefore == null)
+        {
+            if (FeatureToggle.TWEAK_GAMMA_OVERRIDE.getBooleanValue())
+            {
+                FeatureToggle.TWEAK_GAMMA_OVERRIDE.setBooleanValue(false);
+                FeatureToggle.TWEAK_GAMMA_OVERRIDE.setBooleanValue(true);
+            }
+        }
+    }
 }

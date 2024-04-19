@@ -49,7 +49,7 @@ public abstract class MixinWorldRenderer
 
     @Inject(method = "render", at = @At(value = "INVOKE_STRING",
             target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=terrain_setup"))
-    private void preSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
+    private void preSetupTerrain(float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_FREE_CAMERA.getBooleanValue())
         {
@@ -59,7 +59,7 @@ public abstract class MixinWorldRenderer
 
     @Inject(method = "render", at = @At(value = "INVOKE_STRING",
             target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=compile_sections"))
-    private void postSetupTerrain(net.minecraft.client.util.math.MatrixStack matrixStack, float partialTicks, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer renderer, LightmapTextureManager lightmap, Matrix4f matrix4f, CallbackInfo ci)
+    private void postSetupTerrain(float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, Matrix4f matrix4f2, CallbackInfo ci)
     {
         CameraUtils.setFreeCameraSpectator(false);
     }
@@ -111,6 +111,7 @@ public abstract class MixinWorldRenderer
             int x = MathHelper.floor(camera.getPos().x) >> 4;
             int z = MathHelper.floor(camera.getPos().z) >> 4;
             CameraUtils.markChunksForRebuild(x, z, this.lastUpdatePosX, this.lastUpdatePosZ);
+            // Could send this to ServuX in the future
         }
     }
 }

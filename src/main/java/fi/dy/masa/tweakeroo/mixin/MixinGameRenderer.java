@@ -69,7 +69,7 @@ public abstract class MixinGameRenderer
         }
     }
 
-    @Redirect(method = "updateTargetedEntity", at = @At(value = "INVOKE",
+    @Redirect(method = "updateCrosshairTarget", at = @At(value = "INVOKE",
               target = "Lnet/minecraft/client/MinecraftClient;getCameraEntity()Lnet/minecraft/entity/Entity;"))
     private Entity overrideCameraEntityForRayTrace(MinecraftClient mc)
     {
@@ -87,7 +87,7 @@ public abstract class MixinGameRenderer
         return mc.getCameraEntity();
     }
 
-    @ModifyArg(method = "updateTargetedEntity",
+    @ModifyArg(method = "findCrosshairTarget",
                at = @At(value = "INVOKE",
                         target = "Lnet/minecraft/entity/projectile/ProjectileUtil;raycast(" +
                                  "Lnet/minecraft/entity/Entity;" +
@@ -114,7 +114,7 @@ public abstract class MixinGameRenderer
 
     @Inject(method = "renderWorld", at = @At(
                 value = "INVOKE", shift = Shift.AFTER,
-                target = "Lnet/minecraft/client/render/GameRenderer;updateTargetedEntity(F)V"))
+                target = "Lnet/minecraft/client/render/GameRenderer;updateCrosshairTarget(F)V"))
     private void overrideRenderViewEntityPre(CallbackInfo ci)
     {
         if (FeatureToggle.TWEAK_ELYTRA_CAMERA.getBooleanValue() && Hotkeys.ELYTRA_CAMERA.getKeybind().isKeybindHeld())

@@ -1,14 +1,9 @@
 package fi.dy.masa.tweakeroo.mixin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
@@ -25,7 +20,7 @@ public abstract class MixinBackgroundRenderer
     @ModifyConstant(
             method = "applyFog",
             slice = @Slice(
-                            from = @At(value = "FIELD", target = "Lnet/minecraft/entity/effect/StatusEffects;FIRE_RESISTANCE:Lnet/minecraft/entity/effect/StatusEffect;"),
+                            from = @At(value = "FIELD", target = "Lnet/minecraft/entity/effect/StatusEffects;FIRE_RESISTANCE:Lnet/minecraft/registry/entry/RegistryEntry;"),
                             to   = @At(value = "FIELD", target = "Lnet/minecraft/client/render/CameraSubmersionType;POWDER_SNOW:Lnet/minecraft/client/render/CameraSubmersionType;")),
             constant = @Constant(floatValue = 0.25f),
             require = 0)
@@ -44,9 +39,9 @@ public abstract class MixinBackgroundRenderer
     @ModifyConstant(
             method = "applyFog",
             slice = @Slice(
-                    from = @At(value = "FIELD", target = "Lnet/minecraft/entity/effect/StatusEffects;FIRE_RESISTANCE:Lnet/minecraft/entity/effect/StatusEffect;"),
+                    from = @At(value = "FIELD", target = "Lnet/minecraft/entity/effect/StatusEffects;FIRE_RESISTANCE:Lnet/minecraft/registry/entry/RegistryEntry;"),
                     to   = @At(value = "FIELD", target = "Lnet/minecraft/client/render/CameraSubmersionType;POWDER_SNOW:Lnet/minecraft/client/render/CameraSubmersionType;")),
-            constant = { @Constant(floatValue = 1.0f), @Constant(floatValue = 3.0f)},
+            constant = { @Constant(floatValue = 1.0f), @Constant(floatValue = 5.0f)},
             require = 0)
     private static float reduceLavaFogEnd(float original)
     {
@@ -72,10 +67,8 @@ public abstract class MixinBackgroundRenderer
         {
             return Math.max(512, MinecraftClient.getInstance().gameRenderer.getViewDistance()) * 1.6f;
         }
-
         return original;
     }
-
     @ModifyVariable(
             method = "applyFog(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/BackgroundRenderer$FogType;FZ)V",
             slice = @Slice(
@@ -87,7 +80,6 @@ public abstract class MixinBackgroundRenderer
         {
             return Math.max(512, MinecraftClient.getInstance().gameRenderer.getViewDistance()) * 2.0f;
         }
-
         return original;
     }
     */

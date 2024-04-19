@@ -10,14 +10,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.gui.GuiBase;
-import fi.dy.masa.malilib.hotkeys.IHotkey;
-import fi.dy.masa.malilib.hotkeys.IKeybindManager;
-import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
-import fi.dy.masa.malilib.hotkeys.IKeyboardInputHandler;
-import fi.dy.masa.malilib.hotkeys.IMouseInputHandler;
-import fi.dy.masa.malilib.hotkeys.KeyCallbackAdjustable;
+import fi.dy.masa.malilib.hotkeys.*;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.InfoUtils;
 import fi.dy.masa.tweakeroo.Reference;
@@ -26,7 +22,6 @@ import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
-import net.minecraft.world.RaycastContext;
 
 public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IMouseInputHandler
 {
@@ -93,20 +88,19 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         MinecraftClient mc = MinecraftClient.getInstance();
 
         if (mc.world == null || mc.player == null || mc.interactionManager == null || mc.crosshairTarget == null ||
-            GuiUtils.getCurrentScreen() != null)
+                GuiUtils.getCurrentScreen() != null)
         {
             return false;
         }
 
         if (mc.player.isCreative() && FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() && eventButtonState &&
-            mc.options.useKey.matchesMouse(eventButton) && mc.crosshairTarget.getType() == HitResult.Type.MISS)
+                mc.options.useKey.matchesMouse(eventButton) && mc.crosshairTarget.getType() == HitResult.Type.MISS)
         {
             Vec3d eyePos = mc.player.getEyePos();
             Vec3d rotVec = mc.player.getRotationVec(1.0f);
 
             Vec3d vec3d = eyePos.add(rotVec.multiply(Configs.Generic.ANGEL_BLOCK_PLACEMENT_DISTANCE.getDoubleValue()));
             BlockHitResult context = mc.world.raycast(new RaycastContext(eyePos, vec3d, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.SOURCE_ONLY, mc.player));
-
             for (Hand hand : Hand.values())
             {
                 ItemStack stack = mc.player.getStackInHand(hand);

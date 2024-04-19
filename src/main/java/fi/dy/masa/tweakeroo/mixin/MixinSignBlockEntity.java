@@ -12,8 +12,10 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
@@ -33,16 +35,19 @@ public abstract class MixinSignBlockEntity extends BlockEntity implements ISignT
     }
 
     @Inject(method = "readNbt", at = @At("RETURN"))
-    private void restoreCopiedText(NbtCompound nbt, CallbackInfo ci)
+    private void restoreCopiedText(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup, CallbackInfo ci)
     {
         // Restore the copied/pasted text after the TileEntity sync overrides it with empty lines
         if (FeatureToggle.TWEAK_SIGN_COPY.getBooleanValue() && this.getWorld() != null && this.getWorld().isClient)
         {
             MinecraftClient mc = MinecraftClient.getInstance();
 
-            if ((mc.currentScreen instanceof SignEditScreen) && ((IGuiEditSign) mc.currentScreen).getTile() == (Object) this)
+            if (mc.currentScreen instanceof SignEditScreen || mc.currentScreen instanceof HangingSignEditScreen)
             {
-                MiscUtils.applyPreviousTextToSign((SignBlockEntity) (Object) this, null, ((SignBlockEntity) (Object) this).isPlayerFacingFront(mc.player));
+                if (((IGuiEditSign) mc.currentScreen).getTile() == (Object) this)
+                {
+                    MiscUtils.applyPreviousTextToSign((SignBlockEntity) (Object) this, null, ((SignBlockEntity) (Object) this).isPlayerFacingFront(mc.player));
+                }
             }
         }
     }

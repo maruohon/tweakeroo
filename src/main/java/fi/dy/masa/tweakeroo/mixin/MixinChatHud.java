@@ -18,16 +18,10 @@ import fi.dy.masa.tweakeroo.util.MiscUtils;
 @Mixin(value = ChatHud.class, priority = 1100)
 public abstract class MixinChatHud
 {
-    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V",
+    @ModifyVariable(method = "Lnet/minecraft/client/gui/hud/ChatHud;addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V",
                     at = @At("HEAD"), argsOnly = true)
-    private Text tweakeroo_addMessageTimestamp(Text componentIn, Text parameterMessage, MessageSignatureData data, int ticks, MessageIndicator indicator, boolean refreshing)
+    private Text tweakeroo_addMessageTimestamp(Text componentIn, Text parameterMessage, MessageSignatureData data, MessageIndicator indicator)
     {
-        // If we're refreshing, we have probably already modified the message, therefore we don't want to do anything.
-        if (refreshing)
-        {
-            return componentIn;
-        }
-
         if (FeatureToggle.TWEAK_CHAT_TIMESTAMP.getBooleanValue())
         {
             MutableText newComponent = Text.literal(MiscUtils.getChatTimestamp() + " ");

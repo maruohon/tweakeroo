@@ -1,9 +1,9 @@
 package fi.dy.masa.tweakeroo;
 
+import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import fi.dy.masa.malilib.event.InitializationHandler;
-import net.fabricmc.api.ModInitializer;
 
 public class Tweakeroo implements ModInitializer
 {

@@ -2,7 +2,7 @@ package fi.dy.masa.tweakeroo.renderer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
+import org.joml.Matrix4fStack;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -11,7 +11,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -270,7 +269,7 @@ public class RenderUtils
         {
             final int resp = EnchantmentHelper.getRespiration(living);
             final int aqua = EnchantmentHelper.getEquipmentLevel(Enchantments.AQUA_AFFINITY, living);
-            float fog = originalFog;
+            float fog = (originalFog > 1.0f) ? 3.3f : 1.3f;
 
             if (aqua > 0)
             {
@@ -295,19 +294,21 @@ public class RenderUtils
         int width = GuiUtils.getScaledWindowWidth();
         int height = GuiUtils.getScaledWindowHeight();
         Camera camera = mc.gameRenderer.getCamera();
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        matrixStack.push();
-        matrixStack.translate(width / 2.0, height / 2.0, zLevel);
+
+        Matrix4fStack matrix4fStack = RenderSystem.getModelViewStack();
+        matrix4fStack.pushMatrix();
+        matrix4fStack.translate((float) (width / 2.0), (float) (height / 2.0), zLevel);
         float pitch = camera.getPitch();
         float yaw = camera.getYaw();
-        Quaternionf rot = new Quaternionf().rotationXYZ(-pitch * (float) (Math.PI / 180.0), yaw * (float) (Math.PI / 180.0), 0.0F);
-        matrixStack.multiply(rot);
-        //matrixStack.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(camera.getPitch()));
-        //matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw()));
-        matrixStack.scale(-1.0F, -1.0F, -1.0F);
+
+        matrix4fStack.rotateXYZ(-(pitch) * ((float) (Math.PI / 180.0)), yaw * ((float) (Math.PI / 180.0)), 0.0F);
+        matrix4fStack.rotateX(fi.dy.masa.malilib.render.RenderUtils.matrix4fRotateFix(-pitch));
+        matrix4fStack.rotateY(fi.dy.masa.malilib.render.RenderUtils.matrix4fRotateFix(yaw));
+
+        matrix4fStack.scale(-1.0F, -1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
         RenderSystem.renderCrosshair(10);
-        matrixStack.pop();
+        matrix4fStack.popMatrix();
         RenderSystem.applyModelViewMatrix();
     }
 

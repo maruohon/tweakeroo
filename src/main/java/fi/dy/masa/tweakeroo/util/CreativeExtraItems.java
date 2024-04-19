@@ -1,21 +1,15 @@
 package fi.dy.masa.tweakeroo.util;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
-import javax.annotation.Nullable;
 import com.google.common.collect.ArrayListMultimap;
-import com.mojang.brigadier.StringReader;
 import net.minecraft.block.InfestedBlock;
-import net.minecraft.command.argument.ItemStringReader;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
+import net.minecraft.item.*;
 import net.minecraft.text.TextContent;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.collection.DefaultedList;
+import fi.dy.masa.malilib.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.Tweakeroo;
 
 public class CreativeExtraItems
@@ -67,11 +61,11 @@ public class CreativeExtraItems
 
         for (String str : items)
         {
-            ItemStack stack = parseItemFromString(str);
+            ItemStack stack = InventoryUtils.getItemStackFromString(str);
 
             if (stack.isEmpty() == false)
             {
-                if (stack.hasNbt())
+                if (stack.getComponents().isEmpty() == false)
                 {
                     ADDED_ITEMS.put(group, stack);
                 }
@@ -81,28 +75,6 @@ public class CreativeExtraItems
                 }
             }
         }
-    }
-
-    public static ItemStack parseItemFromString(String str)
-    {
-        try
-        {
-            ItemStringReader.ItemResult itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(str));
-            Item item = itemResult.item().value();
-
-            if (item != null)
-            {
-                ItemStack stack = new ItemStack(item);
-                stack.setNbt(itemResult.nbt());
-                return stack;
-            }
-        }
-        catch (Exception e)
-        {
-            Tweakeroo.logger.warn("Invalid item '{}'", str);
-        }
-
-        return ItemStack.EMPTY;
     }
 
     public static void removeInfestedBlocks(DefaultedList<ItemStack> stacks)

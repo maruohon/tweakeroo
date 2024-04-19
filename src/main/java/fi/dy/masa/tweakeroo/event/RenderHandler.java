@@ -1,11 +1,12 @@
 package fi.dy.masa.tweakeroo.event;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.item.Item;
 import org.joml.Matrix4f;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
@@ -71,37 +72,41 @@ public class RenderHandler implements IRenderer
     @Override
     public void onRenderTooltipLast(DrawContext drawContext, ItemStack stack, int x, int y)
     {
-        if (stack.getItem() instanceof FilledMapItem)
+        Item item = stack.getItem();
+        if (item instanceof FilledMapItem)
         {
             if (FeatureToggle.TWEAK_MAP_PREVIEW.getBooleanValue() &&
-                (Configs.Generic.MAP_PREVIEW_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown()))
+                    (!Configs.Generic.MAP_PREVIEW_REQUIRE_SHIFT.getBooleanValue() || GuiBase.isShiftDown()))
             {
                 fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue(), false);
             }
         }
-        else if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
+        else if (stack.getComponents().contains(DataComponentTypes.CONTAINER))
         {
-            boolean render = Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown();
-
-            if (render)
+            if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
             {
-                fi.dy.masa.malilib.render.RenderUtils.renderShulkerBoxPreview(stack, x, y, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue(), drawContext);
+                boolean render = !Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() || GuiBase.isShiftDown();
+
+                if (render)
+                {
+                    fi.dy.masa.malilib.render.RenderUtils.renderShulkerBoxPreview(stack, x, y, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue(), drawContext);
+                }
             }
         }
     }
 
     @Override
-    public void onRenderWorldLast(MatrixStack matrixStack, Matrix4f projMatrix)
+    public void onRenderWorldLast(Matrix4f matrix4f, Matrix4f projMatrix)
     {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         if (mc.player != null)
         {
-            this.renderOverlays(matrixStack, mc);
+            this.renderOverlays(matrix4f, mc);
         }
     }
 
-    private void renderOverlays(MatrixStack matrixStack, MinecraftClient mc)
+    private void renderOverlays(Matrix4f matrix4f, MinecraftClient mc)
     {
         Entity entity = mc.getCameraEntity();
 
@@ -128,7 +133,7 @@ public class RenderHandler implements IRenderer
                     hitResult.getSide(),
                     hitResult.getPos(),
                     color,
-                    matrixStack,
+                    matrix4f,
                     mc);
 
             RenderSystem.enableDepthTest();

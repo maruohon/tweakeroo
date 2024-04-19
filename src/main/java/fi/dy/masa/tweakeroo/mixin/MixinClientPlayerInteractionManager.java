@@ -21,7 +21,6 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.tweaks.MiscTweaks;
 import fi.dy.masa.tweakeroo.tweaks.PlacementTweaks;
@@ -157,24 +156,6 @@ public abstract class MixinClientPlayerInteractionManager
         else
         {
             InventoryUtils.trySwapCurrentToolIfNearlyBroken();
-        }
-    }
-
-    @Inject(method = "getReachDistance", at = @At("HEAD"), cancellable = true)
-    private void overrideReachDistance(CallbackInfoReturnable<Float> cir)
-    {
-        if (FeatureToggle.TWEAK_BLOCK_REACH_OVERRIDE.getBooleanValue())
-        {
-            cir.setReturnValue((float) Configs.Generic.BLOCK_REACH_DISTANCE.getDoubleValue());
-        }
-    }
-
-    @Inject(method = "hasExtendedReach", at = @At("HEAD"), cancellable = true)
-    private void overrideExtendedReach(CallbackInfoReturnable<Boolean> cir)
-    {
-        if (FeatureToggle.TWEAK_BLOCK_REACH_OVERRIDE.getBooleanValue())
-        {
-            cir.setReturnValue(false);
         }
     }
 

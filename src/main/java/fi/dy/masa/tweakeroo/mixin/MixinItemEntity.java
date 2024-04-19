@@ -87,7 +87,7 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
                 fi.dy.masa.malilib.util.InventoryUtils.shulkerBoxHasItems(stackSelf) == false &&
                 // Only stack up to 64, and don't steal from other stacks that are larger
                 stackSelf.getCount() < 64 && stackSelf.getCount() >= stackOther.getCount() &&
-                ItemStack.canCombine(stackSelf, stackOther))
+                ItemStack.areItemsAndComponentsEqual(stackSelf, stackOther))
             {
                 int amount = Math.min(stackOther.getCount(), 64 - stackSelf.getCount());
 
