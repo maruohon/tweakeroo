@@ -7,13 +7,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
-import fi.dy.masa.malilib.network.NetworkReference;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 
@@ -53,7 +53,7 @@ public abstract class MixinPlayerEntity extends LivingEntity
     {
         if (FeatureToggle.TWEAK_BLOCK_REACH_OVERRIDE.getBooleanValue())
         {
-            if (NetworkReference.getInstance().isIntegrated())
+            if (MinecraftClient.getInstance().isIntegratedServerRunning())
             {
                 cir.setReturnValue(Configs.Generic.BLOCK_REACH_DISTANCE.getDoubleValue());
             }
@@ -71,7 +71,7 @@ public abstract class MixinPlayerEntity extends LivingEntity
     {
         if (FeatureToggle.TWEAK_ENTITY_REACH_OVERRIDE.getBooleanValue())
         {
-            if (NetworkReference.getInstance().isIntegrated())
+            if (MinecraftClient.getInstance().isIntegratedServerRunning())
             {
                 cir.setReturnValue(Configs.Generic.ENTITY_REACH_DISTANCE.getDoubleValue());
             }
