@@ -1,14 +1,14 @@
 package fi.dy.masa.tweakeroo.event;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.Item;
 import org.joml.Matrix4f;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.FilledMapItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -76,7 +76,7 @@ public class RenderHandler implements IRenderer
         if (item instanceof FilledMapItem)
         {
             if (FeatureToggle.TWEAK_MAP_PREVIEW.getBooleanValue() &&
-                    (!Configs.Generic.MAP_PREVIEW_REQUIRE_SHIFT.getBooleanValue() || GuiBase.isShiftDown()))
+                (Configs.Generic.MAP_PREVIEW_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown()))
             {
                 fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue(), false);
             }
@@ -85,7 +85,7 @@ public class RenderHandler implements IRenderer
         {
             if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
             {
-                boolean render = !Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() || GuiBase.isShiftDown();
+                boolean render = Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown();
 
                 if (render)
                 {
