@@ -88,19 +88,20 @@ public class InputHandler implements IKeybindProvider, IKeyboardInputHandler, IM
         MinecraftClient mc = MinecraftClient.getInstance();
 
         if (mc.world == null || mc.player == null || mc.interactionManager == null || mc.crosshairTarget == null ||
-                GuiUtils.getCurrentScreen() != null)
+            GuiUtils.getCurrentScreen() != null)
         {
             return false;
         }
 
         if (mc.player.isCreative() && FeatureToggle.TWEAK_ANGEL_BLOCK.getBooleanValue() && eventButtonState &&
-                mc.options.useKey.matchesMouse(eventButton) && mc.crosshairTarget.getType() == HitResult.Type.MISS)
+            mc.options.useKey.matchesMouse(eventButton) && mc.crosshairTarget.getType() == HitResult.Type.MISS)
         {
             Vec3d eyePos = mc.player.getEyePos();
             Vec3d rotVec = mc.player.getRotationVec(1.0f);
 
             Vec3d vec3d = eyePos.add(rotVec.multiply(Configs.Generic.ANGEL_BLOCK_PLACEMENT_DISTANCE.getDoubleValue()));
             BlockHitResult context = mc.world.raycast(new RaycastContext(eyePos, vec3d, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.SOURCE_ONLY, mc.player));
+            
             for (Hand hand : Hand.values())
             {
                 ItemStack stack = mc.player.getStackInHand(hand);
