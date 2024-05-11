@@ -17,6 +17,7 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.interfaces.IRenderer;
 import fi.dy.masa.malilib.util.ActiveMode;
 import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.malilib.util.InventoryUtils;
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
@@ -81,13 +82,11 @@ public class RenderHandler implements IRenderer
                 fi.dy.masa.malilib.render.RenderUtils.renderMapPreview(stack, x, y, Configs.Generic.MAP_PREVIEW_SIZE.getIntegerValue(), false);
             }
         }
-        else if (stack.getComponents().contains(DataComponentTypes.CONTAINER))
+        else if (stack.getComponents().contains(DataComponentTypes.CONTAINER) && InventoryUtils.shulkerBoxHasItems(stack))
         {
             if (FeatureToggle.TWEAK_SHULKERBOX_DISPLAY.getBooleanValue())
             {
-                boolean render = Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown();
-
-                if (render)
+                if (Configs.Generic.SHULKER_DISPLAY_REQUIRE_SHIFT.getBooleanValue() == false || GuiBase.isShiftDown())
                 {
                     fi.dy.masa.malilib.render.RenderUtils.renderShulkerBoxPreview(stack, x, y, Configs.Generic.SHULKER_DISPLAY_BACKGROUND_COLOR.getBooleanValue(), drawContext);
                 }
