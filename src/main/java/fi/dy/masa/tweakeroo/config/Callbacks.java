@@ -36,7 +36,7 @@ public class Callbacks
 
     public static void init(MinecraftClient mc)
     {
-        FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(FeatureToggle.TWEAK_GAMMA_OVERRIDE, mc));
+        FeatureToggle.TWEAK_GAMMA_OVERRIDE.setValueChangeCallback(new FeatureCallbackGamma(mc));
         Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN.setValueChangeCallback(new FeatureCallbackSlime(Configs.Disable.DISABLE_SLIME_BLOCK_SLOWDOWN));
 
         FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT.getKeybind().setCallback(new KeyCallbackToggleFastMode(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT));
@@ -144,7 +144,7 @@ public class Callbacks
     {
         private final MinecraftClient mc;
 
-        public FeatureCallbackGamma(FeatureToggle feature, MinecraftClient mc)
+        public FeatureCallbackGamma(MinecraftClient mc)
         {
             this.mc = mc;
             double gamma = this.mc.options.getGamma().getValue();
@@ -155,10 +155,12 @@ public class Callbacks
             }
 
             // If the feature is enabled on game launch, apply it here
-            if (feature.getBooleanValue())
-            {
-                this.applyValue(Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue());
-            }
+//            if (feature.getBooleanValue())
+//            {
+//                this.applyValue(Configs.Generic.GAMMA_OVERRIDE_VALUE.getDoubleValue());
+//            }
+
+            // The config file loaded after Callback.init(), so this code is useless.
         }
 
         @Override
