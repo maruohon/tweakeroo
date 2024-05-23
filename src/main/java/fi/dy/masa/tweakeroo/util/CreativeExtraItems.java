@@ -63,7 +63,7 @@ public class CreativeExtraItems
         {
             ItemStack stack = InventoryUtils.getItemStackFromString(str);
 
-            if (stack.isEmpty() == false)
+            if (stack != null && stack.isEmpty() == false)
             {
                 if (stack.getComponents().isEmpty() == false)
                 {
