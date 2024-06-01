@@ -1121,28 +1121,4 @@ public class InventoryUtils
             }
         }
     }
-
-    public static boolean cleanUpShulkerBoxNBT(ItemStack stack)
-    {
-        ContainerComponent itemContainer = stack.getComponents().get(DataComponentTypes.CONTAINER);
-        boolean changed = false;
-
-        if (itemContainer != null)
-        {
-            Iterator<ItemStack> iter = itemContainer.stream().iterator();
-
-            while (iter.hasNext())
-            {
-                ItemStack item = iter.next();
-
-                if (item.isEmpty())
-                {
-                    iter.remove();
-                    changed = true;
-                }
-            }
-        }
-
-        return changed;
-    }
 }

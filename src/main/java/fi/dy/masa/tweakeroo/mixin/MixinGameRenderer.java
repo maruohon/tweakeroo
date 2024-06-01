@@ -27,12 +27,10 @@ import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
 import fi.dy.masa.tweakeroo.util.MiscUtils;
 
-@Mixin(value = GameRenderer.class, priority = 999)
+@Mixin(value = GameRenderer.class, priority = 1001)
 public abstract class MixinGameRenderer
 {
     @Shadow @Final MinecraftClient client;
-
-    @Shadow protected abstract void bobView(MatrixStack matrices, float tickDelta);
 
     private float realYaw;
     private float realPitch;
@@ -43,16 +41,6 @@ public abstract class MixinGameRenderer
         if (Callbacks.skipWorldRendering)
         {
             ci.cancel();
-        }
-    }
-
-    @Redirect(method = "renderWorld", require = 0, at = @At(value = "INVOKE",
-              target = "Lnet/minecraft/client/render/GameRenderer;bobView(Lnet/minecraft/client/util/math/MatrixStack;F)V"))
-    private void disableWorldViewBob(GameRenderer renderer, MatrixStack matrices, float tickDelta)
-    {
-        if (Configs.Disable.DISABLE_WORLD_VIEW_BOB.getBooleanValue() == false)
-        {
-            this.bobView(matrices, tickDelta);
         }
     }
 

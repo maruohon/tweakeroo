@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.util.IEntityItem;
-import fi.dy.masa.tweakeroo.util.InventoryUtils;
 
 @Mixin(ItemEntity.class)
 public abstract class MixinItemEntity extends Entity implements IEntityItem
@@ -36,21 +35,6 @@ public abstract class MixinItemEntity extends Entity implements IEntityItem
     public int getPickupDelay()
     {
         return this.pickupDelay;
-    }
-
-    @Inject(method = "<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/item/ItemStack;)V", at = @At("RETURN"))
-    private void removeEmptyShulkerBoxTags(World worldIn, double x, double y, double z, ItemStack stack, CallbackInfo ci)
-    {
-        if (FeatureToggle.TWEAK_SHULKERBOX_STACK_GROUND.getBooleanValue())
-        {
-            if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof ShulkerBoxBlock)
-            {
-                if (InventoryUtils.cleanUpShulkerBoxNBT(stack))
-                {
-                    ((ItemEntity) (Object) this).setStack(stack);
-                }
-            }
-        }
     }
 
     @Inject(method = "canMerge()Z", at = @At("HEAD"), cancellable = true)
