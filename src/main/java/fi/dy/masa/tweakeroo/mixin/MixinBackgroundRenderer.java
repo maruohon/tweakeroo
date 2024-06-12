@@ -67,8 +67,10 @@ public abstract class MixinBackgroundRenderer
         {
             return Math.max(512, MinecraftClient.getInstance().gameRenderer.getViewDistance()) * 1.6f;
         }
+        
         return original;
     }
+    
     @ModifyVariable(
             method = "applyFog(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/BackgroundRenderer$FogType;FZ)V",
             slice = @Slice(
@@ -80,6 +82,7 @@ public abstract class MixinBackgroundRenderer
         {
             return Math.max(512, MinecraftClient.getInstance().gameRenderer.getViewDistance()) * 2.0f;
         }
+        
         return original;
     }
     */
