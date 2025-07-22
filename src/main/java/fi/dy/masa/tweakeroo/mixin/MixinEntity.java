@@ -2,17 +2,21 @@ package fi.dy.masa.tweakeroo.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
+
 import fi.dy.masa.tweakeroo.config.Configs;
 import fi.dy.masa.tweakeroo.config.FeatureToggle;
 import fi.dy.masa.tweakeroo.config.Hotkeys;
 import fi.dy.masa.tweakeroo.util.CameraUtils;
-import fi.dy.masa.tweakeroo.util.MiscUtils;
 import fi.dy.masa.tweakeroo.util.SnapAimMode;
+import fi.dy.masa.tweakeroo.util.SnapAimUtils;
 
 @Mixin(net.minecraft.entity.Entity.class)
 public abstract class MixinEntity
@@ -22,8 +26,8 @@ public abstract class MixinEntity
     @Shadow public float prevYaw;
     @Shadow public float prevPitch;
 
-    private double forcedPitch;
-    private double forcedYaw;
+    @Unique private double lastFreePitch;
+    @Unique private double lastFreeYaw;
 
     @Shadow public abstract net.minecraft.util.math.Vec3d getVelocity();
     @Shadow public abstract void setVelocity(net.minecraft.util.math.Vec3d velocity);
@@ -38,26 +42,13 @@ public abstract class MixinEntity
     }
 
     @Inject(method = "updateVelocity", at = @At("HEAD"), cancellable = true)
-    private void moreAccurateMoveRelative(float float_1, net.minecraft.util.math.Vec3d motion, CallbackInfo ci)
+    private void moreAccurateMoveRelative(float speedIn, net.minecraft.util.math.Vec3d motion, CallbackInfo ci)
     {
-        if ((Object) this instanceof ClientPlayerEntity)
+        if ((Object) this instanceof ClientPlayerEntity &&
+            (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue() ||
+             FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue()))
         {
-            if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
-            {
-                double speed = motion.lengthSquared();
-
-                if (speed >= 1.0E-7D)
-                {
-                   motion = (speed > 1.0D ? motion.normalize() : motion).multiply((double) float_1);
-                   double xFactor = Math.sin(this.yaw * Math.PI / 180D);
-                   double zFactor = Math.cos(this.yaw * Math.PI / 180D);
-                   net.minecraft.util.math.Vec3d change = new net.minecraft.util.math.Vec3d(motion.x * zFactor - motion.z * xFactor, motion.y, motion.z * zFactor + motion.x * xFactor);
-
-                   this.setVelocity(this.getVelocity().add(change));
-                }
-
-                ci.cancel();
-            }
+            SnapAimUtils.onUpdateVelocity((Entity) (Object) this, this.yaw, speedIn, motion, ci);
         }
     }
 
@@ -73,8 +64,17 @@ public abstract class MixinEntity
 
             if (FeatureToggle.TWEAK_AIM_LOCK.getBooleanValue())
             {
-                this.yaw = (float) this.forcedYaw;
-                this.pitch = (float) this.forcedPitch;
+                if (FeatureToggle.TWEAK_SNAP_AIM.getBooleanValue())
+                {
+                    this.yaw = SnapAimUtils.getSnappedYaw(this.lastFreeYaw);
+                    this.pitch = SnapAimUtils.getSnappedPitch(this.lastFreePitch);
+                }
+                else
+                {
+                    this.yaw = (float) this.lastFreeYaw;
+                    this.pitch = (float) this.lastFreePitch;
+                }
+
                 this.prevYaw = this.yaw;
                 this.prevPitch = this.pitch;
                 ci.cancel();
@@ -95,8 +95,8 @@ public abstract class MixinEntity
 
                 this.updateCustomPlayerRotations(yawChange, pitchChange, updateYaw, updatePitch, pitchLimit);
 
-                this.yaw = MiscUtils.getSnappedYaw(this.forcedYaw);
-                this.pitch = MiscUtils.getSnappedPitch(this.forcedPitch);
+                this.yaw = SnapAimUtils.getSnappedYaw(this.lastFreeYaw);
+                this.pitch = SnapAimUtils.getSnappedPitch(this.lastFreePitch);
                 this.prevYaw = this.yaw;
                 this.prevPitch = this.pitch;
                 ci.cancel();
@@ -116,13 +116,11 @@ public abstract class MixinEntity
 
                 this.updateCustomPlayerRotations(yawChange, pitchChange, true, true, pitchLimit);
 
-                CameraUtils.setCameraYaw((float) this.forcedYaw);
-                CameraUtils.setCameraPitch((float) this.forcedPitch);
+                CameraUtils.setCameraYaw((float) this.lastFreeYaw);
+                CameraUtils.setCameraPitch((float) this.lastFreePitch);
 
                 this.yaw = this.prevYaw;
                 this.pitch = this.prevPitch;
-                this.prevYaw = this.yaw;
-                this.prevPitch = this.pitch;
                 ci.cancel();
 
                 return;
@@ -130,21 +128,22 @@ public abstract class MixinEntity
 
             // Update the internal rotations while no locking features are enabled
             // They will then be used as the forced rotations when some of the locking features are activated.
-            this.forcedYaw = this.yaw;
-            this.forcedPitch = this.pitch;
+            this.lastFreeYaw = this.yaw;
+            this.lastFreePitch = this.pitch;
         }
     }
 
+    @Unique
     private void updateCustomPlayerRotations(double yawChange, double pitchChange, boolean updateYaw, boolean updatePitch, float pitchLimit)
     {
         if (updateYaw)
         {
-            this.forcedYaw += yawChange * 0.15D;
+            this.lastFreeYaw += yawChange * 0.15D;
         }
 
         if (updatePitch)
         {
-            this.forcedPitch = net.minecraft.util.math.MathHelper.clamp(this.forcedPitch + pitchChange * 0.15D, -pitchLimit, pitchLimit);
+            this.lastFreePitch = net.minecraft.util.math.MathHelper.clamp(this.lastFreePitch + pitchChange * 0.15D, -pitchLimit, pitchLimit);
         }
     }
 }
