@@ -29,6 +29,7 @@ import net.minecraft.item.MiningToolItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.c2s.play.PlayerInteractItemC2SPacket;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -806,7 +807,8 @@ public class InventoryUtils
                 if (isHotbarSlot(slotNumber))
                 {
                     inventory.selectedSlot = slotNumber - 36;
-                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(inventory.selectedSlot));
+                    PendingPackets.addPacket(new UpdateSelectedSlotC2SPacket(inventory.selectedSlot), PlayerInteractItemC2SPacket.class);
+//                    mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(inventory.selectedSlot));
                 }
                 else
                 {

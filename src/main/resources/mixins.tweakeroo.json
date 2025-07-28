@@ -73,7 +73,8 @@
 		"MixinUpdateStructureBlockC2SPacket",
 		"MixinWindow",
 		"MixinWorld",
-		"MixinWorldRenderer"
+		"MixinWorldRenderer",
+		"MixinSendPacket"
 	],
 	"mixinPriority": 990,
 	"injectors": {
