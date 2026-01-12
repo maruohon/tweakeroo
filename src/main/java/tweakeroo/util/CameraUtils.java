@@ -91,8 +91,8 @@ public class CameraUtils
 
         if (chunkX != lastChunkX)
         {
-            final int minCX = chunkX > lastChunkX ? lastChunkX + viewDistance : chunkX     - viewDistance;
-            final int maxCX = chunkX > lastChunkX ? chunkX     + viewDistance : lastChunkX - viewDistance;
+            final int minCX = chunkX > lastChunkX ? Math.max(lastChunkX + viewDistance, chunkX - viewDistance) : chunkX - viewDistance;
+            final int maxCX = chunkX > lastChunkX ? chunkX + viewDistance : Math.min(lastChunkX - viewDistance, chunkX + viewDistance);
 
             for (int cx = minCX; cx <= maxCX; ++cx)
             {
@@ -110,8 +110,8 @@ public class CameraUtils
 
         if (chunkZ != lastChunkZ)
         {
-            final int minCZ = chunkZ > lastChunkZ ? lastChunkZ + viewDistance : chunkZ     - viewDistance;
-            final int maxCZ = chunkZ > lastChunkZ ? chunkZ     + viewDistance : lastChunkZ - viewDistance;
+            final int minCZ = chunkZ > lastChunkZ ? Math.max(lastChunkZ + viewDistance, chunkZ - viewDistance) : chunkZ - viewDistance;
+            final int maxCZ = chunkZ > lastChunkZ ? chunkZ + viewDistance : Math.min(lastChunkZ - viewDistance, chunkZ + viewDistance);
 
             for (int cz = minCZ; cz <= maxCZ; ++cz)
             {
