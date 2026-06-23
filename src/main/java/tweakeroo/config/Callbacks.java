@@ -142,21 +142,21 @@ public class Callbacks
         Hotkeys.SKIP_ALL_RENDERING.createCallbackForAction(Actions.TOGGLE_SKIP_ALL_RENDERING);
         Hotkeys.SKIP_WORLD_RENDERING.createCallbackForAction(Actions.TOGGLE_SKIP_WORLD_RENDERING);
 
-        addAdjustableCallback(FeatureToggle.TWEAK_AFTER_CLICKER,            Configs.Generic.AFTER_CLICKER_CLICK_COUNT,  "tweakeroo.message.toggled_after_clicker_on",   "tweakeroo.message.set_after_clicker_count_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_GRID,            Configs.Generic.BREAKING_GRID_SIZE,         "tweakeroo.message.toggled_breaking_grid_on",   "tweakeroo.message.set_breaking_grid_size_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_FAST_LEFT_CLICK,          Configs.Generic.FAST_LEFT_CLICK_COUNT,      "tweakeroo.message.toggled_fast_left_click_on", "tweakeroo.message.set_fast_left_click_count_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_FAST_RIGHT_CLICK,         Configs.Generic.FAST_RIGHT_CLICK_COUNT,     "tweakeroo.message.toggled_fast_right_click_on","tweakeroo.message.set_fast_right_click_count_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_GAMMA_OVERRIDE,           Configs.Generic.GAMMA_OVERRIDE_VALUE,       "tweakeroo.message.toggled_gamma_override_on",  "tweakeroo.message.set_gamma_override_value_to", () -> 0.1);
-        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE,        Configs.Generic.HOTBAR_SLOT_CYCLE_MAX,      "tweakeroo.message.toggled_slot_cycle_on",      "tweakeroo.message.set_hotbar_slot_cycle_max_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER,   Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX, "tweakeroo.message.toggled_slot_randomizer_on", "tweakeroo.message.set_hotbar_slot_randomizer_max_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_PERIODIC_ATTACK,          Configs.Generic.PERIODIC_ATTACK_INTERVAL,   "tweakeroo.message.toggled_periodic_attack_on", "tweakeroo.message.set_periodic_attack_interval_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_PERIODIC_USE,             Configs.Generic.PERIODIC_USE_INTERVAL,      "tweakeroo.message.toggled_periodic_use_on",    "tweakeroo.message.set_periodic_use_interval_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_GRID,           Configs.Generic.PLACEMENT_GRID_SIZE,        "tweakeroo.message.toggled_placement_grid_on",  "tweakeroo.message.set_placement_grid_size_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_LIMIT,          Configs.Generic.PLACEMENT_LIMIT,            "tweakeroo.message.toggled_placement_limit_on", "tweakeroo.message.set_placement_limit_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_STATIC_FOV,               Configs.Generic.STATIC_FOV,                 "tweakeroo.message.toggled_static_fov_on",      "tweakeroo.message.set_static_fov_value_to", () -> 1);
-
-        addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_RESTRICTION,     Configs.Generic.BREAKING_RESTRICTION_MODE,  "tweakeroo.message.toggled_breaking_restriction_on", "tweakeroo.message.set_breaking_restriction_mode_to");
-        addAdjustableCallback(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT,     Configs.Generic.PLACEMENT_RESTRICTION_MODE, "tweakeroo.message.toggled_fast_block_placement_on", "tweakeroo.message.set_placement_restriction_mode_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_AFTER_CLICKER,            Configs.Generic.AFTER_CLICKER_CLICK_COUNT,  "tweakeroo.message.toggled_after_clicker_on",         "tweakeroo.message.set_after_clicker_count_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_GRID,            Configs.Generic.BREAKING_GRID_SIZE,         "tweakeroo.message.toggled_breaking_grid_on",         "tweakeroo.message.set_breaking_grid_size_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_BREAKING_RESTRICTION,     Configs.Generic.BREAKING_RESTRICTION_MODE,  "tweakeroo.message.toggled_breaking_restriction_on",  "tweakeroo.message.set_breaking_restriction_mode_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_FAST_BLOCK_PLACEMENT,     Configs.Generic.PLACEMENT_RESTRICTION_MODE, "tweakeroo.message.toggled_fast_block_placement_on",  "tweakeroo.message.set_placement_restriction_mode_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_FAST_LEFT_CLICK,          Configs.Generic.FAST_LEFT_CLICK_COUNT,      "tweakeroo.message.toggled_fast_left_click_on",       "tweakeroo.message.set_fast_left_click_count_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_FAST_RIGHT_CLICK,         Configs.Generic.FAST_RIGHT_CLICK_COUNT,     "tweakeroo.message.toggled_fast_right_click_on",      "tweakeroo.message.set_fast_right_click_count_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_GAMMA_OVERRIDE,           Configs.Generic.GAMMA_OVERRIDE_VALUE,       "tweakeroo.message.toggled_gamma_override_on",        "tweakeroo.message.set_gamma_override_value_to", () -> 0.1);
+        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_CYCLE,        Configs.Generic.HOTBAR_SLOT_CYCLE_MAX,      "tweakeroo.message.toggled_slot_cycle_on",            "tweakeroo.message.set_hotbar_slot_cycle_max_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_HOTBAR_SLOT_RANDOMIZER,   Configs.Generic.HOTBAR_SLOT_RANDOMIZER_MAX, "tweakeroo.message.toggled_slot_randomizer_on",       "tweakeroo.message.set_hotbar_slot_randomizer_max_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PERIODIC_ATTACK,          Configs.Generic.PERIODIC_ATTACK_INTERVAL,   "tweakeroo.message.toggled_periodic_attack_on",       "tweakeroo.message.set_periodic_attack_interval_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PERIODIC_USE,             Configs.Generic.PERIODIC_USE_INTERVAL,      "tweakeroo.message.toggled_periodic_use_on",          "tweakeroo.message.set_periodic_use_interval_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_GRID,           Configs.Generic.PLACEMENT_GRID_SIZE,        "tweakeroo.message.toggled_placement_grid_on",        "tweakeroo.message.set_placement_grid_size_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_LIMIT,          Configs.Generic.PLACEMENT_LIMIT,            "tweakeroo.message.toggled_placement_limit_on",       "tweakeroo.message.set_placement_limit_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_PLACEMENT_RESTRICTION,    Configs.Generic.PLACEMENT_RESTRICTION_MODE, "tweakeroo.message.toggled_placement_restriction_on", "tweakeroo.message.set_placement_restriction_mode_to");
+        addAdjustableCallback(FeatureToggle.TWEAK_STATIC_FOV,               Configs.Generic.STATIC_FOV,                 "tweakeroo.message.toggled_static_fov_on",            "tweakeroo.message.set_static_fov_value_to", () -> 1);
 
         FeatureToggle.TWEAK_FLY_SPEED.setHotkeyCallback(AdjustableValueHotkeyCallback.createClampedDoubleDelegate(
                 FeatureToggle.TWEAK_FLY_SPEED.getBooleanConfig(), () -> Configs.Internal.ACTIVE_FLY_SPEED_OVERRIDE_VALUE,

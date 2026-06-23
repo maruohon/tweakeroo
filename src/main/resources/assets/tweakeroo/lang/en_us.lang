@@ -613,6 +613,7 @@ tweakeroo.message.toggled_periodic_attack_on=Toggled Periodic Attack §aON§r, i
 tweakeroo.message.toggled_periodic_use_on=Toggled Periodic Use §aON§r, interval = §b%s§r ticks
 tweakeroo.message.toggled_placement_grid_on=Toggled Placement Grid §aON§r, grid size: §b%s
 tweakeroo.message.toggled_placement_limit_on=Toggled Placement Limit §aON§r, limit: §b%s
+tweakeroo.message.toggled_placement_restriction_on=Toggled Placement Restriction §aON§r, mode: §3%s
 tweakeroo.message.toggled_slot_cycle_on=Toggled Hotbar Slot Cycle §aON§r, max slot: §b%s
 tweakeroo.message.toggled_slot_randomizer_on=Toggled Hotbar Slot Randomizer §aON§r, max slot: §b%s
 tweakeroo.message.toggled_snap_aim_on_both=Toggled Snap Aim (Yaw & Pitch) §aON§r, yaw step §b%s§r, pitch step §b%s

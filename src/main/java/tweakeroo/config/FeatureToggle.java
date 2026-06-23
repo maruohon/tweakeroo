@@ -75,7 +75,7 @@ public enum FeatureToggle implements ConfigInfo
     TWEAK_PICK_BEFORE_PLACE             ("tweakPickBeforePlace",                    false),
     TWEAK_PLACEMENT_GRID                ("tweakPlacementGrid",                      false, KeyBindSettings.INGAME_BOTH),
     TWEAK_PLACEMENT_LIMIT               ("tweakPlacementLimit",                     false, KeyBindSettings.INGAME_BOTH),
-    TWEAK_PLACEMENT_RESTRICTION         ("tweakPlacementRestriction",               false),
+    TWEAK_PLACEMENT_RESTRICTION         ("tweakPlacementRestriction",               false, KeyBindSettings.INGAME_RELEASE),
     TWEAK_PLACEMENT_REST_FIRST          ("tweakPlacementRestrictionFirst",          false),
     TWEAK_PLACEMENT_REST_HAND           ("tweakPlacementRestrictionHand",           false),
     TWEAK_PLAYER_INVENTORY_PEEK         ("tweakPlayerInventoryPeek",                false),
