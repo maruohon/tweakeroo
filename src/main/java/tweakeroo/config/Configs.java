@@ -21,7 +21,7 @@ import malilib.config.option.ConfigOption;
 import malilib.config.option.DoubleConfig;
 import malilib.config.option.HotkeyedBooleanConfig;
 import malilib.config.option.IntegerConfig;
-import malilib.config.option.OptionListConfig;
+import malilib.config.option.OptionConfig;
 import malilib.config.option.StringConfig;
 import malilib.config.option.Vec2iConfig;
 import malilib.config.option.list.BlackWhiteListConfig;
@@ -118,11 +118,11 @@ public class Configs
         public static final BooleanConfig ZOOM_ADJUST_MOUSE_SENSITIVITY         = new BooleanConfig("zoomAdjustMouseSensitivity", true);
         public static final DoubleConfig  ZOOM_FOV                              = new DoubleConfig( "zoomFov", 30, 0.01, 359.99);
 
-        public static final OptionListConfig<PlacementRestrictionMode>  BREAKING_RESTRICTION_MODE       = new OptionListConfig<>("breakingRestrictionMode", PlacementRestrictionMode.LINE, PlacementRestrictionMode.VALUES);
-        public static final OptionListConfig<ActiveMode>                ELYTRA_CAMERA_INDICATOR         = new OptionListConfig<>("elytraCameraIndicator", ActiveMode.WITH_KEY, ActiveMode.VALUES);
-        public static final OptionListConfig<HudAlignment>              HOTBAR_SWAP_OVERLAY_ALIGNMENT   = new OptionListConfig<>("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, HudAlignment.VALUES);
-        public static final OptionListConfig<PlacementRestrictionMode>  PLACEMENT_RESTRICTION_MODE      = new OptionListConfig<>("placementRestrictionMode", PlacementRestrictionMode.FACE, PlacementRestrictionMode.VALUES);
-        public static final OptionListConfig<SnapAimMode>               SNAP_AIM_MODE                   = new OptionListConfig<>("snapAimMode", SnapAimMode.YAW, SnapAimMode.VALUES);
+        public static final OptionConfig<PlacementRestrictionMode> BREAKING_RESTRICTION_MODE      = new OptionConfig<>("breakingRestrictionMode", PlacementRestrictionMode.LINE, PlacementRestrictionMode.VALUES);
+        public static final OptionConfig<ActiveMode>               ELYTRA_CAMERA_INDICATOR        = new OptionConfig<>("elytraCameraIndicator", ActiveMode.WITH_KEY, ActiveMode.VALUES);
+        public static final OptionConfig<HudAlignment>             HOTBAR_SWAP_OVERLAY_ALIGNMENT  = new OptionConfig<>("hotbarSwapOverlayAlignment", HudAlignment.BOTTOM_RIGHT, HudAlignment.VALUES);
+        public static final OptionConfig<PlacementRestrictionMode> PLACEMENT_RESTRICTION_MODE     = new OptionConfig<>("placementRestrictionMode", PlacementRestrictionMode.FACE, PlacementRestrictionMode.VALUES);
+        public static final OptionConfig<SnapAimMode>              SNAP_AIM_MODE                  = new OptionConfig<>("snapAimMode", SnapAimMode.YAW, SnapAimMode.VALUES);
 
         public static final ImmutableList<ConfigOption<?>> OPTIONS = ImmutableList.of(
                 AFTER_CLICKER_CLICK_COUNT,

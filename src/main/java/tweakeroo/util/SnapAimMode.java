@@ -2,9 +2,9 @@ package tweakeroo.util;
 
 import com.google.common.collect.ImmutableList;
 
-import malilib.config.value.BaseOptionListConfigValue;
+import malilib.config.value.BaseOptionConfigValue;
 
-public class SnapAimMode extends BaseOptionListConfigValue
+public class SnapAimMode extends BaseOptionConfigValue
 {
     public static final SnapAimMode YAW   = new SnapAimMode("yaw",     "tweakeroo.label.snap_aim_mode.yaw");
     public static final SnapAimMode PITCH = new SnapAimMode("pitch",   "tweakeroo.label.snap_aim_mode.pitch");

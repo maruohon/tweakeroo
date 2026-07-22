@@ -13,7 +13,7 @@ import malilib.config.ValueChangeCallback;
 import malilib.config.option.BooleanContainingConfig;
 import malilib.config.option.DoubleConfig;
 import malilib.config.option.IntegerConfig;
-import malilib.config.option.OptionListConfig;
+import malilib.config.option.OptionConfig;
 import malilib.gui.BaseScreen;
 import malilib.input.Hotkey;
 import malilib.input.KeyAction;
@@ -215,7 +215,7 @@ public class Callbacks
     }
 
     private static void addAdjustableCallback(FeatureToggle feature,
-                                              OptionListConfig<?> config,
+                                              OptionConfig<?> config,
                                               String toggleMessageKey,
                                               String adjustMessageKey)
     {

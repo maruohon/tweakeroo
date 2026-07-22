@@ -2,12 +2,12 @@ package tweakeroo.util;
 
 import com.google.common.collect.ImmutableList;
 
-import malilib.config.value.BaseOptionListConfigValue;
+import malilib.config.value.BaseOptionConfigValue;
 import malilib.util.position.BlockPos;
 import malilib.util.position.Direction;
 import tweakeroo.tweaks.PlacementTweaks;
 
-public class PlacementRestrictionMode extends BaseOptionListConfigValue
+public class PlacementRestrictionMode extends BaseOptionConfigValue
 {
     public static final PlacementRestrictionMode FACE     = new PlacementRestrictionMode("face",     "tweakeroo.label.placement_restriction_mode.face", PlacementTweaks::isNewPositionValidForFaceMode);
     public static final PlacementRestrictionMode LAYER    = new PlacementRestrictionMode("layer",    "tweakeroo.label.placement_restriction_mode.layer", PlacementTweaks::isNewPositionValidForLayerMode);
